@@ -42,9 +42,7 @@ const SubjectStep = ({
     <WizardStepHeading
       {...stepProps}
       fieldsetHeading={!hasHighlights}
-      editTitle={
-        hasHighlights ? 'Change featured table or subject' : 'Change subject'
-      }
+      editTitle="Change subject"
     >
       {hasHighlights
         ? 'View a featured table or create your own'
