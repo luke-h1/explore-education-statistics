@@ -114,7 +114,7 @@ const SubjectStep = ({
           </TabsSection>
         </Tabs>
         <h2 className="govuk-heading-m govuk-!-margin-top-9">
-          View or edit previous step
+          Edit previous step
         </h2>
       </>
     ) : (
