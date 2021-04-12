@@ -58,6 +58,10 @@ const TableHeadersForm = ({
           keyboard users, select and deselect a draggable item with space and
           use the arrow keys to move a selected item.
         </p>
+        <p className="govuk-hint">
+          If you want to change the data then you can{' '}
+          <a href="#edit-table">edit the table</a>
+        </p>
         <div className="govuk-visually-hidden">
           To move a draggable item, select and deselect the item with space and
           use the arrow keys to move a selected item. If you are using a screen
