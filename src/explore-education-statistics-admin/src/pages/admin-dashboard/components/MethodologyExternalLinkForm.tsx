@@ -55,39 +55,41 @@ const MethodologyExternalLinkForm = ({
       validationSchema={validationSchema}
     >
       {form => (
-        <Form id="methodology-external">
-          <FormFieldset
-            id="methodology-external-fieldset"
-            legend="Link to an externally hosted methodology"
-            legendSize="s"
-          >
-            <FormGroup>
-              <FormFieldTextInput
-                label="Link title"
-                name="title"
-                className="govuk-!-width-two-thirds"
-              />
-              <FormFieldTextInput
-                label="URL"
-                name="url"
-                className="govuk-!-width-two-thirds"
-              />
-            </FormGroup>
-            <ButtonGroup>
-              <Button type="submit">Save</Button>
-              <Button
-                type="reset"
-                variant="secondary"
-                onClick={() => {
-                  form.resetForm();
-                  onCancel();
-                }}
-              >
-                Cancel
-              </Button>
-            </ButtonGroup>
-          </FormFieldset>
-        </Form>
+        <div className="govuk-!-width-full govuk-!-margin-top-3">
+          <Form id="methodology-external">
+            <FormFieldset
+              id="methodology-external-fieldset"
+              legend="Use external methodology"
+              legendSize="s"
+            >
+              <FormGroup>
+                <FormFieldTextInput
+                  label="Link title"
+                  name="title"
+                  className="govuk-!-width-two-thirds"
+                />
+                <FormFieldTextInput
+                  label="URL"
+                  name="url"
+                  className="govuk-!-width-two-thirds"
+                />
+              </FormGroup>
+              <ButtonGroup>
+                <Button type="submit">Save</Button>
+                <Button
+                  type="reset"
+                  variant="secondary"
+                  onClick={() => {
+                    form.resetForm();
+                    onCancel();
+                  }}
+                >
+                  Cancel
+                </Button>
+              </ButtonGroup>
+            </FormFieldset>
+          </Form>
+        </div>
       )}
     </Formik>
   );

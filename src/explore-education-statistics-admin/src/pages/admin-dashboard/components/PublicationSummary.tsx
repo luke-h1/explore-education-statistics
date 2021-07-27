@@ -1,4 +1,5 @@
 import ButtonLink from '@admin/components/ButtonLink';
+import Link from '@admin/components/Link';
 import {
   ReleaseRouteParams,
   releaseSummaryRoute,
@@ -42,117 +43,97 @@ const PublicationSummary = ({
     !releases.some(r => r.amendment && r.previousVersionId === release.id);
   return (
     <>
-      <table>
-        <tbody>
-          <tr>
-            <th className="govuk-!-width-one-quarter">Team</th>
-            <td className="govuk-!-width-one-half">
-              <p
-                className="govuk-!-margin-bottom-1"
-                data-testid={`Team name for ${publication.title}`}
+      <div className="dfe-flex govuk-!-margin-bottom-9">
+        <h4 className="govuk-!-width-one-quarter">Publication team and contact</h4>
+        <div className="govuk-!-width-one-half">
+          <p data-testid={`Team name for ${publication.title}`} className="govuk-!-margin-bottom-0">
+            {contact?.teamName || 'No team name'}
+          </p> 
+          {contact?.teamEmail && (
+            <p>
+              <a
+                href={`mailto:${contact.teamEmail}`}
+                data-testid={`Team email for ${publication.title}`}
               >
-                {contact?.teamName || 'No team name'}
-              </p>
-
-              {contact?.teamEmail && (
-                <p className="govuk-!-margin-bottom-0">
-                  <a
-                    href={`mailto:${contact.teamEmail}`}
-                    data-testid={`Team email for ${publication.title}`}
-                  >
-                    {contact.teamEmail}
-                  </a>
-                </p>
-              )}
-            </td>
-          </tr>
-          <tr>
-            <th>Contact</th>
-            <td>
-              <p
-                className="govuk-!-margin-bottom-1"
-                data-testid={`Contact name for ${publication.title}`}
-              >
-                {contact?.contactName || 'No contact name'}
-              </p>
-
-              {contact?.contactTelNo && (
-                <p className="govuk-!-margin-bottom-0">
-                  <a
-                    href={`tel:${contact.contactTelNo}`}
-                    data-testid={`Contact phone number for ${publication.title}`}
-                  >
-                    {contact.contactTelNo}
-                  </a>
-                </p>
-              )}
-            </td>
-          </tr>
-          <tr>
-            <th>Methodologies</th>
-            <td data-testid={`Methodology for ${publication.title}`}>
-              <MethodologySummary
-                publication={publication}
-                topicId={topicId}
-                onChangePublication={onChangePublication}
-              />
-            </td>
-          </tr>
-          {permissions.canUpdatePublication && (
-            <tr>
-              <th>Manage</th>
-              <td>
-                <ButtonGroup className="govuk-!-margin-bottom-2">
-                  <ButtonLink
-                    data-testid={`Edit publication link for ${publication.title}`}
-                    to={generatePath<PublicationRouteParams>(
-                      publicationEditRoute.path,
-                      {
-                        publicationId: publication.id,
-                      },
-                    )}
-                  >
-                    Manage this publication
-                  </ButtonLink>
-                </ButtonGroup>
-              </td>
-            </tr>
+                {contact.teamEmail}
+              </a>
+            </p>
           )}
-          <tr>
-            <th>Releases</th>
-            <td colSpan={2} data-testid={`Releases for ${publication.title}`}>
-              <ButtonGroup className="govuk-!-margin-bottom-2">
-                {permissions.canCreateReleases && (
-                  <ButtonLink
-                    to={generatePath(releaseCreateRoute.path, {
-                      publicationId: id,
-                    })}
-                    data-testid={`Create new release link for ${title}`}
-                  >
-                    Create new release
-                  </ButtonLink>
-                )}
-              </ButtonGroup>
-              {releases.length > 0 ? (
-                <ul className="govuk-list">
-                  {releases.filter(noAmendmentInProgressFilter).map(release => (
-                    <li key={release.id}>
-                      <NonScheduledReleaseSummary
-                        onClickAmendRelease={setAmendReleaseId}
-                        onClickCancelAmendment={setCancelAmendmentReleaseId}
-                        release={release}
-                      />
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p>No releases created</p>
+          <p data-testid={`Contact name for ${publication.title}`} className="govuk-!-margin-bottom-0">
+            {contact?.contactName || 'No contact name'}
+          </p>
+          {contact?.contactTelNo && (
+            <p className="govuk-!-margin-bottom-0">
+              <a
+                href={`tel:${contact.contactTelNo}`}
+                data-testid={`Contact phone number for ${publication.title}`}
+              >
+                {contact.contactTelNo}
+              </a>
+            </p>
+          )}
+        </div>
+        {permissions.canUpdatePublication && (
+          <div className="dfe-align-item--right">
+            <Link
+              data-testid={`Edit publication link for ${publication.title}`}
+              to={generatePath<PublicationRouteParams>(
+                publicationEditRoute.path,
+                {
+                  publicationId: publication.id,
+                },
               )}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
+            >
+              Manage this publication
+            </Link>
+          </div>
+        )}
+      </div>
+      <div className="dfe-flex govuk-!-margin-bottom-9">
+        <h4 className="govuk-!-width-one-quarter">Methodologies</h4>
+        <div className="govuk-!-width-three-quarters">
+          <MethodologySummary
+            publication={publication}
+            topicId={topicId}
+            onChangePublication={onChangePublication}
+          />
+        </div>
+      </div>
+      <div className="dfe-flex govuk-!-margin-bottom-6">
+        <h4 className="govuk-!-width-one-quarter">
+          Releases
+        </h4>
+        <div className="govuk-!-width-three-quarters">
+          {releases.length > 0 ? (
+            <ul className="govuk-list">
+              {releases.filter(noAmendmentInProgressFilter).map(release => (
+                <li key={release.id}>
+                  <NonScheduledReleaseSummary
+                    onClickAmendRelease={setAmendReleaseId}
+                    onClickCancelAmendment={setCancelAmendmentReleaseId}
+                    release={release}
+                  />
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>No releases created</p>
+          )}
+          <ButtonGroup className="govuk-!-margin-bottom-2">
+            {permissions.canCreateReleases && (
+              <ButtonLink
+                to={generatePath(releaseCreateRoute.path, {
+                  publicationId: id,
+                })}
+                data-testid={`Create new release link for ${title}`}
+              >
+                Create new release
+              </ButtonLink>
+            )}
+          </ButtonGroup>
+        </div>
+      </div>
+    
       {amendReleaseId && (
         <ModalConfirm
           title="Confirm you want to amend this live release"

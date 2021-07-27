@@ -30,6 +30,14 @@
   align-items: center;
 }
 
+.dfe-align-item--right {
+  margin-left: auto;
+}
+
+.dfe-align-item--left {
+  margin-right: auto;
+}
+
 .dfe-flex-shrink--0 {
   flex-shrink: 0;
 }

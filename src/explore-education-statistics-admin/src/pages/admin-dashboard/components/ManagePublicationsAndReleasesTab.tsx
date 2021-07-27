@@ -164,9 +164,7 @@ const ManagePublicationsAndReleasesTab = () => {
 
             {selectedTheme && selectedTopic && (
               <>
-                <h2 data-testid="selectedThemeTitle">{selectedTheme.title}</h2>
-
-                <h3 data-testid="selectedTopicTitle">{selectedTopic.title}</h3>
+                <h2 data-testid="selectedThemeTitle">{selectedTheme.title} / {selectedTopic.title}</h2>
 
                 <LoadingSpinner loading={loadingPublications}>
                   {myPublications && myPublications.length > 0 ? (
@@ -177,7 +175,7 @@ const ManagePublicationsAndReleasesTab = () => {
                         <AccordionSection
                           key={publication.id}
                           heading={publication.title}
-                          headingTag="h4"
+                          headingTag="h3"
                         >
                           <PublicationSummary
                             publication={publication}
