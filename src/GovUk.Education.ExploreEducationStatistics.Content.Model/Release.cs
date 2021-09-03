@@ -66,11 +66,25 @@ namespace GovUk.Education.ExploreEducationStatistics.Content.Model
 
         public List<ReleaseStatus> ReleaseStatuses { get; set; }
 
+        public bool EmailSubscribers
+        {
+            get
+            {
+                return // !Amendment || // @MarkFix don't want this hidden logic? rely on ReleaseStatus entirely?
+                       (ReleaseStatuses.Any(rs => rs.ApprovalStatus == ReleaseApprovalStatus.Approved) // @MarkFix needs to be approved?
+                        && ReleaseStatuses
+                            .Where(rs => rs.ApprovalStatus == ReleaseApprovalStatus.Approved)
+                            .OrderBy(rs => rs.Created)
+                            .Last()
+                            .EmailSubscribers);
+            }
+        }
+
         public string LatestInternalReleaseNote
         {
             get
             {
-                return ReleaseStatuses?.Count > 0
+                return ReleaseStatuses.Any()
                     ? ReleaseStatuses.OrderBy(rs => rs.Created).Last().InternalReleaseNote
                     : null;
             }

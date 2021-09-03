@@ -58,6 +58,8 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.ViewModels
         [JsonConverter(typeof(StringEnumConverter))]
         public ReleaseApprovalStatus ApprovalStatus { get; set; }
 
+        public bool EmailSubscribers { get; set; }
+
         public string LatestInternalReleaseNote { get; set; }
 
         public bool Amendment { get; set; }
