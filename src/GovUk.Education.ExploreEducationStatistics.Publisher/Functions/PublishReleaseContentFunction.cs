@@ -83,7 +83,10 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Functions
 
                 await _contentService.DeletePreviousVersionsDownloadFiles(message.ReleaseId);
                 await _contentService.DeletePreviousVersionsContent(message.ReleaseId);
+
+                // @MarkFix check subscribers should be notified
                 await _notificationsService.NotifySubscribers(message.ReleaseId);
+
                 await UpdateStage(message.ReleaseId, message.ReleaseStatusId, State.Complete);
             }
             catch (Exception e)

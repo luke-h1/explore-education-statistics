@@ -14,6 +14,8 @@ namespace GovUk.Education.ExploreEducationStatistics.Content.Model
 
         public string InternalReleaseNote { get; set; }
 
+        public bool EmailSubscribers { get; set; }
+
         public ReleaseApprovalStatus ApprovalStatus { get; set; }
 
         public DateTime? Created { get; set; }
