@@ -137,6 +137,8 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.ViewModels
 
         public string LatestInternalReleaseNote { get; set; }
 
+        public bool? EmailSubscribers { get; set; }
+
         [JsonConverter(typeof(StringEnumConverter))]
         public PublishMethod? PublishMethod { get; set; }
 

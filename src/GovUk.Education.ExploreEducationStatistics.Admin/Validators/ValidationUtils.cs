@@ -143,6 +143,8 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Validators
         ReleaseNotApproved,
         ApprovedReleaseMustHavePublishScheduledDate,
         PublishedReleaseCannotBeUnapproved,
+        CannotSendNotifyEmailWhenReleaseNotApproved,
+        MustSendNotifyEmailForOriginalRelease,
 
         // Release checklist errors
         DataFileImportsMustBeCompleted,
