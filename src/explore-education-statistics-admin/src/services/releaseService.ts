@@ -8,6 +8,7 @@ export interface Release {
   id: string;
   slug: string;
   approvalStatus: ReleaseApprovalStatus;
+  emailSubscribers?: boolean; // @MarkFix shouldn't be nullable?
   latestRelease: boolean;
   live: boolean;
   amendment: boolean;
@@ -165,6 +166,7 @@ export interface ReleaseStatus {
   releaseStatusId: string;
   internalReleaseNote: string;
   approvalStatus: ReleaseApprovalStatus;
+  emailSubscribers: boolean;
   created: string;
   createdByEmail: string;
 }
