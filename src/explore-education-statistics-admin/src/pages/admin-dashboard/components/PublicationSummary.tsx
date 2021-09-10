@@ -75,7 +75,8 @@ const PublicationSummary = ({
         </div>
         {permissions.canUpdatePublication && (
           <div className="dfe-align-item--right">
-            <Link
+            <ButtonLink
+              variant="secondary"
               data-testid={`Edit publication link for ${publication.title}`}
               to={generatePath<PublicationRouteParams>(
                 publicationEditRoute.path,
@@ -85,7 +86,7 @@ const PublicationSummary = ({
               )}
             >
               Manage this publication
-            </Link>
+            </ButtonLink>
           </div>
         )}
       </div>
@@ -117,9 +118,9 @@ const PublicationSummary = ({
               ))}
             </ul>
           ) : (
-            <p>No releases created</p>
+            <strong>No releases created</strong>
           )}
-          <ButtonGroup className="govuk-!-margin-bottom-2">
+          <ButtonGroup className="govuk-!-margin-top-9">
             {permissions.canCreateReleases && (
               <ButtonLink
                 to={generatePath(releaseCreateRoute.path, {

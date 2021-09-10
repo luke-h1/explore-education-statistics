@@ -142,21 +142,20 @@ const MethodologySummary = ({
                         <Link
                           to={generatePath(methodologySummaryRoute.path, {
                             publicationId,
-                            methodologyId: methodology.id,
+                            methodologyId: methodology.previousVersionId,
                           })}
                         >
-                          {methodology.permissions.canUpdateMethodology
-                            ? 'Edit this amendment TEST 2'
-                            : 'View this amendment'}
+                          View original methodology
                         </Link>
                         <ButtonLink
                           to={generatePath(methodologySummaryRoute.path, {
                             publicationId,
-                            methodologyId: methodology.previousVersionId,
+                            methodologyId: methodology.id,
                           })}
-                          className="govuk-button--secondary govuk-!-margin-left-4"
                         >
-                          View original methodology
+                          {methodology.permissions.canUpdateMethodology
+                            ? 'Edit this amendment'
+                            : 'View this amendment'}
                         </ButtonLink>
                       </ButtonGroup>
                     </>
@@ -214,7 +213,7 @@ const MethodologySummary = ({
         )}
 
         {hasMethodologyPermissions && (
-          <ButtonGroup className="govuk-!-margin-bottom-2">
+          <ButtonGroup className="govuk-!-margin-bottom-2 govuk-!-width-full dfe-justify-content--space-between">
             {publication.permissions.canCreateMethodologies && (
               <Button
                 data-testid={`Create methodology for ${title}`}
@@ -254,26 +253,29 @@ const MethodologySummary = ({
 
         {externalMethodology?.url && (
           <>
-            <Link to={externalMethodology.url} unvisited>
-              {externalMethodology.title} (external methodology)
-            </Link>
-            {publication.permissions.canManageExternalMethodology && (
-              <ButtonGroup className="govuk-!-margin-bottom-2 govuk-!-margin-top-2">
-                <Button
-                  type="button"
-                  onClick={() => setShowAddEditExternalMethodologyForm(true)}
-                >
-                  Edit externally hosted methodology
-                </Button>
-                <Button
-                  type="button"
-                  variant="warning"
-                  onClick={handleRemoveExternalMethodology}
-                >
-                  Remove
-                </Button>
-              </ButtonGroup>
-            )}
+            <div className="dfe-flex dfe-justify-content--space-between dfe-align-items--center govuk-!-width-full">
+              <Link to={externalMethodology.url} unvisited>
+                {externalMethodology.title} (External methodology)
+              </Link>
+              {publication.permissions.canManageExternalMethodology && (
+                <ButtonGroup className="govuk-!-margin-bottom-2 govuk-!-margin-top-2">
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    onClick={() => setShowAddEditExternalMethodologyForm(true)}
+                  >
+                    Edit external methodology
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="warning"
+                    onClick={handleRemoveExternalMethodology}
+                  >
+                    Remove
+                  </Button>
+                </ButtonGroup>
+              )}
+            </div>
           </>
         )}
 
