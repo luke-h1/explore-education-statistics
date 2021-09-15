@@ -30,6 +30,10 @@
   align-items: center;
 }
 
+.dfe-align-items--flex-end {
+  align-items: flex-end;
+}
+
 .dfe-flex-shrink--0 {
   flex-shrink: 0;
 }
@@ -44,4 +48,17 @@
 
 .dfe-flex-grow--1 {
   flex-grow: 1;
+}
+
+.dfe-flex-underline {
+  border-bottom: 1px solid $govuk-border-colour;
+}
+
+$widths: 20, 40, 60, 80;
+
+@each $width in $widths {
+  .dfe-flex-basis--#{$width} {
+    flex-basis: ($width) * 1%;
+    padding: 2rem 0;
+  }
 }

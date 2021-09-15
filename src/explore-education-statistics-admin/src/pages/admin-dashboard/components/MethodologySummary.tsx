@@ -250,55 +250,67 @@ const MethodologySummary = ({
       )}
 
       {canCreateAdoptOrManageExternal && (
-        <ButtonGroup
-          className={classNames('govuk-!-margin-bottom-2', {
-            'govuk-!-margin-top-2': methodologies.length > 0,
-          })}
-        >
-          {publication.permissions.canCreateMethodologies && (
-            <Button
-              data-testid={`Create methodology for ${title}`}
-              onClick={async () => {
-                const {
-                  id: methodologyId,
-                } = await methodologyService.createMethodology(publicationId);
-                history.push(
-                  generatePath<MethodologyRouteParams>(
-                    methodologySummaryRoute.path,
-                    {
-                      methodologyId,
-                    },
-                  ),
-                );
-              }}
-            >
-              Create methodology
-            </Button>
-          )}
-
-          {publication.permissions.canManageExternalMethodology &&
-            !externalMethodology && (
-              <ButtonLink
-                to={generatePath(externalMethodologyEditRoute.path, {
-                  publicationId,
-                })}
-                variant="secondary"
+        <>
+          <ButtonGroup
+            className={classNames('govuk-!-margin-bottom-0', {
+              'govuk-!-margin-top-6': methodologies.length > 0,
+            })}
+          >
+            {publication.permissions.canCreateMethodologies && (
+              <Button
+                data-testid={`Create methodology for ${title}`}
+                className="govuk-!-margin-right-4"
+                onClick={async () => {
+                  const {
+                    id: methodologyId,
+                  } = await methodologyService.createMethodology(publicationId);
+                  history.push(
+                    generatePath<MethodologyRouteParams>(
+                      methodologySummaryRoute.path,
+                      {
+                        methodologyId,
+                      },
+                    ),
+                  );
+                }}
               >
-                Link to an externally hosted methodology
-              </ButtonLink>
+                Create methodology
+              </Button>
             )}
 
-          {publication.permissions.canAdoptMethodologies && (
-            <ButtonLink
-              to={generatePath(methodologyAdoptRoute.path, {
-                publicationId,
-              })}
-              variant="secondary"
-            >
-              Adopt a methodology
-            </ButtonLink>
-          )}
-        </ButtonGroup>
+            {publication.permissions.canManageExternalMethodology &&
+              !externalMethodology && (
+                <>
+                  <p className="govuk-!-margin-bottom-0 govuk-!-margin-right-4">
+                    Or alternatively:{' '}
+                  </p>
+                  <Link
+                    to={generatePath(externalMethodologyEditRoute.path, {
+                      publicationId,
+                    })}
+                    className="govuk-!-margin-right-4"
+                  >
+                    Use external methodology
+                  </Link>
+                </>
+              )}
+
+            {publication.permissions.canAdoptMethodologies && (
+              <>
+                <p className="govuk-!-margin-bottom-0 govuk-!-margin-right-4">
+                  or
+                </p>
+                <Link
+                  to={generatePath(methodologyAdoptRoute.path, {
+                    publicationId,
+                  })}
+                >
+                  Adopt a methodology
+                </Link>
+              </>
+            )}
+          </ButtonGroup>
+        </>
       )}
 
       {amendMethodologyId && (
