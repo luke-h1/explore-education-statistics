@@ -36,7 +36,7 @@ const ReleaseSummary = ({
   return (
     <Details
       open={open}
-      className="govuk-!-margin-bottom-0"
+      className="govuk-!-margin-bottom-3"
       summary={getReleaseSummaryLabel(release)}
       summaryAfter={
         <TagGroup className="govuk-!-margin-left-2">
@@ -72,48 +72,53 @@ const ReleaseSummary = ({
         </TagGroup>
       }
     >
-      <SummaryList className="govuk-!-margin-bottom-3">
-        <SummaryListItem term="Publish date">
-          <FormattedDate>
-            {release.published || release.publishScheduled || ''}
-          </FormattedDate>
-        </SummaryListItem>
+      <div className="dfe-flex">
+        <div className="dfe-flex-basis--75">
+          <SummaryList className="govuk-!-margin-bottom-3">
+            <SummaryListItem term="Publish">
+              <FormattedDate>
+                {release.published || release.publishScheduled || ''}
+              </FormattedDate>
+            </SummaryListItem>
 
-        {isValidPartialDate(release.nextReleaseDate) && (
-          <SummaryListItem term="Next release date">
-            <time>{formatPartialDate(release.nextReleaseDate)}</time>
-          </SummaryListItem>
-        )}
-        {release.approvalStatus === 'Approved' && (
-          <SummaryListItem term="Release process status">
-            <ReleaseServiceStatus releaseId={release.id} />
-          </SummaryListItem>
-        )}
-        <SummaryListItem term="Lead statistician">
-          {release.contact && (
-            <span>
-              {release.contact.contactName}
-              <br />
-              <a href="mailto:{lead.teamEmail}">{release.contact.teamEmail}</a>
-              <br />
-              {release.contact.contactTelNo}
-            </span>
-          )}
-        </SummaryListItem>
-        {release.latestInternalReleaseNote && (
-          <SummaryListItem term="Internal note">
-            <span className="dfe-multiline-content">
-              {release.latestInternalReleaseNote}
-            </span>
-          </SummaryListItem>
-        )}
-      </SummaryList>
-      {children}
-
-      <div className="govuk-grid-row">
-        <div className="govuk-grid-column-two-thirds">{actions}</div>
-        <div className="govuk-grid-column-one-third dfe-align--right">
-          {secondaryActions}
+            {isValidPartialDate(release.nextReleaseDate) && (
+              <SummaryListItem term="Next release date">
+                <time>{formatPartialDate(release.nextReleaseDate)}</time>
+              </SummaryListItem>
+            )}
+            {release.approvalStatus === 'Approved' && (
+              <SummaryListItem term="Release process status">
+                <ReleaseServiceStatus releaseId={release.id} />
+              </SummaryListItem>
+            )}
+            <SummaryListItem term="Lead statistician">
+              {release.contact && (
+                <span>
+                  {release.contact.contactName}
+                  <br />
+                  <a href="mailto:{lead.teamEmail}">
+                    {release.contact.teamEmail}
+                  </a>
+                  <br />
+                  {release.contact.contactTelNo}
+                </span>
+              )}
+            </SummaryListItem>
+            {release.latestInternalReleaseNote && (
+              <SummaryListItem term="Internal note">
+                <span className="dfe-multiline-content">
+                  {release.latestInternalReleaseNote}
+                </span>
+              </SummaryListItem>
+            )}
+          </SummaryList>
+          {children}
+        </div>
+        <div className="dfe-flex-basis--25">
+          <div className="dfe-flex dfe-flex-direction--column dfe-justify-content--flex-end govuk-!-margin-left-6">
+            {actions}
+            {secondaryActions}
+          </div>
         </div>
       </div>
     </Details>

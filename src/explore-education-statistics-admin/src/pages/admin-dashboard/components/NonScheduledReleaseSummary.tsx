@@ -1,4 +1,5 @@
 import ButtonLink from '@admin/components/ButtonLink';
+import Link from '@admin/components/Link';
 import ReleaseSummary from '@admin/pages/admin-dashboard/components/ReleaseSummary';
 import { getReleaseSummaryLabel } from '@admin/pages/release/utils/releaseSummaryUtil';
 import {
@@ -46,6 +47,7 @@ const NonScheduledReleaseSummary = ({
             {release.amendment ? (
               <>
                 <ButtonLink
+                  variant="secondary"
                   to={generatePath<ReleaseRouteParams>(
                     releaseSummaryRoute.path,
                     {
@@ -58,7 +60,7 @@ const NonScheduledReleaseSummary = ({
                   }, ${getReleaseSummaryLabel(release)}`}
                 >
                   {release.permissions.canUpdateRelease
-                    ? 'Edit this release amendment'
+                    ? 'Edit this amendment'
                     : 'View this release amendment'}
                 </ButtonLink>
                 <ButtonLink
@@ -69,7 +71,7 @@ const NonScheduledReleaseSummary = ({
                       releaseId: release.previousVersionId,
                     },
                   )}
-                  className="govuk-button--secondary govuk-!-margin-left-4"
+                  className="govuk-button--secondary"
                   data-testid={`View original release link for ${
                     release.publicationTitle
                   }, ${getReleaseSummaryLabel(release)}`}
@@ -79,7 +81,8 @@ const NonScheduledReleaseSummary = ({
               </>
             ) : (
               <>
-                <ButtonLink
+                <Link
+                  className="dfe-align--centre govuk-!-margin-bottom-6"
                   to={generatePath<ReleaseRouteParams>(
                     releaseSummaryRoute.path,
                     {
@@ -94,11 +97,11 @@ const NonScheduledReleaseSummary = ({
                   {release.permissions.canUpdateRelease
                     ? 'Edit this release'
                     : 'View this release'}
-                </ButtonLink>
+                </Link>
                 {includeCreateAmendmentControls &&
                   release.permissions.canMakeAmendmentOfRelease && (
                     <Button
-                      className="govuk-button--secondary govuk-!-margin-left-4"
+                      className="govuk-button--secondary"
                       onClick={() => setAmendReleaseId(release.id)}
                     >
                       Amend this release
