@@ -122,7 +122,7 @@ const MethodologySummary = ({
                 </SummaryList>
               </div>
               <div className="dfe-flex-basis--25">
-                <div className="dfe-flex dfe-flex-direction--column dfe-justify-content--flex-end govuk-!-margin-left-6">
+                <div className="dfe-flex dfe-flex-direction--column dfe-justify-content--flex-end govuk-!-margin-left-4 govuk-!-padding-left-4 dfe-flex-border--left">
                   {methodology.amendment ? (
                     <>
                       <ButtonLink
@@ -132,9 +132,7 @@ const MethodologySummary = ({
                           methodologyId: methodology.id,
                         })}
                       >
-                        {canEdit
-                          ? 'Edit this amendment'
-                          : 'View this amendment'}
+                        {canEdit ? 'Edit amendment' : 'View amendment'}
                       </ButtonLink>
                       <ButtonLink
                         to={generatePath(methodologySummaryRoute.path, {
@@ -156,9 +154,7 @@ const MethodologySummary = ({
                           methodologyId: methodology.id,
                         })}
                       >
-                        {canEdit
-                          ? 'Edit this methodology'
-                          : 'View this methodology'}
+                        {canEdit ? 'Edit methodology' : 'View methodology'}
                       </Link>
                       {methodology.permissions
                         .canMakeAmendmentOfMethodology && (
@@ -206,7 +202,7 @@ const MethodologySummary = ({
       {externalMethodology?.url && (
         <Details
           open={false}
-          className="govuk-!-margin-bottom-3"
+          className="govuk-!-margin-bottom-4"
           summary={`${externalMethodology.title} (External)`}
         >
           <div className="dfe-flex">
@@ -220,7 +216,7 @@ const MethodologySummary = ({
               </SummaryList>
             </div>
             <div className="dfe-flex-basis--25">
-              <div className="dfe-flex dfe-flex-direction--column dfe-justify-content--flex-end govuk-!-margin-left-6">
+              <div className="dfe-flex dfe-flex-direction--column dfe-justify-content--flex-end govuk-!-margin-left-4 govuk-!-padding-left-4 dfe-flex-border--left">
                 {publication.permissions.canManageExternalMethodology && (
                   <>
                     <Link

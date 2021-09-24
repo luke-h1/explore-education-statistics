@@ -60,8 +60,8 @@ const NonScheduledReleaseSummary = ({
                   }, ${getReleaseSummaryLabel(release)}`}
                 >
                   {release.permissions.canUpdateRelease
-                    ? 'Edit this amendment'
-                    : 'View this release amendment'}
+                    ? 'Edit amendment'
+                    : 'View release amendment'}
                 </ButtonLink>
                 <ButtonLink
                   to={generatePath<ReleaseRouteParams>(
@@ -95,8 +95,8 @@ const NonScheduledReleaseSummary = ({
                   }, ${getReleaseSummaryLabel(release)}`}
                 >
                   {release.permissions.canUpdateRelease
-                    ? 'Edit this release'
-                    : 'View this release'}
+                    ? 'Edit release'
+                    : 'View release'}
                 </Link>
                 {includeCreateAmendmentControls &&
                   release.permissions.canMakeAmendmentOfRelease && (
@@ -104,7 +104,7 @@ const NonScheduledReleaseSummary = ({
                       className="govuk-button--secondary"
                       onClick={() => setAmendReleaseId(release.id)}
                     >
-                      Amend this release
+                      Amend release
                     </Button>
                   )}
               </>

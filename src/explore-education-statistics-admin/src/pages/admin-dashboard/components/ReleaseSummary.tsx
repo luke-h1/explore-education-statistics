@@ -36,7 +36,7 @@ const ReleaseSummary = ({
   return (
     <Details
       open={open}
-      className="govuk-!-margin-bottom-3"
+      className="govuk-!-margin-bottom-4"
       summary={getReleaseSummaryLabel(release)}
       summaryAfter={
         <TagGroup className="govuk-!-margin-left-2">
@@ -115,7 +115,7 @@ const ReleaseSummary = ({
           {children}
         </div>
         <div className="dfe-flex-basis--25">
-          <div className="dfe-flex dfe-flex-direction--column dfe-justify-content--flex-end govuk-!-margin-left-6">
+          <div className="dfe-flex dfe-flex-direction--column dfe-justify-content--flex-end govuk-!-margin-left-4 govuk-!-padding-4 dfe-flex-border--left">
             {actions}
             {secondaryActions}
           </div>
