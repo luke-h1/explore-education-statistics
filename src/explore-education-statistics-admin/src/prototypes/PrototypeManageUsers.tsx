@@ -326,7 +326,7 @@ const PrototypeManageUsers = () => {
                       htmlFor="role-all"
                       className="govuk-label govuk-checkboxes__label"
                     >
-                      Grant access to all listed users listeb above
+                      Grant access to all users listed above
                     </label>
                   </div>
                 </div>
