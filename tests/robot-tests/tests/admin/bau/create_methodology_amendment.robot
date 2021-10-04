@@ -8,6 +8,7 @@ Force Tags          Admin    Local    Dev    AltersData
 
 Suite Setup         user signs in as bau1
 Suite Teardown      user closes the browser
+Test Setup          fail test fast if required
 
 *** Variables ***
 ${PUBLICATION_NAME}=    UI tests - create methodology amendment publication %{RUN_IDENTIFIER}
@@ -18,7 +19,7 @@ Create publicly accessible Publication
     user create test release via api    ${PUBLICATION_ID}    AY    2021
     user navigates to editable release summary from admin dashboard    ${PUBLICATION_NAME}
     ...    Academic Year 2021/22 (not Live)
-    user approves release for immediate publication
+    user approves original release for immediate publication
 
 Create Methodology with some content and images
     user creates methodology for publication    ${PUBLICATION_NAME}

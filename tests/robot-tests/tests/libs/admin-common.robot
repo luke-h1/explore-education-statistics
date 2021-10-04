@@ -134,7 +134,7 @@ user creates publication
     user enters text into element    id:publicationForm-title    ${title}
     user enters text into element    id:publicationForm-teamName    Attainment statistics team
     user enters text into element    id:publicationForm-teamEmail    Attainment.STATISTICS@education.gov.uk
-    user enters text into element    id:publicationForm-contactName    Tingting Shu
+    user enters text into element    id:publicationForm-contactName    UI Tests Contact Name
     user enters text into element    id:publicationForm-contactTelNo    0123456789
     user clicks button    Save publication
     user waits until h1 is visible    Dashboard    60
@@ -337,6 +337,38 @@ user cancels methodology amendment for publication
     user waits until modal is visible    Confirm you want to cancel this amended methodology
     user clicks button    Confirm
 
+user adds note to methodology
+    [Arguments]
+    ...    ${note}
+    user clicks button    Add note
+    user enters text into element    label:New methodology note    ${note}
+    user clicks button    Save note
+    ${date}=    get current datetime    %-d %B %Y
+    user waits until element contains    css:#methodologyNotes time    ${date}
+    user waits until element contains    css:#methodologyNotes p    ${note}
+
+user removes methodology note
+    [Arguments]
+    ...    ${note}
+    ...    ${parent}
+    user clicks button    Remove note    ${parent}
+    user clicks button    Confirm
+    user waits until page does not contain    ${note}
+
+user edits methodology note
+    [Arguments]
+    ...    ${note}
+    ...    ${day}
+    ...    ${month}
+    ...    ${year}
+    user clicks button    Edit note    xpath://p[text()="${note}"]/ancestor::li
+    user enters text into element    label:Day    ${day}
+    user enters text into element    label:Month    ${month}
+    user enters text into element    label:Year    ${year}
+    user enters text into element    label:Edit methodology note    ${note} - edited
+    user clicks button    Update note
+    user waits until page contains    ${note} - edited
+
 user links publication to external methodology
     [Arguments]
     ...    ${publication}
@@ -466,19 +498,19 @@ user clicks footnote subject checkbox
     user clicks element    ${checkbox}
     checkbox should be selected    ${checkbox}
 
-user gets meta guidance data file content editor
+user gets data guidance data file content editor
     [Arguments]    ${accordion_heading}
-    user waits until page contains element    id:metaGuidance-dataFiles
-    ${accordion}=    user gets accordion section content element    ${accordion_heading}    id:metaGuidance-dataFiles
+    user waits until page contains element    id:dataGuidance-dataFiles
+    ${accordion}=    user gets accordion section content element    ${accordion_heading}    id:dataGuidance-dataFiles
     user waits until parent contains element    ${accordion}    xpath:.//*[@data-testid="Content"]//*[@role="textbox"]
     ${editor}=    get child element    ${accordion}    xpath:.//*[@data-testid="Content"]//*[@role="textbox"]
     [Return]    ${editor}
 
-user enters text into meta guidance data file content editor
+user enters text into data guidance data file content editor
     [Arguments]    ${accordion_heading}    ${text}
-    ${accordion}=    user gets accordion section content element    ${accordion_heading}    id:metaGuidance-dataFiles
+    ${accordion}=    user gets accordion section content element    ${accordion_heading}    id:dataGuidance-dataFiles
     user checks element does not contain child element    ${accordion}    testid:fileGuidanceContent-focused
-    ${editor}=    user gets meta guidance data file content editor    ${accordion_heading}
+    ${editor}=    user gets data guidance data file content editor    ${accordion_heading}
     user clicks element    ${editor}
     user checks element contains child element    ${accordion}    testid:fileGuidanceContent-focused
     user enters text into element    ${editor}    ${text}
@@ -503,20 +535,31 @@ user deletes subject file
     user clicks element    ${button}
     user clicks button    Confirm
 
+user approves original release for immediate publication
+    user approves release for immediate publication    original
+
+user approves amended release for immediate publication
+    user approves release for immediate publication    amendment
+
 user approves release for immediate publication
+    [Arguments]    ${release_type}=original
     user clicks link    Sign off
     user waits until page does not contain loading spinner
     user waits until h2 is visible    Sign off
     user waits until page contains button    Edit release status
     user clicks button    Edit release status
     user waits until h2 is visible    Edit release status
+    user checks page does not contain    Notify subscribers by email
     user clicks radio    Approved for publication
+    IF    '${release_type}' == 'amendment'
+        user waits until page contains    Notify subscribers by email
+    END
     user enters text into element    id:releaseStatusForm-latestInternalReleaseNote    Approved by UI tests
     user clicks radio    Immediately
     user clicks button    Update status
     user waits until h2 is visible    Sign off    %{WAIT_MEDIUM}
     user checks summary list contains    Current status    Approved
-    user waits for release process status to be    Complete    ${release_complete_wait}
+    user waits for release process status to be    Complete    %{RELEASE_COMPLETE_WAIT}
     user reloads page    # EES-1448
     user checks page does not contain button    Edit release status
 
@@ -649,21 +692,19 @@ user gives release access to analyst
 user removes publication owner access from analyst
     [Arguments]    ${PUBLICATION_NAME}    ${ANALYST_EMAIL}=ees-analyst1@education.gov.uk
     user goes to manage user    ${ANALYST_EMAIL}
-    user scrolls to element    css:[name="selectedPublicationId"]
-    # NOTE: The below wait is to prevent a transient failure that occurs on the UI test pipeline due to the DOM not being fully rendered which
-    # causes issues with getting the 'selectedPublicationId' selector (staleElementException)
-    Sleep    1
-    user clicks element    testid:remove-publication-role-${PUBLICATION_NAME}
+    ${table}=    user gets testid element    publicationAccessTable
+    ${row}=    get child element    ${table}
+    ...    xpath://tbody/tr[td[//th[text()="Publication"] and text()="${PUBLICATION_NAME}"] and td[//th[text()="Role"] and text()="Owner"]]
+    user clicks button    Remove    ${row}
     user waits until page does not contain loading spinner
 
 user removes release access from analyst
-    [Arguments]    ${RELEASE_NAME}    ${ROLE}    ${ANALYST_EMAIL}=ees-analyst1@education.gov.uk
+    [Arguments]    ${PUBLICATION_NAME}    ${RELEASE_NAME}    ${ROLE}    ${ANALYST_EMAIL}=ees-analyst1@education.gov.uk
     user goes to manage user    ${ANALYST_EMAIL}
-    user scrolls to element    css:[name="selectedReleaseId"]
-    # NOTE: The below wait is to prevent a transient failure that occurs on the UI test pipeline due to the DOM not being fully rendered which
-    # causes issues with getting the 'selectedPublicationId' selector (staleElementException)
-    Sleep    1
-    user clicks element    testid:remove-release-role-${ROLE}
+    ${table}=    user gets testid element    releaseAccessTable
+    ${row}=    get child element    ${table}
+    ...    xpath://tbody/tr[td[//th[text()="Publication"] and text()="${PUBLICATION_NAME}"] and td[//th[text()="Release"] and text()="${RELEASE_NAME}"] and td[//th[text()="Role"] and text()="${ROLE}"]]
+    user clicks button    Remove    ${row}
     user waits until page does not contain loading spinner
 
 user goes to manage user

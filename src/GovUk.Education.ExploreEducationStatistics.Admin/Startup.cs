@@ -244,14 +244,14 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin
                     new StorageQueueService(Configuration.GetValue<string>("PublisherStorage")),
                     provider.GetService<IUserService>(),
                     provider.GetRequiredService<ILogger<PublishingService>>()));
-            services.AddTransient<IReleaseStatusService, ReleaseStatusService>(s =>
-                new ReleaseStatusService(
+            services.AddTransient<IReleasePublishingStatusService, ReleasePublishingStatusService>(s =>
+                new ReleasePublishingStatusService(
                     s.GetService<IMapper>(),
                     s.GetService<IUserService>(),
                     s.GetService<IPersistenceHelper<ContentDbContext>>(),
                     new TableStorageService(Configuration.GetValue<string>("PublisherStorage"))));
-            services.AddTransient<IReleaseStatusRepository, ReleaseStatusRepository>(s =>
-                new ReleaseStatusRepository(
+            services.AddTransient<IReleasePublishingStatusRepository, ReleasePublishingStatusRepository>(s =>
+                new ReleasePublishingStatusRepository(
                     new TableStorageService(Configuration.GetValue<string>("PublisherStorage"))
                 )
             );
@@ -262,6 +262,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin
             services.AddTransient<IMetaService, MetaService>();
             services.AddTransient<ILegacyReleaseService, LegacyReleaseService>();
             services.AddTransient<IReleaseService, ReleaseService>();
+            services.AddTransient<IReleaseApprovalService, ReleaseApprovalService>();
             services.AddTransient<ReleaseSubjectRepository.SubjectDeleter, ReleaseSubjectRepository.SubjectDeleter>();
             services.AddTransient<IReleaseSubjectRepository, ReleaseSubjectRepository>();
             services.AddTransient<IReleaseChecklistService, ReleaseChecklistService>();
@@ -275,6 +276,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin
             services.AddTransient<IMethodologyFileRepository, MethodologyFileRepository>();
             services.AddTransient<IMethodologyImageService, MethodologyImageService>();
             services.AddTransient<IMethodologyAmendmentService, MethodologyAmendmentService>();
+            services.AddTransient<IMethodologyApprovalService, MethodologyApprovalService>();
             services.AddTransient<IDataBlockService, DataBlockService>();
             services.AddTransient<IPreReleaseUserService, PreReleaseUserService>();
             services.AddTransient<IPreReleaseService, PreReleaseService>();

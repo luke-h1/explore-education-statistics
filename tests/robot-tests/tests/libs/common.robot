@@ -5,6 +5,7 @@ Library     Collections
 #Library    XvfbRobot    # sudo apt install xvfb + pip install robotframework-xvfb
 Library     file_operations.py
 Library     utilities.py
+Library     fail_fast.py
 Resource    ./tables-common.robot
 Resource    ./table_tool.robot
 
@@ -14,18 +15,31 @@ ${headless}=                            1
 ${FILES_DIR}=                           ${EXECDIR}${/}tests${/}files${/}
 
 ${timeout}=                             30
-${implicit_wait}=                       3
-${release_complete_wait}=               900
+${implicit_wait}=                       15
+${RELEASE_COMPLETE_WAIT}=               900
 ${prompt_to_continue_on_failure}=       0
+${FAIL_TEST_SUITES_FAST}=               1
 
 *** Keywords ***
 do this on failure
-    capture large screenshot and html
+    # See if the currently executing Test Suite is failing fast and if not, take a screenshot and HTML grab of the
+    # failing page.
+    ${currently_failing_fast}=    current test suite failing fast
+
+    IF    "${currently_failing_fast}" == "${FALSE}"
+
+        capture large screenshot and html
+
+        # Additionally, mark the current Test Suite as failing if the "FAIL_TEST_SUITES_FAST" option is enabled, and
+        # this will cause subsequent tests within this same Test Suite to fail immediately (by virtue of their "Test
+        # Setup" steps checking to see if their owning Test Suite is currently failing fast).
+        IF    ${FAIL_TEST_SUITES_FAST} == 1
+            record failing test suite
+        END
+    END
+
     IF    ${prompt_to_continue_on_failure} == 1
         prompt to continue
-    END
-    IF    ${prompt_to_continue_on_failure} == 0
-        set selenium timeout    3
     END
 
 user opens the browser
@@ -623,6 +637,10 @@ user gets details content element
     ${content}=    get child element    ${parent}    id:${content_id}
     [Return]    ${content}
 
+user checks page for details dropdown
+    [Arguments]    ${text}
+    user checks page contains element    xpath:.//details/summary[contains(., "${text}")]
+
 user waits until details contains element
     [Arguments]    ${text}    ${element}    ${parent}=css:body    ${wait}=${timeout}
     ${details}=    user gets details content element    ${text}    ${parent}
@@ -719,10 +737,10 @@ user checks nth breadcrumb contains
     [Arguments]    ${num}    ${text}
     user checks element should contain    css:[data-testid="breadcrumbs--list"] li:nth-child(${num})    ${text}
 
-user checks page contains other release
-    [Arguments]    ${other_release_title}
-    user checks page contains element
-    ...    xpath://li[@data-testid="other-release-item"]/a[text()="${other_release_title}"]
+user waits until page contains other release
+    [Arguments]    ${other_release_title}    ${wait}=${timeout}
+    user waits until page contains element
+    ...    xpath://li[@data-testid="other-release-item"]/a[text()="${other_release_title}"]    ${wait}
 
 user checks page does not contain other release
     [Arguments]    ${other_release_title}
@@ -771,15 +789,3 @@ lookup or return webelement
 user closes Set Page View box
     user clicks element    id:pageViewToggleButton
     user waits until element is not visible    id:editingMode
-
-user checks page for details section
-    [Arguments]    ${heading}
-    user checks page contains element    testid:Expand Details Section ${heading}
-
-user expands details section
-    [Arguments]    ${heading}
-    user clicks element    testid:Expand Details Section ${heading}
-
-user checks page for details dropdown
-    [Arguments]    ${text}
-    user checks page contains element    xpath:.//details/summary[contains(., "${text}")]

@@ -6,6 +6,7 @@ Resource            ../../libs/public-common.robot
 
 Suite Setup         user signs in as bau1
 Suite Teardown      user closes the browser
+Test Setup          fail test fast if required
 
 Force Tags          Admin    Local    Dev    AltersData
 
@@ -30,6 +31,13 @@ Approve a methodology for publishing immediately
     ...    Adding Methodology content    ${METHODOLOGY_CONTENT_EDITABLE_ACCORDION}
 
     user approves methodology for publication    ${PUBLICATION_NAME}
+
+Verify the expected public URL of the methodology on the Sign off tab
+    user views methodology for publication    ${PUBLICATION_NAME}
+    user clicks link    Sign off
+    user waits until page contains testid    public-methodology-url
+    ${ACCESSIBLE_METHODOLOGY_URL}=    Get Value    xpath://*[@data-testid="public-methodology-url"]
+    should be equal    ${PUBLIC_METHODOLOGY_URL}    ${ACCESSIBLE_METHODOLOGY_URL}
 
 Verify that the publication is not visible on the public methodologies page without a published release
     user navigates to public methodologies page
@@ -56,7 +64,16 @@ Verify that the methodology is still not publicly accessible by URL without publ
 Approve the release
     user navigates to editable release summary from admin dashboard    ${PUBLICATION_NAME}
     ...    ${RELEASE_NAME} (not Live)
-    user approves release for immediate publication
+    user approves original release for immediate publication
+
+Verify that the user cannot edit the status of the methodology
+    user views methodology for publication
+    ...    ${PUBLICATION_NAME}
+    ...    ${PUBLICATION_NAME}
+    ...    View this methodology
+    user clicks link    Sign off
+    user waits until h2 is visible    Sign off
+    user checks page does not contain    Edit status
 
 Verify that the methodology is visible on the public methodologies page with the expected URL
     user navigates to public methodologies page
@@ -77,7 +94,18 @@ Verify that the methodology is publicly accessible
     user waits until h1 is visible    ${PUBLICATION_NAME}
     user waits until page contains title caption    Methodology
 
+Verify that the methodology displays a link to the publication
+    user checks element contains child element
+    ...    css:[aria-labelledby="related-information"]
+    ...    xpath://h3[text()="Publications"]
+    user checks page contains link with text and url
+    ...    ${PUBLICATION_NAME}
+    ...    /find-statistics/ui-tests-publish-methodology-%{RUN_IDENTIFIER}
+    ...    css:[aria-labelledby="related-information"]
+
 Verify that the methodology content is correct
+    ${date}=    get current datetime    %-d %B %Y
+    user checks summary list contains    Published    ${date}
     user waits until page contains accordion section    Methodology content section 1
     user opens accordion section    Methodology content section 1
     ${content}=    user gets accordion section content element    Methodology content section 1
@@ -101,10 +129,35 @@ Update the methodology amendment's content
     ...    ${METHODOLOGY_CONTENT_EDITABLE_ACCORDION}
     user changes accordion section title    1    New and Updated Title    ${METHODOLOGY_CONTENT_EDITABLE_ACCORDION}
 
+Add a note describing the amendment
+    user adds note to methodology
+    ...    Latest note
+
+Add and remove another note describing the amendment
+    user adds note to methodology
+    ...    Note which should be deleted
+    user removes methodology note
+    ...    Note which should be deleted
+    ...    css:#methodologyNotes li:nth-of-type(1)
+
+Add and update another note describing the amendment
+    user adds note to methodology
+    ...    Note which should be updated
+    user edits methodology note
+    ...    Note which should be updated
+    ...    01
+    ...    03
+    ...    2021
+
 Approve the amendment for publishing immediately
     user approves methodology amendment for publication
     ...    ${PUBLICATION_NAME}
     ...    ${PUBLICATION_NAME} - Amended methodology
+
+Verify that the user cannot edit the status of the amended methodology
+    user clicks link    Sign off
+    user waits until h2 is visible    Sign off
+    user checks page does not contain    Edit status
 
 Verify that the amended methodology is visible on the public methodologies page immediately
     user navigates to public methodologies page
@@ -125,12 +178,32 @@ Verify that the amended methodology is publicly accessible immediately
     user waits until h1 is visible    ${PUBLICATION_NAME} - Amended methodology
     user waits until page contains title caption    Methodology
 
+Verify that the amended methodology displays a link to the publication
+    user checks element contains child element
+    ...    css:[aria-labelledby="related-information"]
+    ...    xpath://h3[text()="Publications"]
+    user checks page contains link with text and url
+    ...    ${PUBLICATION_NAME}
+    ...    /find-statistics/ui-tests-publish-methodology-%{RUN_IDENTIFIER}
+    ...    css:[aria-labelledby="related-information"]
+
 Verify that the amended methodology content is correct
+    ${date}=    get current datetime    %-d %B %Y
+    user checks summary list contains    Published    ${date}
+    user checks summary list contains    Last updated    ${date}
     user waits until page contains accordion section    New and Updated Title
     user opens accordion section    New and Updated Title
     ${content}=    user gets accordion section content element    New and Updated Title
     user checks element contains    ${content}    Adding Methodology content
     user checks element contains    ${content}    New & Updated content
+
+Verify the list of notes
+    ${date}=    get current datetime    %-d %B %Y
+    user opens details dropdown    See all notes (2)
+    user waits until page contains element    css:[data-testid="notes"] li    limit=2
+    user checks methodology note    1    ${date}    Latest note
+    user checks methodology note    2    1 March 2021    Note which should be updated - edited
+    user closes details dropdown    See all notes (2)
 
 Schedule a methodology amendment to be published with a release amendment
     user navigates to admin dashboard
