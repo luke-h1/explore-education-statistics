@@ -21,6 +21,8 @@ const PrototypeManageUsers = () => {
   const [showDeleteUserModal, toggleDeleteUserModal] = useToggle(false);
   const [userName, setUserName] = useState('');
   const [releaseName, setReleaseName] = useState('');
+  const [roleType, setRoleType] = useState(false);
+  const [showRoleModal, toggleRoleModal] = useToggle(false);
 
   const glossaryList = [
     {
@@ -122,6 +124,28 @@ const PrototypeManageUsers = () => {
     {
       name: 'Charlie',
       surname: 'Cheeseman',
+      releases: [
+        {
+          release: currentReleases[0],
+          role: true,
+        },
+        {
+          release: currentReleases[1],
+          role: true,
+        },
+        {
+          release: currentReleases[2],
+          role: true,
+        },
+        {
+          release: currentReleases[3],
+          role: true,
+        },
+      ],
+    },
+    {
+      name: 'Danielle',
+      surname: 'Davids',
       releases: [
         {
           release: currentReleases[0],
@@ -246,10 +270,11 @@ const PrototypeManageUsers = () => {
                     key={index.toString()}
                   >
                     <h2 className="govuk-heading-s govuk-!-margin-bottom-0 dfe-flex-basis--50">{`${item.name} ${item.surname}`}</h2>
+
                     <PrototypeChangeUserRole
-                      selectedRole={item.releases[0].role}
+                      selectedRole={roleType}
                       name={`${item.name} ${item.surname}`}
-                      release="All releases"
+                      release={item.releases[0].release}
                       roleId={`${index}`}
                       className="dfe-flex-basis--30 govuk-!-margin-top-1 govuk-!-margin-bottom-1"
                     />
@@ -262,7 +287,7 @@ const PrototypeManageUsers = () => {
                           setUserName(`${item.name} ${item.surname}`);
                         }}
                       >
-                        Remove user
+                        Delete user
                       </a>
                     </div>
 
@@ -305,37 +330,73 @@ const PrototypeManageUsers = () => {
                     >
                       <p>
                         Are you sure you want to delete{' '}
-                        <strong>{userName}</strong>?
-                      </p>
-                      <p>
-                        From release:{' '}
-                        <strong>{releaseName || 'All releases'}</strong>
+                        <strong>{userName}</strong>
+                        <br />
+                        from all releases in this publication?
                       </p>
                     </ModalConfirm>
                   </div>
                 ))}
-                <div className="dfe-flex dfe-flex-wrap dfe-align-items--center dfe-justify-content--space-between govuk-!-padding-bottom-3 govuk-!-margin-top-9">
-                  <div className="govuk-checkboxes__item">
-                    <input
-                      type="checkbox"
-                      className="govuk-checkboxes__input"
-                      name="role"
-                      id="role-all"
-                    />
-                    <label
-                      htmlFor="role-all"
-                      className="govuk-label govuk-checkboxes__label"
+                <div className="dfe-flex dfe-flex-wrap dfe-align-items--center dfe-justify-content--flex-end govuk-!-padding-bottom-3 govuk-!-margin-top-6">
+                  <div className="dfe-flex dfe-flex-basis--30">
+                    <Button
+                      type="button"
+                      onClick={() => {
+                        toggleRoleModal(true);
+                      }}
+                      className="dfe-flex-basis--55"
                     >
-                      Grant access to all users listed above
-                    </label>
+                      Grant access to all
+                    </Button>
+
+                    <ModalConfirm
+                      open={showRoleModal}
+                      title="Grant access to all listed users"
+                      onExit={() => toggleRoleModal(false)}
+                      onConfirm={() => toggleRoleModal(false)}
+                      onCancel={() => toggleRoleModal(false)}
+                    >
+                      <p>
+                        Are you sure you want to grant access to all listed
+                        users?
+                      </p>
+                    </ModalConfirm>
                   </div>
                 </div>
               </fieldset>
             </form>
             <h2 className="govuk-heading-m">Previous releases</h2>
-            {currentReleases.map((item, index) => (
+            {currentReleases.slice(1).map((item, index) => (
               <div key={index.toString()}>
-                <Details summary={item}>Test</Details>
+                <Details summary={item}>
+                  {userList.map((item2, index2) => (
+                    <div
+                      className="dfe-flex dfe-flex-wrap dfe-align-items--center dfe-justify-content--space-between dfe-flex-underline"
+                      key={index2.toString()}
+                    >
+                      <h2 className="govuk-heading-s govuk-!-margin-bottom-0 dfe-flex-basis--50">{`${item2.name} ${item2.surname}`}</h2>
+
+                      <PrototypeChangeUserRole
+                        selectedRole={item2.releases[index + 1].role}
+                        name={`${item2.name} ${item2.surname}`}
+                        release={item2.releases[index + 1].release}
+                        roleId={`${index + 1}`}
+                        className="dfe-flex-basis--30 govuk-!-margin-top-1 govuk-!-margin-bottom-1"
+                      />
+                      <div className="dfe-align--right dfe-flex-basis--10">
+                        <a
+                          href="#"
+                          onClick={() => {
+                            toggleDeleteUserModal(true);
+                            setUserName(`${item2.name} ${item2.surname}`);
+                          }}
+                        >
+                          Delete user
+                        </a>
+                      </div>
+                    </div>
+                  ))}
+                </Details>
               </div>
             ))}
           </TabsSection>
@@ -356,33 +417,34 @@ const PrototypeManageUsers = () => {
                     className="govuk-!-width-three-quarters"
                   />
                 </FormGroup>
-                <fieldset className="govuk-fieldset">
-                  <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">
-                    Set user role for all or individually selected releases
-                  </legend>
-                  <PrototypeChangeUserRole
-                    selectedRole
-                    name="Invited user"
-                    release="All releases"
-                    roleId="invited-user-1"
-                    type="invite"
-                  />
 
-                  <Details
-                    summary="Set roles for individual releases"
-                    className="govuk-!-margin-top-6"
-                  >
+                <p className="govuk-hint">
+                  By default this user will have access to all releases in this
+                  publication.
+                </p>
+
+                <Details
+                  summary="Alternatively set roles for individual releases"
+                  className="govuk-!-margin-top-2"
+                >
+                  <fieldset className="govuk-fieldset">
+                    <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">
+                      Set user roles for individual releases
+                    </legend>
                     {currentReleases.map((item, index) => (
                       <>
                         <div
-                          className={`dfe-flex dfe-align-items--center ${
+                          className={`dfe-flex dfe-align-items--center dfe-justify-content--space-between ${
                             index < currentReleases.length - 1
                               ? 'dfe-flex-underline'
                               : ''
                           }`}
                           key={index.toString()}
                         >
-                          <div className="dfe-flex-basis--30 dfe-align--right govuk-!-padding-2">
+                          <h2 className="govuk-heading-s govuk-!-margin-bottom-0 dfe-flex-basis--50">
+                            {item}
+                          </h2>
+                          <div className="dfe-flex-basis--50 dfe-align--right govuk-!-padding-2">
                             <PrototypeChangeUserRole
                               selectedRole
                               name="Invited user"
@@ -394,11 +456,11 @@ const PrototypeManageUsers = () => {
                         </div>
                       </>
                     ))}
-                  </Details>
-                  <ButtonGroup>
-                    <Button>Send invite</Button>
-                  </ButtonGroup>
-                </fieldset>
+                  </fieldset>
+                </Details>
+                <ButtonGroup>
+                  <Button>Send invite</Button>
+                </ButtonGroup>
               </fieldset>
             </form>
           </TabsSection>

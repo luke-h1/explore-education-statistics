@@ -31,7 +31,7 @@ const PrototypeSelectedRole = ({
   type,
 }: Props) => {
   const [showRoleModal, toggleRoleModal] = useToggle(false);
-  const [roleType, setRoleType] = useState(false);
+  const [roleType, setRoleType] = useState(selectedRole);
 
   //let role = '';
 
@@ -68,7 +68,13 @@ const PrototypeSelectedRole = ({
         </div>
         </div>*/}
 
-      <p className="govuk-!-margin-0">
+      <p
+        className={classNames(
+          'govuk-!-margin-0',
+          'govuk-tag',
+          roleType ? 'govuk-tag--grey' : 'govuk-tag--grey',
+        )}
+      >
         {roleType ? 'Access Granted' : 'No access'}
       </p>
 
@@ -127,8 +133,8 @@ const PrototypeSelectedRole = ({
         onCancel={() => toggleRoleModal(false)}
       >
         <p>
-          Are you sure you want to change {name}'s role to{' '}
-          <strong>{roleType}</strong>, <br />
+          Are you sure you want to{' '}
+          <strong>{roleType ? 'remove access' : 'grant access'}</strong> <br />
           for <strong>{release}</strong>?
         </p>
       </ModalConfirm>
