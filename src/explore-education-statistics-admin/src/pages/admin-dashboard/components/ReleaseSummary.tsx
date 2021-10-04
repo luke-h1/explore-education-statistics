@@ -91,7 +91,7 @@ const ReleaseSummary = ({
                 <ReleaseServiceStatus releaseId={release.id} />
               </SummaryListItem>
             )}
-            <SummaryListItem term="Lead statistician">
+            {/*<SummaryListItem term="Lead statistician">
               {release.contact && (
                 <span>
                   {release.contact.contactName}
@@ -103,7 +103,7 @@ const ReleaseSummary = ({
                   {release.contact.contactTelNo}
                 </span>
               )}
-            </SummaryListItem>
+              </SummaryListItem>*/}
             {release.latestInternalReleaseNote && (
               <SummaryListItem term="Internal note">
                 <span className="dfe-multiline-content">

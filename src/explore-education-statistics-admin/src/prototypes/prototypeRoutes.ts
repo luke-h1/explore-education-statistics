@@ -10,6 +10,7 @@ import PrototypeTableHighlights from './PrototypeTableHighlights';
 import PrototypeHomepage from './PrototypeHomepage';
 import PrototypeHomepage2 from './PrototypeHomepage2';
 import PrototypeRelease from './PrototypeRelease';
+import PrototypeManageUsers from './PrototypeManageUsers';
 
 interface PrototypeRoute extends RouteProps {
   name: string;
@@ -71,6 +72,11 @@ const prototypeRoutes: PrototypeRoute[] = [
     name: 'Release',
     path: '/prototypes/release',
     component: PrototypeRelease,
+  },
+  {
+    name: 'Manage users',
+    path: '/prototypes/manage-users',
+    component: PrototypeManageUsers,
   },
 ];
 

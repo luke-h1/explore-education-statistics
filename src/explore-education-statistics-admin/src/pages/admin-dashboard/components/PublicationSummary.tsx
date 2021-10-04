@@ -33,10 +33,10 @@ const PublicationSummary = ({
     <>
       <div className="dfe-flex dfe-justify-content--space-between dfe-align-items--top dfe-flex-underline govuk-!-padding-bottom-6 govuk-!-padding-top-3">
         <div className="dfe-flex-basis--20">
-          <h5 className="govuk-!-margin-top-0">Publication team and contact</h5>
+          <h5 className="govuk-!-margin-top-0">Publication team</h5>
         </div>
         <div className="dfe-flex-basis--80 dfe-flex dfe-flex-wrap dfe-justify-content--space-between">
-          <div className="dfe-flex-basis--35">
+          <div className="dfe-flex-basis--70">
             <p
               className="govuk-!-margin-bottom-1"
               data-testid={`Team name for ${publication.title}`}
@@ -44,7 +44,7 @@ const PublicationSummary = ({
               {contact?.teamName || 'No team name'}
             </p>
             {contact?.teamEmail && (
-              <p>
+              <p className="govuk-!-margin-bottom-0">
                 <a
                   href={`mailto:${contact.teamEmail}`}
                   data-testid={`Team email for ${publication.title}`}
@@ -54,7 +54,32 @@ const PublicationSummary = ({
               </p>
             )}
           </div>
-          <div className="dfe-flex-basis--40">
+          {permissions.canUpdatePublication && (
+            <div className="dfe-flex-basis--23-5 dfe-flex dfe-flex-direction--column  govuk-!-margin-left-4 govuk-!-padding-left-4 dfe-flex-border--left">
+              <ButtonLink
+                data-testid={`Edit publication link for ${publication.title}`}
+                className="govuk-!-margin-bottom-0  dfe-align--centre"
+                variant="secondary"
+                to={generatePath<PublicationRouteParams>(
+                  publicationEditRoute.path,
+                  {
+                    publicationId: publication.id,
+                  },
+                )}
+              >
+                Manage publication
+              </ButtonLink>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="dfe-flex dfe-justify-content--space-between dfe-align-items--top dfe-flex-underline govuk-!-padding-bottom-6 govuk-!-padding-top-3">
+        <div className="dfe-flex-basis--20">
+          <h5 className="govuk-!-margin-top-0">Contact</h5>
+        </div>
+        <div className="dfe-flex-basis--80 dfe-flex dfe-flex-wrap dfe-justify-content--space-between">
+          <div className="dfe-flex-basis--70">
             <p
               className="govuk-!-margin-bottom-1"
               data-testid={`Contact name for ${publication.title}`}
@@ -74,20 +99,14 @@ const PublicationSummary = ({
             )}
           </div>
           {permissions.canUpdatePublication && (
-            <div className="dfe-flex-basis--25 dfe-flex dfe-flex-direction--column">
-              <ButtonLink
+            <div className="dfe-flex-basis--23-5 dfe-flex dfe-flex-direction--column  govuk-!-margin-left-4 govuk-!-padding-left-4 dfe-flex-border--left">
+              <Link
                 data-testid={`Edit publication link for ${publication.title}`}
-                variant="secondary"
-                className="govuk-!-margin-bottom-0 govuk-!-margin-left-6 "
-                to={generatePath<PublicationRouteParams>(
-                  publicationEditRoute.path,
-                  {
-                    publicationId: publication.id,
-                  },
-                )}
+                className="govuk-!-margin-bottom-0 govuk-!-margin-top-3 dfe-align--centre"
+                to="/prototypes/manage-users"
               >
-                Manage publication
-              </ButtonLink>
+                Manage users
+              </Link>
             </div>
           )}
         </div>
