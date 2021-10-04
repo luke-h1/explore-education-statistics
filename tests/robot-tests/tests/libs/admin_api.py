@@ -47,7 +47,6 @@ class AdminClient:
 
 admin_client = AdminClient()
 
-
 def user_creates_theme_via_api(title: str, summary: str = '') -> str:
     assert title
 

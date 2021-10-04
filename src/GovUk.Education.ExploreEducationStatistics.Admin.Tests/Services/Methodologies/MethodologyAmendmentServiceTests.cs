@@ -94,7 +94,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services.Method
             }
 
             // Check that the amendment was successfully saved.  More detailed field-by-field testing is available in
-            // the MethodologyTests class.
+            // the MethodologyVersionTests class.
             await using (var context = InMemoryApplicationDbContext(contextId))
             {
                 var amendment = await context.MethodologyVersions
@@ -194,6 +194,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services.Method
             {
                 var amendmentMethodologyFiles = await context
                     .MethodologyFiles
+                    .AsQueryable()
                     .Where(f => f.MethodologyVersionId == amendmentId)
                     .ToListAsync();
 

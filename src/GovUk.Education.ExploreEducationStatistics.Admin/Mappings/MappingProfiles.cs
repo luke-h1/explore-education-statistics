@@ -9,8 +9,8 @@ using GovUk.Education.ExploreEducationStatistics.Admin.ViewModels.ManageContent;
 using GovUk.Education.ExploreEducationStatistics.Admin.ViewModels.Methodology;
 using GovUk.Education.ExploreEducationStatistics.Common.Extensions;
 using GovUk.Education.ExploreEducationStatistics.Content.Model;
+using GovUk.Education.ExploreEducationStatistics.Publisher.Model;
 using PublicationViewModel = GovUk.Education.ExploreEducationStatistics.Admin.ViewModels.PublicationViewModel;
-using ReleaseStatus = GovUk.Education.ExploreEducationStatistics.Publisher.Model.ReleaseStatus;
 using ReleaseViewModel = GovUk.Education.ExploreEducationStatistics.Admin.ViewModels.ReleaseViewModel;
 
 namespace GovUk.Education.ExploreEducationStatistics.Admin.Mappings
@@ -63,7 +63,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Mappings
                 .ForMember(dest => dest.PublishScheduled, m => m.MapFrom(model =>
                     model.PublishScheduledDate));
 
-            CreateMap<ReleaseStatus, ReleasePublishingStatusViewModel>()
+            CreateMap<ReleasePublishingStatus, ReleasePublishingStatusViewModel>()
                 .ForMember(model => model.LastUpdated, m => m.MapFrom(status => status.Timestamp));
 
             CreateMap<MethodologyNote, MethodologyNoteViewModel>();
@@ -219,13 +219,19 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Mappings
 
             CreateMap<ContentSection, ContentSectionViewModel>()
                 .ForMember(dest => dest.Content,
-                m => m.MapFrom(section => section.Content.OrderBy(contentBlock => contentBlock.Order)));
+                m => m.MapFrom(section =>
+                    section.Content.OrderBy(contentBlock => contentBlock.Order)));
 
             CreateMap<MethodologyVersion, ManageMethodologyContentViewModel>()
                 .ForMember(dest => dest.Content,
-                    m => m.MapFrom(methodology => methodology.Content.OrderBy(contentSection => contentSection.Order)))
+                    m => m.MapFrom(methodologyVersion =>
+                        methodologyVersion.Content.OrderBy(contentSection => contentSection.Order)))
                 .ForMember(dest => dest.Annexes,
-                    m => m.MapFrom(methodology => methodology.Annexes.OrderBy(annexSection => annexSection.Order)));
+                    m => m.MapFrom(methodologyVersion =>
+                        methodologyVersion.Annexes.OrderBy(annexSection => annexSection.Order)))
+                .ForMember(dest => dest.Notes,
+                    m => m.MapFrom(methodologyVersion =>
+                        methodologyVersion.Notes.OrderByDescending(note => note.DisplayDate)));
 
             CreateMap<Release, ReleasePublicationStatusViewModel>();
         }

@@ -61,7 +61,7 @@ describe('ReleaseDataAndFilesAccordion', () => {
         release={testRelease}
         renderAllFilesButton={<a href="#">Mock all files button</a>}
         renderDownloadLink={file => <a href="/">{file.name}</a>}
-        renderMetaGuidanceLink={<a href="#">mock meta guidance link</a>}
+        renderDataGuidanceLink={<a href="#">mock data guidance link</a>}
       />,
     );
 
@@ -106,21 +106,21 @@ describe('ReleaseDataAndFilesAccordion', () => {
     ).toBeInTheDocument();
   });
 
-  test('renders meta guidance link', () => {
+  test('renders data guidance link', () => {
     render(
       <ReleaseDataAndFilesAccordion
         release={testRelease}
         renderDownloadLink={file => <a href="/">{file.name}</a>}
-        renderMetaGuidanceLink={<a href="#">mock meta guidance link</a>}
+        renderDataGuidanceLink={<a href="#">mock data guidance link</a>}
       />,
     );
 
     expect(
-      screen.getByRole('link', { name: 'mock meta guidance link' }),
+      screen.getByRole('link', { name: 'mock data guidance link' }),
     ).toBeInTheDocument();
   });
 
-  test('does not render meta guidance link if there is no meta guidance', () => {
+  test('does not render data guidance link if there is no data guidance', () => {
     render(
       <ReleaseDataAndFilesAccordion
         release={{
@@ -128,12 +128,12 @@ describe('ReleaseDataAndFilesAccordion', () => {
           hasMetaGuidance: false,
         }}
         renderDownloadLink={file => <a href="/">{file.name}</a>}
-        renderMetaGuidanceLink={<a href="#">mock meta guidance link</a>}
+        renderDataGuidanceLink={<a href="#">mock data guidance link</a>}
       />,
     );
 
     expect(
-      screen.queryByRole('link', { name: 'mock meta guidance link' }),
+      screen.queryByRole('link', { name: 'mock data guidance link' }),
     ).not.toBeInTheDocument();
   });
 
@@ -145,7 +145,7 @@ describe('ReleaseDataAndFilesAccordion', () => {
           downloadFiles: [],
         }}
         renderDownloadLink={file => <a href="/">{file.name}</a>}
-        renderMetaGuidanceLink={<a href="#">mock meta guidance link</a>}
+        renderDataGuidanceLink={<a href="#">mock data guidance link</a>}
       />,
     );
 
@@ -155,13 +155,58 @@ describe('ReleaseDataAndFilesAccordion', () => {
     ).not.toBeInTheDocument();
   });
 
+  test('does not render all files button if there are no files', () => {
+    render(
+      <ReleaseDataAndFilesAccordion
+        release={{
+          ...testRelease,
+          downloadFiles: [],
+        }}
+        renderAllFilesButton={<a href="/">Download all files</a>}
+        renderDownloadLink={file => <a href="/">{file.name}</a>}
+        renderDataGuidanceLink={<a href="#">mock data guidance link</a>}
+      />,
+    );
+
+    expect(
+      screen.queryByRole('link', { name: 'Download all files' }),
+    ).not.toBeInTheDocument();
+  });
+
+  test('does not render all files button if there is only an all files zip', () => {
+    render(
+      <ReleaseDataAndFilesAccordion
+        release={{
+          ...testRelease,
+          downloadFiles: [
+            {
+              id: 'file-1',
+              name: 'All files',
+              fileName: 'all-files.zip',
+              type: 'Ancillary',
+              size: '0 KB',
+              extension: 'zip',
+            },
+          ],
+        }}
+        renderAllFilesButton={<a href="/">Download all files</a>}
+        renderDownloadLink={file => <a href="/">{file.name}</a>}
+        renderDataGuidanceLink={<a href="#">mock data guidance link</a>}
+      />,
+    );
+
+    expect(
+      screen.queryByRole('link', { name: 'Download all files' }),
+    ).not.toBeInTheDocument();
+  });
+
   test('renders data catalogue link', () => {
     render(
       <ReleaseDataAndFilesAccordion
         release={testRelease}
         renderDataCatalogueLink={<a href="#">mock data catalogue link</a>}
         renderDownloadLink={file => <a href="/">{file.name}</a>}
-        renderMetaGuidanceLink={<a href="#">mock meta guidance link</a>}
+        renderDataGuidanceLink={<a href="#">mock data guidance link</a>}
       />,
     );
 
@@ -175,7 +220,7 @@ describe('ReleaseDataAndFilesAccordion', () => {
       <ReleaseDataAndFilesAccordion
         release={testRelease}
         renderDownloadLink={file => <a href="/">{file.name}</a>}
-        renderMetaGuidanceLink={<a href="#">mock meta guidance link</a>}
+        renderDataGuidanceLink={<a href="#">mock data guidance link</a>}
       />,
     );
 
@@ -216,7 +261,7 @@ describe('ReleaseDataAndFilesAccordion', () => {
         release={testRelease}
         renderCreateTablesButton={<a href="#">mock create tables button</a>}
         renderDownloadLink={file => <a href="/">{file.name}</a>}
-        renderMetaGuidanceLink={<a href="#">mock meta guidance link</a>}
+        renderDataGuidanceLink={<a href="#">mock data guidance link</a>}
       />,
     );
 
@@ -234,7 +279,7 @@ describe('ReleaseDataAndFilesAccordion', () => {
           <a href="#">mock pre-release access link</a>
         }
         renderDownloadLink={file => <a href="/">{file.name}</a>}
-        renderMetaGuidanceLink={<a href="#">mock meta guidance link</a>}
+        renderDataGuidanceLink={<a href="#">mock data guidance link</a>}
       />,
     );
 
