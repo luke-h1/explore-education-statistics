@@ -177,7 +177,7 @@ const PrototypeManageUsers = () => {
     >
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-two-thirds">
-          <PageTitle title="Manage users" caption="Publication title" />
+          <PageTitle title="Manage team access" caption="Publication title" />
         </div>
       </div>
 
@@ -258,7 +258,7 @@ const PrototypeManageUsers = () => {
       )}
       {!edit && (
         <Tabs id="manage-release-users">
-          <TabsSection title="Manage existing users">
+          <TabsSection title="Manage team access">
             <form className="govuk-!-margin-bottom-9">
               <fieldset className="govuk-fieldset">
                 <legend className="govuk-fieldset__legend govuk-fieldset__legend--m">
