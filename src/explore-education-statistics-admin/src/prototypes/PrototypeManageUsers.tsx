@@ -344,7 +344,7 @@ const PrototypeManageUsers = () => {
                       onClick={() => {
                         toggleRoleModal(true);
                       }}
-                      className="dfe-flex-basis--55"
+                      className="dfe-flex-basis--55 govuk-!-margin-left-2"
                     >
                       Grant access to all
                     </Button>

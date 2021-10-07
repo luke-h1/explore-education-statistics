@@ -129,7 +129,7 @@ const PrototypeSelectedRole = ({
         )}*/}
       <ModalConfirm
         open={showRoleModal}
-        title={`Role update for ${name}`}
+        title={`Change access for ${name}`}
         onExit={() => toggleRoleModal(false)}
         onConfirm={() => toggleRoleModal(false)}
         onCancel={() => toggleRoleModal(false)}
