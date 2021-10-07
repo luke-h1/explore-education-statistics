@@ -136,7 +136,7 @@ const PrototypeSelectedRole = ({
       >
         <p>
           Are you sure you want to{' '}
-          <strong>{roleType ? 'remove access' : 'grant access'}</strong> <br />
+          <strong>{roleType ? 'grant access' : 'remove access'}</strong> <br />
           for <strong>{release}</strong>?
         </p>
       </ModalConfirm>
