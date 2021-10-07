@@ -139,7 +139,6 @@ const MethodologySummary = ({
                           publicationId,
                           methodologyId: methodology.previousVersionId,
                         })}
-                        className="govuk-!-margin-left-4"
                         variant="secondary"
                       >
                         View original methodology
@@ -318,7 +317,7 @@ const MethodologySummary = ({
                       publicationId,
                     })}
                   >
-                    Adopt a methodology
+                    Adopt an existing methodology
                   </Link>
                 </>
               )}

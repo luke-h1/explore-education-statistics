@@ -74,7 +74,7 @@ const PrototypeSelectedRole = ({
           'govuk-tag',
           'dfe-flex-basis--45',
           'dfe-align--centre',
-          roleType ? 'govuk-tag--green' : 'govuk-tag--red',
+          roleType ? 'govuk-tag--grey' : 'govuk-tag--red',
         )}
       >
         {roleType ? 'Access Granted' : 'No access'}
@@ -100,7 +100,7 @@ const PrototypeSelectedRole = ({
             setRoleType(false);
           }}
           type="button"
-          variant="secondary"
+          variant="warning"
           className="govuk-!-margin-top-2 govuk-!-margin-bottom-2 dfe-flex-basis--45"
         >
           Remove access

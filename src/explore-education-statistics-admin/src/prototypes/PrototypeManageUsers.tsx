@@ -264,6 +264,9 @@ const PrototypeManageUsers = () => {
                 <legend className="govuk-fieldset__legend govuk-fieldset__legend--m">
                   Update access for latest release (Academic year 20 / 21)
                 </legend>
+                <p className="govuk-hint">
+                  Allow team members to be able to access and edit this release
+                </p>
                 {userList.map((item, index) => (
                   <div
                     className="dfe-flex dfe-flex-wrap dfe-align-items--center dfe-justify-content--space-between dfe-flex-underline"
@@ -419,8 +422,8 @@ const PrototypeManageUsers = () => {
                 </FormGroup>
 
                 <p className="govuk-hint">
-                  By default this user will have access to all releases in this
-                  publication.
+                  By default this user will have access and be able to edit to
+                  all releases in this publication.
                 </p>
 
                 <Details

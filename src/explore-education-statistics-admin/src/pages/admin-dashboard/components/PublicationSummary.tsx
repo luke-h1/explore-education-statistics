@@ -58,7 +58,7 @@ const PublicationSummary = ({
             <div className="dfe-flex-basis--23-5 dfe-flex dfe-flex-direction--column  govuk-!-margin-left-4 govuk-!-padding-left-4 dfe-flex-border--left">
               <ButtonLink
                 data-testid={`Edit publication link for ${publication.title}`}
-                className="govuk-!-margin-bottom-0  dfe-align--centre"
+                className="govuk-!-margin-bottom-3  dfe-align--centre"
                 variant="secondary"
                 to={generatePath<PublicationRouteParams>(
                   publicationEditRoute.path,

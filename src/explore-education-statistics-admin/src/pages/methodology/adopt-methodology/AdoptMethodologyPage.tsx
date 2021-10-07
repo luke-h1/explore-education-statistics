@@ -29,10 +29,13 @@ const AdoptMethodologyPage = ({
   const { adoptableMethodologies, publication } = value ?? {};
 
   return (
-    <Page breadcrumbs={[{ name: 'Adopt a methodology' }]}>
+    <Page breadcrumbs={[{ name: 'Adopt an existing methodology' }]}>
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-two-thirds">
-          <PageTitle title="Adopt a methodology" caption={publication?.title} />
+          <PageTitle
+            title="Adopt an existing methodology"
+            caption={publication?.title}
+          />
           <LoadingSpinner loading={isLoading}>
             {adoptableMethodologies && adoptableMethodologies.length > 0 ? (
               <AdoptMethodologyForm

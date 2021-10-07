@@ -81,8 +81,9 @@ const NonScheduledReleaseSummary = ({
               </>
             ) : (
               <>
-                <Link
+                <ButtonLink
                   className="dfe-align--centre govuk-!-margin-bottom-6"
+                  variant="secondary"
                   to={generatePath<ReleaseRouteParams>(
                     releaseSummaryRoute.path,
                     {
@@ -97,7 +98,7 @@ const NonScheduledReleaseSummary = ({
                   {release.permissions.canUpdateRelease
                     ? 'Edit release'
                     : 'View release'}
-                </Link>
+                </ButtonLink>
                 {includeCreateAmendmentControls &&
                   release.permissions.canMakeAmendmentOfRelease && (
                     <Button
