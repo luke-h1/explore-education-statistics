@@ -95,7 +95,7 @@ const MethodologySummary = ({
           <Details
             key={methodology.id}
             open={false}
-            className="govuk-!-margin-bottom-3"
+            className="govuk-!-margin-bottom-3 dfe-flex-details-summary"
             summary={displayTitle}
             summaryAfter={
               <TagGroup className="govuk-!-margin-left-2">
@@ -122,7 +122,7 @@ const MethodologySummary = ({
                 </SummaryList>
               </div>
               <div className="dfe-flex-basis--25">
-                <div className="dfe-flex dfe-flex-direction--column dfe-justify-content--flex-end govuk-!-margin-left-4 govuk-!-padding-left-4 dfe-flex-border--left">
+                <div className="dfe-flex dfe-flex-direction--column dfe-justify-content--flex-end govuk-!-margin-left-4 govuk-!-padding-top-4  govuk-!-padding-left-4 dfe-flex-border--left">
                   {methodology.amendment ? (
                     <>
                       <ButtonLink
@@ -254,7 +254,6 @@ const MethodologySummary = ({
               <WarningMessage className="govuk-!-margin-bottom-2">
                 No methodologies added
               </WarningMessage>
-              <hr />
             </>
           )}
           <ButtonGroup

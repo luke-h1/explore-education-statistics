@@ -78,3 +78,11 @@ $widths: 20, 25, 30, 35, 40, 45, 50, 55, 60, 70, 75, 80, 90, 100;
 .dfe-flex-basis--23-5 {
   flex-basis: 23.5%;
 }
+
+.dfe-flex-details-summary {
+  .govuk-details__summary {
+    display: flex;
+    justify-content: space-between;
+    width: 96%;
+  }
+}

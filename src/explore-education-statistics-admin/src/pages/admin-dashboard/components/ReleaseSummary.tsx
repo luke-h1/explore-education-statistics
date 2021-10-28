@@ -36,7 +36,7 @@ const ReleaseSummary = ({
   return (
     <Details
       open={open}
-      className="govuk-!-margin-bottom-4"
+      className="govuk-!-margin-bottom-4 dfe-flex-details-summary"
       summary={getReleaseSummaryLabel(release)}
       summaryAfter={
         <TagGroup className="govuk-!-margin-left-2">
@@ -75,10 +75,15 @@ const ReleaseSummary = ({
       <div className="dfe-flex">
         <div className="dfe-flex-basis--75">
           <SummaryList className="govuk-!-margin-bottom-3">
-            <SummaryListItem term="Publish">
-              <FormattedDate>
-                {release.published || release.publishScheduled || ''}
-              </FormattedDate>
+            <SummaryListItem term="Publish date">
+              {((release.published !== undefined ||
+                release.publishScheduled !== undefined) && (
+                <>
+                  <FormattedDate>
+                    {release.published || release.publishScheduled || ''}
+                  </FormattedDate>
+                </>
+              )) || <>N/A</>}
             </SummaryListItem>
 
             {isValidPartialDate(release.nextReleaseDate) && (
@@ -91,7 +96,7 @@ const ReleaseSummary = ({
                 <ReleaseServiceStatus releaseId={release.id} />
               </SummaryListItem>
             )}
-            {/*<SummaryListItem term="Lead statistician">
+            <SummaryListItem term="Lead statistician">
               {release.contact && (
                 <span>
                   {release.contact.contactName}
@@ -103,7 +108,7 @@ const ReleaseSummary = ({
                   {release.contact.contactTelNo}
                 </span>
               )}
-              </SummaryListItem>*/}
+            </SummaryListItem>
             {release.latestInternalReleaseNote && (
               <SummaryListItem term="Internal note">
                 <span className="dfe-multiline-content">
@@ -115,7 +120,7 @@ const ReleaseSummary = ({
           {children}
         </div>
         <div className="dfe-flex-basis--25">
-          <div className="dfe-flex dfe-flex-direction--column dfe-justify-content--flex-end govuk-!-margin-left-4 govuk-!-padding-left-4 dfe-flex-border--left">
+          <div className="dfe-flex dfe-flex-direction--column dfe-justify-content--flex-end govuk-!-margin-left-4 govuk-!-padding-top-4 govuk-!-padding-left-4 dfe-flex-border--left">
             {actions}
             {secondaryActions}
           </div>
