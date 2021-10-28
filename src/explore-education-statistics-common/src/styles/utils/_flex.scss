@@ -85,4 +85,8 @@ $widths: 20, 25, 30, 35, 40, 45, 50, 55, 60, 70, 75, 80, 90, 100;
     justify-content: space-between;
     width: 96%;
   }
+  .govuk-details__summary .govuk-tag {
+    text-align: center;
+    width: 180px;
+  }
 }
