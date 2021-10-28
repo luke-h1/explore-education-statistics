@@ -120,7 +120,7 @@ const ReleaseSummary = ({
           {children}
         </div>
         <div className="dfe-flex-basis--25">
-          <div className="dfe-flex dfe-flex-direction--column dfe-justify-content--flex-end govuk-!-margin-left-4 govuk-!-padding-top-4 govuk-!-padding-left-4 dfe-flex-border--left">
+          <div className="dfe-flex dfe-flex-direction--column dfe-flex-height--100 govuk-!-margin-left-4 govuk-!-padding-top-4 govuk-!-padding-left-4 dfe-flex-border--left">
             {actions}
             {secondaryActions}
           </div>
