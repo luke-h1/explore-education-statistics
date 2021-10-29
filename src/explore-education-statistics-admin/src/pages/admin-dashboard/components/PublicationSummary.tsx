@@ -35,7 +35,7 @@ const PublicationSummary = ({
     <>
       <div className="dfe-flex dfe-justify-content--space-between dfe-align-items--top dfe-flex-underline  dfe-align-items--top govuk-!-padding-bottom-6 govuk-!-padding-top-3">
         <div className="dfe-flex-basis--20">
-          <h5 className="govuk-!-margin-top-2 govuk-heading-s">Releases</h5>
+          <h5 className="govuk-heading-s">Releases</h5>
         </div>
         <div
           className="dfe-flex-basis--80"
@@ -75,9 +75,7 @@ const PublicationSummary = ({
 
       <div className="dfe-flex dfe-justify-content--space-between dfe-align-items--top dfe-flex-underline govuk-!-padding-bottom-6 govuk-!-padding-top-3">
         <div className="dfe-flex-basis--20">
-          <h5 className="govuk-!-margin-top-2 govuk-heading-s">
-            Methodologies
-          </h5>
+          <h5 className="govuk-heading-s">Methodologies</h5>
         </div>
         <div
           className="dfe-flex-basis--80"
