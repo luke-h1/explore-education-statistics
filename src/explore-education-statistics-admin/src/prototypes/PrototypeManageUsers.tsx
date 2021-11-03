@@ -12,12 +12,14 @@ import { isTemplateExpression, isThrowStatement } from 'typescript';
 import Details from '@common/components/Details';
 import Tabs from '@common/components/Tabs';
 import TabsSection from '@common/components/TabsSection';
+import WarningMessage from '@common/components/WarningMessage';
 
 const PrototypeManageUsers = () => {
   const [showDeleteUserModal, toggleDeleteUserModal] = useToggle(false);
   const [userName, setUserName] = useState('');
   const [roleType, setRoleType] = useState(false);
   const [showRoleModal, toggleRoleModal] = useToggle(false);
+  const [showTeamMembers, toggleTeamMembers] = useToggle(true);
 
   const currentReleases = [
     'Academic year 20 / 21',
@@ -138,150 +140,179 @@ const PrototypeManageUsers = () => {
               <legend className="govuk-fieldset__legend govuk-fieldset__legend--m">
                 Update access for latest release (Academic year 20 / 21)
               </legend>
-              <p className="govuk-hint">
-                Allow team members to be able to access and edit this release.
-                You can also{' '}
-                <a href="#previous-releases">
-                  control access to previous releases
-                </a>
-                .
-              </p>
-              {userList.map((item, index) => (
-                <div
-                  className="dfe-flex dfe-flex-wrap dfe-align-items--center dfe-justify-content--space-between dfe-flex-underline"
-                  key={index.toString()}
-                >
-                  <h2 className="govuk-heading-s govuk-!-margin-bottom-0 dfe-flex-basis--50">{`${item.name} ${item.surname}`}</h2>
-
-                  <PrototypeChangeUserRole
-                    selectedRole={roleType}
-                    name={`${item.name} ${item.surname}`}
-                    release={item.releases[0].release}
-                    roleId={`${index}`}
-                    className="dfe-flex-basis--30 govuk-!-margin-top-1 govuk-!-margin-bottom-1"
-                  />
-
-                  <div className="dfe-align--right dfe-flex-basis--10">
-                    <a
-                      href="#"
-                      onClick={() => {
-                        toggleDeleteUserModal(true);
-                        setUserName(`${item.name} ${item.surname}`);
-                      }}
-                    >
-                      Delete user
+              {(showTeamMembers && (
+                <>
+                  <p className="govuk-hint">
+                    Allow team members to be able to access and edit this
+                    release. You can also{' '}
+                    <a href="#previous-releases">
+                      control access to previous releases
                     </a>
-                  </div>
+                    .
+                  </p>
+                  {userList.map((item, index) => (
+                    <div
+                      className="dfe-flex dfe-flex-wrap dfe-align-items--center dfe-justify-content--space-between dfe-flex-underline"
+                      key={index.toString()}
+                    >
+                      <h2 className="govuk-heading-s govuk-!-margin-bottom-0 dfe-flex-basis--50">{`${item.name} ${item.surname}`}</h2>
 
-                  {/*<div className="dfe-flex-basis--100">
-                    <Details summary="Individual releases">
-                      {item.releases.map((item2, index2) =>(
-                        <>
-                          <div className={`dfe-flex dfe-align-items--center ${index2 < (item.releases.length-1) ? 'dfe-flex-underline' : ''}`} key={index2.toString()}>
-                            <div className="dfe-flex-basis--60 dfe-align--right govuk-!-padding-2">
-                              <PrototypeChangeUserRole 
-                                selectedRole={item2.role} 
-                                name={`${item.name} ${item.surname}`} 
-                                release={item2.release}
-                                roleId={`${index}-${index2}`} 
-                              />
-                            </div>
-                            <div className="dfe-flex-basis--40 dfe-align--right">
-                              <a
-                                href="#"
-                                onClick={() => {
-                                  toggleDeleteUserModal(true);
-                                  setUserName(`${item.name} ${item.surname}`);
-                                  setReleaseName(item2.release);
-                                }}
-                              >
-                                Remove
-                              </a>
-                            </div>
-                          </div>
-                        </>
-                      ))}
-                    </Details>
-                  </div>*/}
-                  <ModalConfirm
-                    open={showDeleteUserModal}
-                    title="Confirm user delete"
-                    onExit={() => toggleDeleteUserModal(false)}
-                    onConfirm={() => toggleDeleteUserModal(false)}
-                    onCancel={() => toggleDeleteUserModal(false)}
-                  >
-                    <p>
-                      Are you sure you want to delete{' '}
-                      <strong>{userName}</strong>
-                      <br />
-                      from all releases in this publication?
-                    </p>
-                  </ModalConfirm>
-                </div>
-              ))}
-              <div className="dfe-flex dfe-flex-wrap dfe-align-items--center dfe-justify-content--flex-end govuk-!-padding-bottom-3 govuk-!-margin-top-6">
-                <div className="dfe-flex dfe-flex-basis--30">
-                  <Button
-                    type="button"
-                    onClick={() => {
-                      toggleRoleModal(true);
-                    }}
-                    className="dfe-flex-basis--55 govuk-!-margin-left-2"
-                  >
-                    Grant access to all
-                  </Button>
+                      <PrototypeChangeUserRole
+                        selectedRole={roleType}
+                        name={`${item.name} ${item.surname}`}
+                        release={item.releases[0].release}
+                        roleId={`${index}`}
+                        className="dfe-flex-basis--30 govuk-!-margin-top-1 govuk-!-margin-bottom-1"
+                      />
 
-                  <ModalConfirm
-                    open={showRoleModal}
-                    title="Grant access to all listed users"
-                    onExit={() => toggleRoleModal(false)}
-                    onConfirm={() => toggleRoleModal(false)}
-                    onCancel={() => toggleRoleModal(false)}
-                  >
-                    <p>
-                      Are you sure you want to grant access to all listed users?
-                    </p>
-                  </ModalConfirm>
-                </div>
-              </div>
-            </fieldset>
-          </form>
-          <h2 className="govuk-heading-m" id="previous-releases">
-            Previous releases
-          </h2>
-          {currentReleases.slice(1).map((item, index) => (
-            <div key={index.toString()}>
-              <Details summary={item}>
-                {userList.map((item2, index2) => (
-                  <div
-                    className="dfe-flex dfe-flex-wrap dfe-align-items--center dfe-justify-content--space-between dfe-flex-underline"
-                    key={index2.toString()}
-                  >
-                    <h2 className="govuk-heading-s govuk-!-margin-bottom-0 dfe-flex-basis--50">{`${item2.name} ${item2.surname}`}</h2>
+                      <div className="dfe-align--right dfe-flex-basis--10">
+                        <a
+                          href="#"
+                          onClick={() => {
+                            toggleDeleteUserModal(true);
+                            setUserName(`${item.name} ${item.surname}`);
+                          }}
+                        >
+                          Remove user
+                        </a>
+                      </div>
 
-                    <PrototypeChangeUserRole
-                      selectedRole={item2.releases[index + 1].role}
-                      name={`${item2.name} ${item2.surname}`}
-                      release={item2.releases[index + 1].release}
-                      roleId={`${index + 1}`}
-                      className="dfe-flex-basis--30 govuk-!-margin-top-1 govuk-!-margin-bottom-1"
-                    />
-                    <div className="dfe-align--right dfe-flex-basis--10">
-                      <a
-                        href="#"
-                        onClick={() => {
-                          toggleDeleteUserModal(true);
-                          setUserName(`${item2.name} ${item2.surname}`);
-                        }}
+                      {/*<div className="dfe-flex-basis--100">
+                        <Details summary="Individual releases">
+                          {item.releases.map((item2, index2) =>(
+                            <>
+                              <div className={`dfe-flex dfe-align-items--center ${index2 < (item.releases.length-1) ? 'dfe-flex-underline' : ''}`} key={index2.toString()}>
+                                <div className="dfe-flex-basis--60 dfe-align--right govuk-!-padding-2">
+                                  <PrototypeChangeUserRole 
+                                    selectedRole={item2.role} 
+                                    name={`${item.name} ${item.surname}`} 
+                                    release={item2.release}
+                                    roleId={`${index}-${index2}`} 
+                                  />
+                                </div>
+                                <div className="dfe-flex-basis--40 dfe-align--right">
+                                  <a
+                                    href="#"
+                                    onClick={() => {
+                                      toggleDeleteUserModal(true);
+                                      setUserName(`${item.name} ${item.surname}`);
+                                      setReleaseName(item2.release);
+                                    }}
+                                  >
+                                    Remove
+                                  </a>
+                                </div>
+                              </div>
+                            </>
+                          ))}
+                        </Details>
+                      </div>*/}
+                      <ModalConfirm
+                        open={showDeleteUserModal}
+                        title="Confirm user removal"
+                        onExit={() => toggleDeleteUserModal(false)}
+                        onConfirm={() => toggleDeleteUserModal(false)}
+                        onCancel={() => toggleDeleteUserModal(false)}
                       >
-                        Delete user
-                      </a>
+                        <p>
+                          Are you sure you want to remove{' '}
+                          <strong>{userName}</strong>
+                          <br />
+                          from all releases in this publication?
+                        </p>
+                      </ModalConfirm>
+                    </div>
+                  ))}
+                  <div className="dfe-flex dfe-flex-wrap dfe-align-items--center dfe-justify-content--flex-end govuk-!-padding-bottom-3 govuk-!-margin-top-6">
+                    <div className="dfe-flex dfe-flex-basis--30">
+                      <Button
+                        type="button"
+                        onClick={() => {
+                          toggleRoleModal(true);
+                        }}
+                        className="dfe-flex-basis--55 govuk-!-margin-left-2"
+                      >
+                        Grant access to all
+                      </Button>
+
+                      <ModalConfirm
+                        open={showRoleModal}
+                        title="Grant access to all listed users"
+                        onExit={() => toggleRoleModal(false)}
+                        onConfirm={() => toggleRoleModal(false)}
+                        onCancel={() => toggleRoleModal(false)}
+                      >
+                        <p>
+                          Are you sure you want to grant access to all listed
+                          users?
+                        </p>
+                      </ModalConfirm>
                     </div>
                   </div>
-                ))}
-              </Details>
-            </div>
-          ))}
+                  <a
+                    href="#"
+                    onClick={() => {
+                      toggleTeamMembers(false);
+                    }}
+                  >
+                    Hide team members
+                  </a>
+                </>
+              )) || (
+                <>
+                  <WarningMessage className="govuk-!-margin-top-9">
+                    There are currently no team members associated to this
+                    publication
+                    <p className="govuk-!-margin-bottom-0">
+                      Please{' '}
+                      <a href="#manage-release-users-2">invite new users</a> to
+                      join.
+                    </p>
+                  </WarningMessage>
+                </>
+              )}
+            </fieldset>
+          </form>
+          {showTeamMembers && (
+            <>
+              <h2 className="govuk-heading-m" id="previous-releases">
+                Previous releases
+              </h2>
+              {currentReleases.slice(1).map((item, index) => (
+                <div key={index.toString()}>
+                  <Details summary={item}>
+                    {userList.map((item2, index2) => (
+                      <div
+                        className="dfe-flex dfe-flex-wrap dfe-align-items--center dfe-justify-content--space-between dfe-flex-underline"
+                        key={index2.toString()}
+                      >
+                        <h2 className="govuk-heading-s govuk-!-margin-bottom-0 dfe-flex-basis--50">{`${item2.name} ${item2.surname}`}</h2>
+
+                        <PrototypeChangeUserRole
+                          selectedRole={item2.releases[index + 1].role}
+                          name={`${item2.name} ${item2.surname}`}
+                          release={item2.releases[index + 1].release}
+                          roleId={`${index + 1}`}
+                          className="dfe-flex-basis--30 govuk-!-margin-top-1 govuk-!-margin-bottom-1"
+                        />
+                        <div className="dfe-align--right dfe-flex-basis--10">
+                          <a
+                            href="#"
+                            onClick={() => {
+                              toggleDeleteUserModal(true);
+                              setUserName(`${item2.name} ${item2.surname}`);
+                            }}
+                          >
+                            Delete user
+                          </a>
+                        </div>
+                      </div>
+                    ))}
+                  </Details>
+                </div>
+              ))}
+            </>
+          )}
         </TabsSection>
         <TabsSection title="Invite new users">
           <form>
