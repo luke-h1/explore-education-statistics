@@ -6,6 +6,14 @@
   flex-wrap: wrap;
 }
 
+.dfe-flex-direction--column {
+  flex-direction: column;
+}
+
+.dfe-flex-direction--row {
+  flex-direction: row;
+}
+
 .dfe-align-items--center {
   align-content: center;
 }

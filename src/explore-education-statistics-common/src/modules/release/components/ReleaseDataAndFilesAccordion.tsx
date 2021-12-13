@@ -57,23 +57,22 @@ const ReleaseDataAndFilesAccordion = ({
         }}
       >
         <AccordionSection heading="Explore data and files">
-          <div className="govuk-grid-row">
-            <div className="govuk-grid-column-three-quarters">
-              <p>
+          <div className="govuk-grid-row dfe-flex dfe-flex-wrap">
+            <div className="govuk-grid-column-three-quarters dfe-flex dfe-flex-direction--column dfe-justify-content--center">
+              <p className="govuk-!-margin-bottom-1">
                 All data used in this release is available as open data for
-                download.
+                download
               </p>
             </div>
 
             {hasAllFilesButton && (
-              <div className="govuk-grid-column-one-quarter dfe-align--centre">
+              <div className="govuk-grid-column-one-quarter dfe-align--centre dfe-flex-shrink--0">
                 {renderAllFilesButton}
               </div>
             )}
           </div>
-          <hr className="govuk-!-margin-top-3" />
 
-          <div className="govuk-grid-row">
+          {/*<div className="govuk-grid-row">
             <div className="govuk-grid-column-full">
               <h3 className="govuk-heading-s govuk-!-margin-bottom-0">
                 Open data
@@ -94,25 +93,31 @@ const ReleaseDataAndFilesAccordion = ({
                 </ul>
               )}
             </div>
-          </div>
+                  </div> */}
 
           {renderDataCatalogueLink && (
-            <div className="govuk-grid-row">
-              <div className="govuk-grid-column-three-quarters">
-                <p>
-                  Browse and download individual open data files from this
-                  release in our data catalogue.
-                </p>
+            <>
+              <hr />
+              <div className="govuk-grid-row">
+                <div className="govuk-grid-column-three-quarters">
+                  <h3 className="govuk-heading-s govuk-!-margin-bottom-0">
+                    Open data
+                  </h3>
+                  <p>
+                    Browse and download individual open data files from this
+                    release in our data catalogue
+                  </p>
+                </div>
+                <div className="govuk-grid-column-one-quarter dfe-align--centre govuk-!-margin-top-1">
+                  {renderDataCatalogueLink}
+                </div>
               </div>
-              <div className="govuk-grid-column-one-quarter dfe-align--centre">
-                {renderDataCatalogueLink}
-              </div>
-            </div>
+            </>
           )}
 
           {release.hasDataGuidance && (
             <>
-              <hr />
+              <hr className="govuk-!-margin-top-0" />
               <div className="govuk-grid-row">
                 <div className="govuk-grid-column-three-quarters">
                   <h3 className="govuk-heading-s govuk-!-margin-bottom-0">
@@ -120,7 +125,7 @@ const ReleaseDataAndFilesAccordion = ({
                   </h3>
                   <p>
                     Learn more about the data files used in this release using
-                    our online guidance.
+                    our online guidance
                   </p>
                 </div>
                 <div className="govuk-grid-column-one-quarter dfe-align--centre govuk-!-margin-top-1">
@@ -141,10 +146,10 @@ const ReleaseDataAndFilesAccordion = ({
                   <p>
                     You can view featured tables that we have built for you, or
                     create your own tables from the open data using our table
-                    tool.
+                    tool
                   </p>
                 </div>
-                <div className="govuk-grid-column-one-quarter govuk-!-margin-top-1">
+                <div className="govuk-grid-column-one-quarter govuk-!-margin-top-3">
                   {renderCreateTablesButton}
                 </div>
               </div>
@@ -153,7 +158,7 @@ const ReleaseDataAndFilesAccordion = ({
 
           {ancillaryFiles.length > 0 && (
             <>
-              <hr />
+              <hr className="govuk-!-margin-top-0" />
               <h3 className="govuk-heading-s govuk-!-margin-bottom-0">
                 All supporting files
               </h3>

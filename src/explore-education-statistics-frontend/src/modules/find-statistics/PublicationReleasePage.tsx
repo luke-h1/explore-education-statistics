@@ -118,9 +118,10 @@ const PublicationReleasePage: NextPage<Props> = ({ release }) => {
 
             {updates.length > 0 ? (
               <SummaryListItem term="Last updated">
+                <FormattedDate>{updates[0].on}</FormattedDate>
                 <Details
                   id="releaseLastUpdates"
-                  summary={`3 December 2021, view updates (${updates.length})`}
+                  summary={`See all updates (${updates.length})`}
                   onToggle={open => {
                     if (open) {
                       logEvent({
@@ -148,46 +149,7 @@ const PublicationReleasePage: NextPage<Props> = ({ release }) => {
               </SummaryListItem>
             ) : null}
 
-            {!!releaseCount && (
-              <SummaryListItem term="Release archive">
-                <Details
-                  summary={`See other releases (${releaseCount})`}
-                  onToggle={open =>
-                    open &&
-                    logEvent({
-                      category: 'Other Releases',
-                      action: 'Release page other releases dropdown opened',
-                      label: window.location.pathname,
-                    })
-                  }
-                >
-                  <ul className="govuk-list">
-                    {[
-                      ...release.publication.otherReleases.map(
-                        ({ id, slug, title }) => (
-                          <li key={id} data-testid="other-release-item">
-                            <Link
-                              to={`/find-statistics/${release.publication.slug}/${slug}`}
-                            >
-                              {title}
-                            </Link>
-                          </li>
-                        ),
-                      ),
-                      ...release.publication.legacyReleases.map(
-                        ({ id, description, url }) => (
-                          <li key={id} data-testid="other-release-item">
-                            <a href={url}>{description}</a>
-                          </li>
-                        ),
-                      ),
-                    ]}
-                  </ul>
-                </Details>
-              </SummaryListItem>
-            )}
-
-            {/* <SummaryListItem term="Receive updates">
+            <SummaryListItem term="Receive updates">
               <Link
                 className="dfe-print-hidden govuk-!-font-weight-bold"
                 unvisited
@@ -202,7 +164,7 @@ const PublicationReleasePage: NextPage<Props> = ({ release }) => {
               >
                 Sign up for email alerts
               </Link>
-              </SummaryListItem> */}
+            </SummaryListItem>
           </SummaryList>
 
           {release.summarySection.content.map(block => (
@@ -236,32 +198,6 @@ const PublicationReleasePage: NextPage<Props> = ({ release }) => {
             </h2>
             <nav role="navigation" aria-labelledby="data-downloads">
               <ul className="govuk-list govuk-list--spaced govuk-!-margin-bottom-6">
-                {showAllFilesButton && (
-                  <li className="dfe-flex dfe-align-items--center">
-                    <Link
-                      className="govuk-button govuk-!-margin-bottom-0 govuk-!-width-three-quarters"
-                      to={`${process.env.CONTENT_API_BASE_URL}/releases/${release.id}/files`}
-                      onClick={() => {
-                        logEvent({
-                          category: `${release.publication.title} release page - Useful information`,
-                          action: 'Download all data button clicked',
-                          label: `Publication: ${release.publication.title}, Release: ${release.title}, File: All files`,
-                        });
-                      }}
-                    >
-                      Download all data
-                      <br />
-                      <span
-                        className={classNames(
-                          styles.releaseDownloadFilesize,
-                          'govuk-body-s',
-                        )}
-                      >
-                        (ZIP, 120Mb)
-                      </span>
-                    </Link>
-                  </li>
-                )}
                 <li>
                   <a
                     href="#dataDownloads-1"
@@ -276,6 +212,45 @@ const PublicationReleasePage: NextPage<Props> = ({ release }) => {
                     Explore data and files
                   </a>
                 </li>
+                {release.hasDataGuidance && (
+                  <li>
+                    <Link
+                      to={
+                        release.latestRelease
+                          ? `/find-statistics/${release.publication.slug}/meta-guidance`
+                          : `/find-statistics/${release.publication.slug}/${release.slug}/meta-guidance`
+                      }
+                    >
+                      Data guidance
+                    </Link>
+                  </li>
+                )}
+                {showAllFilesButton && (
+                  <li className="dfe-flex dfe-align-items--center">
+                    <Link
+                      className="govuk-button govuk-!-margin-bottom-0 govuk-!-width-full"
+                      to={`${process.env.CONTENT_API_BASE_URL}/releases/${release.id}/files`}
+                      onClick={() => {
+                        logEvent({
+                          category: `${release.publication.title} release page - Useful information`,
+                          action: 'Download all data button clicked',
+                          label: `Publication: ${release.publication.title}, Release: ${release.title}, File: All files`,
+                        });
+                      }}
+                    >
+                      Download all data
+                      <span
+                        className={classNames(
+                          styles.releaseDownloadFilesize,
+                          'govuk-body-s',
+                          'govuk-!-margin-left-1',
+                        )}
+                      >
+                        (ZIP, 120Mb)
+                      </span>
+                    </Link>
+                  </li>
+                )}
               </ul>
             </nav>
             <h2 className="govuk-heading-m" id="useful-information">
@@ -283,22 +258,6 @@ const PublicationReleasePage: NextPage<Props> = ({ release }) => {
             </h2>
             <nav role="navigation" aria-labelledby="useful-information">
               <ul className="govuk-list govuk-list--spaced govuk-!-margin-bottom-0">
-                <li>
-                  <Link
-                    className="dfe-print-hidden"
-                    unvisited
-                    to={`/subscriptions?slug=${release.publication.slug}`}
-                    data-testid={`subscription-${release.publication.slug}`}
-                    onClick={() => {
-                      logEvent({
-                        category: 'Subscribe',
-                        action: 'Email subscription',
-                      });
-                    }}
-                  >
-                    Sign up for email alerts
-                  </Link>
-                </li>
                 {release.hasPreReleaseAccessList && (
                   <li>
                     <Link
@@ -315,7 +274,7 @@ const PublicationReleasePage: NextPage<Props> = ({ release }) => {
                 <li>
                   <a href="#contact-us">Contact us</a>
                 </li>
-                {/* {!!releaseCount && (
+                {!!releaseCount && (
                   <>
                     <p className="govuk-!-margin-bottom-0">
                       {release.coverageTitle}{' '}
@@ -356,7 +315,7 @@ const PublicationReleasePage: NextPage<Props> = ({ release }) => {
                       </ul>
                     </Details>
                   </>
-                      )} */}
+                )}
               </ul>
             </nav>
 
@@ -388,30 +347,6 @@ const PublicationReleasePage: NextPage<Props> = ({ release }) => {
                       </Link>
                     </li>
                   )}
-                </ul>
-              </>
-            )}
-
-            {release.hasDataGuidance && (
-              <>
-                <h3
-                  className="govuk-heading-s govuk-!-margin-bottom-0"
-                  id="guidance"
-                >
-                  Guidance
-                </h3>
-                <ul className="govuk-list">
-                  <li>
-                    <Link
-                      to={
-                        release.latestRelease
-                          ? `/find-statistics/${release.publication.slug}/meta-guidance`
-                          : `/find-statistics/${release.publication.slug}/${release.slug}/meta-guidance`
-                      }
-                    >
-                      Data guidance
-                    </Link>
-                  </li>
                 </ul>
               </>
             )}
@@ -480,7 +415,7 @@ const PublicationReleasePage: NextPage<Props> = ({ release }) => {
                 });
               }}
             >
-              Download all files
+              Download all data
               <br />
               <span className="govuk-body-s">(ZIP, 120Mb)</span>
             </Link>
