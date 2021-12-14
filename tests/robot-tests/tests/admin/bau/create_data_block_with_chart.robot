@@ -25,7 +25,6 @@ Create test publication and release via API
 Upload subject
     user navigates to editable release summary from admin dashboard    ${PUBLICATION_NAME}
     ...    Academic Year 2025/26 (not Live)
-    user clicks link    Data and files
     user uploads subject    UI test subject    upload-file-test.csv    upload-file-test.meta.csv
 
 Start creating a data block
@@ -34,13 +33,13 @@ Start creating a data block
     user waits until page contains    No data blocks have been created.
 
     user clicks link    Create data block
-    user waits until table tool wizard step is available    Choose a subject
+    user waits until table tool wizard step is available    1    Choose a subject
 
 Select subject "UI test subject"
     user waits until page contains    UI test subject
     user clicks radio    UI test subject
     user clicks element    id:publicationSubjectForm-submit
-    user waits until table tool wizard step is available    Choose locations    90
+    user waits until table tool wizard step is available    2    Choose locations    90
     user checks previous table tool step contains    1    Subject    UI test subject
 
 Select locations
@@ -53,7 +52,7 @@ Select locations
     user clicks checkbox    Nailsea Youngwood
     user clicks checkbox    Syon
     user clicks element    id:locationFiltersForm-submit
-    user waits until table tool wizard step is available    Choose time period    90
+    user waits until table tool wizard step is available    3    Choose time period    90
 
 Select time period
     user waits until page contains element    id:timePeriodForm-start
@@ -67,11 +66,11 @@ Select time period
     user chooses select option    id:timePeriodForm-start    2005
     user chooses select option    id:timePeriodForm-end    2020
     user clicks element    id:timePeriodForm-submit
-    user waits until table tool wizard step is available    Choose your filters
-    user checks previous table tool step contains    3    Time period    2005 to 2020
+    user waits until table tool wizard step is available    4    Choose your filters
+    user checks previous table tool step contains    3    Time period    2005 to 2020    %{WAIT_MEDIUM}
 
 Select indicators
-    user clicks indicator checkbox    Admission Numbers
+    user checks indicator checkbox is checked    Admission Numbers
 
 Create table
     [Documentation]    EES-615
@@ -174,19 +173,15 @@ Embed data block into release content
 
     user creates new content section    1    ${CONTENT_SECTION_NAME}
     user clicks button    Add data block
-    user chooses select option    css:select[name="selectedDataBlock"]    ${DATABLOCK_NAME}
-    user waits until element is visible    css:table
-    user clicks button    Embed
-    # Wait for table to update
-    sleep    0.3s
+    user chooses and embeds data block    ${DATABLOCK_NAME}
 
 Validate embedded table rows
-    ${table}=    set variable    css:[data-testid="Data block - ${DATABLOCK_NAME}"] table
-    user scrolls to element    xpath://button[text()="${CONTENT_SECTION_NAME}"]
-    # The below is to avoid React lazy-loading the table which causes the test to fail here
-    user scrolls down    400
-    user waits until page contains element    ${table}    30
+    ${datablock}=    set variable    testid:Data block - ${DATABLOCK_NAME}
+    # Need to scroll to block to load it
+    user scrolls to element    ${datablock}
 
+    ${table}=    set variable    ${datablock} >> css:table
+    user waits until page contains element    ${table}    30
     user checks table column heading contains    1    1    Admission Numbers    ${table}
 
     ${row}=    user gets row number with heading    Bolton 001 (E02000984)    ${table}
@@ -269,7 +264,7 @@ Navigate to Chart tab
     set suite variable    ${DATABLOCK_URL}    ${url}
 
     user clicks link    Chart
-    user waits until table tool wizard step is available    Choose chart type
+    user waits until h3 is visible    Choose chart type
 
 Configure basic line chart
     user clicks button    Line
@@ -337,9 +332,10 @@ Validate line chart embeds correctly
     user clicks link    Content
     user waits until h2 is visible    ${PUBLICATION_NAME}
     user opens accordion section    ${CONTENT_SECTION_NAME}    css:#releaseMainContent
-    ${datablock}=    set variable    css:[data-testid="Data block - ${DATABLOCK_NAME}"]
-    # The below is to avoid React lazy-loading the chart which causes the test to fail here
-    user scrolls down    400
+
+    ${datablock}=    set variable    testid:Data block - ${DATABLOCK_NAME}
+    # Need to scroll to block to load it
+    user scrolls to element    ${datablock}
     user waits until element contains line chart    ${datablock}
 
     user checks chart title contains    ${datablock}    Test chart title
@@ -372,7 +368,7 @@ Validate line chart embeds correctly
     user checks chart tooltip item contains    ${datablock}    1    Admission Numbers (Nailsea Youngwood): 4,198
 
 Configure basic vertical bar chart
-    user goes to url    ${DATABLOCK_URL}
+    user navigates to admin frontend    ${DATABLOCK_URL}
 
     user waits until h2 is visible    ${DATABLOCK_NAME}    %{WAIT_MEDIUM}
     user waits until page does not contain loading spinner
@@ -382,11 +378,11 @@ Configure basic vertical bar chart
 
 Change vertical bar chart legend
     user clicks link    Legend
-    user waits until h3 is visible    Legend    60
+    user waits until h3 is visible    Legend    %{WAIT_SMALL}
 
     user counts legend form item rows    1
     user checks element value should be    id:chartLegendConfigurationForm-items-0-label
-    ...    Admission Numbers (Nailsea Youngwood)    60
+    ...    Admission Numbers (Nailsea Youngwood)    %{WAIT_SMALL}
 
     user enters text into element    id:chartLegendConfigurationForm-items-0-label    Admissions
 
@@ -431,13 +427,13 @@ Save and validate vertical bar chart embeds correctly
     user waits until button is enabled    Save chart options
 
     user clicks link    Content
-    user waits until h2 is visible    ${PUBLICATION_NAME}    60
+    user waits until h2 is visible    ${PUBLICATION_NAME}    %{WAIT_SMALL}
     user opens accordion section    ${CONTENT_SECTION_NAME}    css:#releaseMainContent
 
-    ${datablock}=    set variable    css:[data-testid="Data block - ${DATABLOCK_NAME}"]
+    ${datablock}=    set variable    testid:Data block - ${DATABLOCK_NAME}
+    # Need to scroll to block to load it
+    user scrolls to element    ${datablock}
     user waits until element does not contain line chart    ${datablock}
-    # below is to prevent React lazy loading the chart
-    user scrolls down    400
     user waits until element contains bar chart    ${datablock}
 
     user checks chart title contains    ${datablock}    Test chart title
@@ -470,8 +466,8 @@ Save and validate vertical bar chart embeds correctly
     user checks chart tooltip item contains    ${datablock}    1    Admissions: 4,198
 
 Configure basic horizontal bar chart
-    user goes to url    ${DATABLOCK_URL}
-    user waits until h2 is visible    ${DATABLOCK_NAME}    60
+    user navigates to admin frontend    ${DATABLOCK_URL}
+    user waits until h2 is visible    ${DATABLOCK_NAME}    %{WAIT_SMALL}
     user waits until page does not contain loading spinner
 
     user clicks link    Chart
@@ -519,7 +515,9 @@ Save and validate horizontal bar chart embeds correctly
     user waits until h2 is visible    ${PUBLICATION_NAME}
     user opens accordion section    ${CONTENT_SECTION_NAME}    css:#releaseMainContent
 
-    ${datablock}=    set variable    css:[data-testid="Data block - ${DATABLOCK_NAME}"]
+    ${datablock}=    set variable    testid:Data block - ${DATABLOCK_NAME}
+    # Need to scroll to block to load it
+    user scrolls to element    ${datablock}
     user waits until element contains bar chart    ${datablock}
 
     user checks chart title contains    ${datablock}    Test chart title
@@ -552,8 +550,8 @@ Save and validate horizontal bar chart embeds correctly
     user checks chart tooltip item contains    ${datablock}    1    Admissions: 4,198
 
 Configure basic geographic chart
-    user goes to url    ${DATABLOCK_URL}
-    user waits until h2 is visible    ${DATABLOCK_NAME}    60
+    user navigates to admin frontend    ${DATABLOCK_URL}
+    user waits until h2 is visible    ${DATABLOCK_NAME}    %{WAIT_SMALL}
     user waits until page does not contain loading spinner
 
     user clicks link    Chart
@@ -561,7 +559,7 @@ Configure basic geographic chart
 
 Change geographic chart legend
     user clicks link    Legend
-    user waits until h3 is visible    Legend    90
+    user waits until h3 is visible    Legend    %{WAIT_MEDIUM}
 
     user counts legend form item rows    5
     user checks element value should be    id:chartLegendConfigurationForm-items-0-label    Admission Numbers (2005)
@@ -610,15 +608,18 @@ Save and validate geographic chart embeds correctly
     user clicks link    Content
     user waits until h2 is visible    ${PUBLICATION_NAME}
     user opens accordion section    ${CONTENT_SECTION_NAME}    css:#releaseMainContent
+    user waits until page does not contain loading spinner
 
-    ${datablock}=    set variable    css:[data-testid="Data block - ${DATABLOCK_NAME}"]
+    ${datablock}=    set variable    testid:Data block - ${DATABLOCK_NAME}
+    # Need to scroll to block to load it
+    user scrolls to element    ${datablock}
     user waits until element does not contain bar chart    ${datablock}
     user waits until element contains map chart    ${datablock}
 
     user checks map chart height    ${datablock}    700
     user checks map chart width    ${datablock}    600
 
-    user chooses select option    ${datablock} select[name="selectedLocation"]    Nailsea Youngwood
+    user chooses select option    ${datablock} >> name:selectedLocation    Nailsea Youngwood
 
     user mouses over selected map feature    ${datablock}
     user checks chart tooltip label contains    ${datablock}    Nailsea Youngwood
@@ -635,13 +636,13 @@ Save and validate geographic chart embeds correctly
     user checks map chart indicator tile contains    ${datablock}    5    Admissions in 2016    4,198
 
 Configure basic infographic chart
-    user goes to url    ${DATABLOCK_URL}
+    user navigates to admin frontend    ${DATABLOCK_URL}
 
     user waits until h2 is visible    ${DATABLOCK_NAME}
     user waits until page does not contain loading spinner
 
     user clicks link    Chart
-    user waits until table tool wizard step is available    Choose chart type
+    user waits until h3 is visible    Choose chart type
     user clicks button    Choose an infographic as alternative
     user chooses file    id:chartConfigurationForm-file    ${FILES_DIR}test-infographic.png
 
@@ -658,7 +659,9 @@ Save and validate infographic chart embeds correctly
     user waits until h2 is visible    ${PUBLICATION_NAME}
     user opens accordion section    ${CONTENT_SECTION_NAME}    css:#releaseMainContent
 
-    ${datablock}=    set variable    css:[data-testid="Data block - ${DATABLOCK_NAME}"]
+    ${datablock}=    set variable    testid:Data block - ${DATABLOCK_NAME}
+    # Need to scroll to block to load it
+    user scrolls to element    ${datablock}
     user checks chart title contains    ${datablock}    Test chart title
     user checks infographic chart contains alt    ${datablock}    Test chart alt
 
@@ -667,7 +670,7 @@ Delete embedded data block
     user clicks button    Confirm
 
 Delete chart from data block
-    user goes to url    ${DATABLOCK_URL}
+    user navigates to admin frontend    ${DATABLOCK_URL}
     user waits until h2 is visible    ${DATABLOCK_NAME}
     user waits until page does not contain loading spinner
     user clicks link    Chart

@@ -31,11 +31,10 @@ const ReleaseDataGuidancePage = ({ release }: Props) => {
 
       <ReleaseDataGuidancePageContent
         published={release.published}
-        dataGuidance={release.metaGuidance}
+        dataGuidance={release.dataGuidance}
         renderDataCatalogueLink={
           <Link
-            to="/data-catalogue/[publication]/[release]"
-            as={`/data-catalogue/${release.publication.slug}/${release.slug}`}
+            to={`/data-catalogue/${release.publication.slug}/${release.slug}`}
           >
             data catalogue
           </Link>

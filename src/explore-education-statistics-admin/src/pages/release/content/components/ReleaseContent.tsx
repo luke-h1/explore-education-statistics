@@ -19,14 +19,15 @@ import {
   releaseDataGuidanceRoute,
 } from '@admin/routes/routes';
 import releaseDataFileService from '@admin/services/releaseDataFileService';
+import releaseFileService from '@admin/services/releaseFileService';
 import Button from '@common/components/Button';
 import ButtonText from '@common/components/ButtonText';
 import Details from '@common/components/Details';
 import PageSearchForm from '@common/components/PageSearchForm';
 import RelatedAside from '@common/components/RelatedAside';
+import ReleaseDataAndFilesAccordion from '@common/modules/release/components/ReleaseDataAndFilesAccordion';
 import React, { useCallback, useMemo } from 'react';
 import { generatePath, useLocation } from 'react-router';
-import ReleaseDataAndFilesAccordion from '@common/modules/release/components/ReleaseDataAndFilesAccordion';
 
 interface MethodologyLink {
   key: string;
@@ -127,13 +128,17 @@ const ReleaseContent = () => {
     });
   }
 
+  const hasAllFilesButton = release.downloadFiles.some(
+    file =>
+      file.type === 'Data' ||
+      (file.type === 'Ancillary' && file.name !== 'All files'),
+  );
+
   return (
     <>
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-two-thirds">
-          <div className="govuk-grid-row">
-            <BasicReleaseSummary release={release} />
-          </div>
+          <BasicReleaseSummary release={release} />
 
           <div id="releaseSummary">
             {release.summarySection && (
@@ -182,13 +187,21 @@ const ReleaseContent = () => {
             <h2 className="govuk-heading-m">Useful information</h2>
 
             <ul className="govuk-list govuk-list--spaced govuk-!-margin-bottom-0">
+              {hasAllFilesButton && (
+                <li>
+                  <Button
+                    className="govuk-button govuk-!-margin-bottom-3"
+                    disableDoubleClick
+                    onClick={() =>
+                      releaseFileService.downloadAllFilesZip(release.id)
+                    }
+                  >
+                    Download all data
+                  </Button>
+                </li>
+              )}
               <li>
-                <a
-                  href="#dataDownloads-1"
-                  className="govuk-button govuk-!-margin-bottom-3"
-                >
-                  View data and files
-                </a>
+                <a href="#dataDownloads-1">View data and files</a>
               </li>
               {release.hasPreReleaseAccessList && (
                 <li>
@@ -281,6 +294,15 @@ const ReleaseContent = () => {
       {(release.downloadFiles || release.hasPreReleaseAccessList) && (
         <ReleaseDataAndFilesAccordion
           release={release}
+          renderAllFilesButton={
+            <Button
+              className="govuk-!-width-full"
+              disableDoubleClick
+              onClick={() => releaseFileService.downloadAllFilesZip(release.id)}
+            >
+              Download all files
+            </Button>
+          }
           renderDownloadLink={file => (
             <ButtonText
               onClick={() =>

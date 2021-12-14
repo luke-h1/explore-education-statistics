@@ -9,12 +9,12 @@ Force Tags          GeneralPublic    Local    Dev    Test    Preprod    Prod
 
 *** Test Cases ***
 Navigate to glossary page
-    environment variable should be set    PUBLIC_URL
-    user goes to url    %{PUBLIC_URL}
+    user navigates to public frontend
     user waits until h1 is visible    Explore our statistics and data
 
     user clicks link    Glossary
     user waits until h1 is visible    Glossary
+    user waits until page contains element    id:glossary    # Glossary accordion
     user checks url contains    %{PUBLIC_URL}/glossary
 
 Validate glossary accordion sections

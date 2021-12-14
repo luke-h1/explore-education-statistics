@@ -493,6 +493,20 @@
       "type": "bool",
       "defaultValue": false
     },
+    "requestTimeoutsTableBuilderQuery": {
+      "type": "int",
+      "defaultValue": 210000,
+      "metadata": {
+        "description": "Timeout in milliseconds for a table builder query to return results before cancelling the request in the API"
+      }
+    },
+    "tableBuilderMaxTableCellsAllowed": {
+      "type": "int",
+      "defaultValue": 25000,
+      "metadata": {
+        "description": "Maximum number of table cells that a table builder query could potentially render for a request to be valid"
+      }
+    },
     "timeZone": {
       "type": "string",
       "defaultValue": "GMT Standard Time"
@@ -790,7 +804,7 @@
         "resourceId": "[resourceId('Microsoft.Sql/servers/databases', variables('publicSqlServerName'), 'public-statistics')]",
         "resourceType": "microsoft.sql/servers/databases",
         "metricName": "cpu_percent",
-        "threshold": 75,
+        "threshold": 85,
         "operator": "GreaterThan",
         "timeAggregation": "Average",
         "criterionType": "StaticThresholdCriterion"
@@ -834,7 +848,7 @@
         "resourceId": "[resourceId('Microsoft.Sql/servers/databases', variables('publicSqlServerName'), 'public-statistics')]",
         "resourceType": "microsoft.sql/servers/databases",
         "metricName": "storage_percent",
-        "threshold": 75,
+        "threshold": 90,
         "operator": "GreaterThan",
         "timeAggregation": "Maximum",
         "criterionType": "StaticThresholdCriterion"
@@ -856,7 +870,7 @@
         "resourceId": "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), 'statistics')]",
         "resourceType": "microsoft.sql/servers/databases",
         "metricName": "cpu_percent",
-        "threshold": 75,
+        "threshold": 85,
         "operator": "GreaterThan",
         "timeAggregation": "Average",
         "criterionType": "StaticThresholdCriterion"
@@ -900,7 +914,7 @@
         "resourceId": "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), 'statistics')]",
         "resourceType": "microsoft.sql/servers/databases",
         "metricName": "storage_percent",
-        "threshold": 75,
+        "threshold": 90,
         "operator": "GreaterThan",
         "timeAggregation": "Maximum",
         "criterionType": "StaticThresholdCriterion"
@@ -922,7 +936,7 @@
         "resourceId": "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), 'content')]",
         "resourceType": "microsoft.sql/servers/databases",
         "metricName": "cpu_percent",
-        "threshold": 75,
+        "threshold": 85,
         "operator": "GreaterThan",
         "timeAggregation": "Average",
         "criterionType": "StaticThresholdCriterion"
@@ -966,7 +980,7 @@
         "resourceId": "[resourceId('Microsoft.Sql/servers/databases', variables('sqlServerName'), 'content')]",
         "resourceType": "microsoft.sql/servers/databases",
         "metricName": "storage_percent",
-        "threshold": 75,
+        "threshold": 90,
         "operator": "GreaterThan",
         "timeAggregation": "Maximum",
         "criterionType": "StaticThresholdCriterion"
@@ -981,20 +995,19 @@
         "operator": "GreaterThan",
         "timeAggregation": "Total",
         "criterionType": "StaticThresholdCriterion"
+      },
+      {
+        "name": "[concat(parameters('subscription'),'DataFactoryPipelineFailures')]",
+        "description": "Data Factory - Pipeline Failed Run",
+        "resourceId": "[resourceId('Microsoft.DataFactory/factories', variables('dataFactoryName'))]",
+        "resourceType": "Microsoft.DataFactory/factories",
+        "metricName": "PipelineFailedRuns",
+        "threshold": 1,
+        "operator": "GreaterThan",
+        "timeAggregation": "Total",
+        "criterionType": "StaticThresholdCriterion"
       }
-      // {
-      //   "name": "[concat(parameters('subscription'),'DataFactoryPipelineFailures')]",
-      //   "description": "Data Factory - Pipeline Failed Run",
-      //   "resourceId": "[resourceId('Microsoft.DataFactory/factories', variables('dataFactoryName'))]",
-      //   "resourceType": "Microsoft.DataFactory/factories",
-      //   "metricName": "PipelineFailedRuns",
-      //   "threshold": 0,
-      //   "operator": "GreaterThan",
-      //   "timeAggregation": "Total",
-      //   "criterionType": "StaticThresholdCriterion"
-      // }
     ],
-
     "vNetName": "[concat(parameters('subscription'), '-vnet-', parameters('environment'))]",
     "vNetRef": "[resourceId('Microsoft.Network/virtualNetworks', variables('vNetName'))]",
     "adminSubnetName": "[concat(parameters('subscription'), '-snet-', parameters('environment'), '-admin')]",
@@ -1193,10 +1206,12 @@
       ],
       "properties": {
         "APPINSIGHTS_INSTRUMENTATIONKEY": "[reference(resourceId('microsoft.insights/components/', variables('dataAppInsights')), '2020-02-02').InstrumentationKey]",
-        "WEBSITE_NODE_DEFAULT_VERSION": "6.9.1",
+        "WEBSITE_NODE_DEFAULT_VERSION": "14.16.0",
         "WEBSITE_RUN_FROM_PACKAGE": "1",
         "PublicStorage": "[concat('@Microsoft.KeyVault(SecretUri=', reference(variables('ees-storage-public'), '2018-02-14').secretUriWithVersion, ')')]",
-        "enableSwagger": "[parameters('enableSwagger')]"
+        "enableSwagger": "[parameters('enableSwagger')]",
+        "RequestTimeouts:TableBuilderQuery": "[parameters('requestTimeoutsTableBuilderQuery')]",
+        "TableBuilder:MaxTableCellsAllowed": "[parameters('tableBuilderMaxTableCellsAllowed')]"
       }
     },
     {
@@ -1415,7 +1430,7 @@
       ],
       "properties": {
         "APPINSIGHTS_INSTRUMENTATIONKEY": "[reference(resourceId('microsoft.insights/components/', variables('contentAppInsights')), '2020-02-02').InstrumentationKey]",
-        "WEBSITE_NODE_DEFAULT_VERSION": "6.9.1",
+        "WEBSITE_NODE_DEFAULT_VERSION": "14.16.0",
         "WEBSITE_RUN_FROM_PACKAGE": "1",
         "PublicStorage": "[concat('@Microsoft.KeyVault(SecretUri=', reference(variables('ees-storage-public'), '2018-02-14').secretUriWithVersion, ')')]",
         "enableSwagger": "[parameters('enableSwagger')]"
@@ -1637,7 +1652,7 @@
       "properties": {
         "APPINSIGHTS_INSTRUMENTATIONKEY": "[reference(resourceId('microsoft.insights/components/', variables('adminAppInsights')), '2020-02-02').InstrumentationKey]",
         "AppInsights__InstrumentationKey": "[reference(resourceId('microsoft.insights/components/', variables('adminAppInsights')), '2020-02-02').InstrumentationKey]",
-        "WEBSITE_NODE_DEFAULT_VERSION": "6.9.1",
+        "WEBSITE_NODE_DEFAULT_VERSION": "14.16.0",
         "WEBSITE_RUN_FROM_PACKAGE": "1",
         "WEBSITE_LOAD_CERTIFICATES": "*",
         "ASPNETCORE_DETAILEDERRORS": "[parameters('detailedErrors')]",
@@ -1659,7 +1674,8 @@
         "PreReleaseAccess:AccessWindow:MinutesBeforeReleaseTimeStart": "[parameters('preReleaseMinutesBeforeStart')]",
         "PreReleaseAccess:AccessWindow:MinutesBeforeReleaseTimeEnd": "[parameters('preReleaseMinutesBeforeEnd')]",
         "enableSwagger": "[parameters('enableSwagger')]",
-        "enableThemeDeletion": "[parameters('enableThemeDeletion')]"
+        "enableThemeDeletion": "[parameters('enableThemeDeletion')]",
+        "TableBuilder:MaxTableCellsAllowed": "[parameters('tableBuilderMaxTableCellsAllowed')]"
       }
     },
     {
@@ -1781,7 +1797,7 @@
     {
       "type": "Microsoft.Web/sites",
       "name": "[variables('publicAppName')]",
-      "apiVersion": "2019-08-01",
+      "apiVersion": "2021-02-01",
       "location": "[resourceGroup().location]",
       "identity": {
         "type": "SystemAssigned"
@@ -1828,7 +1844,7 @@
       "name": "[concat(variables('publicAppName'), '/appsettings')]",
       "type": "Microsoft.Web/sites/config",
       "location": "[resourceGroup().location]",
-      "apiVersion": "2019-08-01",
+      "apiVersion": "2021-02-01",
       "dependsOn": [
         "[resourceId('Microsoft.Web/sites', variables('publicAppName'))]"
       ],
@@ -1843,9 +1859,10 @@
         "NOTIFICATION_API_BASE_URL": "[concat('https://', variables('notificationsAppName'),'.azurewebsites.net/api')]",
         "HOTJAR_ID": "[parameters('publicAppHotjarId')]",
         "GA_TRACKING_ID": "[parameters('publicAppGATrackingId')]",
+        "NEXT_CONFIG_MODE": "server",
         "NODE_ENV": "production",
         "PUBLIC_URL": "[concat(variables('publicAppUrl'), '/')]",
-        "WEBSITE_NODE_DEFAULT_VERSION": "12.13.0",
+        "WEBSITE_NODE_DEFAULT_VERSION": "14.16.0",
         "WEBSITE_RUN_FROM_PACKAGE": "1"
       }
     },
@@ -1874,7 +1891,6 @@
       "properties": {
         "name": "[variables('publicPlanName')]",
         "workerSizeId": "0",
-        "reserved": false,
         "numberOfWorkers": "1",
         "hostingEnvironment": ""
       }

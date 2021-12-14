@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,12 +32,12 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
 {
     public class ReleaseServiceTests
     {
-        private static readonly Contact Contact = new Contact
+        private static readonly Contact Contact = new()
         {
             Id = Guid.NewGuid()
         };
 
-        private static readonly Theme Theme = new Theme
+        private static readonly Theme Theme = new()
         {
             Id = Guid.NewGuid(),
             Title = "Theme A",
@@ -44,7 +45,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
             Summary = "The first theme"
         };
 
-        private static readonly Topic Topic = new Topic
+        private static readonly Topic Topic = new()
         {
             Id = Guid.NewGuid(),
             Title = "Topic A",
@@ -52,7 +53,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
             Slug = "topic-a",
         };
 
-        private static readonly Publication PublicationA = new Publication
+        private static readonly Publication PublicationA = new()
         {
             Id = Guid.NewGuid(),
             Title = "Publication A",
@@ -61,7 +62,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
             Topic = Topic
         };
 
-        private static readonly Publication PublicationB = new Publication
+        private static readonly Publication PublicationB = new()
         {
             Id = Guid.NewGuid(),
             Title = "Publication B",
@@ -70,18 +71,18 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
             Topic = Topic
         };
 
-        private static readonly List<Publication> Publications = new List<Publication>
+        private static readonly List<Publication> Publications = new()
         {
             PublicationA, PublicationB
         };
 
-        private static readonly Release PublicationARelease1V0 = new Release
+        private static readonly Release PublicationARelease1V0 = new()
         {
             Id = new Guid("36725e6b-8682-480b-a04a-0564253b7160"),
             PublicationId = PublicationA.Id,
             ReleaseName = "2018",
             TimePeriodCoverage = AcademicYearQ1,
-            MetaGuidance = "Release 1 v0 Guidance",
+            DataGuidance = "Release 1 v0 Guidance",
             RelatedInformation = new List<Link>
             {
                 new Link
@@ -99,13 +100,13 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
             SoftDeleted = false
         };
 
-        private static readonly Release PublicationARelease1V1 = new Release
+        private static readonly Release PublicationARelease1V1 = new()
         {
             Id = new Guid("de6dc6ad-dc75-435c-9cf5-1ed4fe49c0cc"),
             PublicationId = PublicationA.Id,
             ReleaseName = "2018",
             TimePeriodCoverage = AcademicYearQ1,
-            MetaGuidance = "Release 1 v1 Guidance",
+            DataGuidance = "Release 1 v1 Guidance",
             RelatedInformation = new List<Link>
             {
                 new Link
@@ -123,7 +124,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
                 new Update
                 {
                     Id = Guid.NewGuid(),
-                    On =  new DateTime(2020, 1, 1),
+                    On = new DateTime(2020, 1, 1),
                     Reason = "First update"
                 }
             },
@@ -132,13 +133,13 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
             SoftDeleted = false,
         };
 
-        private static readonly Release PublicationARelease1V2Deleted = new Release
+        private static readonly Release PublicationARelease1V2Deleted = new()
         {
             Id = new Guid("6ac10729-e83f-4ed4-abc6-8d0efa62ccd2"),
             PublicationId = PublicationA.Id,
             ReleaseName = "2018",
             TimePeriodCoverage = AcademicYearQ1,
-            MetaGuidance = "Release 1 v2 Guidance",
+            DataGuidance = "Release 1 v2 Guidance",
             RelatedInformation = new List<Link>
             {
                 new Link
@@ -156,7 +157,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
                 new Update
                 {
                     Id = Guid.NewGuid(),
-                    On =  new DateTime(2020, 1, 1),
+                    On = new DateTime(2020, 1, 1),
                     Reason = "First update"
                 }
             },
@@ -165,13 +166,13 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
             SoftDeleted = true
         };
 
-        private static readonly Release PublicationARelease1V3NotPublished = new Release
+        private static readonly Release PublicationARelease1V3NotPublished = new()
         {
             Id = new Guid("f5cbff36-4aa8-4e59-9621-b069ae8dee3e"),
             PublicationId = PublicationA.Id,
             ReleaseName = "2018",
             TimePeriodCoverage = AcademicYearQ1,
-            MetaGuidance = "Release 1 v3 Guidance",
+            DataGuidance = "Release 1 v3 Guidance",
             RelatedInformation = new List<Link>(),
             Slug = "2018-19-q1",
             Published = null,
@@ -181,13 +182,13 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
                 new Update
                 {
                     Id = Guid.NewGuid(),
-                    On =  new DateTime(2020, 1, 1),
+                    On = new DateTime(2020, 1, 1),
                     Reason = "First update"
                 },
                 new Update
                 {
                     Id = Guid.NewGuid(),
-                    On =  new DateTime(2020, 2, 1),
+                    On = new DateTime(2020, 2, 1),
                     Reason = "Second update"
                 }
             },
@@ -196,13 +197,13 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
             SoftDeleted = false
         };
 
-        private static readonly Release PublicationARelease2 = new Release
+        private static readonly Release PublicationARelease2 = new()
         {
             Id = new Guid("e7e1aae3-a0a1-44b7-bdf3-3df4a363ce20"),
             PublicationId = PublicationA.Id,
             ReleaseName = "2018",
             TimePeriodCoverage = AcademicYearQ2,
-            MetaGuidance = "Release 2 Guidance",
+            DataGuidance = "Release 2 Guidance",
             RelatedInformation = new List<Link>
             {
                 new Link
@@ -219,13 +220,13 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
             PreviousVersionId = null
         };
 
-        private static readonly Release PublicationARelease3 = new Release
+        private static readonly Release PublicationARelease3 = new()
         {
             Id = new Guid("2286f83d-c567-40f0-a7bd-f7cc5ca266ea"),
             PublicationId = PublicationA.Id,
             ReleaseName = "2018",
             TimePeriodCoverage = AcademicYearQ3,
-            MetaGuidance = "Release 3 Guidance",
+            DataGuidance = "Release 3 Guidance",
             RelatedInformation = new List<Link>(),
             Slug = "2018-19-q3",
             Published = null,
@@ -234,7 +235,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
             PreviousVersionId = null
         };
 
-        private static readonly List<Release> Releases = new List<Release>
+        private static readonly List<Release> Releases = new()
         {
             PublicationARelease1V0,
             PublicationARelease1V1,
@@ -268,7 +269,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
             }
         };
 
-        private static readonly ContentSection Release1SummarySection = new ContentSection
+        private static readonly ContentSection Release1SummarySection = new()
         {
             Id = Guid.NewGuid(),
             Order = 1,
@@ -277,7 +278,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
             Type = ContentSectionType.ReleaseSummary
         };
 
-        private static readonly ContentSection Release1Section1 = new ContentSection
+        private static readonly ContentSection Release1Section1 = new()
         {
             Id = Guid.NewGuid(),
             Order = 2,
@@ -286,7 +287,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
             Type = ContentSectionType.Generic
         };
 
-        private static readonly ContentSection Release1Section2 = new ContentSection
+        private static readonly ContentSection Release1Section2 = new()
         {
             Id = Guid.NewGuid(),
             Order = 0,
@@ -295,7 +296,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
             Type = ContentSectionType.Generic
         };
 
-        private static readonly ContentSection Release1Section3 = new ContentSection
+        private static readonly ContentSection Release1Section3 = new()
         {
             Id = Guid.NewGuid(),
             Order = 1,
@@ -304,7 +305,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
             Type = ContentSectionType.Generic
         };
 
-        private static readonly ContentSection Release1KeyStatsSection = new ContentSection
+        private static readonly ContentSection Release1KeyStatsSection = new()
         {
             Id = Guid.NewGuid(),
             Order = 2,
@@ -313,7 +314,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
             Type = ContentSectionType.KeyStatistics
         };
 
-        private static readonly ContentSection Release2SummarySection = new ContentSection
+        private static readonly ContentSection Release2SummarySection = new()
         {
             Id = Guid.NewGuid(),
             Order = 1,
@@ -322,7 +323,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
             Type = ContentSectionType.ReleaseSummary
         };
 
-        private static readonly ContentSection Release2Section1 = new ContentSection
+        private static readonly ContentSection Release2Section1 = new()
         {
             Id = Guid.NewGuid(),
             Order = 2,
@@ -331,7 +332,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
             Type = ContentSectionType.Generic
         };
 
-        private static readonly ContentSection Release2Section2 = new ContentSection
+        private static readonly ContentSection Release2Section2 = new()
         {
             Id = Guid.NewGuid(),
             Order = 0,
@@ -340,7 +341,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
             Type = ContentSectionType.Generic
         };
 
-        private static readonly ContentSection Release2Section3 = new ContentSection
+        private static readonly ContentSection Release2Section3 = new()
         {
             Id = Guid.NewGuid(),
             Order = 1,
@@ -349,7 +350,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
             Type = ContentSectionType.Generic
         };
 
-        private static readonly ContentSection Release2KeyStatsSection = new ContentSection
+        private static readonly ContentSection Release2KeyStatsSection = new()
         {
             Id = Guid.NewGuid(),
             Order = 2,
@@ -358,7 +359,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
             Type = ContentSectionType.KeyStatistics
         };
 
-        private static readonly List<ContentSection> ContentSections = new List<ContentSection>
+        private static readonly List<ContentSection> ContentSections = new()
         {
             Release1SummarySection,
             Release1Section1,
@@ -372,7 +373,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
             Release2KeyStatsSection
         };
 
-        private static readonly List<ReleaseContentSection> ReleaseContentSections = new List<ReleaseContentSection>
+        private static readonly List<ReleaseContentSection> ReleaseContentSections = new()
         {
             new ReleaseContentSection
             {
@@ -534,7 +535,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
             ContentSectionId = Release2KeyStatsSection.Id
         };
 
-        private static readonly List<ContentBlock> ContentBlocks = new List<ContentBlock>
+        private static readonly List<ContentBlock> ContentBlocks = new()
         {
             Release1SummarySectionHtmlContentBlock1,
             Release1SummarySectionHtmlContentBlock2,
@@ -552,7 +553,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
             Release2KeyStatsDataBlock
         };
 
-        private static readonly ReleaseFile PublicationARelease2AncillaryReleaseFile = new ReleaseFile
+        private static readonly ReleaseFile PublicationARelease2AncillaryReleaseFile = new()
         {
             Release = PublicationARelease2,
             Name = "Ancillary Test File",
@@ -563,7 +564,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
             }
         };
 
-        private static readonly ReleaseFile PublicationARelease2ChartReleaseFile = new ReleaseFile
+        private static readonly ReleaseFile PublicationARelease2ChartReleaseFile = new()
         {
             Release = PublicationARelease2,
             File = new File
@@ -573,7 +574,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
             }
         };
 
-        private static readonly ReleaseFile PublicationARelease2DataReleaseFile = new ReleaseFile
+        private static readonly ReleaseFile PublicationARelease2DataReleaseFile = new()
         {
             Release = PublicationARelease2,
             Name = "Data Test File",
@@ -584,7 +585,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
             }
         };
 
-        private static readonly List<ReleaseFile> ReleaseFiles = new List<ReleaseFile>
+        private static readonly List<ReleaseFile> ReleaseFiles = new()
         {
             PublicationARelease2AncillaryReleaseFile,
             PublicationARelease2ChartReleaseFile,
@@ -599,6 +600,72 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
                 }
             }
         };
+
+        [Fact]
+        public async Task CreatePublicStatisticsRelease_ReleaseDoesNotExist()
+        {
+            var statisticsDbContextId = Guid.NewGuid().ToString();
+            var publicStatisticsDbContextId = Guid.NewGuid().ToString();
+
+            await using (var statisticsDbContext = InMemoryStatisticsDbContext(statisticsDbContextId))
+            await using (var publicStatisticsDbContext = InMemoryPublicStatisticsDbContext(publicStatisticsDbContextId))
+            {
+                var service = BuildReleaseService(statisticsDbContext: statisticsDbContext,
+                    publicStatisticsDbContext: publicStatisticsDbContext);
+
+                await service.CreatePublicStatisticsRelease(Guid.NewGuid());
+            }
+
+            await using (var publicStatisticsDbContext = InMemoryPublicStatisticsDbContext(publicStatisticsDbContextId))
+            {
+                Assert.Empty(publicStatisticsDbContext.Release);
+            }
+        }
+
+        [Fact]
+        public async Task CreatePublicStatisticsRelease()
+        {
+            var statisticsDbContextId = Guid.NewGuid().ToString();
+            var publicStatisticsDbContextId = Guid.NewGuid().ToString();
+
+            var release = new Data.Model.Release
+            {
+                PublicationId = Guid.NewGuid(),
+                Slug = "release-slug",
+                Year = 2021,
+                TimeIdentifier = CalendarYear,
+                Published = DateTime.UtcNow
+            };
+
+            await using (var statisticsDbContext = InMemoryStatisticsDbContext(statisticsDbContextId))
+            {
+                await statisticsDbContext.AddAsync(release);
+                await statisticsDbContext.SaveChangesAsync();
+            }
+
+            await using (var statisticsDbContext = InMemoryStatisticsDbContext(statisticsDbContextId))
+            await using (var publicStatisticsDbContext = InMemoryPublicStatisticsDbContext(publicStatisticsDbContextId))
+            {
+                var service = BuildReleaseService(statisticsDbContext: statisticsDbContext,
+                    publicStatisticsDbContext: publicStatisticsDbContext);
+
+                await service.CreatePublicStatisticsRelease(release.Id);
+            }
+
+            await using (var publicStatisticsDbContext = InMemoryPublicStatisticsDbContext(publicStatisticsDbContextId))
+            {
+                var publicStatisticsRelease = Assert.Single(publicStatisticsDbContext.Release);
+                Assert.NotNull(publicStatisticsRelease);
+
+                Assert.Equal(release.Id, publicStatisticsRelease.Id);
+                Assert.Equal(release.PublicationId, publicStatisticsRelease.PublicationId);
+                Assert.Equal(release.Year, publicStatisticsRelease.Year);
+                Assert.Equal(release.TimeIdentifier, publicStatisticsRelease.TimeIdentifier);
+                Assert.Equal(release.Slug, publicStatisticsRelease.Slug);
+                Assert.Equal(release.PreviousVersionId, publicStatisticsRelease.PreviousVersionId);
+                Assert.Null(publicStatisticsRelease.Published);
+            }
+        }
 
         [Fact]
         public async Task GetDownloadFiles()
@@ -860,7 +927,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
                 Assert.Equal("10 Mb", result.DownloadFiles[1].Size);
                 Assert.Equal(FileType.Data, result.DownloadFiles[1].Type);
 
-                Assert.Equal("Release 2 Guidance", result.MetaGuidance);
+                Assert.Equal("Release 2 Guidance", result.DataGuidance);
 
                 Assert.Single(result.RelatedInformation);
                 Assert.Equal(new Guid("a0855237-b2f1-4dae-b2fc-027bb2802ba3"), result.RelatedInformation[0].Id);
@@ -949,7 +1016,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
 
                 Assert.Empty(result.DownloadFiles);
 
-                Assert.Equal("Release 1 v1 Guidance", result.MetaGuidance);
+                Assert.Equal("Release 1 v1 Guidance", result.DataGuidance);
 
                 Assert.Single(result.RelatedInformation);
                 Assert.Equal(new Guid("9eb283bd-4f28-4e65-bc91-1da9cc6567f9"), result.RelatedInformation[0].Id);
@@ -994,7 +1061,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
 
                 Assert.Empty(result.DownloadFiles);
 
-                Assert.Equal("Release 3 Guidance", result.MetaGuidance);
+                Assert.Equal("Release 3 Guidance", result.DataGuidance);
 
                 Assert.Empty(result.RelatedInformation);
             }
@@ -1038,7 +1105,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
 
                 Assert.Empty(result.DownloadFiles);
 
-                Assert.Equal("Release 1 v3 Guidance", result.MetaGuidance);
+                Assert.Equal("Release 1 v3 Guidance", result.DataGuidance);
 
                 Assert.Empty(result.RelatedInformation);
             }
@@ -1103,16 +1170,16 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
             var published = DateTime.UtcNow;
 
             var contentDbContextId = Guid.NewGuid().ToString();
-            var statisticsDbContextId = Guid.NewGuid().ToString();
+            var publicStatisticsDbContextId = Guid.NewGuid().ToString();
 
             await using (var contentDbContext = InMemoryContentDbContext(contentDbContextId))
-            await using (var statisticsDbContext = InMemoryPublicStatisticsDbContext(statisticsDbContextId))
+            await using (var publicStatisticsDbContext = InMemoryPublicStatisticsDbContext(publicStatisticsDbContextId))
             {
                 await contentDbContext.Releases.AddAsync(contentRelease);
                 await contentDbContext.SaveChangesAsync();
 
-                await statisticsDbContext.Release.AddAsync(statisticsRelease);
-                await statisticsDbContext.SaveChangesAsync();
+                await publicStatisticsDbContext.Release.AddAsync(statisticsRelease);
+                await publicStatisticsDbContext.SaveChangesAsync();
             }
 
             var methodologyService = new Mock<IMethodologyService>(MockBehavior.Strict);
@@ -1122,22 +1189,22 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
                 .Returns(Task.CompletedTask);
 
             await using (var contentDbContext = InMemoryContentDbContext(contentDbContextId))
-            await using (var statisticsDbContext = InMemoryPublicStatisticsDbContext(statisticsDbContextId))
+            await using (var publicStatisticsDbContext = InMemoryPublicStatisticsDbContext(publicStatisticsDbContextId))
             {
                 var service = BuildReleaseService(contentDbContext: contentDbContext,
-                    statisticsDbContext: statisticsDbContext,
+                    publicStatisticsDbContext: publicStatisticsDbContext,
                     methodologyService: methodologyService.Object);
 
                 await service.SetPublishedDates(contentRelease.Id, published);
             }
 
             await using (var contentDbContext = InMemoryContentDbContext(contentDbContextId))
-            await using (var statisticsDbContext = InMemoryPublicStatisticsDbContext(statisticsDbContextId))
+            await using (var publicStatisticsDbContext = InMemoryPublicStatisticsDbContext(publicStatisticsDbContextId))
             {
                 var actualContentRelease = await contentDbContext.Releases
                     .Include(r => r.Publication)
                     .SingleAsync(r => r.Id == contentRelease.Id);
-                var actualStatisticsRelease = await statisticsDbContext.Release.FindAsync(contentRelease.Id);
+                var actualStatisticsRelease = await publicStatisticsDbContext.Release.FindAsync(contentRelease.Id);
 
                 Assert.NotNull(actualContentRelease);
                 Assert.NotNull(actualStatisticsRelease);
@@ -1154,7 +1221,8 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
             MockUtils.VerifyAllMocks(methodologyService);
         }
 
-        [Fact] public async Task SetPublishedDates_ReleaseHasNoStatisticsData()
+        [Fact]
+        public async Task SetPublishedDates_ReleaseHasNoStatisticsData()
         {
             var contentRelease = new Release
             {
@@ -1184,7 +1252,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
             await using (var statisticsDbContext = InMemoryPublicStatisticsDbContext())
             {
                 var service = BuildReleaseService(contentDbContext: contentDbContext,
-                    statisticsDbContext: statisticsDbContext,
+                    publicStatisticsDbContext: statisticsDbContext,
                     methodologyService: methodologyService.Object);
 
                 await service.SetPublishedDates(contentRelease.Id, published);
@@ -1237,10 +1305,10 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
             };
 
             var contentDbContextId = Guid.NewGuid().ToString();
-            var statisticsDbContextId = Guid.NewGuid().ToString();
+            var publicStatisticsDbContextId = Guid.NewGuid().ToString();
 
             await using (var contentDbContext = InMemoryContentDbContext(contentDbContextId))
-            await using (var statisticsDbContext = InMemoryPublicStatisticsDbContext(statisticsDbContextId))
+            await using (var statisticsDbContext = InMemoryPublicStatisticsDbContext(publicStatisticsDbContextId))
             {
                 await contentDbContext.Publications.AddAsync(publication);
                 await contentDbContext.Releases.AddRangeAsync(previousContentRelease, contentRelease);
@@ -1257,22 +1325,22 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
                 .Returns(Task.CompletedTask);
 
             await using (var contentDbContext = InMemoryContentDbContext(contentDbContextId))
-            await using (var statisticsDbContext = InMemoryPublicStatisticsDbContext(statisticsDbContextId))
+            await using (var publicStatisticsDbContext = InMemoryPublicStatisticsDbContext(publicStatisticsDbContextId))
             {
                 var service = BuildReleaseService(contentDbContext: contentDbContext,
-                    statisticsDbContext: statisticsDbContext,
+                    publicStatisticsDbContext: publicStatisticsDbContext,
                     methodologyService: methodologyService.Object);
 
                 await service.SetPublishedDates(contentRelease.Id, DateTime.UtcNow);
             }
 
             await using (var contentDbContext = InMemoryContentDbContext(contentDbContextId))
-            await using (var statisticsDbContext = InMemoryPublicStatisticsDbContext(statisticsDbContextId))
+            await using (var publicStatisticsDbContext = InMemoryPublicStatisticsDbContext(publicStatisticsDbContextId))
             {
                 var actualContentRelease = await contentDbContext.Releases
                     .Include(r => r.Publication)
                     .SingleAsync(r => r.Id == contentRelease.Id);
-                var actualStatisticsRelease = await statisticsDbContext.Release.FindAsync(contentRelease.Id);
+                var actualStatisticsRelease = await publicStatisticsDbContext.Release.FindAsync(contentRelease.Id);
 
                 Assert.NotNull(actualContentRelease);
                 Assert.NotNull(actualStatisticsRelease);
@@ -1296,15 +1364,17 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
         }
 
         private static ReleaseService BuildReleaseService(
-            ContentDbContext contentDbContext,
-            PublicStatisticsDbContext statisticsDbContext = null,
-            IBlobStorageService publicBlobStorageService = null,
-            IMethodologyService methodologyService = null,
-            IReleaseSubjectRepository releaseSubjectRepository = null)
+            ContentDbContext? contentDbContext = null,
+            StatisticsDbContext? statisticsDbContext = null,
+            PublicStatisticsDbContext? publicStatisticsDbContext = null,
+            IBlobStorageService? publicBlobStorageService = null,
+            IMethodologyService? methodologyService = null,
+            IReleaseSubjectRepository? releaseSubjectRepository = null)
         {
-            return new ReleaseService(
-                contentDbContext,
-                statisticsDbContext ?? new Mock<PublicStatisticsDbContext>().Object,
+            return new(
+                contentDbContext ?? new Mock<ContentDbContext>().Object,
+                statisticsDbContext ?? new Mock<StatisticsDbContext>().Object,
+                publicStatisticsDbContext ?? new Mock<PublicStatisticsDbContext>().Object,
                 publicBlobStorageService ?? new Mock<IBlobStorageService>().Object,
                 methodologyService ?? new Mock<IMethodologyService>().Object,
                 releaseSubjectRepository ?? new Mock<IReleaseSubjectRepository>().Object,

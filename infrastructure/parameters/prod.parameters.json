@@ -67,6 +67,12 @@
     },
     "enableAlerts": {
       "value": true
+    },
+    "tableBuilderMaxTableCellsAllowed": {
+      "value": 1000000
+    },
+    "maxDbSizeBytes": {
+      "value": 375809638400
     }
   }
 }

@@ -29,7 +29,9 @@ const KeyStatSelectForm = ({
     return availableDataBlocks.filter(dataBlock => {
       const { timePeriod, locations, indicators } = dataBlock.query;
 
-      const locationLevels = Object.values(locations);
+      const locationLevels = Object.values(locations).filter(
+        level => level?.length,
+      );
 
       const hasSingleLocation =
         locationLevels.length === 1 && locationLevels[0].length === 1;
@@ -69,8 +71,8 @@ const KeyStatSelectForm = ({
     <>
       <FormSelect
         className="govuk-!-margin-right-1"
-        id="id"
-        name="key_indicator_select"
+        id="keyIndicatorSelect"
+        name="selectedDataBlock"
         label={label}
         value={selectedDataBlockId}
         onChange={e => setSelectedDataBlockId(e.target.value)}

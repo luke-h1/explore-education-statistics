@@ -552,11 +552,11 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Migrations.ContentMig
                     b.Property<Guid>("CreatedById")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("DataGuidance")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("DataLastPublished")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("MetaGuidance")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NextReleaseDate")
                         .HasColumnType("nvarchar(max)");
@@ -731,12 +731,22 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Migrations.ContentMig
                         new
                         {
                             Id = new Guid("1821abb8-68b0-431b-9770-0bea65d02ff0"),
-                            Title = "Ad Hoc"
+                            Title = "Ad Hoc Statistics"
                         },
                         new
                         {
                             Id = new Guid("8becd272-1100-4e33-8a7d-1c0c4e3b42b8"),
                             Title = "National Statistics"
+                        },
+                        new
+                        {
+                            Id = new Guid("f5de8522-3150-435d-98d5-1d14763f8c54"),
+                            Title = "Experimental Statistics"
+                        },
+                        new
+                        {
+                            Id = new Guid("15bd4f57-c837-4821-b308-7f4169cd9330"),
+                            Title = "Management Information"
                         });
                 });
 
@@ -915,6 +925,18 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Migrations.ContentMig
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<DateTime?>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("Deleted")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DeletedById")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("ReleaseId")
                         .HasColumnType("uniqueidentifier");
 
@@ -929,6 +951,10 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Migrations.ContentMig
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("DeletedById");
 
                     b.HasIndex("ReleaseId");
 
@@ -1339,6 +1365,14 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Migrations.ContentMig
 
             modelBuilder.Entity("GovUk.Education.ExploreEducationStatistics.Content.Model.UserReleaseRole", b =>
                 {
+                    b.HasOne("GovUk.Education.ExploreEducationStatistics.Content.Model.User", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById");
+
+                    b.HasOne("GovUk.Education.ExploreEducationStatistics.Content.Model.User", "DeletedBy")
+                        .WithMany()
+                        .HasForeignKey("DeletedById");
+
                     b.HasOne("GovUk.Education.ExploreEducationStatistics.Content.Model.Release", "Release")
                         .WithMany()
                         .HasForeignKey("ReleaseId")

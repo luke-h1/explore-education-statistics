@@ -11,7 +11,12 @@ function PublicationList({ publications }: Props) {
     <ul className="govuk-!-margin-top-0">
       {publications.map(({ id, legacyPublicationUrl, slug, title }) => (
         <li key={id} className="govuk-!-margin-bottom-0">
-          <h3 className="govuk-heading-s govuk-!-margin-bottom-0">{title}</h3>
+          <h3
+            id={`publication-heading-${id}}`}
+            className="govuk-heading-s govuk-!-margin-bottom-0"
+          >
+            {title}
+          </h3>
           {legacyPublicationUrl ? (
             <div className="govuk-!-margin-bottom-3">
               {' '}
@@ -25,8 +30,7 @@ function PublicationList({ publications }: Props) {
             <div className="govuk-grid-row govuk-!-margin-bottom-3">
               <div className="govuk-grid-column-one-third govuk-!-margin-bottom-1">
                 <Link
-                  to="/find-statistics/[publication]"
-                  as={`/find-statistics/${slug}`}
+                  to={`/find-statistics/${slug}`}
                   testId={`View stats link for ${title}`}
                 >
                   View statistics and data{' '}
@@ -36,8 +40,7 @@ function PublicationList({ publications }: Props) {
 
               <div className="govuk-grid-column-one-third">
                 <Link
-                  to="/data-tables/[publication]"
-                  as={`/data-tables/${slug}`}
+                  to={`/data-tables/${slug}`}
                   data-testid={`Create table link for ${title}`}
                 >
                   Create your own tables{' '}

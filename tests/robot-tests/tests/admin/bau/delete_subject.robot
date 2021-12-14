@@ -24,7 +24,6 @@ Verify Release summary
     ...    National Statistics
 
 Upload subject
-    user clicks link    Data and files
     user uploads subject    UI test subject    upload-file-test-with-filter.csv
     ...    upload-file-test-with-filter.meta.csv
 
@@ -89,13 +88,13 @@ Navigate to 'Data blocks' page
 Create new data block
     user clicks link    Create data block
     user waits until h2 is visible    Create data block
-    user waits until table tool wizard step is available    Choose a subject
+    user waits until table tool wizard step is available    1    Choose a subject
 
 Select subject "UI test subject"
     user waits until page contains    UI test subject
     user clicks radio    UI test subject
     user clicks element    id:publicationSubjectForm-submit
-    user waits until table tool wizard step is available    Choose locations
+    user waits until table tool wizard step is available    2    Choose locations
     user checks previous table tool step contains    1    Subject    UI test subject
 
 Select locations
@@ -105,16 +104,16 @@ Select locations
     user clicks checkbox    Nailsea Youngwood
     user clicks checkbox    Syon
     user clicks element    id:locationFiltersForm-submit
-    user waits until table tool wizard step is available    Choose time period
+    user waits until table tool wizard step is available    3    Choose time period
 
 Select time period
     user chooses select option    id:timePeriodForm-start    2019
     user chooses select option    id:timePeriodForm-end    2019
     user clicks element    id:timePeriodForm-submit
-    user waits until table tool wizard step is available    Choose your filters
+    user waits until table tool wizard step is available    4    Choose your filters
 
 Select indicators
-    user clicks indicator checkbox    Admission Numbers
+    user checks indicator checkbox is checked    Admission Numbers
 
 Create table
     [Documentation]    EES-615
@@ -148,12 +147,12 @@ Navigate back to 'Data and files' page
 
 Delete UI test subject
     user clicks link    Data uploads
-    user waits until h2 is visible    Add data file to release    60
-    user waits until page contains accordion section    UI test subject    60
+    user waits until h2 is visible    Add data file to release    %{WAIT_SMALL}
+    user waits until page contains accordion section    UI test subject    %{WAIT_SMALL}
     user opens accordion section    UI test subject
     user clicks button    Delete files
 
-    user waits until h1 is visible    Confirm deletion of selected data files    60
+    user waits until h1 is visible    Confirm deletion of selected data files    %{WAIT_SMALL}
     user checks page contains    4 footnotes will be removed or updated.
     user checks page contains    The following data blocks will also be deleted:
     user checks page contains    UI test table name
@@ -162,4 +161,4 @@ Delete UI test subject
     user clicks button    Confirm
 
     user waits until page does not contain accordion section    UI test subject
-    user waits until h2 is visible    Add data file to release    30
+    user waits until h2 is visible    Add data file to release    %{WAIT_SMALL}

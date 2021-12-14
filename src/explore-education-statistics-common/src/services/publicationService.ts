@@ -79,9 +79,11 @@ export interface ReleaseNote {
 
 // eslint-disable-next-line no-shadow
 export enum ReleaseType {
-  AdHoc = 'Ad Hoc',
+  AdHocStatistics = 'Ad Hoc Statistics',
+  ExperimentalStatistics = 'Experimental Statistics',
   NationalStatistics = 'National Statistics',
   OfficialStatistics = 'Official Statistics',
+  ManagementInformation = 'Management Information',
 }
 
 export interface ContentSection<BlockType> {
@@ -121,7 +123,7 @@ export interface Release<
   downloadFiles: FileInfo[];
   dataLastPublished: string;
   hasPreReleaseAccessList: boolean;
-  hasMetaGuidance: boolean;
+  hasDataGuidance: boolean;
 }
 
 export interface ReleaseSummary {

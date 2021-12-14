@@ -6,25 +6,25 @@ Suite Setup         user opens the browser
 Suite Teardown      user closes the browser
 Test Setup          fail test fast if required
 
-Force Tags          GeneralPublic    Local    Dev    Test    Preprod
+Force Tags          GeneralPublic    Local    Dev    Preprod
 
 *** Test Cases ***
 Navigate to Absence publication
-    environment variable should be set    PUBLIC_URL
-    user goes to url    %{PUBLIC_URL}
+    user navigates to public frontend
     user waits until page contains    Explore our statistics and data
+
     user clicks link    Explore
     user waits until page contains
-    ...    Browse to find the statistics and data you’re looking for and open the section to get links to
-    user waits for page to finish loading
+    ...    Browse to find the statistics and data you’re looking for and open the section to get links to:
+    ...    %{WAIT_MEDIUM}
 
     user opens accordion section    Pupils and schools
     user opens details dropdown    Pupil absence
     user clicks element    testid:View stats link for Pupil absence in schools in England
-    user waits until h1 is visible    Pupil absence in schools in England    90
+    user waits until h1 is visible    Pupil absence in schools in England    %{WAIT_MEDIUM}
 
 Validate title
-    user waits until h1 is visible    Pupil absence in schools in England    90
+    user waits until h1 is visible    Pupil absence in schools in England    %{WAIT_MEDIUM}
     user waits until page contains title caption    Academic Year 2016/17
 
 Validate URL
@@ -63,6 +63,7 @@ Validate "About these statistics" -- "Last updated"
     user closes details dropdown    See all updates (2)
 
 Validate "Useful information"
+    user checks page contains element    link:Download all data
     user checks page contains link with text and url    Pupil absence statistics: methodology
     ...    /methodology/pupil-absence-in-schools-in-england
 
@@ -88,7 +89,7 @@ Validate headlines -- Summary tab key stats
     [Documentation]    DFE-915    EES-806    EES-1508
     user scrolls to element    xpath://h2[contains(text(), "Headline facts and figures")]
 
-    user checks key stat contents    1    Overall absence rate    4.7%    Up from 4.6% in 2015/16    90
+    user checks key stat contents    1    Overall absence rate    4.7%    Up from 4.6% in 2015/16    %{WAIT_MEDIUM}
     user checks key stat definition    1    What is overall absence?
     ...    Total number of all authorised and unauthorised absences from possible school sessions for all pupils.
 
@@ -158,7 +159,7 @@ Validate Key Statistics data block -- Charts tab
 Validate Key Statistics data block -- Data tables tab
     user clicks element    id:releaseHeadlines-tables-tab
     user waits until element contains    css:[data-testid="dataTableCaption"]
-    ...    'Absence by characteristic' in England between 2012/13 and 2016/17    30
+    ...    'Absence by characteristic' in England between 2012/13 and 2016/17    %{WAIT_SMALL}
 
     user checks table column heading contains    1    1    2012/13    css:#releaseHeadlines-tables table
     user checks table column heading contains    1    2    2013/14    css:#releaseHeadlines-tables table
@@ -216,7 +217,7 @@ Validate Regional and local authority (LA) breakdown table
     [Tags]    Failing
     user opens accordion section    Regional and local authority (LA) breakdown    id:content
     user waits until element contains    css:#content_9_datablock-tables [data-testid="dataTableCaption"]
-    ...    'Absence by characteristic' from 'Pupil absence in schools in England' in    90
+    ...    'Absence by characteristic' from 'Pupil absence in schools in England' in    %{WAIT_MEDIUM}
 
     user checks table column heading contains    1    1    2016/17    css:#content_9_datablock-tables table
 
@@ -310,9 +311,11 @@ Validate Regional and local authority (LA) breakdown chart
 
 Clicking "Create tables" takes user to Table Tool page with absence publication selected
     [Documentation]    DFE-898
+    user opens accordion section    Explore data and files
+    user waits until h3 is visible    Create your own tables
     user clicks link    Create tables
-    user waits until h1 is visible    Create your own tables    60
+    user waits until h1 is visible    Create your own tables    %{WAIT_MEDIUM}
     user waits for page to finish loading
 
-    user waits until table tool wizard step is available    Choose a subject
+    user waits until table tool wizard step is available    2    Choose a subject
     user checks previous table tool step contains    1    Publication    Pupil absence in schools in England

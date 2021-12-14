@@ -12,24 +12,19 @@ namespace GovUk.Education.ExploreEducationStatistics.Common.Services
             return "staging";
         }
 
-        private static string PublicContentDownloadPath(string prefix = null)
-        {
-            return $"{AppendPathSeparator(prefix)}download";
-        }
-
         private static string PublicContentFastTrackPath(string prefix = null)
         {
             return $"{AppendPathSeparator(prefix)}fast-track";
         }
 
-        private static string PublicContentPublicationsPath(string prefix = null)
+        private static string PrivateContentPublicationsPath(string prefix = null)
         {
             return $"{AppendPathSeparator(prefix)}publications";
         }
 
-        public static string PublicContentDownloadTreePath(string prefix = null)
+        private static string PublicContentPublicationsPath(string prefix = null)
         {
-            return $"{PublicContentDownloadPath(prefix)}/tree.json";
+            return $"{AppendPathSeparator(prefix)}publications";
         }
 
         public static string PublicContentReleaseFastTrackPath(string releaseId, string prefix = null)
@@ -42,14 +37,19 @@ namespace GovUk.Education.ExploreEducationStatistics.Common.Services
             return $"{PublicContentReleaseFastTrackPath(releaseId, prefix)}/{id}.json";
         }
 
-        public static string PublicContentPublicationsTreePath(string prefix = null)
+        public static string PrivateContentPublicationParentPath(Guid publicationId, string prefix = null)
         {
-            return $"{PublicContentPublicationsPath(prefix)}/tree.json";
+            return $"{PrivateContentPublicationsPath(prefix)}/{publicationId}";
         }
 
         public static string PublicContentPublicationParentPath(string slug, string prefix = null)
         {
             return $"{PublicContentPublicationsPath(prefix)}/{slug}";
+        }
+
+        public static string PrivateContentReleaseParentPath(Guid publicationId, Guid releaseId, string prefix = null)
+        {
+            return $"{PrivateContentPublicationParentPath(publicationId, prefix)}/releases/{releaseId}";
         }
 
         public static string PublicContentReleaseParentPath(string publicationSlug, string releaseSlug, string prefix = null)
@@ -71,16 +71,62 @@ namespace GovUk.Education.ExploreEducationStatistics.Common.Services
         {
             return $"{PublicContentPublicationParentPath(publicationSlug, prefix)}/releases/{releaseSlug}.json";
         }
+        
+        public static string PrivateContentDataBlockParentPath(
+            Guid publicationId,
+            Guid releaseId)
+        {
+            return $"{PrivateContentReleaseParentPath(publicationId, releaseId)}/data-blocks";
+        }
+        
+        public static string PublicContentDataBlockParentPath(
+            string publicationSlug,
+            string releaseSlug)
+        {
+            return $"{PublicContentReleaseParentPath(publicationSlug, releaseSlug)}/data-blocks";
+        }
+
+        public static string PrivateContentDataBlockPath(
+            Guid publicationId,
+            Guid releaseId,
+            Guid dataBlockId)
+        {
+            return $"{PrivateContentDataBlockParentPath(publicationId, releaseId)}/{dataBlockId}.json";
+        }
 
         public static string PublicContentDataBlockPath(
             string publicationSlug,
             string releaseSlug,
-            Guid dataBlockId,
-            string prefix = null)
+            Guid dataBlockId)
         {
-            return $"{PublicContentReleaseParentPath(publicationSlug, releaseSlug, prefix)}/data-blocks/{dataBlockId}.json";
+            return $"{PublicContentDataBlockParentPath(publicationSlug, releaseSlug)}/{dataBlockId}.json";
         }
 
+        public static string PublicContentSubjectMetaParentPath(string publicationSlug, string releaseSlug)
+        {
+            return $"{PublicContentReleaseParentPath(publicationSlug, releaseSlug)}/subject-meta";
+        }
+        
+        public static string PublicContentSubjectMetaPath(string publicationSlug, string releaseSlug, Guid subjectId)
+        {
+            return $"{PublicContentSubjectMetaParentPath(publicationSlug, releaseSlug)}/{subjectId}.json";
+        }
+        
+        public static string PublicContentFastTrackResultsParentPath(string publicationSlug, string releaseSlug)
+        {
+            return $"{PublicContentReleaseParentPath(publicationSlug, releaseSlug)}/fast-track-results";
+        }
+
+        public static string PublicContentFastTrackResultsPath(string publicationSlug, string releaseSlug, Guid fastTrackId)
+        {
+            return $"{PublicContentFastTrackResultsParentPath(publicationSlug, releaseSlug)}/{fastTrackId}.json";
+        }
+
+        public static string PublicContentReleaseSubjectsPath(string publicationSlug, string releaseSlug)
+        {
+            return $"{PublicContentReleaseParentPath(publicationSlug, releaseSlug)}/subjects.json";
+        }
+        
         public static string FilesPath(Guid rootPath, FileType type)
         {
             var typeFolder = (type == Metadata ? Data : type).GetEnumLabel();

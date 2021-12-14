@@ -2,6 +2,7 @@ import ButtonLink from '@admin/components/ButtonLink';
 import Link from '@admin/components/Link';
 import {
   publicationEditRoute,
+  publicationManageTeamAccessRoute,
   PublicationRouteParams,
   releaseCreateRoute,
 } from '@admin/routes/routes';
@@ -20,12 +21,14 @@ export interface Props {
   publication: MyPublication;
   topicId: string;
   onChangePublication: () => void;
+  showManageTeamAccessButton?: boolean;
 }
 
 const PublicationSummary = ({
   publication,
   topicId,
   onChangePublication,
+  showManageTeamAccessButton = true,
 }: Props) => {
   const { contact, permissions, releases, id, title } = publication;
 

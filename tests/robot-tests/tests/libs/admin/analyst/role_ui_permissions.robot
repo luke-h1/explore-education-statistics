@@ -1,5 +1,6 @@
 *** Settings ***
 Resource    ../../common.robot
+Resource    ../../admin-common.robot
 
 *** Keywords ***
 user navigates to publication on admin dashboard
@@ -15,7 +16,7 @@ user cannot see the create methodologies controls for publication
 
 user cannot see the create amendment controls for release
     [Arguments]    ${RELEASE_DETAILS_SECTION}
-    user waits until element contains link    ${RELEASE_DETAILS_SECTION}    View this release    30
+    user waits until element contains link    ${RELEASE_DETAILS_SECTION}    View this release    %{WAIT_SMALL}
     user checks element does not contain button    ${RELEASE_DETAILS_SECTION}    Amend this release
 
 user cannot see edit controls for release content
@@ -50,7 +51,7 @@ user can see the create methodologies controls for publication
 
 user can see the create amendment controls for release
     [Arguments]    ${RELEASE_DETAILS_SECTION}
-    user waits until element contains link    ${RELEASE_DETAILS_SECTION}    View this release    30
+    user waits until element contains link    ${RELEASE_DETAILS_SECTION}    View this release    %{WAIT_SMALL}
     user checks element contains button    ${RELEASE_DETAILS_SECTION}    Amend this release
 
 user cannot see the edit status controls for methodology

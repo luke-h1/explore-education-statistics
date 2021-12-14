@@ -14,6 +14,8 @@ import {
 import Link from '@frontend/components/Link';
 import { logEvent } from '@frontend/services/googleAnalyticsService';
 import React, { ReactNode } from 'react';
+import AdHocOfficialStatisticsSection from '@common/modules/find-statistics/components/AdHocOfficialStatisticsSection';
+import ExperimentalStatisticsSection from '@common/modules/find-statistics/components/ExperimentalStatisticsSection';
 
 interface Props {
   includeAnalytics?: boolean;
@@ -55,10 +57,7 @@ const PublicationReleaseHelpAndSupportSection = ({
           >
             {methodologies.map(methodology => (
               <p key={methodology.id} className="govuk-!-margin-bottom-9">
-                <Link
-                  to="/methodology/[methodology]"
-                  as={`/methodology/${methodology.slug}`}
-                >
+                <Link to={`/methodology/${methodology.slug}`}>
                   {methodology.title}
                 </Link>
               </p>
@@ -80,6 +79,19 @@ const PublicationReleaseHelpAndSupportSection = ({
         {releaseType === ReleaseType.OfficialStatistics && (
           <AccordionSection heading="Official Statistics" headingTag="h3">
             <OfficialStatisticsSection />
+          </AccordionSection>
+        )}
+        {releaseType === ReleaseType.AdHocStatistics && (
+          <AccordionSection
+            heading="Ad hoc Official Statistics"
+            headingTag="h3"
+          >
+            <AdHocOfficialStatisticsSection />
+          </AccordionSection>
+        )}
+        {releaseType === ReleaseType.ExperimentalStatistics && (
+          <AccordionSection heading="Experimental Statistics" headingTag="h3">
+            <ExperimentalStatisticsSection />
           </AccordionSection>
         )}
         <AccordionSection

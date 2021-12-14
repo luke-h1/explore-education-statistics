@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using AutoMapper;
 using Azure.Storage.Blobs;
 using GovUk.Education.ExploreEducationStatistics.Common.Cache;
+using GovUk.Education.ExploreEducationStatistics.Common.Cancellation;
 using GovUk.Education.ExploreEducationStatistics.Common.ModelBinding;
 using GovUk.Education.ExploreEducationStatistics.Common.Services;
 using GovUk.Education.ExploreEducationStatistics.Common.Services.Interfaces;
@@ -59,7 +60,11 @@ namespace GovUk.Education.ExploreEducationStatistics.Content.Api
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
             services.AddApplicationInsightsTelemetry();
-            services.AddMvc(options => { options.EnableEndpointRouting = false; })
+            services.AddMvc(options =>
+                {
+                    options.Filters.Add(new OperationCancelledExceptionFilter());
+                    options.EnableEndpointRouting = false;
+                })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
                 .AddNewtonsoftJson(options => {
                     options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
@@ -112,9 +117,9 @@ namespace GovUk.Education.ExploreEducationStatistics.Content.Api
             services.AddTransient<IFileStorageService, FileStorageService>();
             services.AddTransient<IFilterRepository, FilterRepository>();
             services.AddTransient<IIndicatorRepository, IndicatorRepository>();
-            services.AddTransient<IMetaGuidanceService, MetaGuidanceService>();
+            services.AddTransient<IDataGuidanceService, DataGuidanceService>();
             services.AddTransient<ITimePeriodService, TimePeriodService>();
-            services.AddTransient<IMetaGuidanceSubjectService, MetaGuidanceSubjectService>();
+            services.AddTransient<IDataGuidanceSubjectService, DataGuidanceSubjectService>();
             services.AddTransient<IFootnoteRepository, FootnoteRepository>();
             services.AddTransient<IMethodologyImageService, MethodologyImageService>();
             services.AddTransient<IMethodologyService, MethodologyService>();
@@ -181,7 +186,15 @@ namespace GovUk.Education.ExploreEducationStatistics.Content.Api
                 app.UseRewriter(option);
             }
 
-            app.UseCors(options => options.WithOrigins("http://localhost:3000", "http://localhost:3001","https://localhost:3000","https://localhost:3001").AllowAnyMethod().AllowAnyHeader());
+            app.UseCors(options => options
+                .WithOrigins(
+                    "http://localhost:3000",
+                    "http://localhost:3001",
+                    "https://localhost:3000",
+                    "https://localhost:3001")
+                .AllowAnyMethod()
+                .AllowAnyHeader());
+            
             app.UseMvc();
         }
 

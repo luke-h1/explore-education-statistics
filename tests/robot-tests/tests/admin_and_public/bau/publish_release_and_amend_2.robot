@@ -27,7 +27,6 @@ Create new release
     user opens publication on the admin dashboard    ${PUBLICATION_NAME}
     user clicks link    Create new release
     user creates release for publication    ${PUBLICATION_NAME}    Academic Year Q1    2020
-    user clicks link    Data and files
     user uploads subject    ${SUBJECT_NAME}    seven_filters.csv    seven_filters.meta.csv
 
 Upload another subject (for deletion later)
@@ -36,7 +35,7 @@ Upload another subject (for deletion later)
 
 Add data guidance to subject
     user clicks link    Data guidance
-    user waits until h2 is visible    Public data guidance    90
+    user waits until h2 is visible    Public data guidance    %{WAIT_MEDIUM}
     user enters text into element    id:dataGuidanceForm-content    Test data guidance content
     user waits until page contains accordion section    ${SUBJECT_NAME}
     user enters text into data guidance data file content editor    ${SUBJECT_NAME}
@@ -49,6 +48,8 @@ Add data guidance to second Subject
     user enters text into data guidance data file content editor    ${SECOND_SUBJECT}
     ...    data guidance content
     user clicks button    Save guidance
+    user waits until page contains button    ${SUBJECT_NAME}
+    user waits until page contains button    ${SECOND_SUBJECT}
 
 Navigate to 'Footnotes' page
     user clicks link    Footnotes
@@ -113,28 +114,27 @@ Select "Test Topic" publication
     user opens details dropdown    %{TEST_TOPIC_NAME}
     user clicks radio    ${PUBLICATION_NAME}
     user clicks element    id:publicationForm-submit
-    user waits until table tool wizard step is available    Choose a subject
+    user waits until table tool wizard step is available    2    Choose a subject
     user checks previous table tool step contains    1    Publication    ${PUBLICATION_NAME}
 
 Select subject
     user clicks radio    ${SUBJECT_NAME}
     user clicks element    id:publicationSubjectForm-submit
-    user waits until table tool wizard step is available    Choose locations
+    user waits until table tool wizard step is available    3    Choose locations
     user checks previous table tool step contains    2    Subject    ${SUBJECT_NAME}
 
 Select National location
-    user opens details dropdown    National
-    user clicks checkbox    England
+    user checks location checkbox is checked    England
 
 Click next step button
     user clicks element    id:locationFiltersForm-submit
-    user waits until table tool wizard step is available    Choose time period
+    user waits until table tool wizard step is available    4    Choose time period
 
 Select start date and end date
     user chooses select option    id:timePeriodForm-start    2012/13
     user chooses select option    id:timePeriodForm-end    2012/13
     user clicks element    id:timePeriodForm-submit
-    user waits until table tool wizard step is available    Choose your filters
+    user waits until table tool wizard step is available    5    Choose your filters
     user waits until page contains element    id:filtersForm-indicators
     user checks previous table tool step contains    4    Time period    2012/13
 
@@ -227,14 +227,14 @@ Validate table cells
 
 Generate the permalink
     [Documentation]    EES-214
-    user waits until page contains button    Generate shareable link    60
+    user waits until page contains button    Generate shareable link    %{WAIT_SMALL}
     user clicks button    Generate shareable link
     user waits until page contains testid    permalink-generated-url
     ${PERMA_LOCATION_URL}    Get Value    testid:permalink-generated-url
     Set Suite Variable    ${PERMA_LOCATION_URL}
 
 Go to permalink
-    user goes to url    ${PERMA_LOCATION_URL}
+    user navigates to public frontend    ${PERMA_LOCATION_URL}
     user waits until h1 is visible    '${SUBJECT_NAME}' from '${PUBLICATION_NAME}'
     user checks page does not contain    WARNING - The data used in this permalink may be out-of-date.
     user checks page contains    Footnote 1 ${SUBJECT_NAME}
@@ -272,10 +272,11 @@ Replace subject data
 
 Confirm data replacement
     user clicks button    Confirm data replacement
+    user waits until h2 is visible    Data replacement complete    %{WAIT_MEDIUM}
 
 Delete second subject file
-    user clicks link    Footnotes    # to avoid focus issues
     user clicks link    Data and files
+    user waits until h2 is visible    Add data file to release
     user deletes subject file    ${SECOND_SUBJECT}
 
 Navigate to 'Content' page for release amendment
@@ -291,12 +292,25 @@ Add release note to release amendment
     user waits until element contains    css:#releaseNotes li:nth-of-type(1) time    ${date}
     user waits until element contains    css:#releaseNotes li:nth-of-type(1) p    Test release note one
 
-Go to "Sign off" page and approve release amendment
+Go to "Sign off" page
     user clicks link    Sign off
+    user waits until h3 is visible    Release status history
+
+Validate Release status table row is correct
+    user waits until page contains element    css:table
+    user checks element count is x    xpath://table/tbody/tr    1
+    ${datetime}    get current datetime    %-d %B %Y
+    table cell should contain    css:table    2    1    ${datetime}    # Date
+    table cell should contain    css:table    2    2    Approved    # Status
+    table cell should contain    css:table    2    3    Approved by UI tests    # Internal note
+    table cell should contain    css:table    2    4    1    # Release version
+    table cell should contain    css:table    2    5    ees-bau1@education.gov.uk    # By user
+
+Approve release amendment
     user approves amended release for immediate publication
 
 Go to permalink page & check for error element to be present
-    user goes to url    ${PERMA_LOCATION_URL}
+    user navigates to public frontend    ${PERMA_LOCATION_URL}
     user waits until page contains    WARNING - The data used in this permalink may be out-of-date.
 
 Check the table has the same results as original table
@@ -356,13 +370,13 @@ Check the table has the same results as original table
     user checks results table cell contains    7    5    1
 
 Check amended release doesn't contain deleted subject
-    user goes to url    %{PUBLIC_URL}/data-tables
+    user navigates to public frontend    %{PUBLIC_URL}/data-tables
     user waits until h1 is visible    Create your own tables
     user opens details dropdown    %{TEST_THEME_NAME}
     user opens details dropdown    %{TEST_TOPIC_NAME}
     user clicks radio    ${PUBLICATION_NAME}
     user clicks element    id:publicationForm-submit
-    user waits until table tool wizard step is available    Choose a subject
+    user waits until table tool wizard step is available    2    Choose a subject
     user checks previous table tool step contains    1    Publication    ${PUBLICATION_NAME}
     user checks page does not contain    ${SECOND_SUBJECT}
 
@@ -371,7 +385,6 @@ Create amendment to modify release
     user creates amendment for release    ${PUBLICATION_NAME}    ${RELEASE_NAME}    (Live - Latest release)
 
 Add subject to release
-    user clicks link    Data and files
     user uploads subject    ${THIRD_SUBJECT}    upload-file-test-with-filter.csv
     ...    upload-file-test-with-filter.meta.csv
 
@@ -416,7 +429,7 @@ Go to "Sign off" to approve amended release for immediate publication
     user approves amended release for immediate publication
 
 Go to public Table Tool page for amendment
-    user goes to url    %{PUBLIC_URL}/data-tables
+    user navigates to public frontend    %{PUBLIC_URL}/data-tables
     user waits until h1 is visible    Create your own tables
 
 Select publication
@@ -424,29 +437,28 @@ Select publication
     user opens details dropdown    %{TEST_TOPIC_NAME}
     user clicks radio    ${PUBLICATION_NAME}
     user clicks element    id:publicationForm-submit
-    user waits until table tool wizard step is available    Choose a subject
+    user waits until table tool wizard step is available    2    Choose a subject
     user checks previous table tool step contains    1    Publication    ${PUBLICATION_NAME}
     #user checks page does not contain    ${SECOND_SUBJECT}    # EES-1360
 
 Select subject again
     user clicks radio    ${SUBJECT_NAME}
     user clicks element    id:publicationSubjectForm-submit
-    user waits until table tool wizard step is available    Choose locations
+    user waits until table tool wizard step is available    3    Choose locations
     user checks previous table tool step contains    2    Subject    ${SUBJECT_NAME}
 
 Select National location filter
-    user opens details dropdown    National
-    user clicks checkbox    England
+    user checks location checkbox is checked    England
 
 Click the next step button
     user clicks element    id:locationFiltersForm-submit
-    user waits until table tool wizard step is available    Choose time period
+    user waits until table tool wizard step is available    4    Choose time period
 
 Select start date + end date
     user chooses select option    id:timePeriodForm-start    2020 Week 13
     user chooses select option    id:timePeriodForm-end    2021 Week 24
     user clicks element    id:timePeriodForm-submit
-    user waits until table tool wizard step is available    Choose your filters
+    user waits until table tool wizard step is available    5    Choose your filters
     user waits until page contains element    id:filtersForm-indicators
 
 Select four indicators
@@ -463,9 +475,20 @@ Select the date cateogory
     user opens details dropdown    Date
     user clicks select all for category    Date
 
-Generate table
+Attempt to generate a table that is too large
     user clicks element    id:filtersForm-submit
-    user waits until page contains    Generate shareable link    60
+    user waits until page contains
+    ...    Could not create table as the filters chosen may exceed the maximum allowed table size.
+    user waits until page contains    Select different filters or download the subject data.
+    user waits until page contains button    Download Seven filters (csv, 17 Kb)    %{WAIT_MEDIUM}
+
+Reduce the number of selected Dates and generate a smaller table
+    user clicks unselect all for category    Date
+    user clicks category checkbox    Date    23/03/2020
+    user clicks category checkbox    Date    24/03/2020
+    user clicks category checkbox    Date    25/03/2020
+    user clicks element    id:filtersForm-submit
+    user waits until page contains    Generate shareable link    %{WAIT_SMALL}
 
 Validate generated table
     user checks page contains    Updating ${SUBJECT_NAME} footnote
@@ -478,7 +501,7 @@ Generate the new permalink
     Set Suite Variable    ${PERMA_LOCATION_URL_TWO}
 
 Go to new permalink
-    user goes to url    ${PERMA_LOCATION_URL_TWO}
+    user navigates to public frontend    ${PERMA_LOCATION_URL_TWO}
     user waits until h1 is visible    '${SUBJECT_NAME}' from '${PUBLICATION_NAME}'
     user checks page does not contain    WARNING - The data used in this permalink may be out-of-date.
     user checks page contains    Updating ${SUBJECT_NAME} footnote

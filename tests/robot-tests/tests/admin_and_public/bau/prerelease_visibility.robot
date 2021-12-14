@@ -24,7 +24,6 @@ Verify release summary
     ...    National Statistics
 
 Upload subject
-    user clicks link    Data and files
     user uploads subject    UI test subject    upload-file-test.csv    upload-file-test.meta.csv
 
 Go to 'Sign Off' page
@@ -36,10 +35,7 @@ Go to 'Sign Off' page
     Set Suite Variable    ${PUBLIC_RELEASE_LINK}
 
 Go to Public Release Link
-    # To get around basic auth on public frontend
-    user goes to url    %{PUBLIC_URL}
-    user waits until h1 is visible    Explore our statistics and data
-    user goes to url    ${PUBLIC_RELEASE_LINK}
+    user navigates to public frontend    ${PUBLIC_RELEASE_LINK}
     user waits until page contains    Page not found
     user checks page does not contain    ${RELEASE_NAME}
 
@@ -74,8 +70,8 @@ Add data guidance to subject
 
 Go to "Sign off" page
     user clicks link    Sign off
-    user waits until h2 is visible    Sign off    90
-    user waits until page contains button    Edit release status    60
+    user waits until h2 is visible    Sign off    %{WAIT_MEDIUM}
+    user waits until page contains button    Edit release status    %{WAIT_SMALL}
 
 Approve release and wait for it to be Scheduled
     [Tags]    NotAgainstDev
@@ -88,7 +84,7 @@ Approve release and wait for it to be Scheduled
     user clicks radio    Approved for publication
     user enters text into element    id:releaseStatusForm-latestInternalReleaseNote    Approved by UI tests
 
-    user waits until page contains element    xpath://label[text()="On a specific date"]/../input    60
+    user waits until page contains element    xpath://label[text()="On a specific date"]/../input    %{WAIT_SMALL}
     user clicks radio    On a specific date
 
     user waits until page contains    Publish date
@@ -105,14 +101,14 @@ Approve release and wait for it to be Scheduled
     user checks summary list contains    Next release expected    January 2001
     user checks summary list contains    Current status    Approved
 
-    user waits for release process status to be    Scheduled    60
+    user waits for release process status to be    Scheduled    %{WAIT_SMALL}
 
 Check scheduled release isn't visible on public Table Tool
     user navigates to data tables page on public frontend
     user checks page does not contain    ${PUBLICATION_NAME}
 
 Go to public release URL and check release isn't visible
-    user goes to url    ${PUBLIC_RELEASE_LINK}
+    user navigates to public frontend    ${PUBLIC_RELEASE_LINK}
     user waits until page does not contain    ${PUBLICATION_NAME}
 
 Check "Page not found" appears
@@ -137,5 +133,5 @@ Approve release for immediate publication but don't wait to finish
     user checks summary list contains    Current status    Approved
 
 Go to public release URL again and check release isn't visible
-    user goes to url    ${PUBLIC_RELEASE_LINK}
+    user navigates to public frontend    ${PUBLIC_RELEASE_LINK}
     user waits until page contains    Page not found

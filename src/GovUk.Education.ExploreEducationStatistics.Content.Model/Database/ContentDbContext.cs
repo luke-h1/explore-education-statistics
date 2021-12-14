@@ -162,7 +162,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Content.Model.Database
             modelBuilder.Entity<MethodologyNote>()
                 .Property(n => n.Updated)
                 .HasConversion(
-                    v => v, 
+                    v => v,
                     v => v.HasValue ? DateTime.SpecifyKind(v.Value, DateTimeKind.Utc) : (DateTime?) null);
 
             modelBuilder.Entity<MethodologyNote>()
@@ -179,6 +179,18 @@ namespace GovUk.Education.ExploreEducationStatistics.Content.Model.Database
             modelBuilder.Entity<Publication>()
                 .OwnsOne(p => p.ExternalMethodology)
                 .ToTable("ExternalMethodology");
+
+            modelBuilder.Entity<Publication>()
+                .Property(n => n.Published)
+                .HasConversion(
+                    v => v,
+                    v => v.HasValue ? DateTime.SpecifyKind(v.Value, DateTimeKind.Utc) : (DateTime?) null);
+
+            modelBuilder.Entity<Publication>()
+                .Property(n => n.Updated)
+                .HasConversion(
+                    v => v,
+                    v => v.HasValue ? DateTime.SpecifyKind(v.Value, DateTimeKind.Utc) : (DateTime?) null);
 
             modelBuilder.Entity<PublicationMethodology>()
                 .HasKey(pm => new {pm.PublicationId, pm.MethodologyId});
@@ -381,11 +393,19 @@ namespace GovUk.Education.ExploreEducationStatistics.Content.Model.Database
                 .HasConversion(new EnumToStringConverter<PublicationRole>());
 
             modelBuilder.Entity<UserReleaseRole>()
+                .Property(userReleaseRole => userReleaseRole.Created)
+                .HasConversion(
+                    v => v,
+                    v => v.HasValue ? DateTime.SpecifyKind(v.Value, DateTimeKind.Utc) : (DateTime?) null);
+
+            modelBuilder.Entity<UserReleaseRole>()
                 .Property(r => r.Role)
                 .HasConversion(new EnumToStringConverter<ReleaseRole>());
 
             modelBuilder.Entity<UserReleaseRole>()
-                .HasQueryFilter(r => !r.SoftDeleted);
+                .HasQueryFilter(r =>
+                    !r.SoftDeleted
+                    && r.Deleted == null);
 
             modelBuilder.Entity<UserReleaseInvite>()
                 .Property(r => r.Role)
@@ -393,6 +413,12 @@ namespace GovUk.Education.ExploreEducationStatistics.Content.Model.Database
 
             modelBuilder.Entity<UserReleaseInvite>()
                 .HasQueryFilter(r => !r.SoftDeleted);
+
+            modelBuilder.Entity<UserReleaseInvite>()
+                .Property(invite => invite.Created)
+                .HasConversion(
+                    v => v,
+                    v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
 
             modelBuilder.Entity<ReleaseType>().HasData(
                 new ReleaseType
@@ -403,12 +429,22 @@ namespace GovUk.Education.ExploreEducationStatistics.Content.Model.Database
                 new ReleaseType
                 {
                     Id = new Guid("1821abb8-68b0-431b-9770-0bea65d02ff0"),
-                    Title = "Ad Hoc"
+                    Title = "Ad Hoc Statistics"
                 },
                 new ReleaseType
                 {
                     Id = new Guid("8becd272-1100-4e33-8a7d-1c0c4e3b42b8"),
                     Title = "National Statistics"
+                },
+                new ReleaseType
+                {
+                    Id = new Guid("f5de8522-3150-435d-98d5-1d14763f8c54"),
+                    Title = "Experimental Statistics"
+                },
+                new ReleaseType
+                {
+                    Id = new Guid("15bd4f57-c837-4821-b308-7f4169cd9330"),
+                    Title = "Management Information"
                 });
 
             modelBuilder.Entity<GlossaryEntry>()
