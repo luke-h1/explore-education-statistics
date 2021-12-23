@@ -11,6 +11,8 @@ import PrototypeHomepage from './PrototypeHomepage';
 import PrototypeHomepage2 from './PrototypeHomepage2';
 import PrototypeRelease from './PrototypeRelease';
 import PrototypeManageUsers from './PrototypeManageUsers';
+import PrototypeAdminDashboard from './PrototypeAdminDashboard';
+import PrototypeAdminPublication from './PrototypeAdminPublication';
 
 interface PrototypeRoute extends RouteProps {
   name: string;
@@ -77,6 +79,16 @@ const prototypeRoutes: PrototypeRoute[] = [
     name: 'Manage users',
     path: '/prototypes/manage-users',
     component: PrototypeManageUsers,
+  },
+  {
+    name: 'Admin dashboard',
+    path: '/prototypes/admin-dashboard',
+    component: PrototypeAdminDashboard,
+  },
+  {
+    name: 'Admin publication',
+    path: '/prototypes/admin-publication',
+    component: PrototypeAdminPublication,
   },
 ];
 
