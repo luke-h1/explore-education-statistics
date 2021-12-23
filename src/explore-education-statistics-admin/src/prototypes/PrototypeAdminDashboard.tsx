@@ -198,41 +198,18 @@ const PrototypeManageUsers = () => {
                   </td>
                   <td>
                     <Details
-                      summary="View stages"
+                      summary="View issues"
                       className="govuk-!-margin-bottom-0"
                     >
                       <ul className="govuk-list">
                         <li>
-                          <Tag colour="green">
-                            Data ✓{' '}
-                            <span className="govuk-visually-hidden">
-                              Complete
-                            </span>
-                          </Tag>
+                          <Tag colour="red">3 Errors</Tag>
                         </li>
                         <li>
-                          <Tag colour="green">
-                            Content ✓{' '}
-                            <span className="govuk-visually-hidden">
-                              Complete
-                            </span>
-                          </Tag>
+                          <Tag colour="orange">3 Warnings</Tag>
                         </li>
                         <li>
-                          <Tag colour="green">
-                            Files ✓{' '}
-                            <span className="govuk-visually-hidden">
-                              Complete
-                            </span>
-                          </Tag>
-                        </li>
-                        <li>
-                          <Tag colour="green">
-                            Publishing ✓
-                            <span className="govuk-visually-hidden">
-                              Complete
-                            </span>{' '}
-                          </Tag>
+                          <Tag colour="grey">3 Comments</Tag>
                         </li>
                       </ul>
                     </Details>
