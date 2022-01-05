@@ -246,6 +246,7 @@ const PrototypeManagePublication = () => {
                 </tr>
               </tbody>
             </table>
+            <Button>Create new release</Button>
           </div>
           {/*}
           <Details 
@@ -382,10 +383,10 @@ const PrototypeManagePublication = () => {
                     <Tag>Approved</Tag>
                   </td>
                   <td>28 March 2021</td>
-                  <td>
+                  <td className="dfe-align--left">
                     <a href="#">Amend</a>
                   </td>
-                  <td>
+                  <td className="dfe-align--centre">
                     <a href="#">View</a>
                   </td>
                   <td />
@@ -397,13 +398,13 @@ const PrototypeManagePublication = () => {
                     <Tag>Approved</Tag>
                   </td>
                   <td>28 March 2021</td>
-                  <td>
+                  <td className="dfe-align--left">
                     <a href="#">Amend</a>
                   </td>
-                  <td>
+                  <td className="dfe-align--centre">
                     <a href="#">View</a>
                   </td>
-                  <td>
+                  <td className="dfe-align--right">
                     <a href="#">Remove</a>
                   </td>
                 </tr>
