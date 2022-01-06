@@ -137,7 +137,6 @@ const PrototypeManageUsers = () => {
                 <tr className="govuk-table__row">
                   <th>Publication / Release period</th>
                   <th>State</th>
-                  <th>Status</th>
                   <th style={{ width: '210px' }}>Checklist</th>
                   <th style={{ width: '180px' }}>Publish date</th>
                   <th colSpan={2} className="govuk-table__cell--numeric">
@@ -155,9 +154,6 @@ const PrototypeManageUsers = () => {
                   <td>Academic Year 2020/21 (Not live)</td>
                   <td>
                     <Tag>Draft</Tag>
-                  </td>
-                  <td>
-                    <Tag colour="red">Not ready</Tag>
                   </td>
                   <td>
                     <Details
@@ -192,9 +188,6 @@ const PrototypeManageUsers = () => {
                   <td>Academic Year 2019/20 (Not live)</td>
                   <td>
                     <Tag>Draft</Tag>
-                  </td>
-                  <td>
-                    <Tag colour="red">Not ready</Tag>
                   </td>
                   <td>
                     <Details
@@ -236,9 +229,6 @@ const PrototypeManageUsers = () => {
                     <Tag>Draft</Tag>
                   </td>
                   <td>
-                    <Tag colour="red">Not ready</Tag>
-                  </td>
-                  <td>
                     <Details
                       summary="View issues"
                       className="govuk-!-margin-bottom-0"
@@ -276,9 +266,6 @@ const PrototypeManageUsers = () => {
                   <td>Academic Year 2020/21 (Not live)</td>
                   <td>
                     <Tag>Draft</Tag>
-                  </td>
-                  <td>
-                    <Tag colour="red">Not ready</Tag>
                   </td>
                   <td>
                     <Details

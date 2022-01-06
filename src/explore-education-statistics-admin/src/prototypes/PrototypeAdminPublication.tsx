@@ -69,7 +69,6 @@ const PrototypeManagePublication = () => {
                 <tr className="govuk-table__row">
                   <th>Release period</th>
                   <th>State</th>
-                  <th>Status</th>
                   <th style={{ width: '210px' }}>Checklist</th>
                   <th style={{ width: '180px' }}>Publish date</th>
                   <th colSpan={2}>Actions</th>
@@ -80,9 +79,6 @@ const PrototypeManagePublication = () => {
                   <td>Academic Year 2020/21 (Not live)</td>
                   <td>
                     <Tag>Draft</Tag>
-                  </td>
-                  <td>
-                    <Tag colour="red">Not ready</Tag>
                   </td>
                   <td>
                     <Details
@@ -117,9 +113,6 @@ const PrototypeManagePublication = () => {
                   <td>Academic Year 2019/20 (Live - Latest release)</td>
                   <td>
                     <Tag colour="green">Published</Tag>
-                  </td>
-                  <td>
-                    <Tag colour="green">Complete</Tag>
                   </td>
                   <td>
                     <Details
@@ -176,9 +169,6 @@ const PrototypeManagePublication = () => {
                     <Tag colour="green">Published</Tag>
                   </td>
                   <td>
-                    <Tag colour="green">Complete</Tag>
-                  </td>
-                  <td>
                     <Details
                       summary="View stages"
                       className="govuk-!-margin-bottom-0"
@@ -213,9 +203,6 @@ const PrototypeManagePublication = () => {
                     <Tag colour="green">Published</Tag>
                   </td>
                   <td>
-                    <Tag colour="green">Complete</Tag>
-                  </td>
-                  <td>
                     <Details
                       summary="View stages"
                       className="govuk-!-margin-bottom-0"
@@ -244,9 +231,48 @@ const PrototypeManagePublication = () => {
                     <a href="#">View</a>
                   </td>
                 </tr>
+                <tr>
+                  <td>Academic Year 2016/17 (Live)</td>
+                  <td>
+                    <Tag colour="green">Published</Tag>
+                  </td>
+                  <td>
+                    <Details
+                      summary="View stages"
+                      className="govuk-!-margin-bottom-0"
+                    >
+                      <ul className="govuk-list">
+                        <li>
+                          <Tag colour="green">Data ✓</Tag>
+                        </li>
+                        <li>
+                          <Tag colour="green">Content ✓</Tag>
+                        </li>
+                        <li>
+                          <Tag colour="green">Files ✓</Tag>
+                        </li>
+                        <li>
+                          <Tag colour="green">Publishing ✓</Tag>
+                        </li>
+                      </ul>
+                    </Details>
+                  </td>
+                  <td>25 Sept 17</td>
+                  <td>
+                    <a href="#">Amend</a>
+                  </td>
+                  <td>
+                    <a href="#">View</a>
+                  </td>
+                </tr>
               </tbody>
             </table>
-            <Button>Create new release</Button>
+
+            <a href="#">View previous 5 releases</a>
+
+            <div className="govuk-!-margin-top-6">
+              <Button>Create new release</Button>
+            </div>
           </div>
           {/*}
           <Details 
