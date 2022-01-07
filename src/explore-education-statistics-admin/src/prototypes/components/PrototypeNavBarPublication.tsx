@@ -13,22 +13,22 @@ const PrototypeNavBarPublication = () => {
     >
       <ul className={classNames(styles.list, 'govuk-!-margin-bottom-0')}>
         <li>
-          <NavLink to="?page=releases">Releases</NavLink>
+          <NavLink to="admin-publication">Releases</NavLink>
         </li>
         <li>
-          <NavLink to="?page=methodology">Methodology</NavLink>
+          <NavLink to="admin-methodology">Methodology</NavLink>
         </li>
         <li>
-          <NavLink to="/prototypes2">Contact</NavLink>
+          <NavLink to="admin-contact">Contact</NavLink>
         </li>
         <li>
-          <NavLink to="/prototypes3">Publication details</NavLink>
+          <NavLink to="admin-details">Publication details</NavLink>
         </li>
         <li>
-          <NavLink to="/prototypes4">Team access</NavLink>
+          <NavLink to="admin-access">Team access</NavLink>
         </li>
         <li>
-          <NavLink to="pre-release">Legacy releases</NavLink>
+          <NavLink to="admin-legacy">Legacy releases</NavLink>
         </li>
       </ul>
     </nav>

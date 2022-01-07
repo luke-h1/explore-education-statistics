@@ -3,10 +3,16 @@ import Link from '@admin/components/Link';
 import PrototypePage from '@admin/prototypes/components/PrototypePage';
 import React, { useState } from 'react';
 import RelatedInformation from '@common/components/RelatedInformation';
-import ReleaseList from '@admin/prototypes/components/PrototypePublicationReleaseList';
 import Nav from '@admin/prototypes/components/PrototypeNavBarPublication';
+import Button from '@common/components/Button';
+import ButtonLink from '@common/components/ButtonLink';
+import SummaryList from '@common/components/SummaryList';
+import SummaryListItem from '@common/components/SummaryListItem';
 
 const PrototypeManagePublication = () => {
+  const queryParams = new URLSearchParams(window.location.search);
+  const page = queryParams.get('page');
+
   return (
     <PrototypePage
       wide
@@ -37,7 +43,24 @@ const PrototypeManagePublication = () => {
 
       <Nav />
 
-      <ReleaseList />
+      <h3>Contact for this publication</h3>
+      <p className="govuk-hint">
+        They will be the main point of contact for data and methodology
+        enquiries for this publication and its releases.
+      </p>
+      <SummaryList>
+        <SummaryListItem term="Team">Prototyping team</SummaryListItem>
+        <SummaryListItem term="Team email">
+          <a href="mailto:#">ProtTeam@education.gov.uk</a>
+        </SummaryListItem>
+        <SummaryListItem term="Contact name">John Smith</SummaryListItem>
+        <SummaryListItem term="Contact telephone">
+          01234 0567891
+        </SummaryListItem>
+      </SummaryList>
+      <ButtonLink className="govuk-button--secondary" href="#" as="#">
+        Edit contact details
+      </ButtonLink>
     </PrototypePage>
   );
 };

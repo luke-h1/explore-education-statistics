@@ -107,24 +107,73 @@ const PrototypeManageUsers = () => {
           <h2>Pupils and schools</h2>
           <h3>Pupil absence</h3>
 
-          <p>Current publications:</p>
-          <ul className="govuk-list govuk-list--spaced govuk-!-margin-bottom-9">
-            <li>
-              <Link to="/prototypes/admin-publication">
-                Pupil absence in schools in England
-              </Link>
-            </li>
-            <li>
-              <Link to="/admin-publication">
-                Pupil absence in schools in England: autumn and spring
-              </Link>
-            </li>
-            <li>
-              <Link to="/admin-publication">
-                Pupil absence in schools in England: autumn term
-              </Link>
-            </li>
-          </ul>
+          <table className="govuk-table">
+            <thead className="govuk-table__head">
+              <tr className="govuk-table__row">
+                <th scope="col">Current publications</th>
+                <th scope="col" className="govuk-table__cell--numeric">
+                  <Tag>Draft</Tag>
+                </th>
+                <th scope="col" className="govuk-table__cell--numeric">
+                  <Tag>In review</Tag>
+                </th>
+                <th scope="col" className="govuk-table__cell--numeric">
+                  <Tag colour="blue">Scheduled</Tag>
+                </th>
+                <th scope="col" className="govuk-table__cell--numeric">
+                  <Tag colour="green">Published</Tag>
+                </th>
+                <th className="govuk-table__cell--numeric">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Pupil absence in schools in England</td>
+                <td className="govuk-table__cell--numeric">1</td>
+                <td className="govuk-table__cell--numeric">1</td>
+                <td className="govuk-table__cell--numeric">0</td>
+                <td className="govuk-table__cell--numeric">10</td>
+                <td className="govuk-table__cell--numeric">
+                  <Link to="/prototypes/admin-publication">
+                    View{' '}
+                    <span className="govuk-visually-hidden">
+                      Pupil absence in schools in England
+                    </span>
+                  </Link>
+                </td>
+              </tr>
+              <tr>
+                <td>Pupil absence in schools in England: autumn and spring</td>
+                <td className="govuk-table__cell--numeric">2</td>
+                <td className="govuk-table__cell--numeric">1</td>
+                <td className="govuk-table__cell--numeric">1</td>
+                <td className="govuk-table__cell--numeric">15</td>
+                <td className="govuk-table__cell--numeric">
+                  <Link to="/prototypes/admin-publication">
+                    View{' '}
+                    <span className="govuk-visually-hidden">
+                      Pupil absence in schools in England
+                    </span>
+                  </Link>
+                </td>
+              </tr>
+              <tr>
+                <td>Pupil absence in schools in England: autumn term</td>
+                <td className="govuk-table__cell--numeric">1</td>
+                <td className="govuk-table__cell--numeric">0</td>
+                <td className="govuk-table__cell--numeric">1</td>
+                <td className="govuk-table__cell--numeric">10</td>
+                <td className="govuk-table__cell--numeric">
+                  <Link to="/prototypes/admin-publication">
+                    View{' '}
+                    <span className="govuk-visually-hidden">
+                      Pupil absence in schools in England
+                    </span>
+                  </Link>
+                </td>
+              </tr>
+            </tbody>
+          </table>
 
           <a href="#" className="govuk-button">
             Create new publication
@@ -138,7 +187,6 @@ const PrototypeManageUsers = () => {
                   <th>Publication / Release period</th>
                   <th>State</th>
                   <th style={{ width: '210px' }}>Checklist</th>
-                  <th style={{ width: '180px' }}>Publish date</th>
                   <th colSpan={2} className="govuk-table__cell--numeric">
                     Actions
                   </th>
@@ -157,28 +205,36 @@ const PrototypeManageUsers = () => {
                   </td>
                   <td>
                     <Details
-                      summary="View issues"
+                      summary="View issues (9)"
                       className="govuk-!-margin-bottom-0"
                     >
-                      <ul className="govuk-list">
+                      <ul className="govuk-list dfe-flex dfe-justify-content--space-between">
                         <li>
-                          <Tag colour="red">3 Errors</Tag>
+                          <Tag colour="red">
+                            <span title="3 errors">3 ✖</span>
+                          </Tag>
                         </li>
                         <li>
-                          <Tag colour="orange">3 Warnings</Tag>
+                          <Tag colour="yellow">
+                            <span title="3 Warnings">3 &#33;</span>
+                          </Tag>
                         </li>
                         <li>
-                          <Tag colour="grey">3 Comments</Tag>
+                          <Tag colour="grey">
+                            <span title="3 unresolved comments">
+                              3 &#8216;&#8217;
+                            </span>
+                          </Tag>
                         </li>
                       </ul>
                     </Details>
                   </td>
-                  <td>N/A</td>
                   <td className="govuk-table__cell--numeric">
                     <a href="#">
                       Edit{' '}
                       <span className="govuk-visually-hidden">
-                        Academic Year 2019/20 (Not live)
+                        Academic Year 2019/20 (Not live), Pupil absence in
+                        schools in England
                       </span>
                     </a>
                   </td>
@@ -187,27 +243,34 @@ const PrototypeManageUsers = () => {
                 <tr>
                   <td>Academic Year 2019/20 (Not live)</td>
                   <td>
-                    <Tag>Draft</Tag>
+                    <Tag>In review</Tag>
                   </td>
                   <td>
                     <Details
-                      summary="View issues"
+                      summary="View issues (1)"
                       className="govuk-!-margin-bottom-0"
                     >
-                      <ul className="govuk-list">
+                      <ul className="govuk-list dfe-flex dfe-justify-content--space-between">
                         <li>
-                          <Tag colour="red">3 Errors</Tag>
+                          <Tag colour="green">
+                            <span title="o errors">0 ✖</span>
+                          </Tag>
                         </li>
                         <li>
-                          <Tag colour="orange">3 Warnings</Tag>
+                          <Tag colour="yellow">
+                            <span title="1 Warning">1 &#33;</span>
+                          </Tag>
                         </li>
                         <li>
-                          <Tag colour="grey">3 Comments</Tag>
+                          <Tag colour="green">
+                            <span title="0 unresolved comments">
+                              0 &#8216;&#8217;
+                            </span>
+                          </Tag>
                         </li>
                       </ul>
                     </Details>
                   </td>
-                  <td>N/A</td>
                   <td className="govuk-table__cell--numeric">
                     <a href="#">
                       Edit{' '}
@@ -230,23 +293,30 @@ const PrototypeManageUsers = () => {
                   </td>
                   <td>
                     <Details
-                      summary="View issues"
+                      summary="View issues (9)"
                       className="govuk-!-margin-bottom-0"
                     >
-                      <ul className="govuk-list">
+                      <ul className="govuk-list dfe-flex dfe-justify-content--space-between">
                         <li>
-                          <Tag colour="red">3 Errors</Tag>
+                          <Tag colour="red">
+                            <span title="3 errors">3 ✖</span>
+                          </Tag>
                         </li>
                         <li>
-                          <Tag colour="orange">3 Warnings</Tag>
+                          <Tag colour="yellow">
+                            <span title="3 Warnings">3 &#33;</span>
+                          </Tag>
                         </li>
                         <li>
-                          <Tag colour="grey">3 Comments</Tag>
+                          <Tag colour="grey">
+                            <span title="3 unresolved comments">
+                              3 &#8216;&#8217;
+                            </span>
+                          </Tag>
                         </li>
                       </ul>
                     </Details>
                   </td>
-                  <td>N/A</td>
                   <td className="govuk-table__cell--numeric">
                     <a href="#">
                       Edit{' '}
@@ -269,23 +339,30 @@ const PrototypeManageUsers = () => {
                   </td>
                   <td>
                     <Details
-                      summary="View issues"
+                      summary="View issues (9)"
                       className="govuk-!-margin-bottom-0"
                     >
-                      <ul className="govuk-list">
+                      <ul className="govuk-list dfe-flex dfe-justify-content--space-between">
                         <li>
-                          <Tag colour="red">3 Errors</Tag>
+                          <Tag colour="red">
+                            <span title="3 errors">3 ✖</span>
+                          </Tag>
                         </li>
                         <li>
-                          <Tag colour="orange">3 Warnings</Tag>
+                          <Tag colour="yellow">
+                            <span title="3 Warnings">3 &#33;</span>
+                          </Tag>
                         </li>
                         <li>
-                          <Tag colour="grey">3 Comments</Tag>
+                          <Tag colour="grey">
+                            <span title="3 unresolved comments">
+                              3 &#8216;&#8217;
+                            </span>
+                          </Tag>
                         </li>
                       </ul>
                     </Details>
                   </td>
-                  <td>N/A</td>
                   <td className="govuk-table__cell--numeric">
                     <a href="#">
                       Edit{' '}

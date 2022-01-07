@@ -19,28 +19,65 @@ const PrototypePublicationReleaseList = () => {
           </caption>
           <thead className="govuk-table__head">
             <tr className="govuk-table__row">
-              <th>Release period</th>
-              <th>State</th>
-              <th style={{ width: '210px' }}>Checklist</th>
-              <th style={{ width: '180px' }}>Publish date</th>
+              <th style={{ width: '40%' }}>Release period</th>
+              <th style={{ width: '15%' }}>State</th>
+              <th style={{ width: '20%' }} colSpan={3}>
+                Checklist
+              </th>
+              <th style={{ width: '15%' }}>Publish date</th>
               <th colSpan={2}>Actions</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>Academic Year 2020/21 (Not live)</td>
+              <td>Academic Year 2021/22 (Not live)</td>
               <td>
                 <Tag>Draft</Tag>
               </td>
               <td>
-                <Tag colour="red" className="govuk-!-margin-right-1">
+                <Tag colour="red">
                   <span title="3 errors">3 ✖</span>
                 </Tag>
-                <Tag colour="yellow" className="govuk-!-margin-right-1">
+              </td>
+              <td>
+                <Tag colour="yellow">
                   <span title="3 Warnings">3 &#33;</span>
                 </Tag>
+              </td>
+              <td style={{ width: '100px' }}>
                 <Tag colour="grey">
-                  <span title="3 unresolved comments">3</span>
+                  <span title="3 unresolved comments">3 &#8216;&#8217;</span>
+                </Tag>
+              </td>
+              <td>N/A</td>
+              <td>
+                <a href="#">
+                  Edit{' '}
+                  <span className="govuk-visually-hidden">
+                    Academic Year 2019/20 (Not live)
+                  </span>
+                </a>
+              </td>
+              <td />
+            </tr>
+            <tr>
+              <td>Academic Year 2020/21 (Not live)</td>
+              <td>
+                <Tag>in review</Tag>
+              </td>
+              <td>
+                <Tag colour="red">
+                  <span title="0 errors">0 ✖</span>
+                </Tag>
+              </td>
+              <td>
+                <Tag colour="yellow">
+                  <span title="1 Warning">1 &#33;</span>
+                </Tag>
+              </td>
+              <td>
+                <Tag colour="grey">
+                  <span title="0 unresolved comments">0 &#8216;&#8217;</span>
                 </Tag>
               </td>
               <td>N/A</td>
@@ -110,7 +147,7 @@ const PrototypePublicationReleaseList = () => {
               <td>
                 <Tag colour="green">Published</Tag>
               </td>
-              <td>-</td>
+              <td colSpan={3}>-</td>
               <td>25 Sept 20</td>
               <td>
                 <a href="#">Amend</a>
@@ -124,7 +161,7 @@ const PrototypePublicationReleaseList = () => {
               <td>
                 <Tag colour="green">Published</Tag>
               </td>
-              <td>-</td>
+              <td colSpan={3}>-</td>
               <td>25 Sept 19</td>
               <td>
                 <a href="#">Amend</a>
@@ -138,22 +175,8 @@ const PrototypePublicationReleaseList = () => {
               <td>
                 <Tag colour="green">Published</Tag>
               </td>
-              <td>-</td>
+              <td colSpan={3}>-</td>
               <td>25 Sept 18</td>
-              <td>
-                <a href="#">Amend</a>
-              </td>
-              <td>
-                <a href="#">View</a>
-              </td>
-            </tr>
-            <tr>
-              <td>Academic Year 2016/17 (Live)</td>
-              <td>
-                <Tag colour="green">Published</Tag>
-              </td>
-              <td>-</td>
-              <td>25 Sept 17</td>
               <td>
                 <a href="#">Amend</a>
               </td>
@@ -206,12 +229,12 @@ const PrototypePublicationReleaseList = () => {
                   </td>
                 </tr>
                 <tr>
-                  <td>Academic Year 2012/13 (Live)</td>
+                  <td>Academic Year 2016/17 (Live)</td>
                   <td>
                     <Tag colour="green">Published</Tag>
                   </td>
                   <td>-</td>
-                  <td>25 Sept 13</td>
+                  <td>25 Sept 17</td>
                   <td>
                     <a href="#">Amend</a>
                   </td>

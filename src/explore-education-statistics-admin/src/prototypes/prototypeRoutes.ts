@@ -13,6 +13,11 @@ import PrototypeRelease from './PrototypeRelease';
 import PrototypeManageUsers from './PrototypeManageUsers';
 import PrototypeAdminDashboard from './PrototypeAdminDashboard';
 import PrototypeAdminPublication from './PrototypeAdminPublication';
+import PrototypeAdminMethodology from './PrototypeAdminMethodology';
+import PrototypeAdminContact from './PrototypeAdminContact';
+import PrototypeAdminDetails from './PrototypeAdminDetails';
+import PrototypeAdminAccess from './PrototypeAdminAccess';
+import PrototypeAdminLegacy from './PrototypeAdminLegacy';
 
 interface PrototypeRoute extends RouteProps {
   name: string;
@@ -89,6 +94,31 @@ const prototypeRoutes: PrototypeRoute[] = [
     name: 'Admin publication',
     path: '/prototypes/admin-publication',
     component: PrototypeAdminPublication,
+  },
+  {
+    name: 'Admin methodology',
+    path: '/prototypes/admin-methodology',
+    component: PrototypeAdminMethodology,
+  },
+  {
+    name: 'Admin contact',
+    path: '/prototypes/admin-contact',
+    component: PrototypeAdminContact,
+  },
+  {
+    name: 'Admin publication details',
+    path: '/prototypes/admin-details',
+    component: PrototypeAdminDetails,
+  },
+  {
+    name: 'Admin manage access',
+    path: '/prototypes/admin-access',
+    component: PrototypeAdminAccess,
+  },
+  {
+    name: 'Admin legacy releases',
+    path: '/prototypes/admin-legacy',
+    component: PrototypeAdminLegacy,
   },
 ];
 
