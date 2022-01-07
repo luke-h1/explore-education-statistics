@@ -184,12 +184,11 @@ const PrototypeManageUsers = () => {
             <table className="govuk-table">
               <thead className="govuk-table__head">
                 <tr className="govuk-table__row">
-                  <th>Publication / Release period</th>
-                  <th>State</th>
-                  <th style={{ width: '210px' }}>Checklist</th>
-                  <th colSpan={2} className="govuk-table__cell--numeric">
-                    Actions
+                  <th style={{ width: '35%' }}>Publication / Release period</th>
+                  <th colSpan={2} style={{ width: '30%' }}>
+                    Status
                   </th>
+                  <th className="govuk-table__cell--numeric">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -203,7 +202,7 @@ const PrototypeManageUsers = () => {
                   <td>
                     <Tag>Draft</Tag>
                   </td>
-                  <td>
+                  <td style={{ width: '210px' }}>
                     <Details
                       summary="View issues (9)"
                       className="govuk-!-margin-bottom-0"
@@ -382,10 +381,10 @@ const PrototypeManageUsers = () => {
             <table className="govuk-table">
               <thead className="govuk-table__head">
                 <tr className="govuk-table__row">
-                  <th>Publication / Release period</th>
-                  <th>State</th>
-                  <th>Status</th>
-                  <th style={{ width: '210px' }}>Checklist</th>
+                  <th style={{ width: '35%' }}>Publication / Release period</th>
+                  <th colSpan={2} style={{ width: '30%' }}>
+                    Status
+                  </th>
                   <th style={{ width: '190px' }}>Details / notes</th>
                   <th>Publish date</th>
                   <th colSpan={2} className="govuk-table__cell--numeric">
@@ -402,12 +401,9 @@ const PrototypeManageUsers = () => {
                 <tr>
                   <td>Academic Year 2020/21 (Not live)</td>
                   <td>
-                    <Tag>Approved</Tag>
-                  </td>
-                  <td>
                     <Tag colour="red">Validating</Tag>
                   </td>
-                  <td>
+                  <td style={{ width: '210px' }}>
                     <Details
                       summary="View stages"
                       className="govuk-!-margin-bottom-0"
@@ -482,53 +478,9 @@ const PrototypeManageUsers = () => {
                 <tr>
                   <td>Academic Year 2020/21 (Not live)</td>
                   <td>
-                    <Tag>Approved</Tag>
+                    <Tag colour="blue">Scheduled</Tag>
                   </td>
-                  <td>
-                    <Tag colour="red">Validating</Tag>
-                  </td>
-                  <td>
-                    <Details
-                      summary="View stages"
-                      className="govuk-!-margin-bottom-0"
-                    >
-                      <h4>Not started</h4>
-                      <ul className="govuk-list">
-                        <li>
-                          <Tag colour="red">
-                            Data ✖{' '}
-                            <span className="govuk-visually-hidden">
-                              Not started
-                            </span>
-                          </Tag>
-                        </li>
-                        <li>
-                          <Tag colour="red">
-                            Content ✖{' '}
-                            <span className="govuk-visually-hidden">
-                              Not started
-                            </span>
-                          </Tag>
-                        </li>
-                        <li>
-                          <Tag colour="red">
-                            Files ✖{' '}
-                            <span className="govuk-visually-hidden">
-                              Not started
-                            </span>
-                          </Tag>
-                        </li>
-                        <li>
-                          <Tag colour="red">
-                            Publishing ✖
-                            <span className="govuk-visually-hidden">
-                              Not started
-                            </span>{' '}
-                          </Tag>
-                        </li>
-                      </ul>
-                    </Details>
-                  </td>
+                  <td>-</td>
                   <td>
                     <Details
                       summary="View details"
@@ -542,7 +494,7 @@ const PrototypeManageUsers = () => {
                       <p>January 2023</p>
                     </Details>
                   </td>
-                  <td>10 January 2022</td>
+                  <td>20 January 2022</td>
                   <td className="govuk-table__cell--numeric">
                     <a href="#">
                       View{' '}
@@ -561,9 +513,6 @@ const PrototypeManageUsers = () => {
                 </tr>
                 <tr>
                   <td>Academic Year 2020/21 (Not live)</td>
-                  <td>
-                    <Tag>Approved</Tag>
-                  </td>
                   <td>
                     <Tag colour="red">Validating</Tag>
                   </td>
