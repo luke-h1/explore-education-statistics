@@ -1,103 +1,69 @@
 import React, { useState } from 'react';
 import Button from '@common/components/Button';
 import Tag from '@common/components/Tag';
+import Details from '@common/components/Details';
+import WarningMessage from '@common/components/WarningMessage';
 
 const PrototypePublicationReleaseList = () => {
   const [showMore, setShowMore] = useState(false);
+  const [showScheduled, setShowScheduled] = useState(false);
+  const [showReleases, setShowReleases] = useState(true);
 
   return (
     <>
-      <h3>Manage releases</h3>
-      <p className="govuk-hint govuk-!-margin-bottom-6">
-        View, edit or amend all releases contained within this publication.
-      </p>
+      <h3 className="govuk-heading-l">Manage releases</h3>
+      <div className="govuk-grid-row">
+        <div className="govuk-grid-column-three-quarters govuk-!-margin-bottom-6">
+          <p className="govuk-hint govuk-!-margin-bottom-6">
+            View, edit or amend releases contained within this publication.
+          </p>
+        </div>
+        {showReleases && (
+          <div className="govuk-grid-column-one-quarter dfe-align--right">
+            <Button>Create new release</Button>
+          </div>
+        )}
+      </div>
+      {!showReleases && (
+        <div className="govuk-grid-row">
+          <div className="govuk-grid-column-three-quarters">
+            <WarningMessage className="govuk-!-margin-bottom-2">
+              No releases created in this publication
+            </WarningMessage>
+          </div>
+          <div className="govuk-grid-column-one-quarter dfe-align--right govuk-!-margin-top-3">
+            <Button>Create new release</Button>
+          </div>
+        </div>
+      )}
 
-      <div style={{ width: '100%', overflow: 'auto' }}>
-        <table className="govuk-table">
-          <caption>
-            Table showing {showMore ? '10' : '5'} of 20 releases
-          </caption>
-          <thead className="govuk-table__head">
-            <tr className="govuk-table__row">
-              <th style={{ width: '40%' }}>Release period</th>
-              <th style={{ width: '15%' }}>State</th>
-              <th style={{ width: '20%' }} colSpan={3}>
-                Checklist
-              </th>
-              <th style={{ width: '15%' }}>Publish date</th>
-              <th colSpan={2}>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Academic Year 2021/22 (Not live)</td>
-              <td>
-                <Tag>Draft</Tag>
-              </td>
-              <td>
-                <Tag colour="red">
-                  <span title="3 errors">3 ✖</span>
-                </Tag>
-              </td>
-              <td>
-                <Tag colour="yellow">
-                  <span title="3 Warnings">3 &#33;</span>
-                </Tag>
-              </td>
-              <td style={{ width: '100px' }}>
-                <Tag colour="grey">
-                  <span title="3 unresolved comments">3 &#8216;&#8217;</span>
-                </Tag>
-              </td>
-              <td>N/A</td>
-              <td>
-                <a href="#">
-                  Edit{' '}
-                  <span className="govuk-visually-hidden">
-                    Academic Year 2019/20 (Not live)
-                  </span>
-                </a>
-              </td>
-              <td />
-            </tr>
-            <tr>
-              <td>Academic Year 2020/21 (Not live)</td>
-              <td>
-                <Tag>in review</Tag>
-              </td>
-              <td>
-                <Tag colour="red">
-                  <span title="0 errors">0 ✖</span>
-                </Tag>
-              </td>
-              <td>
-                <Tag colour="yellow">
-                  <span title="1 Warning">1 &#33;</span>
-                </Tag>
-              </td>
-              <td>
-                <Tag colour="grey">
-                  <span title="0 unresolved comments">0 &#8216;&#8217;</span>
-                </Tag>
-              </td>
-              <td>N/A</td>
-              <td>
-                <a href="#">
-                  Edit{' '}
-                  <span className="govuk-visually-hidden">
-                    Academic Year 2019/20 (Not live)
-                  </span>
-                </a>
-              </td>
-              <td />
-            </tr>
-            {/* 
+      {showReleases && (
+        <>
+          {showScheduled && (
+            <table className="govuk-table govuk-!-margin-bottom-9">
+              <caption className="govuk-table__caption--m">
+                Scheduled releases
+              </caption>
+              <thead className="govuk-table__head">
+                <tr className="govuk-table__row">
+                  <th style={{ width: '40%' }}>Release period</th>
+                  <th style={{ width: '15%' }}>State</th>
+                  <th style={{ width: '17.5%' }} colSpan={3}>
+                    Checklist
+                  </th>
+                  <th style={{ width: '20%' }}>Scheduled Publish date</th>
+                  <th colSpan={2} className="govuk-table__cell--numeric">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
                 <tr>
                   <td>Academic Year 2020/21 (Not live)</td>
                   <td>
-                    <Tag colour='red'>Started</Tag>
+                    <Tag colour="red">Started</Tag>
                   </td>
-                  <td>
+                  <td colSpan={3}>
                     <Details
                       summary="View stages"
                       className="govuk-!-margin-bottom-0"
@@ -130,73 +96,138 @@ const PrototypePublicationReleaseList = () => {
                       </ul>
                     </Details>
                   </td>
-                  <td>N/A</td>
-                  <td>
+                  <td>12 Jan 22</td>
+                  <td />
+                  <td className="govuk-table__cell--numeric">
                     <a href="#">
-                      Edit{' '}
+                      View{' '}
                       <span className="govuk-visually-hidden">
                         Academic Year 2019/20 (Not live)
                       </span>
                     </a>
                   </td>
-                  <td />
                 </tr>
-                */}
-            <tr>
-              <td>Academic Year 2019/20 (Live - Latest release)</td>
-              <td>
-                <Tag colour="green">Published</Tag>
-              </td>
-              <td colSpan={3}>-</td>
-              <td>25 Sept 20</td>
-              <td>
-                <a href="#">Amend</a>
-              </td>
-              <td>
-                <a href="#">View</a>
-              </td>
-            </tr>
-            <tr>
-              <td>Academic Year 2018/19 (Live)</td>
-              <td>
-                <Tag colour="green">Published</Tag>
-              </td>
-              <td colSpan={3}>-</td>
-              <td>25 Sept 19</td>
-              <td>
-                <a href="#">Amend</a>
-              </td>
-              <td>
-                <a href="#">View</a>
-              </td>
-            </tr>
-            <tr>
-              <td>Academic Year 2017/18 (Live)</td>
-              <td>
-                <Tag colour="green">Published</Tag>
-              </td>
-              <td colSpan={3}>-</td>
-              <td>25 Sept 18</td>
-              <td>
-                <a href="#">Amend</a>
-              </td>
-              <td>
-                <a href="#">View</a>
-              </td>
-            </tr>
-            {showMore && (
-              <>
+              </tbody>
+            </table>
+          )}
+
+          <table className="govuk-table govuk-!-margin-bottom-9">
+            <caption className="govuk-table__caption--m">
+              Draft releases
+            </caption>
+            <thead className="govuk-table__head">
+              <tr className="govuk-table__row">
+                <th style={{ width: '40%' }}>Release period</th>
+                <th style={{ width: '15%' }}>State</th>
+                <th style={{ width: '7.5%' }}>Errors</th>
+                <th style={{ width: '10%' }}>Warnings</th>
+                <th style={{ width: '20%' }}>Unresolved comments</th>
+                <th className="govuk-table__cell--numeric">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Academic Year 2021/22 (Not live)</td>
+                <td>
+                  <Tag>Draft</Tag>
+                </td>
+                <td>3</td>
+                <td>3</td>
+                <td>3</td>
+                <td className="govuk-table__cell--numeric">
+                  <a href="#">
+                    Edit{' '}
+                    <span className="govuk-visually-hidden">
+                      Academic Year 2019/20 (Not live)
+                    </span>
+                  </a>
+                </td>
+              </tr>
+              <tr>
+                <td>Academic Year 2020/21 (Not live)</td>
+                <td>
+                  <Tag>in review</Tag>
+                </td>
+                <td>0</td>
+                <td>1</td>
+                <td>0</td>
+                <td className="govuk-table__cell--numeric">
+                  <a href="#">
+                    Edit{' '}
+                    <span className="govuk-visually-hidden">
+                      Academic Year 2019/20 (Not live)
+                    </span>
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div style={{ width: '100%', overflow: 'auto' }}>
+            <table className="govuk-table govuk-!-margin-bottom-9">
+              <caption className="govuk-table__caption--m">
+                Published releases ({showMore ? '10' : '5'} of 10)
+              </caption>
+              <thead className="govuk-table__head">
+                <tr className="govuk-table__row">
+                  <th style={{ width: '40%' }}>Release period</th>
+                  <th style={{ width: '15%' }}>State</th>
+                  <th style={{ width: '35%' }}>Published date</th>
+                  <th colSpan={2} className="dfe-align--centre">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Academic Year 2019/20 (Live - Latest release)</td>
+                  <td>
+                    <Tag colour="green">Published</Tag>
+                  </td>
+                  <td>25 Sept 20</td>
+                  <td>
+                    <a href="#">Amend</a>
+                  </td>
+                  <td className="govuk-table__cell--numeric">
+                    <a href="#">View</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Academic Year 2018/19 (Live)</td>
+                  <td>
+                    <Tag colour="green">Published</Tag>
+                  </td>
+                  <td>25 Sept 19</td>
+                  <td>
+                    <a href="#">Amend</a>
+                  </td>
+                  <td className="govuk-table__cell--numeric">
+                    <a href="#">View</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Academic Year 2017/18 (Live)</td>
+                  <td>
+                    <Tag colour="green">Published</Tag>
+                  </td>
+                  <td>25 Sept 18</td>
+                  <td>
+                    <a href="#">Amend</a>
+                  </td>
+                  <td className="govuk-table__cell--numeric">
+                    <a href="#">View</a>
+                  </td>
+                </tr>
                 <tr>
                   <td>Academic Year 2015/16 (Live)</td>
                   <td>
                     <Tag colour="green">Published</Tag>
                   </td>
-                  <td>-</td>
                   <td>25 Sept 16</td>
                   <td>
                     <a href="#">Amend</a>
                   </td>
-                  <td>
+                  <td className="govuk-table__cell--numeric">
                     <a href="#">View</a>
                   </td>
                 </tr>
@@ -205,61 +236,146 @@ const PrototypePublicationReleaseList = () => {
                   <td>
                     <Tag colour="green">Published</Tag>
                   </td>
-                  <td>-</td>
                   <td>25 Sept 15</td>
                   <td>
                     <a href="#">Amend</a>
                   </td>
-                  <td>
+                  <td className="govuk-table__cell--numeric">
                     <a href="#">View</a>
                   </td>
                 </tr>
-                <tr>
-                  <td>Academic Year 2013/14 (Live)</td>
-                  <td>
-                    <Tag colour="green">Published</Tag>
-                  </td>
-                  <td>-</td>
-                  <td>25 Sept 14</td>
-                  <td>
-                    <a href="#">Amend</a>
-                  </td>
-                  <td>
-                    <a href="#">View</a>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Academic Year 2016/17 (Live)</td>
-                  <td>
-                    <Tag colour="green">Published</Tag>
-                  </td>
-                  <td>-</td>
-                  <td>25 Sept 17</td>
-                  <td>
-                    <a href="#">Amend</a>
-                  </td>
-                  <td>
-                    <a href="#">View</a>
-                  </td>
-                </tr>
-              </>
+                {showMore && (
+                  <>
+                    <tr>
+                      <td>Academic Year 2013/14 (Live)</td>
+                      <td>
+                        <Tag colour="green">Published</Tag>
+                      </td>
+
+                      <td>25 Sept 14</td>
+                      <td>
+                        <a href="#">Amend</a>
+                      </td>
+                      <td className="govuk-table__cell--numeric">
+                        <a href="#">View</a>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Academic Year 2016/17 (Live)</td>
+                      <td>
+                        <Tag colour="green">Published</Tag>
+                      </td>
+
+                      <td>25 Sept 17</td>
+                      <td>
+                        <a href="#">Amend</a>
+                      </td>
+                      <td className="govuk-table__cell--numeric">
+                        <a href="#">View</a>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Academic Year 2015/16 (Live)</td>
+                      <td>
+                        <Tag colour="green">Published</Tag>
+                      </td>
+
+                      <td>25 Sept 16</td>
+                      <td>
+                        <a href="#">Amend</a>
+                      </td>
+                      <td className="govuk-table__cell--numeric">
+                        <a href="#">View</a>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Academic Year 2014/15 (Live)</td>
+                      <td>
+                        <Tag colour="green">Published</Tag>
+                      </td>
+
+                      <td>25 Sept 15</td>
+                      <td>
+                        <a href="#">Amend</a>
+                      </td>
+                      <td className="govuk-table__cell--numeric">
+                        <a href="#">View</a>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Academic Year 2013/14 (Live)</td>
+                      <td>
+                        <Tag colour="green">Published</Tag>
+                      </td>
+
+                      <td>25 Sept 14</td>
+                      <td>
+                        <a href="#">Amend</a>
+                      </td>
+                      <td className="govuk-table__cell--numeric">
+                        <a href="#">View</a>
+                      </td>
+                    </tr>
+                  </>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </>
+      )}
+      <div className="dfe-align--right govuk-!-margin-top-9">
+        <ul className="govuk-list">
+          <li>
+            {showScheduled ? (
+              <a
+                href="#"
+                className="govuk-body-s"
+                onClick={e => {
+                  e.preventDefault();
+                  setShowScheduled(false);
+                }}
+              >
+                Remove scheduled
+              </a>
+            ) : (
+              <a
+                href="#"
+                className="govuk-body-s"
+                onClick={e => {
+                  e.preventDefault();
+                  setShowScheduled(true);
+                }}
+              >
+                Show scheduled
+              </a>
             )}
-          </tbody>
-        </table>
-
-        <a
-          href="#"
-          onClick={e => {
-            e.preventDefault();
-            setShowMore(true);
-          }}
-        >
-          Show next 5 releases
-        </a>
-
-        <div className="govuk-!-margin-top-9">
-          <Button>Create new release</Button>
-        </div>
+          </li>
+          <li>
+            {showReleases ? (
+              <a
+                href="#"
+                className="govuk-body-s"
+                onClick={e => {
+                  e.preventDefault();
+                  setShowReleases(false);
+                }}
+              >
+                Remove releases
+              </a>
+            ) : (
+              <a
+                href="#"
+                className="govuk-body-s"
+                onClick={e => {
+                  e.preventDefault();
+                  setShowReleases(true);
+                }}
+              >
+                Show releases
+              </a>
+            )}
+          </li>
+        </ul>
       </div>
     </>
   );
