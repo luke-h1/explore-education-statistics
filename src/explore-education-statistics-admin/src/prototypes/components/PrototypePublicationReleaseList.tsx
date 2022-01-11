@@ -320,6 +320,16 @@ const PrototypePublicationReleaseList = () => {
                 )}
               </tbody>
             </table>
+
+            <a
+              href="#"
+              onClick={e => {
+                e.preventDefault();
+                setShowMore(true);
+              }}
+            >
+              Show next 5 published releases
+            </a>
           </div>
         </>
       )}
