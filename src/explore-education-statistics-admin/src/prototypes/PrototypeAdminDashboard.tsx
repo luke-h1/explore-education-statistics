@@ -360,7 +360,7 @@ const PrototypeManageUsers = () => {
                   <th colSpan={2} style={{ width: '30%' }}>
                     Status
                   </th>
-                  <th>Publish date</th>
+                  <th>Scheduled publish date</th>
                   <th colSpan={2} className="govuk-table__cell--numeric">
                     Actions
                   </th>

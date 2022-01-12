@@ -20,17 +20,7 @@ const PrototypePublicationMethodologyList = () => {
             all releases within this publication.
           </p>
         </div>
-        <div className="govuk-grid-column-one-quarter">
-          <h4>Other options</h4>
-          <ul>
-            <li>
-              <a href="#">add external methodology</a>
-            </li>
-            <li>
-              <a href="#">adopt an existing methodology</a>
-            </li>
-          </ul>
-        </div>
+        <div className="govuk-grid-column-one-quarter" />
       </div>
       <div style={{ width: '100%', overflow: 'auto' }}>
         <table className="govuk-table">
@@ -78,6 +68,16 @@ const PrototypePublicationMethodologyList = () => {
             </tr>
           </tbody>
         </table>
+
+        <h4>Other options</h4>
+        <ul>
+          <li>
+            <a href="#">add external methodology</a>
+          </li>
+          <li>
+            <a href="#">adopt an existing methodology</a>
+          </li>
+        </ul>
       </div>
     </>
   );
