@@ -192,7 +192,7 @@ const PrototypeManageUsers = () => {
         <TabsSection title="Draft releases (4)">
           <div style={{ width: '100%', overflow: 'auto' }}>
             <table className="govuk-table">
-              <caption className="govuk-table__caption--m">
+              <caption className="govuk-table__caption--l">
                 Edit draft releases
               </caption>
               <thead className="govuk-table__head">
@@ -234,13 +234,13 @@ const PrototypeManageUsers = () => {
                     </Details>
                   </td>
                   <td className="govuk-table__cell--numeric">
-                    <a href="#">
+                    <Link to="/prototypes/admin-release-summary">
                       Edit{' '}
                       <span className="govuk-visually-hidden">
-                        Academic Year 2019/20 (Not live), Pupil absence in
-                        schools in England
+                        Academic Year 2019/20, Pupil absence in schools in
+                        England
                       </span>
-                    </a>
+                    </Link>
                   </td>
                   <td />
                 </tr>
@@ -262,12 +262,13 @@ const PrototypeManageUsers = () => {
                     </Details>
                   </td>
                   <td className="govuk-table__cell--numeric">
-                    <a href="#">
+                    <Link to="/prototypes/admin-release-summary">
                       Edit{' '}
                       <span className="govuk-visually-hidden">
-                        Academic Year 2019/20 (Not live)
+                        Academic Year 2019/20, Pupil absence in schools in
+                        England
                       </span>
-                    </a>
+                    </Link>
                   </td>
                   <td />
                 </tr>
@@ -300,17 +301,18 @@ const PrototypeManageUsers = () => {
                     </Details>
                   </td>
                   <td className="govuk-table__cell--numeric">
-                    <a href="#">
+                    <Link to="/prototypes/admin-release-summary">
                       Edit{' '}
                       <span className="govuk-visually-hidden">
-                        Academic Year 2019/20 (Not live)
+                        Academic Year 2019/20, Pupil absence in schools in
+                        England
                       </span>
-                    </a>
+                    </Link>
                   </td>
                   <td />
                 </tr>
                 <tr>
-                  <th colSpan={6} scope="col" className="govuk-!-padding-top-6">
+                  <th colSpan={6} scope="col" className="govuk-!-padding-top-9">
                     Pupil absence in schools in England: autumn term
                   </th>
                 </tr>
@@ -335,12 +337,13 @@ const PrototypeManageUsers = () => {
                     </Details>
                   </td>
                   <td className="govuk-table__cell--numeric">
-                    <a href="#">
+                    <Link to="/prototypes/admin-release-summary">
                       Edit{' '}
                       <span className="govuk-visually-hidden">
-                        Academic Year 2019/20 (Not live)
+                        Academic Year 2019/20, Pupil absence in schools in
+                        England
                       </span>
-                    </a>
+                    </Link>
                   </td>
                   <td />
                 </tr>
@@ -351,7 +354,7 @@ const PrototypeManageUsers = () => {
         <TabsSection title="Scheduled releases (3)">
           <div style={{ width: '100%', overflow: 'auto' }}>
             <table className="govuk-table">
-              <caption className="govuk-table__caption--m">
+              <caption className="govuk-table__caption--l">
                 View scheduled releases
               </caption>
               <thead className="govuk-table__head">
@@ -432,7 +435,7 @@ const PrototypeManageUsers = () => {
                 </tr>
 
                 <tr>
-                  <th colSpan={6} scope="col" className="govuk-!-padding-top-6">
+                  <th colSpan={6} scope="col" className="govuk-!-padding-top-9">
                     Pupil absence in schools in England: autumn and spring
                   </th>
                 </tr>
@@ -455,7 +458,7 @@ const PrototypeManageUsers = () => {
                 </tr>
 
                 <tr>
-                  <th colSpan={6} scope="col" className="govuk-!-padding-top-6">
+                  <th colSpan={6} scope="col" className="govuk-!-padding-top-9">
                     Pupil absence in schools in England: autumn term
                   </th>
                 </tr>

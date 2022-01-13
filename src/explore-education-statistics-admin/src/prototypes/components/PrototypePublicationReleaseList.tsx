@@ -3,11 +3,13 @@ import Button from '@common/components/Button';
 import Tag from '@common/components/Tag';
 import Details from '@common/components/Details';
 import WarningMessage from '@common/components/WarningMessage';
+import Link from '@admin/components/Link';
 
 const PrototypePublicationReleaseList = () => {
   const [showMore, setShowMore] = useState(false);
   const [showScheduled, setShowScheduled] = useState(false);
   const [showReleases, setShowReleases] = useState(true);
+  const [showDraft, setShowDraft] = useState(true);
 
   return (
     <>
@@ -113,59 +115,63 @@ const PrototypePublicationReleaseList = () => {
             </div>
           )}
 
-          <div style={{ width: '100%', overflow: 'auto' }}>
-            <table className="govuk-table govuk-!-margin-bottom-9">
-              <caption className="govuk-table__caption--m">
-                Draft releases
-              </caption>
-              <thead className="govuk-table__head">
-                <tr className="govuk-table__row">
-                  <th style={{ width: '40%' }}>Release period</th>
-                  <th style={{ width: '15%' }}>State</th>
-                  <th style={{ width: '9%' }}>Errors</th>
-                  <th style={{ width: '10%' }}>Warnings</th>
-                  <th style={{ width: '20%' }}>Unresolved comments</th>
-                  <th className="govuk-table__cell--numeric">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Academic Year 2021/22 (Not live)</td>
-                  <td>
-                    <Tag>Draft</Tag>
-                  </td>
-                  <td>3</td>
-                  <td>3</td>
-                  <td>3</td>
-                  <td className="govuk-table__cell--numeric">
-                    <a href="#">
-                      Edit{' '}
-                      <span className="govuk-visually-hidden">
-                        Academic Year 2019/20 (Not live)
-                      </span>
-                    </a>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Academic Year 2020/21 (Not live)</td>
-                  <td>
-                    <Tag>in review</Tag>
-                  </td>
-                  <td>0</td>
-                  <td>1</td>
-                  <td>0</td>
-                  <td className="govuk-table__cell--numeric">
-                    <a href="#">
-                      Edit{' '}
-                      <span className="govuk-visually-hidden">
-                        Academic Year 2019/20 (Not live)
-                      </span>
-                    </a>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          {showDraft && (
+            <>
+              <div style={{ width: '100%', overflow: 'auto' }}>
+                <table className="govuk-table govuk-!-margin-bottom-9">
+                  <caption className="govuk-table__caption--m">
+                    Draft releases
+                  </caption>
+                  <thead className="govuk-table__head">
+                    <tr className="govuk-table__row">
+                      <th style={{ width: '40%' }}>Release period</th>
+                      <th style={{ width: '15%' }}>State</th>
+                      <th style={{ width: '9%' }}>Errors</th>
+                      <th style={{ width: '10%' }}>Warnings</th>
+                      <th style={{ width: '20%' }}>Unresolved comments</th>
+                      <th className="govuk-table__cell--numeric">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Academic Year 2021/22 (Not live)</td>
+                      <td>
+                        <Tag>Draft</Tag>
+                      </td>
+                      <td>3</td>
+                      <td>3</td>
+                      <td>3</td>
+                      <td className="govuk-table__cell--numeric">
+                        <Link to="/prototypes/admin-release-summary">
+                          Edit{' '}
+                          <span className="govuk-visually-hidden">
+                            Academic Year 2021/22
+                          </span>
+                        </Link>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Academic Year 2020/21 (Not live)</td>
+                      <td>
+                        <Tag>in review</Tag>
+                      </td>
+                      <td>0</td>
+                      <td>1</td>
+                      <td>0</td>
+                      <td className="govuk-table__cell--numeric">
+                        <Link to="/prototypes/admin-release-summary">
+                          Edit{' '}
+                          <span className="govuk-visually-hidden">
+                            Academic Year 2020/21 (Not live)
+                          </span>
+                        </Link>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </>
+          )}
 
           <div style={{ width: '100%', overflow: 'auto' }}>
             <table className="govuk-table govuk-!-margin-bottom-9">
@@ -377,6 +383,31 @@ const PrototypePublicationReleaseList = () => {
                 }}
               >
                 Show scheduled
+              </a>
+            )}
+          </li>
+          <li>
+            {showDraft ? (
+              <a
+                href="#"
+                className="govuk-body-s"
+                onClick={e => {
+                  e.preventDefault();
+                  setShowDraft(false);
+                }}
+              >
+                Remove draft releases
+              </a>
+            ) : (
+              <a
+                href="#"
+                className="govuk-body-s"
+                onClick={e => {
+                  e.preventDefault();
+                  setShowDraft(true);
+                }}
+              >
+                Show draft releases
               </a>
             )}
           </li>

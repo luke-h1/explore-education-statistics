@@ -47,7 +47,7 @@ const PrototypeManagePublication = () => {
       <div className="govuk-!-width-full">
         <div className="govuk-grid-row">
           <div className="govuk-grid-column-three-quarters">
-            <h3>Update access release access</h3>
+            <h3 className="govuk-heading-l">Update release access</h3>
             <form>
               <label htmlFor="topic" className="govuk-label">
                 Select release
@@ -62,18 +62,18 @@ const PrototypeManagePublication = () => {
               </select>
             </form>
           </div>
-          <div className="govuk-grid-column-one-quarter">
+          <div className="govuk-grid-column-one-quarter dfe-align--right">
             <h4>Other options</h4>
-            <ul>
+            <ul className="govuk-list">
               <li>
-                <a href="#">invite new users</a>
+                <a href="#">Invite new users</a>
               </li>
             </ul>
           </div>
         </div>
 
-        <table className="govuk-table govuk-!-margin-top-9 govuk-!-width-three-quarters">
-          <caption className="govuk-table__caption govuk-table__caption--s">
+        <table className="govuk-table govuk-!-margin-top-9">
+          <caption className="govuk-table__caption govuk-table__caption--m">
             Academic Year 2020/21 (Not live) <Tag>DRAFT</Tag>
           </caption>
           <thead className="govuk-table__head">
@@ -86,19 +86,25 @@ const PrototypeManagePublication = () => {
             <tr>
               <td>Andrew Adams</td>
               <td className="govuk-table__cell--numeric">
-                <a href="#">Remove</a>
+                <a href="#" className="dfe-link--warning">
+                  Remove
+                </a>
               </td>
             </tr>
             <tr>
               <td>Ben Browne</td>
               <td className="govuk-table__cell--numeric">
-                <a href="#">Remove</a>
+                <a href="#" className="dfe-link--warning">
+                  Remove
+                </a>
               </td>
             </tr>
             <tr>
               <td>Charlotte Chesterton</td>
               <td className="govuk-table__cell--numeric">
-                <a href="#">Remove</a>
+                <a href="#" className="dfe-link--warning">
+                  Remove
+                </a>
               </td>
             </tr>
           </tbody>

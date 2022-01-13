@@ -18,6 +18,7 @@ import PrototypeAdminContact from './PrototypeAdminContact';
 import PrototypeAdminDetails from './PrototypeAdminDetails';
 import PrototypeAdminAccess from './PrototypeAdminAccess';
 import PrototypeAdminLegacy from './PrototypeAdminLegacy';
+import PrototypeReleaseSummary from './PrototypeReleaseSummary';
 
 interface PrototypeRoute extends RouteProps {
   name: string;
@@ -119,6 +120,11 @@ const prototypeRoutes: PrototypeRoute[] = [
     name: 'Admin legacy releases',
     path: '/prototypes/admin-legacy',
     component: PrototypeAdminLegacy,
+  },
+  {
+    name: 'Admin release summary',
+    path: '/prototypes/admin-release-summary',
+    component: PrototypeReleaseSummary,
   },
 ];
 

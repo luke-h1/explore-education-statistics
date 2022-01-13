@@ -9,6 +9,7 @@ import ButtonLink from '@common/components/ButtonLink';
 import SummaryList from '@common/components/SummaryList';
 import SummaryListItem from '@common/components/SummaryListItem';
 import Tag from '@common/components/Tag';
+import ButtonGroup from '@common/components/ButtonGroup';
 
 const PrototypeManagePublication = () => {
   const queryParams = new URLSearchParams(window.location.search);
@@ -44,7 +45,84 @@ const PrototypeManagePublication = () => {
 
       <Nav />
 
-      <p>Legacy releases</p>
+      <h3 className="govuk-heading-l">Legacy releases</h3>
+      <p>
+        Legacy releases will be displayed in descending order on the
+        publication.
+      </p>
+
+      <div style={{ width: '100%', overflow: 'auto' }}>
+        <table className="govuk-table">
+          <caption className="govuk-table__caption--m">
+            Legacy release order
+          </caption>
+          <thead className="govuk-table__head">
+            <tr className="govuk-table__row">
+              <th style={{ width: '5%' }}>Order</th>
+              <th style={{ width: '20%' }}>Description</th>
+              <th style={{ width: '65%' }}>URL</th>
+              <th colSpan={2}>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>2</td>
+              <td>Academic Year 2015/16</td>
+              <td>
+                <a href="#">
+                  https://www.gov.uk/government/statistics/permanent-and-fixed-period-exclusions-in-england-2015-to-2016
+                </a>
+              </td>
+              <td>
+                <a href="#">Edit</a>
+              </td>
+              <td>
+                <a href="#" className="dfe-link--warning">
+                  Delete
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>Academic Year 2014/15</td>
+              <td>
+                <a href="#">
+                  https://www.gov.uk/government/statistics/permanent-and-fixed-period-exclusions-in-england-2014-to-2015
+                </a>
+              </td>
+              <td>
+                <a href="#">Edit</a>
+              </td>
+              <td>
+                <a href="#" className="dfe-link--warning">
+                  Delete
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td>0</td>
+              <td>Academic Year 2013/14</td>
+              <td>
+                <a href="#">
+                  https://www.gov.uk/government/statistics/permanent-and-fixed-period-exclusions-in-england-2013-to-2014
+                </a>
+              </td>
+              <td>
+                <a href="#">Edit</a>
+              </td>
+              <td>
+                <a href="#" className="dfe-link--warning">
+                  Delete
+                </a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <ButtonGroup>
+        <Button>Create legacy release</Button>
+        <Button variant="secondary">Reorder legacy releases</Button>
+      </ButtonGroup>
     </PrototypePage>
   );
 };

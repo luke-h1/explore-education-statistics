@@ -6,7 +6,7 @@ interface Props {
   children: ReactNode;
   className?: string;
   testId?: string;
-  variant?: 'success' | 'error' | 'warning';
+  variant?: 'success' | 'error' | 'warning' | 'comments';
 }
 
 const InsetText = ({ children, className, testId, variant }: Props) => {
