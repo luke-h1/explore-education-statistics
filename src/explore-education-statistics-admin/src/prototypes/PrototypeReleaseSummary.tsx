@@ -1,9 +1,7 @@
 import PageTitle from '@admin/components/PageTitle';
 import PrototypePage from '@admin/prototypes/components/PrototypePage';
 import React from 'react';
-import Tabs from '@common/components/Tabs';
 import RelatedAside from '@common/components/RelatedAside';
-import TabsSection from '@common/components/TabsSection';
 import Button from '@common/components/Button';
 import SummaryList from '@common/components/SummaryList';
 import SummaryListItem from '@common/components/SummaryListItem';
@@ -53,7 +51,7 @@ const PrototypeReleaseSummary = () => {
           colour="yellow"
           className="govuk-!-margin-left-1 govuk-!-margin-right-1"
         >
-          5 Warnings
+          3 Warnings
         </Tag>
         <Tag colour="grey">3 Unresolved comments</Tag>
       </div>
@@ -85,7 +83,7 @@ const PrototypeReleaseSummary = () => {
           <div className="govuk-grid-column-one-third">
             <InsetText variant="warning" className="govuk-!-margin-0">
               <h2 className="govuk-heading-s govuk-!-margin-top-0">
-                <Tag colour="red">5 Warnings</Tag>
+                <Tag colour="orange">3 Warnings</Tag>
               </h2>
               <p>
                 <strong>5 things</strong> you may have forgotten, but do not
@@ -106,16 +104,6 @@ const PrototypeReleaseSummary = () => {
                 <li>
                   <a href="#">
                     A methodology for this publication is not yet approved
-                  </a>
-                </li>
-                <li>
-                  <a href="#">
-                    No data blocks have been saved as featured tables
-                  </a>
-                </li>
-                <li>
-                  <a href="#">
-                    A public pre-release access list has not been created
                   </a>
                 </li>
               </ul>

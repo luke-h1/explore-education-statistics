@@ -1,19 +1,16 @@
 import PageTitle from '@admin/components/PageTitle';
 import Link from '@admin/components/Link';
 import PrototypePage from '@admin/prototypes/components/PrototypePage';
-import React, { useState } from 'react';
+import React from 'react';
 import RelatedInformation from '@common/components/RelatedInformation';
 import Nav from '@admin/prototypes/components/PrototypeNavBarPublication';
 import Button from '@common/components/Button';
-import ButtonLink from '@common/components/ButtonLink';
-import SummaryList from '@common/components/SummaryList';
-import SummaryListItem from '@common/components/SummaryListItem';
-import Tag from '@common/components/Tag';
 import ButtonGroup from '@common/components/ButtonGroup';
 
 const PrototypeManagePublication = () => {
-  const queryParams = new URLSearchParams(window.location.search);
-  const page = queryParams.get('page');
+  const dfeLinkWarning = {
+    color: '#d4351c',
+  };
 
   return (
     <PrototypePage
@@ -77,7 +74,7 @@ const PrototypeManagePublication = () => {
                 <a href="#">Edit</a>
               </td>
               <td>
-                <a href="#" className="dfe-link--warning">
+                <a href="#" style={dfeLinkWarning}>
                   Delete
                 </a>
               </td>
@@ -94,7 +91,7 @@ const PrototypeManagePublication = () => {
                 <a href="#">Edit</a>
               </td>
               <td>
-                <a href="#" className="dfe-link--warning">
+                <a href="#" style={dfeLinkWarning}>
                   Delete
                 </a>
               </td>
@@ -111,7 +108,7 @@ const PrototypeManagePublication = () => {
                 <a href="#">Edit</a>
               </td>
               <td>
-                <a href="#" className="dfe-link--warning">
+                <a href="#" style={dfeLinkWarning}>
                   Delete
                 </a>
               </td>

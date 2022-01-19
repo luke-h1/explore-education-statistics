@@ -6,6 +6,10 @@ import WarningMessage from '@common/components/WarningMessage';
 const PrototypePublicationMethodologyList = () => {
   const [showMethodology, setShowMethodology] = useState(true);
 
+  const dfeLinkWarning = {
+    color: '#d4351c',
+  };
+
   return (
     <>
       <div className="govuk-grid-row">
@@ -77,7 +81,7 @@ const PrototypePublicationMethodologyList = () => {
                   <a href="#">View</a>
                 </td>
                 <td className="dfe-align--right">
-                  <a href="#" className="dfe-link--warning">
+                  <a href="#" style={dfeLinkWarning}>
                     Remove
                   </a>
                 </td>

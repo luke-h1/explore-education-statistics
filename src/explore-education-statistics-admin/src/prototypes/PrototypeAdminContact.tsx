@@ -1,12 +1,11 @@
 import PageTitle from '@admin/components/PageTitle';
 import Link from '@admin/components/Link';
 import PrototypePage from '@admin/prototypes/components/PrototypePage';
-import React, { ReactNode, useState } from 'react';
+import React, { useState } from 'react';
 import RelatedInformation from '@common/components/RelatedInformation';
 import Nav from '@admin/prototypes/components/PrototypeNavBarPublication';
 import Button from '@common/components/Button';
 import ButtonGroup from '@common/components/ButtonGroup';
-import ButtonLink from '@common/components/ButtonLink';
 import SummaryList from '@common/components/SummaryList';
 import SummaryListItem from '@common/components/SummaryListItem';
 import {
@@ -16,8 +15,6 @@ import {
 } from '@common/components/form';
 
 const PrototypeManagePublication = () => {
-  const queryParams = new URLSearchParams(window.location.search);
-  const page = queryParams.get('page');
   const [showForm, setShowForm] = useState(false);
 
   return (

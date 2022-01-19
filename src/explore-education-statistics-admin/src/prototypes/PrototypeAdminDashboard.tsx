@@ -1,20 +1,11 @@
 import PageTitle from '@admin/components/PageTitle';
 import Link from '@admin/components/Link';
-import PrototypeChangeUserRole from '@admin/prototypes/components/PrototypeChangeUserRole';
 import PrototypePage from '@admin/prototypes/components/PrototypePage';
 import React, { useState } from 'react';
-import ButtonGroup from '@common/components/ButtonGroup';
-import Button from '@common/components/Button';
-import { FormGroup, FormTextInput } from '@common/components/form';
-import FormEditor from '@admin/components/form/FormEditor';
-import ModalConfirm from '@common/components/ModalConfirm';
-import useToggle from '@common/hooks/useToggle';
-import { isTemplateExpression, isThrowStatement } from 'typescript';
 import Details from '@common/components/Details';
 import Tabs from '@common/components/Tabs';
 import Tag from '@common/components/Tag';
 import TabsSection from '@common/components/TabsSection';
-import WarningMessage from '@common/components/WarningMessage';
 import RelatedInformation from '@common/components/RelatedInformation';
 
 const PrototypeManageUsers = () => {
