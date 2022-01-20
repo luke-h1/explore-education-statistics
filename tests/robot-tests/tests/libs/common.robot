@@ -1,5 +1,5 @@
 *** Settings ***
-Library     SeleniumLibrary    timeout=${timeout}    implicit_wait=${implicit_wait}    run_on_failure=do this on failure
+Library     SeleniumLibrary    timeout=%{TIMEOUT}    implicit_wait=%{IMPLICIT_WAIT}    run_on_failure=do this on failure
 Library     OperatingSystem
 Library     Collections
 #Library    XvfbRobot    # sudo apt install xvfb + pip install robotframework-xvfb
@@ -14,11 +14,11 @@ ${browser}=                             chrome
 ${headless}=                            1
 ${FILES_DIR}=                           ${EXECDIR}${/}tests${/}files${/}
 
-${timeout}=                             30
-${implicit_wait}=                       15
-${RELEASE_COMPLETE_WAIT}=               900
+${timeout}=                             %{TIMEOUT}
+${implicit_wait}=                       %{IMPLICIT_WAIT}
+${RELEASE_COMPLETE_WAIT}=               %{RELEASE_COMPLETE_WAIT}
 ${prompt_to_continue_on_failure}=       0
-${FAIL_TEST_SUITES_FAST}=               1
+${FAIL_TEST_SUITES_FAST}=               %{FAIL_TEST_SUITES_FAST}
 
 *** Keywords ***
 do this on failure
@@ -591,7 +591,7 @@ user presses keys
 
 user enters text into element
     [Arguments]    ${selector}    ${text}
-    user waits until element is visible    ${selector}    60
+    user waits until element is visible    ${selector}    %{WAIT_SMALL}
     user clears element text    ${selector}
     user presses keys    ${text}    ${selector}
 
@@ -614,10 +614,10 @@ user checks page contains link with text and url
 user opens details dropdown
     [Arguments]    ${text}    ${parent}=css:body
     user waits until parent contains element    ${parent}
-    ...    xpath:.//details/summary[contains(., "${text}") and @aria-expanded]    60
+    ...    xpath:.//details/summary[contains(., "${text}") and @aria-expanded]    %{WAIT_SMALL}
     ${details}=    get child element    ${parent}    xpath:.//details[summary[contains(., "${text}")]]
     ${summary}=    get child element    ${parent}    xpath:.//details/summary[contains(., "${text}")]
-    user waits until element is visible    ${summary}    60
+    user waits until element is visible    ${summary}    %{WAIT_SMALL}
     ${is_expanded}=    get element attribute    ${summary}    aria-expanded
     IF    '${is_expanded}' != 'true'
         user clicks element    ${summary}
@@ -798,6 +798,7 @@ user waits until table tool wizard step is available
     ...    ${wait}
     # this visible check passes when it should fail?!
     user waits until element is visible    xpath://h2|h3//*[contains(text(),"${table_tool_step_title}")]
+    ...    %{WAIT_SMALL}
     user waits until page does not contain loading spinner
 
 lookup or return webelement

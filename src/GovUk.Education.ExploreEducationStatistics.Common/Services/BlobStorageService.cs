@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Mime;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure;
@@ -124,12 +123,15 @@ namespace GovUk.Education.ExploreEducationStatistics.Common.Services
             return await GetBlob(containerName, path);
         }
 
-        public async Task DeleteBlobs(IBlobContainer containerName, string directoryPath, string? excludePattern = null)
+        public async Task DeleteBlobs(
+            IBlobContainer containerName,
+            string? directoryPath = null,
+            IBlobStorageService.DeleteBlobsOptions? options = null)
         {
             if (!directoryPath.IsNullOrEmpty())
             {
                 // Forcefully add a trailing slash to prevent deleting blobs whose names begin with that string
-                directoryPath = directoryPath.AppendTrailingSlash();
+                directoryPath = directoryPath?.AppendTrailingSlash();
             }
 
             var blobContainer = await GetBlobContainer(containerName);
@@ -154,13 +156,13 @@ namespace GovUk.Education.ExploreEducationStatistics.Common.Services
                             break;
                         }
 
-                        var excluded = excludePattern != null &&
-                                       Regex.IsMatch(blob.Name, excludePattern, RegexOptions.IgnoreCase);
+                        var excluded = options?.ExcludeRegex?.IsMatch(blob.Name) ?? false;
+                        var included = options?.IncludeRegex?.IsMatch(blob.Name) ?? true;
 
-                        if (excluded)
+                        if (excluded || !included)
                         {
                             _logger.LogInformation($"Ignoring blob {blobContainer.Name}/{blob.Name}");
-                            break;
+                            continue;
                         }
 
                         _logger.LogInformation($"Deleting blob {blobContainer.Name}/{blob.Name}");

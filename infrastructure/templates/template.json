@@ -263,11 +263,18 @@
         "description": "Gov UK Notify service template Id for verifing subscription"
       }
     },
-    "publicationNotificationEmailTemplateId": {
+    "releaseEmailTemplateId": {
       "type": "securestring",
       "defaultValue": "",
       "metadata": {
         "description": "Gov UK Notify service template Id for new release notification"
+      }
+    },
+    "releaseAmendmentEmailTemplateId": {
+      "type": "securestring",
+      "defaultValue": "",
+      "metadata": {
+        "description": "Gov UK Notify service template Id for amended release notification"
       }
     },
     "subscriptionConfirmationEmailTemplateId": {
@@ -290,6 +297,10 @@
       "defaultValue": ""
     },
     "notifyPreReleaseTemplateId": {
+      "type": "securestring",
+      "defaultValue": "change-me"
+    },
+    "notifyContributorTemplateId": {
       "type": "securestring",
       "defaultValue": "change-me"
     },
@@ -560,6 +571,10 @@
       "metadata": {
         "description": "Slack webhook URI for alerts"
       }
+    },
+    "dataFactoryConcurrency": {
+      "type": "int",
+      "defaultValue": 1
     }
   },
   "variables": {
@@ -992,17 +1007,6 @@
         "resourceType": "microsoft.sql/servers/databases",
         "metricName": "blocked_by_firewall",
         "threshold": 0,
-        "operator": "GreaterThan",
-        "timeAggregation": "Total",
-        "criterionType": "StaticThresholdCriterion"
-      },
-      {
-        "name": "[concat(parameters('subscription'),'DataFactoryPipelineFailures')]",
-        "description": "Data Factory - Pipeline Failed Run",
-        "resourceId": "[resourceId('Microsoft.DataFactory/factories', variables('dataFactoryName'))]",
-        "resourceType": "Microsoft.DataFactory/factories",
-        "metricName": "PipelineFailedRuns",
-        "threshold": 1,
         "operator": "GreaterThan",
         "timeAggregation": "Total",
         "criterionType": "StaticThresholdCriterion"
@@ -1661,6 +1665,7 @@
         "NotifyPublicationRoleTemplateId": "[parameters('notifyPublicationRoleTemplateId')]",
         "NotifyReleaseRoleTemplateId": "[parameters('notifyReleaseRoleTemplateId')]",
         "NotifyPreReleaseTemplateId": "[parameters('notifyPreReleaseTemplateId')]",
+        "NotifyContributorTemplateId": "[parameters('notifyContributorTemplateId')]",
         "AdminUri": "[parameters('adminUri')]",
         "PublicAppUrl": "[variables('publicAppUrl')]",
         "IdentityServer:IssuerUri": "[concat('urn=', parameters('adminUri'))]",
@@ -2704,7 +2709,8 @@
         "NotifyApiKey": "[concat('@Microsoft.KeyVault(SecretUri=', reference(variables('ees-notify-apikey'), '2018-02-14').secretUriWithVersion, ')')]",
         "TokenSecretKey": "[concat('@Microsoft.KeyVault(SecretUri=', reference(variables('ees-notify-token'), '2018-02-14').secretUriWithVersion, ')')]",
         "VerificationEmailTemplateId": "[parameters('verificationEmailTemplateId')]",
-        "PublicationNotificationEmailTemplateId": "[parameters('publicationNotificationEmailTemplateId')]",
+        "ReleaseEmailTemplateId": "[parameters('releaseEmailTemplateId')]",
+        "ReleaseAmendmentEmailTemplateId": "[parameters('releaseAmendmentEmailTemplateId')]",
         "SubscriptionConfirmationEmailTemplateId": "[parameters('subscriptionConfirmationEmailTemplateId')]",
         "TableStorageConnString": "[concat('@Microsoft.KeyVault(SecretUri=', reference(variables('ees-storage-notifications')).secretUriWithVersion, ')')]"
       }
@@ -3341,11 +3347,20 @@
           "dataFactoryName": {
             "value": "[variables('dataFactoryName')]"
           },
+          "dataFactoryConcurrency": {
+            "value": "[parameters('dataFactoryConcurrency')]"
+          },
           "keyVaultName": {
             "value": "[variables('keyVaultName')]"
           },
           "branch": {
             "value": "[parameters('branch')]"
+          },
+          "actionGroupAlerts": {
+            "value": "[variables('actionGroupAlerts')]"
+          },
+          "enableAlerts": {
+            "value": "[parameters('enableAlerts')]"
           }
         }
       },
@@ -3353,7 +3368,8 @@
         "[resourceId('Microsoft.Sql/servers', variables('sqlserverName'))]",
         "[resourceId('Microsoft.Sql/servers', variables('publicSqlServerName'))]",
         "[resourceId('Microsoft.Web/sites', variables('publisherAppName'))]",
-        "[resourceId('Microsoft.KeyVault/vaults/', variables('keyVaultName'))]"
+        "[resourceId('Microsoft.KeyVault/vaults/', variables('keyVaultName'))]",
+        "[resourceId('microsoft.insights/actionGroups', variables('actionGroupAlerts'))]"
       ]
     },
     {

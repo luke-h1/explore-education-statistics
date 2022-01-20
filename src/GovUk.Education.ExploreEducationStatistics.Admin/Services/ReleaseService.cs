@@ -15,6 +15,7 @@ using GovUk.Education.ExploreEducationStatistics.Common.Services.Interfaces.Secu
 using GovUk.Education.ExploreEducationStatistics.Common.Utils;
 using GovUk.Education.ExploreEducationStatistics.Content.Model;
 using GovUk.Education.ExploreEducationStatistics.Content.Model.Database;
+using GovUk.Education.ExploreEducationStatistics.Content.Model.Extensions;
 using GovUk.Education.ExploreEducationStatistics.Data.Model;
 using GovUk.Education.ExploreEducationStatistics.Data.Model.Database;
 using GovUk.Education.ExploreEducationStatistics.Data.Model.Repository.Interfaces;
@@ -271,7 +272,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Services
 
         private async Task<Either<ActionResult, Release>> CreateBasicReleaseAmendment(Release release)
         {
-            var amendment = release.CreateReleaseAmendment(DateTime.UtcNow, _userService.GetUserId());
+            var amendment = release.CreateAmendment(DateTime.UtcNow, _userService.GetUserId());
             await _context.Releases.AddAsync(amendment);
             await _context.SaveChangesAsync();
             return amendment;
@@ -455,8 +456,8 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Services
                 })
                 .OnSuccess(_ => GetDeleteDataFilePlan(releaseId, fileId))
                 .OnSuccessDo(deletePlan => _dataBlockService.DeleteDataBlocks(deletePlan.DeleteDataBlockPlan))
-                .OnSuccess(deletePlan => _releaseSubjectRepository.SoftDeleteReleaseSubject(releaseId, deletePlan.SubjectId))
-                .OnSuccess(_ => _releaseDataFileService.Delete(releaseId, fileId));
+                .OnSuccessVoid(deletePlan => _releaseSubjectRepository.SoftDeleteReleaseSubject(releaseId, deletePlan.SubjectId))
+                .OnSuccess(() => _releaseDataFileService.Delete(releaseId, fileId));
         }
 
         public async Task<Either<ActionResult, DataImportViewModel>> GetDataFileImportStatus(Guid releaseId, Guid fileId)
@@ -526,26 +527,30 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Services
             await _context.Entry(release)
                 .Collection(r => r.Content)
                 .LoadAsync();
-            await release.Content.ForEachAsync(async cs =>
-            {
-                await _context.Entry(cs)
-                    .Reference(rcs => rcs.ContentSection)
-                    .LoadAsync();
-                await _context.Entry(cs.ContentSection)
-                    .Collection(s => s.Content)
-                    .LoadAsync();
-            });
+            await release.Content
+                .ToAsyncEnumerable()
+                .ForEachAwaitAsync(async cs =>
+                {
+                    await _context.Entry(cs)
+                        .Reference(rcs => rcs.ContentSection)
+                        .LoadAsync();
+                    await _context.Entry(cs.ContentSection)
+                        .Collection(s => s.Content)
+                        .LoadAsync();
+                });
             await _context.Entry(release)
                 .Collection(r => r.Updates)
                 .LoadAsync();
             await _context.Entry(release)
                 .Collection(r => r.ContentBlocks)
                 .LoadAsync();
-            await release.ContentBlocks.ForEachAsync(async rcb =>
-                await _context.Entry(rcb)
-                    .Reference(cb => cb.ContentBlock)
-                    .LoadAsync()
-            );
+            await release.ContentBlocks
+                .ToAsyncEnumerable()
+                .ForEachAwaitAsync(async rcb =>
+                    await _context.Entry(rcb)
+                        .Reference(cb => cb.ContentBlock)
+                        .LoadAsync()
+                );
             return release;
         }
 

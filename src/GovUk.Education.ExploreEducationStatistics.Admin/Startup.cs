@@ -5,6 +5,7 @@ using System.Security.Claims;
 using AutoMapper;
 using Azure.Storage.Blobs;
 using GovUk.Education.ExploreEducationStatistics.Admin.Areas.Identity.Data;
+using GovUk.Education.ExploreEducationStatistics.Admin.Controllers.Api.Bau;
 using GovUk.Education.ExploreEducationStatistics.Admin.Mappings;
 using GovUk.Education.ExploreEducationStatistics.Admin.Mappings.Interfaces;
 using GovUk.Education.ExploreEducationStatistics.Admin.Migrations.Custom;
@@ -109,12 +110,14 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin
                 options.Secure = CookieSecurePolicy.Always;
             });
 
-            services.AddControllers(
-                options =>
-                {
-                    options.ModelBinderProviders.Insert(0, new SeparatedQueryModelBinderProvider(","));
-                }
-            );
+            services
+                .AddControllers(
+                    options =>
+                    {
+                        options.ModelBinderProviders.Insert(0, new SeparatedQueryModelBinderProvider(","));
+                    }
+                )
+                .AddControllersAsServices();
 
             services.AddDbContext<UsersAndRolesDbContext>(options =>
                 options
@@ -324,6 +327,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin
             services.AddTransient<IUserReleaseRoleService, UserReleaseRoleService>();
             services.AddTransient<IUserPublicationRoleRepository, UserPublicationRoleRepository>();
             services.AddTransient<IUserReleaseRoleRepository, UserReleaseRoleRepository>();
+            services.AddTransient<IUserReleaseInviteRepository, UserReleaseInviteRepository>();
 
             services.AddTransient<INotificationClient>(s =>
             {
@@ -374,7 +378,9 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin
             services.AddSingleton<DataServiceMemoryCache<BoundaryLevel>, DataServiceMemoryCache<BoundaryLevel>>();
             services.AddSingleton<DataServiceMemoryCache<GeoJson>, DataServiceMemoryCache<GeoJson>>();
             services.AddTransient<IUserManagementService, UserManagementService>();
+            services.AddTransient<IReleaseInviteService, ReleaseInviteService>();
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IUserInviteRepository, UserInviteRepository>();
             services.AddTransient<IFileUploadsValidatorService, FileUploadsValidatorService>();
             services.AddTransient(provider => GetBlobStorageService(provider, "CoreStorage"));
             services.AddTransient<ITableStorageService, TableStorageService>(s =>
@@ -402,6 +408,14 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin
             services.AddTransient<IDataArchiveValidationService, DataArchiveValidationService>();
             services.AddTransient<IBlobCacheService, BlobCacheService>();
             services.AddTransient<ICacheKeyService, CacheKeyService>();
+
+            // Register any controllers that need specific dependencies
+            services.AddTransient(
+                provider => new BauCacheController(
+                    privateBlobStorageService: GetBlobStorageService(provider, "CoreStorage"),
+                    publicBlobStorageService: GetBlobStorageService(provider, "PublicStorage")
+                )
+            );
 
             services.AddSwaggerGen(c =>
             {

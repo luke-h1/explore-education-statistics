@@ -248,6 +248,11 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Model.Migrations
                     b.Property<string>("EnglishDevolvedArea_Name")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("GeographicLevel")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(6)")
+                        .HasMaxLength(6);
+
                     b.Property<string>("Institution_Code")
                         .HasColumnType("nvarchar(450)");
 
@@ -343,6 +348,8 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Model.Migrations
                     b.HasIndex("Country_Code");
 
                     b.HasIndex("EnglishDevolvedArea_Code");
+
+                    b.HasIndex("GeographicLevel");
 
                     b.HasIndex("Institution_Code");
 

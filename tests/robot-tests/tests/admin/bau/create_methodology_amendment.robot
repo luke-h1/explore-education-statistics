@@ -98,7 +98,7 @@ Verify the summary for the original Methodology is as expected
     user views methodology for publication
     ...    ${PUBLICATION_NAME}
     ...    ${PUBLICATION_NAME} - first methodology version
-    ...    View this methodology
+    ...    View methodology
     user verifies methodology summary details
     ...    ${PUBLICATION_NAME}
     ...    ${PUBLICATION_NAME} - first methodology version
@@ -119,7 +119,7 @@ Edit the Amendment's summary to return the Methodology's title to the same as it
     ...    ${PUBLICATION_NAME}
     ...    ${PUBLICATION_NAME} - first methodology version
     ...    ${PUBLICATION_NAME}
-    ...    Edit this amendment
+    ...    Edit amendment
     user verifies methodology summary details
     ...    ${PUBLICATION_NAME}
     ...    ${PUBLICATION_NAME}
@@ -141,7 +141,7 @@ Remove an image from a Content Block
     user closes Set Page View box
     user opens accordion section    Methodology annex section 2    ${METHODOLOGY_ANNEXES_EDITABLE_ACCORDION}
     user removes image from accordion section text block    Methodology annex section 2    2
-    ...    Alt text for the uploaded annex image 3    ${METHODOLOGY_ANNEXES_EDITABLE_ACCORDION}
+    ...    Alt text for the uploaded annex image 3    ${METHODOLOGY_ANNEXES_EDITABLE_ACCORDION}    Save
     user checks accordion section text block does not contain image with alt text    Methodology annex section 2    2
     ...    Alt text for the uploaded content image    ${METHODOLOGY_ANNEXES_EDITABLE_ACCORDION}
 
@@ -183,13 +183,13 @@ Approve the Methodology Amendment
 Revisit the Publication on the dashboard and check that the new Amendment is now the live Methodology
     ${accordion}=    user opens publication on the admin dashboard    ${PUBLICATION_NAME}
     user opens details dropdown    ${PUBLICATION_NAME}    ${accordion}
-    user checks element contains link    ${accordion}    View this methodology
-    user checks element does not contain link    ${accordion}    Edit this methodology
+    user checks element contains link    ${accordion}    View methodology
+    user checks element does not contain link    ${accordion}    Edit methodology
     user checks element contains button    ${accordion}    Amend methodology
-    user checks element does not contain link    ${accordion}    Edit this amendment
+    user checks element does not contain link    ${accordion}    Edit amendment
 
 Visit the approved Amendment and check that its summary is as expected
-    user clicks link    View this methodology
+    user clicks link    View methodology
     ${date}=    get current datetime    %-d %B %Y
     user verifies methodology summary details
     ...    ${PUBLICATION_NAME}
@@ -207,13 +207,13 @@ Create and cancel an Amendment
 
     ${accordion}=    user opens publication on the admin dashboard    ${PUBLICATION_NAME}
     user opens details dropdown    ${PUBLICATION_NAME}    ${accordion}
-    user checks element contains link    ${accordion}    View this methodology
-    user checks element does not contain link    ${accordion}    Edit this methodology
+    user checks element contains link    ${accordion}    View methodology
+    user checks element does not contain link    ${accordion}    Edit methodology
     user checks element contains button    ${accordion}    Amend methodology
-    user checks element does not contain link    ${accordion}    Edit this amendment
+    user checks element does not contain link    ${accordion}    Edit amendment
 
 Revisit the live Amendment after the cancellation to double check it remains unaffected
-    user clicks link    View this methodology
+    user clicks link    View methodology
     user clicks link    Manage content
     user verifies amended Methodology readonly content
 

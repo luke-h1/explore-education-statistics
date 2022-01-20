@@ -78,7 +78,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Services
             IList<Observation> observations)
         {
             var queryableObservations = observations.AsQueryable();
-            
+
             return await _persistenceHelper.CheckEntityExists<Subject>(query.SubjectId)
                 .OnSuccess(CheckCanViewSubjectData)
                 .OnSuccess(async subject =>
@@ -86,24 +86,20 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Services
                     var stopwatch = Stopwatch.StartNew();
                     stopwatch.Start();
 
-                    // TODO EES-2902 Remove the location hierarchies feature toggle after EES-2777
-                    var locationHierarchiesEnabled = _locationOptions.TableResultLocationHierarchiesEnabled;
-
-                    // Uses the new GetLocationAttributesHierarchical to get the locations regardless of whether the
-                    // feature is enabled or not.  If the feature is disabled, requests the locations without a hierarchy.
-                    var locationAttributes = await _locationRepository.GetLocationAttributesHierarchical(
-                        queryableObservations,
-                        hierarchies: locationHierarchiesEnabled ? _locationOptions.Hierarchies : null);
+                    var locationAttributes =
+                        await _locationRepository.GetLocationAttributesHierarchicalByObservationsList(
+                            observations,
+                            hierarchies: _locationOptions.Hierarchies);
                     _logger.LogTrace("Got Location attributes in {Time} ms", stopwatch.Elapsed.TotalMilliseconds);
                     stopwatch.Restart();
 
-                    var filterItems = 
+                    var filterItems =
                         _filterItemRepository.GetFilterItemsFromObservationList(observations);
                     var filterViewModels = BuildFilterHierarchy(filterItems);
                     _logger.LogTrace("Got Filters in {Time} ms", stopwatch.Elapsed.TotalMilliseconds);
                     stopwatch.Restart();
 
-                    var footnoteViewModels = 
+                    var footnoteViewModels =
                         GetFilteredFootnoteViewModels(releaseId, queryableObservations, query);
                     _logger.LogTrace("Got Footnotes in {Time} ms", stopwatch.Elapsed.TotalMilliseconds);
                     stopwatch.Restart();
@@ -122,48 +118,28 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Services
                     var releaseFile = await _releaseDataFileRepository.GetBySubject(releaseId, subject.Id);
                     var subjectName = releaseFile.Name!;
 
-                    var locationsHelper =
-                        new LocationsQueryHelper(locationAttributes, query, _boundaryLevelRepository,
-                            _geoJsonRepository);
+                    var locationsHelper = new LocationsQueryHelper(
+                        locationAttributes,
+                        query,
+                        _boundaryLevelRepository,
+                        _geoJsonRepository);
 
-                    if (locationHierarchiesEnabled)
+                    var locationViewModels = locationsHelper.GetLocationViewModels();
+                    _logger.LogTrace("Got Location view models in {Time} ms", stopwatch.Elapsed.TotalMilliseconds);
+                    stopwatch.Stop();
+
+                    return new ResultSubjectMetaViewModel
                     {
-                        var locationViewModels = locationsHelper.GetLocationViewModels();
-                        _logger.LogTrace("Got Location view models in {Time} ms", stopwatch.Elapsed.TotalMilliseconds);
-                        stopwatch.Stop();
-
-                        return new ResultSubjectMetaViewModel
-                        {
-                            Filters = filterViewModels,
-                            Footnotes = footnoteViewModels,
-                            GeoJsonAvailable = locationsHelper.GeoJsonAvailable,
-                            Indicators = indicatorViewModels,
-                            LocationsHierarchical = locationViewModels,
-                            BoundaryLevels = locationsHelper.GetBoundaryLevelViewModels(),
-                            PublicationName = publicationTitle,
-                            SubjectName = subjectName,
-                            TimePeriodRange = timePeriodViewModels
-                        };
-                    }
-                    else
-                    {
-                        var locationViewModels = locationsHelper.GetLegacyLocationViewModels();
-                        _logger.LogTrace("Got Location view models in {Time} ms", stopwatch.Elapsed.TotalMilliseconds);
-                        stopwatch.Stop();
-
-                        return new ResultSubjectMetaViewModel
-                        {
-                            Filters = filterViewModels,
-                            Footnotes = footnoteViewModels,
-                            GeoJsonAvailable = locationsHelper.GeoJsonAvailable,
-                            Indicators = indicatorViewModels,
-                            Locations = locationViewModels,
-                            BoundaryLevels = locationsHelper.GetBoundaryLevelViewModels(),
-                            PublicationName = publicationTitle,
-                            SubjectName = subjectName,
-                            TimePeriodRange = timePeriodViewModels
-                        };
-                    }
+                        Filters = filterViewModels,
+                        Footnotes = footnoteViewModels,
+                        GeoJsonAvailable = locationsHelper.GeoJsonAvailable,
+                        Indicators = indicatorViewModels,
+                        LocationsHierarchical = locationViewModels,
+                        BoundaryLevels = locationsHelper.GetBoundaryLevelViewModels(),
+                        PublicationName = publicationTitle,
+                        SubjectName = subjectName,
+                        TimePeriodRange = timePeriodViewModels
+                    };
                 });
         }
 
@@ -239,63 +215,6 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Services
                     .ToList();
             }
 
-            [Obsolete("TODO EES-2902 - Remove with SOW8 after EES-2777", false)]
-            public List<ObservationalUnitMetaViewModel> GetLegacyLocationViewModels()
-            {
-                var viewModels = _locationAttributes.SelectMany(pair =>
-                {
-                    var (geographicLevel, hierarchicalLocationAttributes) = pair;
-
-                    // Location attributes should be flat because we retrieve the locations without specifying a hierarchy
-                    // Throw an exception if this isn't true
-                    if (hierarchicalLocationAttributes.Any(node => !node.IsLeaf))
-                    {
-                        throw new InvalidOperationException(
-                            $"Expected flat list of location attributes building legacy location view model when locationHierarchies feature is disabled"
-                        );
-                    }
-
-                    // Get the flat list of location attributes
-                    var locationAttributes = hierarchicalLocationAttributes
-                        .Select(node => node.Attribute)
-                        .WhereNotNull()
-                        .ToList();
-
-                    return GetLegacyLocationAttributeViewModels(
-                        geographicLevel,
-                        locationAttributes);
-                });
-
-                return DeduplicateLocationViewModels(viewModels)
-                    .OrderBy(model => model.Level.ToString())
-                    .ThenBy(model => model.Label)
-                    .ToList();
-            }
-
-            [Obsolete("TODO EES-2902 - Remove with SOW8 after EES-2777", false)]
-            private IEnumerable<ObservationalUnitMetaViewModel> GetLegacyLocationAttributeViewModels(
-                GeographicLevel geographicLevel,
-                IReadOnlyList<ILocationAttribute> locationAttributes)
-            {
-                var geoJsonByCode = GetGeoJson(geographicLevel, locationAttributes);
-
-                return locationAttributes.Select(locationAttribute =>
-                {
-                    var code = locationAttribute.GetCodeOrFallback();
-                    var geoJson = code.IsNullOrEmpty()
-                        ? null
-                        : geoJsonByCode.GetValueOrDefault(code)?.Deserialized;
-
-                    return new ObservationalUnitMetaViewModel
-                    {
-                        GeoJson = geoJson,
-                        Label = locationAttribute.Name ?? string.Empty,
-                        Level = geographicLevel,
-                        Value = code
-                    };
-                });
-            }
-
             public Dictionary<string, List<LocationAttributeViewModel>> GetLocationViewModels()
             {
                 var allGeoJson = GetGeoJson(_locationAttributes);
@@ -306,9 +225,12 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Services
                     {
                         var (geographicLevel, locationAttributes) = pair;
                         var geoJsonByCode = allGeoJson.GetValueOrDefault(geographicLevel);
-                        return locationAttributes
-                            .Select(locationAttribute =>
-                                GetLocationAttributeViewModel(locationAttribute, geoJsonByCode))
+                        return DeduplicateLocationViewModels(
+                                locationAttributes
+                                    .OrderBy(OrderLocationAttributes)
+                                    .Select(locationAttribute =>
+                                        GetLocationAttributeViewModel(locationAttribute, geoJsonByCode))
+                            )
                             .ToList();
                     });
             }
@@ -337,11 +259,25 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Services
                 return new LocationAttributeViewModel
                 {
                     Label = locationAttribute.Name ?? string.Empty,
-                    Level = locationAttribute.GetType().Name,
+                    Level = locationAttribute.GetType().Name.CamelCase(),
                     Value = code,
-                    Options = locationAttributeNode.Children
-                        .Select(child => GetLocationAttributeViewModel(child, geoJsonByCode))
+                    Options = DeduplicateLocationViewModels(
+                            locationAttributeNode.Children
+                                .OrderBy(OrderLocationAttributes)
+                                .Select(child => GetLocationAttributeViewModel(child, geoJsonByCode))
+                        )
                         .ToList()
+                };
+            }
+
+            private static string OrderLocationAttributes(LocationAttributeNode node)
+            {
+                var locationAttribute = node.Attribute;
+
+                return locationAttribute switch
+                {
+                    Region region => region.Code ?? string.Empty,
+                    _ => locationAttribute.Name ?? string.Empty
                 };
             }
 

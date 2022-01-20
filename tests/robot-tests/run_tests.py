@@ -106,14 +106,6 @@ parser.add_argument("--rerun-failed-suites",
                     dest="rerun_failed_suites",
                     action='store_true',
                     help="rerun failed test suites and merge results into original run results")
-parser.add_argument("--timeout",
-                    default="30",
-                    dest="timeout",
-                    help="default robot timeout in seconds (default is 30)")
-parser.add_argument("--implicit-wait",
-                    default="5",
-                    dest="implicit_wait",
-                    help="default robot implicit wait in seconds (default is 5)")
 parser.add_argument("--print-keywords",
                     dest="print_keywords",
                     action='store_true',
@@ -153,6 +145,25 @@ parser.add_argument("--analyst-pass",
                     help="manually specify the analyst password")
 args = parser.parse_args()
 
+
+if args.custom_env:
+    load_dotenv(args.custom_env)
+else:
+    load_dotenv('.env.' + args.env)
+
+assert os.getenv('TIMEOUT') is not None
+assert os.getenv('IMPLICIT_WAIT') is not None
+assert os.getenv('PUBLIC_URL') is not None
+assert os.getenv('ADMIN_URL') is not None
+assert os.getenv('PUBLIC_AUTH_USER') is not None
+assert os.getenv('PUBLIC_AUTH_PASSWORD') is not None
+assert os.getenv('RELEASE_COMPLETE_WAIT') is not None
+assert os.getenv('WAIT_MEDIUM') is not None
+assert os.getenv('WAIT_LONG') is not None
+assert os.getenv('WAIT_SMALL') is not None
+assert os.getenv('FAIL_TEST_SUITES_FAST') is not None
+
+
 if args.slack_webhook_url:
     os.environ['SLACK_WEBHOOK_URL'] = args.slack_webhook_url
 
@@ -175,6 +186,7 @@ os.environ["PATH"] += os.pathsep + str(Path('webdriver').absolute())
 
 output_file = "rerun.xml" if args.rerun_failed_tests or args.rerun_failed_suites else "output.xml"
 
+
 # Set robotArgs
 robotArgs = ["--outputdir", "test-results/",
              "--output", output_file,
@@ -182,7 +194,7 @@ robotArgs = ["--outputdir", "test-results/",
              "--exclude", "UnderConstruction",
              "--exclude", "BootstrapData"]
 
-robotArgs += ["-v", f"timeout:{args.timeout}", "-v", f"implicit_wait:{args.implicit_wait}"]
+robotArgs += ["-v", f"timeout:{os.getenv('TIMEOUT')}", "-v", f"implicit_wait:{os.getenv('IMPLICIT_WAIT')}"]
 
 if args.fail_fast:
     robotArgs += ["--exitonfailure"]
@@ -211,11 +223,6 @@ else:
 
     else:
         load_dotenv('.env.' + args.env)
-
-assert os.getenv('PUBLIC_URL') is not None
-assert os.getenv('ADMIN_URL') is not None
-assert os.getenv('ADMIN_EMAIL') is not None
-assert os.getenv('ADMIN_PASSWORD') is not None
 
 
 # seed Azure storage emulator release files

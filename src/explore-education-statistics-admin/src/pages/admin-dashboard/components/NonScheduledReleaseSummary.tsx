@@ -1,5 +1,4 @@
 import ButtonLink from '@admin/components/ButtonLink';
-import Link from '@admin/components/Link';
 import ReleaseSummary from '@admin/pages/admin-dashboard/components/ReleaseSummary';
 import { getReleaseSummaryLabel } from '@admin/pages/release/utils/releaseSummaryUtil';
 import {
@@ -41,13 +40,11 @@ const NonScheduledReleaseSummary = ({
     <>
       <ReleaseSummary
         release={release}
-        // open={release.live && release.latestRelease}
         actions={
           <>
             {release.amendment ? (
               <>
                 <ButtonLink
-                  variant="secondary"
                   to={generatePath<ReleaseRouteParams>(
                     releaseSummaryRoute.path,
                     {
@@ -58,9 +55,10 @@ const NonScheduledReleaseSummary = ({
                   data-testid={`Edit release amendment link for ${
                     release.publicationTitle
                   }, ${getReleaseSummaryLabel(release)}`}
+                  variant="secondary"
                 >
                   {release.permissions.canUpdateRelease
-                    ? 'Edit amendment'
+                    ? 'Edit release amendment'
                     : 'View release amendment'}
                 </ButtonLink>
                 <ButtonLink
@@ -71,10 +69,10 @@ const NonScheduledReleaseSummary = ({
                       releaseId: release.previousVersionId,
                     },
                   )}
-                  className="govuk-button--secondary"
                   data-testid={`View original release link for ${
                     release.publicationTitle
                   }, ${getReleaseSummaryLabel(release)}`}
+                  variant="secondary"
                 >
                   View original release
                 </ButtonLink>
@@ -82,8 +80,6 @@ const NonScheduledReleaseSummary = ({
             ) : (
               <>
                 <ButtonLink
-                  className="dfe-align--centre govuk-!-margin-bottom-6"
-                  variant="secondary"
                   to={generatePath<ReleaseRouteParams>(
                     releaseSummaryRoute.path,
                     {
@@ -94,6 +90,7 @@ const NonScheduledReleaseSummary = ({
                   data-testid={`Edit release link for ${
                     release.publicationTitle
                   }, ${getReleaseSummaryLabel(release)}`}
+                  variant="secondary"
                 >
                   {release.permissions.canUpdateRelease
                     ? 'Edit release'
@@ -102,7 +99,7 @@ const NonScheduledReleaseSummary = ({
                 {includeCreateAmendmentControls &&
                   release.permissions.canMakeAmendmentOfRelease && (
                     <Button
-                      className="govuk-button--secondary"
+                      variant="secondary"
                       onClick={() => setAmendReleaseId(release.id)}
                     >
                       Amend release
@@ -110,23 +107,20 @@ const NonScheduledReleaseSummary = ({
                   )}
               </>
             )}
+            {release.permissions.canDeleteRelease && release.amendment && (
+              <Button
+                onClick={async () => {
+                  setDeleteReleasePlan({
+                    ...(await releaseService.getDeleteReleasePlan(release.id)),
+                    releaseId: release.id,
+                  });
+                }}
+                variant="warning"
+              >
+                Cancel amendment
+              </Button>
+            )}
           </>
-        }
-        secondaryActions={
-          release.permissions.canDeleteRelease &&
-          release.amendment && (
-            <Button
-              onClick={async () => {
-                setDeleteReleasePlan({
-                  ...(await releaseService.getDeleteReleasePlan(release.id)),
-                  releaseId: release.id,
-                });
-              }}
-              className="govuk-button--warning"
-            >
-              Cancel amendment
-            </Button>
-          )
         }
       />
 

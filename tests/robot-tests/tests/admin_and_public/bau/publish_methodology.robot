@@ -71,10 +71,16 @@ Verify that the user cannot edit the status of the methodology
     user views methodology for publication
     ...    ${PUBLICATION_NAME}
     ...    ${PUBLICATION_NAME}
-    ...    View this methodology
+    ...    View methodology
     user clicks link    Sign off
     user waits until h2 is visible    Sign off
     user checks page does not contain    Edit status
+
+Verify that the methodology 'Published' tag is shown
+    user opens publication on the admin dashboard    ${PUBLICATION_NAME}    %{TEST_THEME_NAME}    %{TEST_TOPIC_NAME}
+
+    user waits until page contains element
+    ...    //*[@data-testid="Methodology for ${PUBLICATION_NAME}"]//div//span[text()="Published"]
 
 Verify that the methodology is visible on the public methodologies page with the expected URL
     user navigates to public methodologies page
@@ -118,7 +124,7 @@ Amend the methodology in preparation to test publishing immediately
     ...    ${PUBLICATION_NAME}
     ...    ${PUBLICATION_NAME}
     ...    ${PUBLICATION_NAME} - Amended methodology
-    ...    Edit this amendment
+    ...    Edit amendment
 
 Update the methodology amendment's content
     user clicks link    Manage content

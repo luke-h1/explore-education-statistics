@@ -1,4 +1,5 @@
 import ReleaseServiceStatus from '@admin/components/ReleaseServiceStatus';
+import publicationSummaryStyles from '@admin/pages/admin-dashboard/components/PublicationSummary.module.scss';
 import {
   getReleaseApprovalStatusLabel,
   getReleaseSummaryLabel,
@@ -6,6 +7,7 @@ import {
 import { Release } from '@admin/services/releaseService';
 import Details from '@common/components/Details';
 import FormattedDate from '@common/components/FormattedDate';
+import LoadingSpinner from '@common/components/LoadingSpinner';
 import SummaryList from '@common/components/SummaryList';
 import SummaryListItem from '@common/components/SummaryListItem';
 import Tag from '@common/components/Tag';
@@ -16,12 +18,11 @@ import {
 } from '@common/utils/date/partialDate';
 import React, { ReactNode } from 'react';
 import LazyLoad from 'react-lazyload';
-import LoadingSpinner from '@common/components/LoadingSpinner';
+import classNames from 'classnames';
 
 interface Props {
   release: Release;
   actions: ReactNode;
-  secondaryActions?: ReactNode;
   open?: boolean;
   children?: ReactNode;
 }
@@ -29,14 +30,13 @@ interface Props {
 const ReleaseSummary = ({
   release,
   actions,
-  secondaryActions,
   open = false,
   children,
 }: Props) => {
   return (
     <Details
       open={open}
-      className="govuk-!-margin-bottom-4"
+      className="govuk-!-margin-bottom-0"
       summary={getReleaseSummaryLabel(release)}
       summaryAfter={
         <TagGroup className="govuk-!-margin-left-2">
@@ -72,18 +72,17 @@ const ReleaseSummary = ({
         </TagGroup>
       }
     >
-      <div className="dfe-flex">
-        <div className="dfe-flex-basis--75">
+      <div className={publicationSummaryStyles.detailsInner}>
+        <div className={publicationSummaryStyles.sectionContent}>
           <SummaryList className="govuk-!-margin-bottom-3">
             <SummaryListItem term="Publish date">
-              {((release.published !== undefined ||
-                release.publishScheduled !== undefined) && (
-                <>
-                  <FormattedDate>
-                    {release.published || release.publishScheduled || ''}
-                  </FormattedDate>
-                </>
-              )) || <>N/A</>}
+              {release.published || release.publishScheduled ? (
+                <FormattedDate>
+                  {release.published || release.publishScheduled || ''}
+                </FormattedDate>
+              ) : (
+                'Not yet published'
+              )}
             </SummaryListItem>
 
             {isValidPartialDate(release.nextReleaseDate) && (
@@ -119,11 +118,13 @@ const ReleaseSummary = ({
           </SummaryList>
           {children}
         </div>
-        <div className="dfe-flex-basis--25">
-          <div className="dfe-flex dfe-flex-direction--column dfe-justify-content--flex-end govuk-!-margin-left-4 govuk-!-padding-left-4 govuk-!-padding-left-4 dfe-flex-border--left">
-            {actions}
-            {secondaryActions}
-          </div>
+        <div
+          className={classNames(
+            publicationSummaryStyles.sectionActions,
+            publicationSummaryStyles.detailsActions,
+          )}
+        >
+          {actions}
         </div>
       </div>
     </Details>

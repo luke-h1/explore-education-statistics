@@ -38,7 +38,7 @@ user changes to analyst1
     user signs in as analyst1    False
 
 user signs out
-    user clicks link    Sign out
+    user clicks link    Sign out    css:#navigation
     user waits until h1 is visible    Signed out
     user waits until page contains    You have successfully signed out
 
@@ -70,7 +70,7 @@ user navigates to editable release summary from admin dashboard
     ...    ${DETAILS_HEADING}
     ...    ${THEME_NAME}
     ...    ${TOPIC_NAME}
-    ...    Edit this release
+    ...    Edit release
 
 user navigates to editable release amendment summary from admin dashboard
     [Arguments]
@@ -83,7 +83,7 @@ user navigates to editable release amendment summary from admin dashboard
     ...    ${DETAILS_HEADING}
     ...    ${THEME_NAME}
     ...    ${TOPIC_NAME}
-    ...    Edit this release amendment
+    ...    Edit release amendment
 
 user navigates to readonly release summary from admin dashboard
     [Arguments]
@@ -96,7 +96,7 @@ user navigates to readonly release summary from admin dashboard
     ...    ${DETAILS_HEADING}
     ...    ${THEME_NAME}
     ...    ${TOPIC_NAME}
-    ...    View this release
+    ...    View release
 
 user navigates to release summary from admin dashboard
     [Arguments]
@@ -104,7 +104,7 @@ user navigates to release summary from admin dashboard
     ...    ${DETAILS_HEADING}
     ...    ${THEME_NAME}=%{TEST_THEME_NAME}
     ...    ${TOPIC_NAME}=%{TEST_TOPIC_NAME}
-    ...    ${RELEASE_SUMMARY_LINK_TEXT}=Edit this release
+    ...    ${RELEASE_SUMMARY_LINK_TEXT}=Edit release
     ${details}=    user opens release summary on the admin dashboard
     ...    ${PUBLICATION_NAME}
     ...    ${DETAILS_HEADING}
@@ -180,7 +180,7 @@ user views methodology for publication
     [Arguments]
     ...    ${publication}
     ...    ${methodology_title}=${publication}
-    ...    ${view_button_text}=Edit this methodology
+    ...    ${view_button_text}=Edit methodology
     ${accordion}=    user opens publication on the admin dashboard    ${publication}
     user views methodology for open publication accordion
     ...    ${accordion}
@@ -191,13 +191,13 @@ user views methodology amendment for publication
     [Arguments]    ${publication}    ${methodology_title}=${publication}
     ${accordion}=    user opens publication on the admin dashboard    ${publication}
     user views methodology for open publication accordion    ${accordion}    ${methodology_title}
-    ...    Edit this amendment
+    ...    Edit amendment
 
 user views methodology for open publication accordion
     [Arguments]
     ...    ${accordion}
     ...    ${methodology_title}
-    ...    ${edit_button_text}=Edit this methodology
+    ...    ${edit_button_text}=Edit methodology
     user opens details dropdown    ${methodology_title}    ${accordion}
     user clicks link    ${edit_button_text}    ${accordion}
     user waits until h2 is visible    Methodology summary
@@ -207,7 +207,7 @@ user edits methodology summary for publication
     ...    ${publication}
     ...    ${existing_methodology_title}
     ...    ${new_methodology_title}
-    ...    ${edit_button_text}=Edit this methodology
+    ...    ${edit_button_text}=Edit methodology
     user views methodology for publication    ${publication}    ${existing_methodology_title}    ${edit_button_text}
     user clicks link    Edit summary
     user waits until h2 is visible    Edit methodology summary    %{WAIT_MEDIUM}
@@ -261,7 +261,7 @@ user approves methodology for publication
     ...    ${topic}
     ...    ${publishing_strategy}
     ...    ${with_release}
-    ...    Edit this methodology
+    ...    Edit methodology
 
 user approves methodology amendment for publication
     [Arguments]
@@ -279,7 +279,7 @@ user approves methodology amendment for publication
     ...    ${topic}
     ...    ${publishing_strategy}
     ...    ${with_release}
-    ...    Edit this amendment
+    ...    Edit amendment
 
 approve methodology for publication
     [Arguments]
@@ -377,7 +377,7 @@ user links publication to external methodology
     ...    ${title}=External methodology
     ...    ${link}=https://example.com
     ${accordion}=    user opens publication on the admin dashboard    ${publication}
-    user clicks link    Link to an externally hosted methodology    ${accordion}
+    user clicks link    Use an external methodology    ${accordion}
     user waits until page contains title    Link to an externally hosted methodology
     user enters text into element    label:Link title    ${title}
     user enters text into element    label:URL    ${link}
@@ -418,15 +418,15 @@ user adds basic release content
     user clicks button    Edit block    id:releaseSummary
     user presses keys    Test summary text for ${publication}
     # To ensure Save button gets clicked
-    user sets focus to element    xpath://button[.="Save"]    id:releaseSummary
-    user clicks button    Save    id:releaseSummary
+    user sets focus to element    xpath://button[.="Save & close"]    id:releaseSummary
+    user clicks button    Save & close    id:releaseSummary
     user waits until element contains    id:releaseSummary    Test summary text for ${publication}    %{WAIT_SMALL}
 
     user clicks button    Add a headlines text block    id:releaseHeadlines
     user waits until element contains    id:releaseHeadlines    This section is empty    %{WAIT_SMALL}
     user clicks button    Edit block    id:releaseHeadlines
     user presses keys    Test headlines summary text for ${publication}
-    user clicks button    Save    id:releaseHeadlines
+    user clicks button    Save & close    id:releaseHeadlines
     user waits until element contains    id:releaseHeadlines    Test headlines summary text for ${publication}
     ...    %{WAIT_SMALL}
 
@@ -435,8 +435,8 @@ user adds basic release content
 
     user changes accordion section title    1    Test section one    css:#releaseMainContent
     user adds text block to editable accordion section    Test section one    css:#releaseMainContent
-    user adds content to accordion section text block    Test section one    1    Test content block for ${publication}
-    ...    css:#releaseMainContent
+    user adds content to autosaving accordion section text block    Test section one    1
+    ...    Test content block for ${publication}    css:#releaseMainContent
 
 user creates public prerelease access list
     [Arguments]    ${content}
@@ -530,8 +530,8 @@ user creates amendment for release
     ${accordion}=    user gets accordion section content element    ${PUBLICATION_NAME}
     user opens details dropdown    ${RELEASE_NAME} ${RELEASE_STATUS}    ${accordion}
     ${details}=    user gets details content element    ${RELEASE_NAME} ${RELEASE_STATUS}    ${accordion}
-    user waits until parent contains element    ${details}    xpath:.//a[text()="View this release"]
-    user clicks button    Amend this release    ${details}
+    user waits until parent contains element    ${details}    xpath:.//a[text()="View release"]
+    user clicks button    Amend release    ${details}
     user clicks button    Confirm
     user waits until page contains title    ${PUBLICATION_NAME}
     user waits until page contains title caption    Amend release for ${RELEASE_NAME}
