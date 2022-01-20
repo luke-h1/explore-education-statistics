@@ -54,7 +54,7 @@ const PrototypeManageUsers = () => {
       </div>
 
       <Tabs id="manage-release-users">
-        <TabsSection title="Your publications">
+        <TabsSection title="Your publications (5)">
           <h2>View and manage your publications</h2>
           <p>Select a publication to:</p>
           <ul className="govuk-list--bullet">
