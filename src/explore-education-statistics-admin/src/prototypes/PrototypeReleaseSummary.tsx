@@ -11,6 +11,21 @@ import InsetText from '@common/components/InsetText';
 import NavBar from './components/PrototypeNavBar';
 
 const PrototypeReleaseSummary = () => {
+  const errorTally = (
+    <div className="dfe-fle">
+      <span>More details</span>
+      <Tag colour="red" className="govuk-!-margin-left-3">
+        2 Errors
+      </Tag>
+      <Tag colour="yellow" className="govuk-!-margin-left-1">
+        3 Warnings
+      </Tag>
+      <Tag colour="grey" className="govuk-!-margin-left-1">
+        3 Unresolved comments
+      </Tag>
+    </div>
+  );
+
   return (
     <PrototypePage
       wide
@@ -45,18 +60,10 @@ const PrototypeReleaseSummary = () => {
       </div>
 
       <div>
-        <Tag className="govuk-!-margin-right-1">Draft</Tag>
-        <Tag colour="red">2 Errors</Tag>
-        <Tag
-          colour="yellow"
-          className="govuk-!-margin-left-1 govuk-!-margin-right-1"
-        >
-          3 Warnings
-        </Tag>
-        <Tag colour="grey">3 Unresolved comments</Tag>
+        <Tag>Draft</Tag>
       </div>
 
-      <Details summary="Release checklist" className="govuk-!-margin-top-3">
+      <Details summary={errorTally} className="govuk-!-margin-top-3">
         <div className="govuk-grid-row">
           <div className="govuk-grid-column-one-third">
             <InsetText variant="error" className="govuk-!-margin-0">
@@ -86,7 +93,7 @@ const PrototypeReleaseSummary = () => {
                 <Tag colour="orange">3 Warnings</Tag>
               </h2>
               <p>
-                <strong>5 things</strong> you may have forgotten, but do not
+                <strong>3 things</strong> you may have forgotten, but do not
                 need to resolve to publish this release.
               </p>
               <ul>
@@ -120,10 +127,7 @@ const PrototypeReleaseSummary = () => {
               </p>
               <ul>
                 <li>
-                  <a href="#">Please check the figures shown</a>
-                </li>
-                <li>
-                  <a href="#">Are these the correct dates?</a>
+                  <a href="#">Check comments</a>
                 </li>
               </ul>
             </InsetText>
