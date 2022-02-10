@@ -2,9 +2,15 @@ import React, { useState } from 'react';
 import Button from '@common/components/Button';
 import Tag from '@common/components/Tag';
 import WarningMessage from '@common/components/WarningMessage';
+import InfoIcon from '@common/components/InfoIcon';
+import Modal from '@common/components/Modal';
+import useToggle from '@common/hooks/useToggle';
+import SummaryList from '@common/components/SummaryList';
+import SummaryListItem from '@common/components/SummaryListItem';
 
 const PrototypePublicationMethodologyList = () => {
   const [showMethodology, setShowMethodology] = useState(true);
+  const [showHelpTypeModal, toggleHelpTypeModal] = useToggle(false);
 
   const dfeLinkWarning = {
     color: '#d4351c',
@@ -45,7 +51,18 @@ const PrototypePublicationMethodologyList = () => {
             <thead className="govuk-table__head">
               <tr className="govuk-table__row">
                 <th>Methodology</th>
-                <th>Type</th>
+                <th>
+                  Type
+                  <a
+                    href="#"
+                    className="govuk-!-margin-left-1"
+                    onClick={() => {
+                      toggleHelpTypeModal(true);
+                    }}
+                  >
+                    <InfoIcon description="What is type?" />
+                  </a>
+                </th>
                 <th>Status</th>
                 <th>Publish date</th>
                 <th colSpan={3}>Actions</th>
@@ -88,6 +105,37 @@ const PrototypePublicationMethodologyList = () => {
               </tr>
             </tbody>
           </table>
+          <Modal
+            open={showHelpTypeModal}
+            title="Methodology type guidance"
+            className="govuk-!-width-one-half"
+          >
+            <p>
+              Various different types of methodologies can be associated to this
+              publication
+            </p>
+            <SummaryList>
+              <SummaryListItem term="Owned">
+                This is a methodology that belongs and was created specifically
+                for this publication
+              </SummaryListItem>
+              <SummaryListItem term="Adopted">
+                This is a methodology that is owned by another publication, but
+                can be selected to be shown with this publication
+              </SummaryListItem>
+              <SummaryListItem term="External">
+                This is a link to an existing methodolgy that is hosted
+                externally
+              </SummaryListItem>
+            </SummaryList>
+            <Button
+              onClick={() => {
+                toggleHelpTypeModal(false);
+              }}
+            >
+              Close
+            </Button>
+          </Modal>
         </div>
       )}
       <h4>Other options</h4>
