@@ -11,8 +11,7 @@ import Button from '@common/components/Button';
 import InfoIcon from '@common/components/InfoIcon';
 import Modal from '@common/components/Modal';
 import useToggle from '@common/hooks/useToggle';
-import SummaryList from '@common/components/SummaryList';
-import SummaryListItem from '@common/components/SummaryListItem';
+import ModalContent from '@admin/prototypes/components/PrototypeModalContent';
 
 const PrototypeManageUsers = () => {
   const [showCreatePub, setShowCreatePub] = useState(true);
@@ -25,20 +24,6 @@ const PrototypeManageUsers = () => {
   const [showScheduledStagesModal, toggleScheduledStagesModal] = useToggle(
     false,
   );
-
-  const draftTag = <Tag>Draft</Tag>;
-  const inReviewTag = <Tag>In review</Tag>;
-  const amendmentTag = <Tag>Amendment</Tag>;
-  const errorTag = <Tag colour="red">Error</Tag>;
-  const warningTag = <Tag colour="orange">Warning</Tag>;
-  const commentTag = <Tag colour="grey">Unresolved comments</Tag>;
-  const validatingTag = <Tag colour="orange">Validating</Tag>;
-  const scheduledTag = <Tag colour="blue">Scheduled</Tag>;
-  const failedTag = <Tag colour="red">Failed ✖</Tag>;
-  const startedTag = <Tag colour="orange">Started</Tag>;
-  const notStartedTag = <Tag colour="blue">Not started</Tag>;
-  const completeTag = <Tag colour="green">Complete ✓</Tag>;
-  const cancelledTag = <Tag colour="red">PUBLISHING CANCELLED ✖</Tag>;
 
   return (
     <PrototypePage
@@ -396,22 +381,7 @@ const PrototypeManageUsers = () => {
               title="Draft status guidance"
               className="govuk-!-width-one-half"
             >
-              <p>
-                These are releases that can be edited prior to publication. The
-                different types of draft release status are described below.
-              </p>
-              <SummaryList>
-                <SummaryListItem term={draftTag}>
-                  This is an unpublished draft release
-                </SummaryListItem>
-                <SummaryListItem term={inReviewTag}>
-                  This is a release that is ready to be reviewed prior to
-                  publication
-                </SummaryListItem>
-                <SummaryListItem term={amendmentTag}>
-                  This is a published release that is currently being amended
-                </SummaryListItem>
-              </SummaryList>
+              <ModalContent contentType="helpStatusModal" />
               <Button
                 onClick={() => {
                   toggleHelpStatusModal(false);
@@ -425,24 +395,7 @@ const PrototypeManageUsers = () => {
               title="Issues guidance"
               className="govuk-!-width-one-half"
             >
-              <p>
-                This is a summary of flagged issues associated to this release.
-                Click the 'View issues' link to reveal the details. The
-                different types of issues are described below:
-              </p>
-              <SummaryList>
-                <SummaryListItem term={errorTag}>
-                  These are issues that need to be resolved before publication
-                </SummaryListItem>
-                <SummaryListItem term={warningTag}>
-                  These are things you may have forgotten, but do not need to
-                  resolve to publish the release
-                </SummaryListItem>
-                <SummaryListItem term={commentTag}>
-                  These are unresolved comments that you may wish to check
-                  before publishing the release
-                </SummaryListItem>
-              </SummaryList>
+              <ModalContent contentType="helpIssuesModal" />
               <Button
                 onClick={() => {
                   toggleHelpIssuesModal(false);
@@ -481,7 +434,7 @@ const PrototypeManageUsers = () => {
                     </a>
                   </th>
                   <th style={{ width: '315px' }}>
-                    Stages
+                    Stages checklist
                     <a
                       href="#"
                       className="govuk-!-margin-left-1"
@@ -680,45 +633,7 @@ const PrototypeManageUsers = () => {
               title="Status guidance"
               className="govuk-!-width-one-half"
             >
-              <p>
-                This is a summary of the different status types associated to
-                approved scheduled releases.
-              </p>
-              <div style={{ overflow: 'auto', maxHeight: '70vh' }}>
-                <SummaryList>
-                  <SummaryListItem term={validatingTag}>
-                    This is a release that has just been approved. The system is
-                    validating that everything is OK for publication
-                  </SummaryListItem>
-                  <SummaryListItem term={scheduledTag}>
-                    This is a release that has been approved and validated and
-                    is now scheduled for release on the 'Scheduled publish date'
-                  </SummaryListItem>
-                  <SummaryListItem term={startedTag}>
-                    The publication process has now started
-                  </SummaryListItem>
-                  <SummaryListItem term={completeTag}>
-                    The release has now been successfully published and is now
-                    live for public view
-                  </SummaryListItem>
-                  <SummaryListItem term={failedTag}>
-                    There is a problem preventing the release from being
-                    successfully published. Contact{' '}
-                    <a href="mailto:explore.statistics@education.gov.uk">
-                      explore.statistics@education.gov.uk
-                    </a>{' '}
-                    for further assistance
-                  </SummaryListItem>
-                  <SummaryListItem term="View stages">
-                    For <Tag colour="red">Failed</Tag>,{' '}
-                    <Tag colour="orange">Started</Tag> or{' '}
-                    <Tag colour="green">Complete</Tag> releases clicking 'View
-                    stages' will show a summary of the publication status,
-                    highlighting all the publication steps and whether they have
-                    succeeded or failed
-                  </SummaryListItem>
-                </SummaryList>
-              </div>
+              <ModalContent contentType="scheduledStatusModal" />
               <Button
                 onClick={() => {
                   toggleScheduledStatusModal(false);
@@ -732,38 +647,7 @@ const PrototypeManageUsers = () => {
               title="Publication stages guidance"
               className="govuk-!-width-one-half"
             >
-              <p>
-                For <Tag colour="red">Failed</Tag>,{' '}
-                <Tag colour="orange">Started</Tag> or{' '}
-                <Tag colour="green">Complete</Tag> releases clicking 'View
-                stages' will show a summary of the publication status, there are
-                4 steps of the process (Data, content, files and final
-                publishing) for each step the different stages are described
-                below:
-              </p>
-              <SummaryList>
-                <SummaryListItem term={notStartedTag}>
-                  This step has yet to start publishing
-                </SummaryListItem>
-                <SummaryListItem term={startedTag}>
-                  This step has now started the publication process
-                </SummaryListItem>
-                <SummaryListItem term={completeTag}>
-                  This step of the process has successfully completed
-                </SummaryListItem>
-                <SummaryListItem term={failedTag}>
-                  This step of the process has failed, and the publication
-                  process will be cancelled
-                </SummaryListItem>
-                <SummaryListItem term={cancelledTag}>
-                  There is a problem preventing the release from being
-                  successfully published. Contact{' '}
-                  <a href="mailto:explore.statistics@education.gov.uk">
-                    explore.statistics@education.gov.uk
-                  </a>{' '}
-                  for further assistance
-                </SummaryListItem>
-              </SummaryList>
+              <ModalContent contentType="scheduledStagesModal" />
               <Button
                 onClick={() => {
                   toggleScheduledStagesModal(false);

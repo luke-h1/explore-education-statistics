@@ -4,16 +4,35 @@ import Tag from '@common/components/Tag';
 import Details from '@common/components/Details';
 import WarningMessage from '@common/components/WarningMessage';
 import Link from '@admin/components/Link';
+import InfoIcon from '@common/components/InfoIcon';
+import Modal from '@common/components/Modal';
+import useToggle from '@common/hooks/useToggle';
+import SummaryList from '@common/components/SummaryList';
+import SummaryListItem from '@common/components/SummaryListItem';
+import ModalContent from '@admin/prototypes/components/PrototypeModalContent';
 
 const PrototypePublicationReleaseList = () => {
   const [showMore, setShowMore] = useState(false);
   const [showScheduled, setShowScheduled] = useState(false);
   const [showReleases, setShowReleases] = useState(true);
   const [showDraft, setShowDraft] = useState(true);
+  const [showHelpStatusModal, toggleHelpStatusModal] = useToggle(false);
+  const [
+    showHelpStatusPublishedModal,
+    toggleHelpStatusPublishedModal,
+  ] = useToggle(false);
+  const [showScheduledStatusModal, toggleScheduledStatusModal] = useToggle(
+    false,
+  );
+  const [showScheduledStagesModal, toggleScheduledStagesModal] = useToggle(
+    false,
+  );
+  const [showReleaseIssuesModal, toggleReleaseIssuesModal] = useToggle(false);
 
   return (
     <>
       <h3 className="govuk-heading-l">Manage releases</h3>
+      <ModalContent contentType="draftReleases" />
       <div className="govuk-grid-row">
         <div className="govuk-grid-column-three-quarters govuk-!-margin-bottom-6">
           <p className="govuk-hint govuk-!-margin-bottom-6">
@@ -49,12 +68,32 @@ const PrototypePublicationReleaseList = () => {
                 </caption>
                 <thead className="govuk-table__head">
                   <tr className="govuk-table__row">
-                    <th style={{ width: '40%' }}>Release period</th>
-                    <th style={{ width: '15%' }}>State</th>
-                    <th style={{ width: '17.5%' }} colSpan={3}>
-                      Checklist
+                    <th style={{ width: '38%' }}>Release period</th>
+                    <th style={{ width: '15%' }}>
+                      State
+                      <a
+                        href="#"
+                        className="govuk-!-margin-left-1"
+                        onClick={() => {
+                          toggleScheduledStatusModal(true);
+                        }}
+                      >
+                        <InfoIcon description="What are the publication stages?" />
+                      </a>
                     </th>
-                    <th style={{ width: '20%' }}>Scheduled Publish date</th>
+                    <th style={{ width: '310px' }} colSpan={3}>
+                      Stages checklist
+                      <a
+                        href="#"
+                        className="govuk-!-margin-left-1"
+                        onClick={() => {
+                          toggleScheduledStagesModal(true);
+                        }}
+                      >
+                        <InfoIcon description="What is status?" />
+                      </a>
+                    </th>
+                    <th>Publish date</th>
                     <th colSpan={2} className="govuk-table__cell--numeric">
                       Actions
                     </th>
@@ -71,35 +110,24 @@ const PrototypePublicationReleaseList = () => {
                         summary="View stages"
                         className="govuk-!-margin-bottom-0"
                       >
+                        <h4>Release process started</h4>
                         <ul className="govuk-list">
                           <li>
-                            <Tag colour="green">
-                              Content ✓{' '}
-                              <span className="govuk-visually-hidden">
-                                Complete
-                              </span>
-                            </Tag>
+                            <Tag colour="orange">Data Started</Tag>
                           </li>
                           <li>
-                            <Tag colour="red">
-                              Files ✖{' '}
-                              <span className="govuk-visually-hidden">
-                                Not started
-                              </span>
-                            </Tag>
+                            <Tag colour="blue">Content not started</Tag>
                           </li>
                           <li>
-                            <Tag colour="red">
-                              Publishing ✖
-                              <span className="govuk-visually-hidden">
-                                Not started
-                              </span>{' '}
-                            </Tag>
+                            <Tag colour="green">Files complete ✓</Tag>
+                          </li>
+                          <li>
+                            <Tag colour="blue">Publishing not started</Tag>
                           </li>
                         </ul>
                       </Details>
                     </td>
-                    <td>12 Jan 22</td>
+                    <td>12 January 22</td>
                     <td />
                     <td className="govuk-table__cell--numeric">
                       <a href="#">
@@ -112,6 +140,34 @@ const PrototypePublicationReleaseList = () => {
                   </tr>
                 </tbody>
               </table>
+              <Modal
+                open={showScheduledStatusModal}
+                title="Status guidance"
+                className="govuk-!-width-one-half"
+              >
+                <ModalContent contentType="scheduledStatusModal" />
+                <Button
+                  onClick={() => {
+                    toggleScheduledStatusModal(false);
+                  }}
+                >
+                  Close
+                </Button>
+              </Modal>
+              <Modal
+                open={showScheduledStagesModal}
+                title="Publication stages guidance"
+                className="govuk-!-width-one-half"
+              >
+                <ModalContent contentType="scheduledStagesModal" />
+                <Button
+                  onClick={() => {
+                    toggleScheduledStagesModal(false);
+                  }}
+                >
+                  Close
+                </Button>
+              </Modal>
             </div>
           )}
 
@@ -124,11 +180,55 @@ const PrototypePublicationReleaseList = () => {
                   </caption>
                   <thead className="govuk-table__head">
                     <tr className="govuk-table__row">
-                      <th style={{ width: '40%' }}>Release period</th>
-                      <th style={{ width: '15%' }}>State</th>
-                      <th style={{ width: '9%' }}>Errors</th>
-                      <th style={{ width: '10%' }}>Warnings</th>
-                      <th style={{ width: '20%' }}>Unresolved comments</th>
+                      <th style={{ width: '38%' }}>Release period</th>
+                      <th style={{ width: '15%' }}>
+                        State
+                        <a
+                          href="#"
+                          className="govuk-!-margin-left-1"
+                          onClick={() => {
+                            toggleHelpStatusModal(true);
+                          }}
+                        >
+                          <InfoIcon description="What is status?" />
+                        </a>
+                      </th>
+                      <th style={{ width: '9%' }}>
+                        Errors
+                        <a
+                          href="#"
+                          className="govuk-!-margin-left-1"
+                          onClick={() => {
+                            toggleReleaseIssuesModal(true);
+                          }}
+                        >
+                          <InfoIcon description="What is status?" />
+                        </a>
+                      </th>
+                      <th style={{ width: '10%' }}>
+                        Warnings
+                        <a
+                          href="#"
+                          className="govuk-!-margin-left-1"
+                          onClick={() => {
+                            toggleReleaseIssuesModal(true);
+                          }}
+                        >
+                          <InfoIcon description="What is status?" />
+                        </a>
+                      </th>
+                      <th style={{ width: '20%' }}>
+                        Unresolved comments
+                        <a
+                          href="#"
+                          className="govuk-!-margin-left-1"
+                          onClick={() => {
+                            toggleReleaseIssuesModal(true);
+                          }}
+                        >
+                          <InfoIcon description="What is status?" />
+                        </a>
+                      </th>
                       <th className="govuk-table__cell--numeric">Actions</th>
                     </tr>
                   </thead>
@@ -190,6 +290,51 @@ const PrototypePublicationReleaseList = () => {
             </>
           )}
 
+          <Modal
+            open={showHelpStatusModal}
+            title="Draft status guidance"
+            className="govuk-!-width-one-half"
+          >
+            <ModalContent contentType="helpStatusModal" />
+            <Button
+              onClick={() => {
+                toggleHelpStatusModal(false);
+              }}
+            >
+              Close
+            </Button>
+          </Modal>
+
+          <Modal
+            open={showReleaseIssuesModal}
+            title="Issues guidance"
+            className="govuk-!-width-one-half"
+          >
+            <ModalContent contentType="releaseIssuesModal" />
+            <Button
+              onClick={() => {
+                toggleReleaseIssuesModal(false);
+              }}
+            >
+              Close
+            </Button>
+          </Modal>
+
+          <Modal
+            open={showHelpStatusPublishedModal}
+            title="Published status guidance"
+            className="govuk-!-width-one-half"
+          >
+            <ModalContent contentType="helpPublishedModal" />
+            <Button
+              onClick={() => {
+                toggleHelpStatusPublishedModal(false);
+              }}
+            >
+              Close
+            </Button>
+          </Modal>
+
           <div style={{ width: '100%', overflow: 'auto' }}>
             <table className="govuk-table govuk-!-margin-bottom-9">
               <caption className="govuk-table__caption--m">
@@ -197,8 +342,19 @@ const PrototypePublicationReleaseList = () => {
               </caption>
               <thead className="govuk-table__head">
                 <tr className="govuk-table__row">
-                  <th style={{ width: '40%' }}>Release period</th>
-                  <th style={{ width: '15%' }}>State</th>
+                  <th style={{ width: '38%' }}>Release period</th>
+                  <th style={{ width: '15%' }}>
+                    State
+                    <a
+                      href="#"
+                      className="govuk-!-margin-left-1"
+                      onClick={() => {
+                        toggleHelpStatusPublishedModal(true);
+                      }}
+                    >
+                      <InfoIcon description="What is status?" />
+                    </a>
+                  </th>
                   <th style={{ width: '35%' }}>Published date</th>
                   <th
                     style={{ width: '120px' }}

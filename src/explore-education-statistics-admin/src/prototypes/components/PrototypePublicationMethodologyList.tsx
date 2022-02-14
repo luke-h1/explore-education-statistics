@@ -7,10 +7,12 @@ import Modal from '@common/components/Modal';
 import useToggle from '@common/hooks/useToggle';
 import SummaryList from '@common/components/SummaryList';
 import SummaryListItem from '@common/components/SummaryListItem';
+import ModalContent from '@admin/prototypes/components/PrototypeModalContent';
 
 const PrototypePublicationMethodologyList = () => {
   const [showMethodology, setShowMethodology] = useState(true);
   const [showHelpTypeModal, toggleHelpTypeModal] = useToggle(false);
+  const [showHelpStatusModal, toggleHelpStatusModal] = useToggle(false);
 
   const dfeLinkWarning = {
     color: '#d4351c',
@@ -63,7 +65,18 @@ const PrototypePublicationMethodologyList = () => {
                     <InfoIcon description="What is type?" />
                   </a>
                 </th>
-                <th>Status</th>
+                <th>
+                  Status
+                  <a
+                    href="#"
+                    className="govuk-!-margin-left-1"
+                    onClick={() => {
+                      toggleHelpStatusModal(true);
+                    }}
+                  >
+                    <InfoIcon description="What is status?" />
+                  </a>
+                </th>
                 <th>Publish date</th>
                 <th colSpan={3}>Actions</th>
               </tr>
@@ -75,7 +88,7 @@ const PrototypePublicationMethodologyList = () => {
                 <td>
                   <Tag>Approved</Tag>
                 </td>
-                <td>28 March 2021</td>
+                <td>Not yet published</td>
                 <td className="dfe-align--left">
                   <a href="#">Amend</a>
                 </td>
@@ -88,7 +101,7 @@ const PrototypePublicationMethodologyList = () => {
                 <td>Pupil exclusions statistics</td>
                 <td>Adopted</td>
                 <td>
-                  <Tag>Approved</Tag>
+                  <Tag colour="green">Published</Tag>
                 </td>
                 <td>28 March 2021</td>
                 <td className="dfe-align--left">
@@ -111,13 +124,12 @@ const PrototypePublicationMethodologyList = () => {
             className="govuk-!-width-one-half"
           >
             <p>
-              Various different types of methodologies can be associated to this
-              publication
+              Various types of methodology can be associated to this publication
             </p>
             <SummaryList>
               <SummaryListItem term="Owned">
-                This is a methodology that belongs and was created specifically
-                for this publication
+                This is a methodology that belongs to and was created
+                specifically for this publication
               </SummaryListItem>
               <SummaryListItem term="Adopted">
                 This is a methodology that is owned by another publication, but
@@ -136,17 +148,34 @@ const PrototypePublicationMethodologyList = () => {
               Close
             </Button>
           </Modal>
+          <Modal
+            open={showHelpStatusModal}
+            title="Methodology status guidance"
+            className="govuk-!-width-one-half"
+          >
+            <ModalContent contentType="methodologyStatusModal" />
+            <Button
+              onClick={() => {
+                toggleHelpStatusModal(false);
+              }}
+            >
+              Close
+            </Button>
+          </Modal>
         </div>
       )}
       <h4>Other options</h4>
-      <ul>
-        <li>
-          <a href="#">add external methodology</a>
-        </li>
-        <li>
-          <a href="#">adopt an existing methodology</a>
-        </li>
-      </ul>
+
+      <a href="#">Add external methodology</a>
+      <p className="govuk-hint">
+        This is a link to an existing methodolgy that is hosted externally
+      </p>
+
+      <a href="#">Adopt an existing methodology</a>
+      <p className="govuk-hint">
+        This is a methodology that is owned by another publication
+      </p>
+
       <div className="dfe-align--right govuk-!-margin-top-9">
         <ul className="govuk-list">
           <li>
