@@ -167,6 +167,23 @@ const PrototypePublicationReleaseList = () => {
                         </Link>
                       </td>
                     </tr>
+                    <tr>
+                      <td>Academic Year 2019/20 (Not live)</td>
+                      <td>
+                        <Tag>Amendment</Tag>
+                      </td>
+                      <td>0</td>
+                      <td>1</td>
+                      <td>0</td>
+                      <td className="govuk-table__cell--numeric">
+                        <Link to="/prototypes/admin-release-summary">
+                          Edit{' '}
+                          <span className="govuk-visually-hidden">
+                            Academic Year 2020/21 (Not live)
+                          </span>
+                        </Link>
+                      </td>
+                    </tr>
                   </tbody>
                 </table>
               </div>

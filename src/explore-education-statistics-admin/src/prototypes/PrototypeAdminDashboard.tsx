@@ -8,10 +8,8 @@ import Tag from '@common/components/Tag';
 import TabsSection from '@common/components/TabsSection';
 import RelatedInformation from '@common/components/RelatedInformation';
 import Button from '@common/components/Button';
-import ButtonText from '@common/components/ButtonText';
 import InfoIcon from '@common/components/InfoIcon';
 import Modal from '@common/components/Modal';
-import ModalConfirm from '@common/components/ModalConfirm';
 import useToggle from '@common/hooks/useToggle';
 import SummaryList from '@common/components/SummaryList';
 import SummaryListItem from '@common/components/SummaryListItem';
@@ -24,6 +22,9 @@ const PrototypeManageUsers = () => {
   const [showScheduledStatusModal, toggleScheduledStatusModal] = useToggle(
     false,
   );
+  const [showScheduledStagesModal, toggleScheduledStagesModal] = useToggle(
+    false,
+  );
 
   const draftTag = <Tag>Draft</Tag>;
   const inReviewTag = <Tag>In review</Tag>;
@@ -33,9 +34,11 @@ const PrototypeManageUsers = () => {
   const commentTag = <Tag colour="grey">Unresolved comments</Tag>;
   const validatingTag = <Tag colour="orange">Validating</Tag>;
   const scheduledTag = <Tag colour="blue">Scheduled</Tag>;
-  const failedTag = <Tag colour="red">Failed</Tag>;
+  const failedTag = <Tag colour="red">Failed ✖</Tag>;
   const startedTag = <Tag colour="orange">Started</Tag>;
-  const completeTag = <Tag colour="green">Complete</Tag>;
+  const notStartedTag = <Tag colour="blue">Not started</Tag>;
+  const completeTag = <Tag colour="green">Complete ✓</Tag>;
+  const cancelledTag = <Tag colour="red">PUBLISHING CANCELLED ✖</Tag>;
 
   return (
     <PrototypePage
@@ -55,6 +58,13 @@ const PrototypeManageUsers = () => {
             This is your administration dashboard, here you can manage
             publications, releases and methodologies.
           </p>
+          {showBau && (
+            <ul className="govuk-!-margin-bottom-6">
+              <li>
+                <a href="#">manage themes and topics</a>
+              </li>
+            </ul>
+          )}
         </div>
         <div className="govuk-grid-column-one-third">
           <RelatedInformation heading="Help and guidance">
@@ -205,7 +215,7 @@ const PrototypeManageUsers = () => {
             outstanding issues that may need to be resolved.
           </p>
           <div style={{ width: '100%', overflow: 'auto' }}>
-            <table className="govuk-table" summary="This is a test">
+            <table className="govuk-table">
               <caption className="govuk-visually-hidden">
                 Table showing your draft releases
               </caption>
@@ -417,12 +427,12 @@ const PrototypeManageUsers = () => {
             >
               <p>
                 This is a summary of flagged issues associated to this release.
-                The different types of issues are described below:
+                Click the 'View issues' link to reveal the details. The
+                different types of issues are described below:
               </p>
               <SummaryList>
                 <SummaryListItem term={errorTag}>
-                  The number of issues that need to be resolved before
-                  publication
+                  These are issues that need to be resolved before publication
                 </SummaryListItem>
                 <SummaryListItem term={warningTag}>
                   These are things you may have forgotten, but do not need to
@@ -458,13 +468,25 @@ const PrototypeManageUsers = () => {
               <thead className="govuk-table__head">
                 <tr className="govuk-table__row">
                   <th style={{ width: '38%' }}>Publication / Release period</th>
-                  <th colSpan={2} style={{ width: '35%' }}>
+                  <th>
                     Status
                     <a
                       href="#"
                       className="govuk-!-margin-left-1"
                       onClick={() => {
                         toggleScheduledStatusModal(true);
+                      }}
+                    >
+                      <InfoIcon description="What are the publication stages?" />
+                    </a>
+                  </th>
+                  <th style={{ width: '315px' }}>
+                    Stages
+                    <a
+                      href="#"
+                      className="govuk-!-margin-left-1"
+                      onClick={() => {
+                        toggleScheduledStagesModal(true);
                       }}
                     >
                       <InfoIcon description="What is status?" />
@@ -483,52 +505,13 @@ const PrototypeManageUsers = () => {
                   </th>
                 </tr>
                 <tr>
-                  <td>Academic Year 2020/21 (Not live)</td>
+                  <td>
+                    Academic Year 2020/21 (Not live) <Tag>Amendment</Tag>
+                  </td>
                   <td>
                     <Tag colour="orange">Validating</Tag>
                   </td>
-                  <td style={{ width: '250px' }}>
-                    <Details
-                      summary="View stages"
-                      className="govuk-!-margin-bottom-0"
-                    >
-                      <h4>Not started</h4>
-                      <ul className="govuk-list">
-                        <li>
-                          <Tag colour="red">
-                            Data ✖{' '}
-                            <span className="govuk-visually-hidden">
-                              Not started
-                            </span>
-                          </Tag>
-                        </li>
-                        <li>
-                          <Tag colour="red">
-                            Content ✖{' '}
-                            <span className="govuk-visually-hidden">
-                              Not started
-                            </span>
-                          </Tag>
-                        </li>
-                        <li>
-                          <Tag colour="red">
-                            Files ✖{' '}
-                            <span className="govuk-visually-hidden">
-                              Not started
-                            </span>
-                          </Tag>
-                        </li>
-                        <li>
-                          <Tag colour="red">
-                            Publishing ✖
-                            <span className="govuk-visually-hidden">
-                              Not started
-                            </span>{' '}
-                          </Tag>
-                        </li>
-                      </ul>
-                    </Details>
-                  </td>
+                  <td>-</td>
                   <td>10 January 2022</td>
                   <td className="govuk-table__cell--numeric">
                     <a href="#">
@@ -570,7 +553,83 @@ const PrototypeManageUsers = () => {
                   </th>
                 </tr>
                 <tr>
-                  <td>Academic Year 2020/21 (Not live)</td>
+                  <td>Academic Year 2018/19 (Not live)</td>
+                  <td>
+                    <Tag colour="orange">STARTED</Tag>
+                  </td>
+                  <td>
+                    <Details
+                      summary="View stages"
+                      className="govuk-!-margin-bottom-0"
+                    >
+                      <h4>Release process started</h4>
+                      <ul className="govuk-list">
+                        <li>
+                          <Tag colour="orange">Data Started</Tag>
+                        </li>
+                        <li>
+                          <Tag colour="blue">Content not started</Tag>
+                        </li>
+                        <li>
+                          <Tag colour="green">Files complete ✓</Tag>
+                        </li>
+                        <li>
+                          <Tag colour="blue">Publishing not started</Tag>
+                        </li>
+                      </ul>
+                    </Details>
+                  </td>
+                  <td>10 January 2022</td>
+                  <td className="govuk-table__cell--numeric">
+                    <a href="#">
+                      View{' '}
+                      <span className="govuk-visually-hidden">
+                        Academic Year 2019/20 (Not live)
+                      </span>
+                    </a>
+                  </td>
+                  <td />
+                </tr>
+                <tr>
+                  <td>Academic Year 2019/20 (Not live)</td>
+                  <td>
+                    <Tag colour="green">COMPLETE</Tag>
+                  </td>
+                  <td>
+                    <Details
+                      summary="View stages"
+                      className="govuk-!-margin-bottom-0"
+                    >
+                      <h4>Publishing complete</h4>
+                      <ul className="govuk-list">
+                        <li>
+                          <Tag colour="green">Data complete ✓</Tag>
+                        </li>
+                        <li>
+                          <Tag colour="green">Content complete ✓</Tag>
+                        </li>
+                        <li>
+                          <Tag colour="green">Files complete ✓</Tag>
+                        </li>
+                        <li>
+                          <Tag colour="green">Publishing complete ✓</Tag>
+                        </li>
+                      </ul>
+                    </Details>
+                  </td>
+                  <td>10 January 2022</td>
+                  <td className="govuk-table__cell--numeric">
+                    <a href="#">
+                      View{' '}
+                      <span className="govuk-visually-hidden">
+                        Academic Year 2019/20 (Not live)
+                      </span>
+                    </a>
+                  </td>
+                  <td />
+                </tr>
+                <tr>
+                  <td>Academic Year 2021/22 (Not live)</td>
                   <td>
                     <Tag colour="red">FAILED</Tag>
                   </td>
@@ -582,36 +641,16 @@ const PrototypeManageUsers = () => {
                       <h4>Publishing cancelled</h4>
                       <ul className="govuk-list">
                         <li>
-                          <Tag colour="red">
-                            Data ✖{' '}
-                            <span className="govuk-visually-hidden">
-                              FAILED
-                            </span>
-                          </Tag>
+                          <Tag colour="red">Data failed ✖</Tag>
                         </li>
                         <li>
-                          <Tag colour="green">
-                            Content ✓{' '}
-                            <span className="govuk-visually-hidden">
-                              Complete
-                            </span>
-                          </Tag>
+                          <Tag colour="green">Content complete ✓</Tag>
                         </li>
                         <li>
-                          <Tag colour="green">
-                            Files ✓{' '}
-                            <span className="govuk-visually-hidden">
-                              Complete
-                            </span>
-                          </Tag>
+                          <Tag colour="green">Files complete ✓</Tag>
                         </li>
                         <li>
-                          <Tag colour="red">
-                            Publishing ✖
-                            <span className="govuk-visually-hidden">
-                              Not started
-                            </span>{' '}
-                          </Tag>
+                          <Tag colour="red">Publishing cancelled ✖</Tag>
                         </li>
                       </ul>
                       <h5 className="govuk-!-margin-0">Help and guidance</h5>
@@ -619,7 +658,7 @@ const PrototypeManageUsers = () => {
                         For extra help and guidance to help rectify this issue
                         please email:
                         <br />
-                        <a href="#">ees.help@education.gov.uk</a>
+                        <a href="#">explore.statistics@education.gov.uk</a>
                       </p>
                     </Details>
                   </td>
@@ -645,24 +684,78 @@ const PrototypeManageUsers = () => {
                 This is a summary of the different status types associated to
                 approved scheduled releases.
               </p>
+              <div style={{ overflow: 'auto', maxHeight: '70vh' }}>
+                <SummaryList>
+                  <SummaryListItem term={validatingTag}>
+                    This is a release that has just been approved. The system is
+                    validating that everything is OK for publication
+                  </SummaryListItem>
+                  <SummaryListItem term={scheduledTag}>
+                    This is a release that has been approved and validated and
+                    is now scheduled for release on the 'Scheduled publish date'
+                  </SummaryListItem>
+                  <SummaryListItem term={startedTag}>
+                    The publication process has now started
+                  </SummaryListItem>
+                  <SummaryListItem term={completeTag}>
+                    The release has now been successfully published and is now
+                    live for public view
+                  </SummaryListItem>
+                  <SummaryListItem term={failedTag}>
+                    There is a problem preventing the release from being
+                    successfully published. Contact{' '}
+                    <a href="mailto:explore.statistics@education.gov.uk">
+                      explore.statistics@education.gov.uk
+                    </a>{' '}
+                    for further assistance
+                  </SummaryListItem>
+                  <SummaryListItem term="View stages">
+                    For <Tag colour="red">Failed</Tag>,{' '}
+                    <Tag colour="orange">Started</Tag> or{' '}
+                    <Tag colour="green">Complete</Tag> releases clicking 'View
+                    stages' will show a summary of the publication status,
+                    highlighting all the publication steps and whether they have
+                    succeeded or failed
+                  </SummaryListItem>
+                </SummaryList>
+              </div>
+              <Button
+                onClick={() => {
+                  toggleScheduledStatusModal(false);
+                }}
+              >
+                Close
+              </Button>
+            </Modal>
+            <Modal
+              open={showScheduledStagesModal}
+              title="Publication stages guidance"
+              className="govuk-!-width-one-half"
+            >
+              <p>
+                For <Tag colour="red">Failed</Tag>,{' '}
+                <Tag colour="orange">Started</Tag> or{' '}
+                <Tag colour="green">Complete</Tag> releases clicking 'View
+                stages' will show a summary of the publication status, there are
+                4 steps of the process (Data, content, files and final
+                publishing) for each step the different stages are described
+                below:
+              </p>
               <SummaryList>
-                <SummaryListItem term={validatingTag}>
-                  This is a release that has just been approved for publication.
-                  The system is validating that everything is OK for
-                  publication.
-                </SummaryListItem>
-                <SummaryListItem term={scheduledTag}>
-                  This is a release that mihas been approved and validated and
-                  is now scheduled for release on the 'Scheduled publish date'
+                <SummaryListItem term={notStartedTag}>
+                  This step has yet to start publishing
                 </SummaryListItem>
                 <SummaryListItem term={startedTag}>
-                  The publication process has now started
+                  This step has now started the publication process
                 </SummaryListItem>
                 <SummaryListItem term={completeTag}>
-                  The release has now been successfully published and is now
-                  live for public view
+                  This step of the process has successfully completed
                 </SummaryListItem>
                 <SummaryListItem term={failedTag}>
+                  This step of the process has failed, and the publication
+                  process will be cancelled
+                </SummaryListItem>
+                <SummaryListItem term={cancelledTag}>
                   There is a problem preventing the release from being
                   successfully published. Contact{' '}
                   <a href="mailto:explore.statistics@education.gov.uk">
@@ -670,18 +763,10 @@ const PrototypeManageUsers = () => {
                   </a>{' '}
                   for further assistance
                 </SummaryListItem>
-                <SummaryListItem term="View stages">
-                  For <Tag colour="red">Failed</Tag>,{' '}
-                  <Tag colour="orange">Started</Tag> or{' '}
-                  <Tag colour="green">Complete</Tag> releases clicking 'View
-                  stages' will show a summary of the publication status,
-                  highlighting all the publication steps and whether they have
-                  succeeded or failed
-                </SummaryListItem>
               </SummaryList>
               <Button
                 onClick={() => {
-                  toggleScheduledStatusModal(false);
+                  toggleScheduledStagesModal(false);
                 }}
               >
                 Close
