@@ -19,6 +19,7 @@ import PrototypeAdminDetails from './PrototypeAdminDetails';
 import PrototypeAdminAccess from './PrototypeAdminAccess';
 import PrototypeAdminLegacy from './PrototypeAdminLegacy';
 import PrototypeReleaseSummary from './PrototypeReleaseSummary';
+import PrototypeFindStats from './PrototypeFindStats';
 
 interface PrototypeRoute extends RouteProps {
   name: string;
@@ -125,6 +126,11 @@ const prototypeRoutes: PrototypeRoute[] = [
     name: 'Admin release summary',
     path: '/prototypes/admin-release-summary',
     component: PrototypeReleaseSummary,
+  },
+  {
+    name: 'Find statistics and data',
+    path: '/prototypes/find-statistics',
+    component: PrototypeFindStats,
   },
 ];
 

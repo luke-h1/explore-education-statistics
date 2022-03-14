@@ -83,3 +83,26 @@
     font-size: 1rem;
   }
 }
+
+.prototypePagination {
+  display: flex;
+  justify-content: space-between;
+  list-style: none;
+  margin-top: govuk-spacing(9);
+  padding: 0;
+}
+
+.prototypePaginationLink {
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.prototypePaginationTitle {
+  display: block;
+  font-size: 1.6rem;
+  font-weight: bold;
+  text-decoration: none !important;
+}
