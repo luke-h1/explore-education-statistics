@@ -14,6 +14,7 @@ const PrototypeFindStats = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [theme, setTheme] = useState('');
   const [topic, setTopic] = useState('');
+  const [releaseType, setReleaseType] = useState('');
 
   const showAll = theme === 'all-themes';
   const showExclusions = topic === 'exclusions';
@@ -28,7 +29,7 @@ const PrototypeFindStats = () => {
   let searchQuery = 'Showing all publications';
 
   if (showSchoolCapacity) {
-    searchTally = '3';
+    searchTally = releaseType === 'adhoc' ? '1' : '3';
     searchQuery = 'From: Pupils and schools, school capacity';
   } else if (showExclusions) {
     searchTally = '1';
@@ -82,401 +83,205 @@ const PrototypeFindStats = () => {
               </div>
             </form>
             <h2 className="govuk-heading-m">Filter results</h2>
+
+            <div style={{ maxHeight: '300px', overflow: 'auto' }}>
+              <FormRadioGroup
+                className="govuk-!-padding-left-2"
+                id="theme"
+                legend="Select a theme"
+                legendSize="s"
+                name="theme"
+                value={theme}
+                small
+                onChange={e => {
+                  setTheme(e.target.value);
+                }}
+                options={[
+                  {
+                    label: 'All themes',
+                    value: 'all-themes',
+                    defaultChecked: true,
+                  },
+                  {
+                    label: "Children's social care",
+                    value: 'childrens-social',
+                  },
+                  {
+                    label: 'Covid 19',
+                    value: 'covid-19',
+                  },
+                  {
+                    label: 'Destinations of pupils and students',
+                    value: 'destination-pupils',
+                  },
+                  {
+                    label: 'Early years',
+                    value: 'early-years',
+                  },
+                  {
+                    label: 'Financing and funding',
+                    value: 'finance-funding',
+                  },
+                  {
+                    label: 'Further education',
+                    value: 'further-educaton',
+                    conditional: (
+                      <FormCheckboxGroup
+                        id="topics"
+                        legend="Choose topic"
+                        legendSize="s"
+                        small
+                        name="topic"
+                        hint="Select one or more topics to filter results for this theme"
+                        value={[topic]}
+                        onChange={e => {
+                          setTopic(e.target.value);
+                        }}
+                        options={[
+                          { label: 'FE choices', value: 'fe-choices' },
+                          {
+                            label: 'Further education and skills',
+                            value: 'fe-skills',
+                          },
+                          {
+                            label: 'Further education outcomes',
+                            value: 'fe-outcomes',
+                          },
+                        ]}
+                      />
+                    ),
+                  },
+                  {
+                    label: 'Higher education',
+                    value: 'higher-educaton',
+                    conditional: (
+                      <FormCheckboxGroup
+                        id="topics"
+                        legend="Choose topic"
+                        legendSize="s"
+                        small
+                        name="topic"
+                        hint="Select one or more topics to filter results for this theme"
+                        value={[topic]}
+                        onChange={e => {
+                          setTopic(e.target.value);
+                        }}
+                        options={[
+                          {
+                            label: 'Education exports',
+                            value: 'education-exports',
+                          },
+                          {
+                            label:
+                              'Higher education graduate employment and earnings',
+                            value: 'grad-earnings',
+                          },
+                          {
+                            label: 'Participation measures in higher education',
+                            value: 'participation-he',
+                          },
+                          {
+                            label: 'Skills Bill: Higher level learners',
+                            value: 'skills-bill',
+                          },
+                          {
+                            label: 'Widening participation in higher education',
+                            value: 'widening-participation',
+                          },
+                        ]}
+                      />
+                    ),
+                  },
+                  {
+                    label: 'Pupils and schools',
+                    value: 'pupils-and-schools',
+                    conditional: (
+                      <FormCheckboxGroup
+                        id="topics"
+                        legend="Choose topic"
+                        legendSize="s"
+                        small
+                        name="topic"
+                        hint="Select one or more topics to filter results for this theme"
+                        value={[topic]}
+                        onChange={e => {
+                          setTopic(e.target.value);
+                        }}
+                        options={[
+                          {
+                            label: 'Academy transfers',
+                            value: 'academy-transfers',
+                          },
+                          {
+                            label: 'Admission appeals',
+                            value: 'admission-appeals',
+                          },
+                          { label: 'Exclusions', value: 'exclusions' },
+                          {
+                            label: 'Parental repsonsibility measures',
+                            value: 'resposibility-measures',
+                          },
+                          {
+                            label: 'Pupil absence',
+                            value: 'pupil-absence',
+                          },
+                          {
+                            label: 'School and pupil numbers',
+                            value: 'school-pupil-numbers',
+                          },
+                          {
+                            label: 'School applications',
+                            value: 'school-applications',
+                          },
+                          {
+                            label: 'School capacity',
+                            value: 'school-capacity',
+                          },
+                          {
+                            label: 'Special educational needs (SEN)',
+                            value: 'sen',
+                          },
+                        ]}
+                      />
+                    ),
+                  },
+                  {
+                    label: 'Schools and college outcomes and performance',
+                    value: 'school-college-performance',
+                  },
+                  {
+                    label: 'Teachers and school workforce',
+                    value: 'teachers-workforce',
+                  },
+                  {
+                    label: 'UK training and education statistics',
+                    value: 'uk-training-stats',
+                    conditional: (
+                      <FormCheckboxGroup
+                        id="topics2"
+                        legend="Choose topic"
+                        legendSize="s"
+                        small
+                        name="topic"
+                        value={[topic]}
+                        onChange={e => setTopic(e.target.value)}
+                        options={[
+                          { label: 'Test 1', value: 'test-1' },
+                          { label: 'Test 3', value: 'test-2' },
+                          { label: 'Test 3', value: 'test-3' },
+                        ]}
+                      />
+                    ),
+                  },
+                ]}
+              />
+            </div>
+
+            <h2 className="govuk-heading-m govuk-!-margin-top-6">
+              Other filters
+            </h2>
+
             <Accordion id="filters">
-              <AccordionSection
-                heading="Themes and topics"
-                goToTop={false}
-                open
-              >
-                {/*
-                <div className="govuk-form-group">
-                  <label htmlFor="topic" className="govuk-label">
-                    Filter by theme
-                  </label>
-                  <select 
-                    name="theme" 
-                    id="theme" 
-                    className="govuk-select" 
-                    onChange={event => {
-                      selectedTheme = event.target.value;
-                      setShowTopics(true);
-                    }}>
-                    <option value="">{selectedTheme}</option>
-                    <option value="">Children's social care</option>
-                    <option value="">COVID 19</option>
-                    <option value="">Destinations of pupils and students</option>
-                    <option value="">Early years</option>
-                    <option value="">Financing and funding</option>
-                    <option value="">Further education</option>
-                    <option value="">Higher education</option>
-                    <option value="">Pupils and schools</option>
-                    <option value="">School and college outcomes and performance</option>
-                    <option value="">Teachers and school workforce</option>
-                    <option value="">UK education and training statistics</option>
-                  </select>
-                </div>
-                  */}
-
-                <div style={{ maxHeight: '600px', overflow: 'auto' }}>
-                  <FormRadioGroup
-                    className="govuk-!-padding-left-2"
-                    id="theme"
-                    legend="Select a theme"
-                    name="theme"
-                    value={theme}
-                    small
-                    onChange={e => setTheme(e.target.value)}
-                    options={[
-                      {
-                        label: 'All themes',
-                        value: 'all-themes',
-                        defaultChecked: true,
-                      },
-                      {
-                        label: "Children's social care",
-                        value: 'childrens-social',
-                      },
-                      {
-                        label: 'Covid 19',
-                        value: 'covid-19',
-                      },
-                      {
-                        label: 'Destinations of pupils and students',
-                        value: 'destination-pupils',
-                      },
-                      {
-                        label: 'Early years',
-                        value: 'early-years',
-                      },
-                      {
-                        label: 'Financing and funding',
-                        value: 'finance-funding',
-                      },
-                      {
-                        label: 'Further education',
-                        value: 'further-educaton',
-                        conditional: (
-                          <FormCheckboxGroup
-                            id="topics"
-                            legend="Choose topic"
-                            legendSize="s"
-                            small
-                            name="topic"
-                            hint="Select one or more topics to filter results for this theme"
-                            value={[topic]}
-                            onChange={e => {
-                              setTopic(e.target.value);
-                            }}
-                            options={[
-                              { label: 'FE choices', value: 'fe-choices' },
-                              {
-                                label: 'Further education and skills',
-                                value: 'fe-skills',
-                              },
-                              {
-                                label: 'Further education outcomes',
-                                value: 'fe-outcomes',
-                              },
-                            ]}
-                          />
-                        ),
-                      },
-                      {
-                        label: 'Higher education',
-                        value: 'higher-educaton',
-                        conditional: (
-                          <FormCheckboxGroup
-                            id="topics"
-                            legend="Choose topic"
-                            legendSize="s"
-                            small
-                            name="topic"
-                            hint="Select one or more topics to filter results for this theme"
-                            value={[topic]}
-                            onChange={e => {
-                              setTopic(e.target.value);
-                            }}
-                            options={[
-                              {
-                                label: 'Education exports',
-                                value: 'education-exports',
-                              },
-                              {
-                                label:
-                                  'Higher education graduate employment and earnings',
-                                value: 'grad-earnings',
-                              },
-                              {
-                                label:
-                                  'Participation measures in higher education',
-                                value: 'participation-he',
-                              },
-                              {
-                                label: 'Skills Bill: Higher level learners',
-                                value: 'skills-bill',
-                              },
-                              {
-                                label:
-                                  'Widening participation in higher education',
-                                value: 'widening-participation',
-                              },
-                            ]}
-                          />
-                        ),
-                      },
-                      {
-                        label: 'Pupils and schools',
-                        value: 'pupils-and-schools',
-                        conditional: (
-                          <FormCheckboxGroup
-                            id="topics"
-                            legend="Choose topic"
-                            legendSize="s"
-                            small
-                            name="topic"
-                            hint="Select one or more topics to filter results for this theme"
-                            value={[topic]}
-                            onChange={e => {
-                              setTopic(e.target.value);
-                            }}
-                            options={[
-                              {
-                                label: 'Academy transfers',
-                                value: 'academy-transfers',
-                              },
-                              {
-                                label: 'Admission appeals',
-                                value: 'admission-appeals',
-                              },
-                              { label: 'Exclusions', value: 'exclusions' },
-                              {
-                                label: 'Parental repsonsibility measures',
-                                value: 'resposibility-measures',
-                              },
-                              {
-                                label: 'Pupil absence',
-                                value: 'pupil-absence',
-                              },
-                              {
-                                label: 'School and pupil numbers',
-                                value: 'school-pupil-numbers',
-                              },
-                              {
-                                label: 'School applications',
-                                value: 'school-applications',
-                              },
-                              {
-                                label: 'School capacity',
-                                value: 'school-capacity',
-                              },
-                              {
-                                label: 'Special educational needs (SEN)',
-                                value: 'sen',
-                              },
-                            ]}
-                          />
-                        ),
-                      },
-                      {
-                        label: 'Schools and college outcomes and performance',
-                        value: 'school-college-performance',
-                      },
-                      {
-                        label: 'Teachers and school workforce',
-                        value: 'teachers-workforce',
-                      },
-                      {
-                        label: 'UK training and education statistics',
-                        value: 'uk-training-stats',
-                        conditional: (
-                          <FormCheckboxGroup
-                            id="topics2"
-                            legend="Choose topic"
-                            legendSize="s"
-                            small
-                            name="topic"
-                            value={[topic]}
-                            onChange={e => setTopic(e.target.value)}
-                            options={[
-                              { label: 'Test 1', value: 'test-1' },
-                              { label: 'Test 3', value: 'test-2' },
-                              { label: 'Test 3', value: 'test-3' },
-                            ]}
-                          />
-                        ),
-                      },
-                    ]}
-                  />
-                </div>
-                {console.log(searchTerm)}
-                {console.log(theme)}
-                {console.log(topic)}
-
-                {showTopics && (
-                  <div className="govuk-form-group">
-                    <fieldset className="govuk-fieldset">
-                      <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">
-                        Filter by topics for {selectedTheme}
-                      </legend>
-                      <div
-                        className="govuk-checkboxes govuk-checkboxes--small"
-                        data-module="govuk-checkboxes"
-                      >
-                        <div className="govuk-checkboxes__item">
-                          <input
-                            className="govuk-checkboxes__input"
-                            id="topic1"
-                            name="topic1"
-                            type="checkbox"
-                            value="topic1"
-                          />
-                          <label
-                            className="govuk-label govuk-checkboxes__label"
-                            htmlFor="topic1"
-                          >
-                            Academy transfers
-                          </label>
-                        </div>
-                        <div className="govuk-checkboxes__item">
-                          <input
-                            className="govuk-checkboxes__input"
-                            id="topic2"
-                            name="topic2"
-                            type="checkbox"
-                            value="topic2"
-                          />
-                          <label
-                            className="govuk-label govuk-checkboxes__label"
-                            htmlFor="topic2"
-                          >
-                            Admission appeals
-                          </label>
-                        </div>
-                        <div className="govuk-checkboxes__item">
-                          <input
-                            className="govuk-checkboxes__input"
-                            id="topic3"
-                            name="topic3"
-                            type="checkbox"
-                            value="topic3"
-                          />
-                          <label
-                            className="govuk-label govuk-checkboxes__label"
-                            htmlFor="topic3"
-                          >
-                            Exclusions
-                          </label>
-                        </div>
-                        <div className="govuk-checkboxes__item">
-                          <input
-                            className="govuk-checkboxes__input"
-                            id="topic4"
-                            name="topic4"
-                            type="checkbox"
-                            value="topic4"
-                          />
-                          <label
-                            className="govuk-label govuk-checkboxes__label"
-                            htmlFor="topic4"
-                          >
-                            Parental responsibility measures
-                          </label>
-                        </div>
-                        <div className="govuk-checkboxes__item">
-                          <input
-                            className="govuk-checkboxes__input"
-                            id="topic5"
-                            name="topic5"
-                            type="checkbox"
-                            value="topic5"
-                          />
-                          <label
-                            className="govuk-label govuk-checkboxes__label"
-                            htmlFor="topic5"
-                          >
-                            Pupil absence
-                          </label>
-                        </div>
-                        <div className="govuk-checkboxes__item">
-                          <input
-                            className="govuk-checkboxes__input"
-                            id="topic6"
-                            name="topic6"
-                            type="checkbox"
-                            value="topic6"
-                          />
-                          <label
-                            className="govuk-label govuk-checkboxes__label"
-                            htmlFor="topic6"
-                          >
-                            Pupil projections
-                          </label>
-                        </div>
-                        <div className="govuk-checkboxes__item">
-                          <input
-                            className="govuk-checkboxes__input"
-                            id="topic7"
-                            name="topic7"
-                            type="checkbox"
-                            value="topic7"
-                          />
-                          <label
-                            className="govuk-label govuk-checkboxes__label"
-                            htmlFor="topic7"
-                          >
-                            School and pupil numbers
-                          </label>
-                        </div>
-                        <div className="govuk-checkboxes__item">
-                          <input
-                            className="govuk-checkboxes__input"
-                            id="topic8"
-                            name="topic8"
-                            type="checkbox"
-                            value="topic8"
-                          />
-                          <label
-                            className="govuk-label govuk-checkboxes__label"
-                            htmlFor="topic8"
-                          >
-                            School applications
-                          </label>
-                        </div>
-                        <div className="govuk-checkboxes__item">
-                          <input
-                            className="govuk-checkboxes__input"
-                            id="topic9"
-                            name="topic9"
-                            type="checkbox"
-                            value="topic9"
-                          />
-                          <label
-                            className="govuk-label govuk-checkboxes__label"
-                            htmlFor="topic9"
-                          >
-                            School capacity
-                          </label>
-                        </div>
-                        <div className="govuk-checkboxes__item">
-                          <input
-                            className="govuk-checkboxes__input"
-                            id="topic10"
-                            name="topic10"
-                            type="checkbox"
-                            value="topic10"
-                          />
-                          <label
-                            className="govuk-label govuk-checkboxes__label"
-                            htmlFor="topic10"
-                          >
-                            Special educational needs (SEN)
-                          </label>
-                        </div>
-                      </div>
-                    </fieldset>
-                  </div>
-                )}
-              </AccordionSection>
               <AccordionSection heading="Release type" goToTop={false}>
                 <div className="govuk-form-group">
                   <fieldset className="govuk-fieldset">
@@ -490,14 +295,31 @@ const PrototypeFindStats = () => {
                       <div className="govuk-checkboxes__item">
                         <input
                           className="govuk-checkboxes__input"
-                          id="geography1"
-                          name="geography1"
+                          id="release-show-all"
+                          name="release-type"
                           type="checkbox"
-                          value="geography1"
+                          value="showAll"
+                          onChange={e => setReleaseType(e.target.value)}
                         />
                         <label
                           className="govuk-label govuk-checkboxes__label"
-                          htmlFor="geography1"
+                          htmlFor="release-show-all"
+                        >
+                          Show all
+                        </label>
+                      </div>
+                      <div className="govuk-checkboxes__item">
+                        <input
+                          className="govuk-checkboxes__input"
+                          id="release-type1"
+                          name="release-type"
+                          type="checkbox"
+                          value="national"
+                          onChange={e => setReleaseType(e.target.value)}
+                        />
+                        <label
+                          className="govuk-label govuk-checkboxes__label"
+                          htmlFor="release-type1"
                         >
                           National statistics
                         </label>
@@ -505,14 +327,15 @@ const PrototypeFindStats = () => {
                       <div className="govuk-checkboxes__item">
                         <input
                           className="govuk-checkboxes__input"
-                          id="geography2"
-                          name="geography2"
+                          id="release-type2"
+                          name="release-type"
                           type="checkbox"
-                          value="geography2"
+                          value="official"
+                          onChange={e => setReleaseType(e.target.value)}
                         />
                         <label
                           className="govuk-label govuk-checkboxes__label"
-                          htmlFor="geography2"
+                          htmlFor="release-type2"
                         >
                           Official statistics
                         </label>
@@ -520,14 +343,15 @@ const PrototypeFindStats = () => {
                       <div className="govuk-checkboxes__item">
                         <input
                           className="govuk-checkboxes__input"
-                          id="geography3"
-                          name="geography3"
+                          id="release-type3"
+                          name="release-type"
                           type="checkbox"
-                          value="geography3"
+                          value="adhoc"
+                          onChange={e => setReleaseType(e.target.value)}
                         />
                         <label
                           className="govuk-label govuk-checkboxes__label"
-                          htmlFor="geography3"
+                          htmlFor="release-type3"
                         >
                           Ad hoc statistics
                         </label>
@@ -549,8 +373,24 @@ const PrototypeFindStats = () => {
                       <div className="govuk-checkboxes__item">
                         <input
                           className="govuk-checkboxes__input"
+                          id="type-show-all"
+                          name="type"
+                          type="checkbox"
+                          value="showAll"
+                          onChange={e => setReleaseType(e.target.value)}
+                        />
+                        <label
+                          className="govuk-label govuk-checkboxes__label"
+                          htmlFor="type-show-all"
+                        >
+                          Show all
+                        </label>
+                      </div>
+                      <div className="govuk-checkboxes__item">
+                        <input
+                          className="govuk-checkboxes__input"
                           id="type1"
-                          name="type1"
+                          name="type"
                           type="checkbox"
                           value="type1"
                         />
@@ -565,7 +405,7 @@ const PrototypeFindStats = () => {
                         <input
                           className="govuk-checkboxes__input"
                           id="type2"
-                          name="type2"
+                          name="type"
                           type="checkbox"
                           value="type2"
                         />
@@ -580,7 +420,7 @@ const PrototypeFindStats = () => {
                         <input
                           className="govuk-checkboxes__input"
                           id="type3"
-                          name="type3"
+                          name="type"
                           type="checkbox"
                           value="type3"
                         />
@@ -608,8 +448,25 @@ const PrototypeFindStats = () => {
                       <div className="govuk-checkboxes__item">
                         <input
                           className="govuk-checkboxes__input"
+                          id="org-show-all"
+                          name="org"
+                          type="checkbox"
+                          value="showAll"
+                          checked
+                          onChange={e => setReleaseType(e.target.value)}
+                        />
+                        <label
+                          className="govuk-label govuk-checkboxes__label"
+                          htmlFor="type-show-all"
+                        >
+                          Show all
+                        </label>
+                      </div>
+                      <div className="govuk-checkboxes__item">
+                        <input
+                          className="govuk-checkboxes__input"
                           id="org1"
-                          name="org1"
+                          name="org"
                           type="checkbox"
                           value="org1"
                         />
@@ -624,7 +481,7 @@ const PrototypeFindStats = () => {
                         <input
                           className="govuk-checkboxes__input"
                           id="org2"
-                          name="org2"
+                          name="org"
                           type="checkbox"
                           value="org2"
                         />
@@ -639,7 +496,7 @@ const PrototypeFindStats = () => {
                         <input
                           className="govuk-checkboxes__input"
                           id="org3"
-                          name="org3"
+                          name="org"
                           type="checkbox"
                           value="org3"
                         />
@@ -658,13 +515,24 @@ const PrototypeFindStats = () => {
           </div>
           <div className="govuk-grid-column-two-thirds">
             <div className="govuk-grid-row">
-              <div className="govuk-grid-column-one-half">
+              <div
+                className="govuk-grid-column-one-half"
+                role="region"
+                aria-live="polite"
+                aria-atomic="true"
+              >
                 <h2 className="govuk-!-margin-bottom-0">
                   {searchTally} result(s)
                   <span className="govuk-heading-s govuk-!-margin-bottom-0">
                     {searchQuery}
                   </span>
                 </h2>
+                <p className="govuk-visually-hidden">
+                  Sorted by newest publications
+                </p>
+                <a href="#searchResults" className="govuk-skip-link">
+                  Skip to search results
+                </a>
               </div>
               <div className="govuk-grid-column-one-half">
                 <div className="govuk-form-group">
@@ -732,195 +600,205 @@ const PrototypeFindStats = () => {
             </div>
             <hr />
 
-            {((!showExclusions && !showSchoolCapacity && !showSearchResult) ||
-              theme === 'all-themes') && (
-              <>
-                <PrototypeSearchResult
-                  title="Laptops and tablets data"
-                  summary="How many laptops, tablets and routers we've delivered to help disadvantaged children and young people access education."
-                  theme="COVID 19"
-                  topic="Devices"
-                  type="Official statistics"
-                  org="Department for Education (DfE)"
-                  published="8 March 2022"
-                />
+            <div id="searchResults">
+              {((!showExclusions && !showSchoolCapacity && !showSearchResult) ||
+                theme === 'all-themes') && (
+                <>
+                  <PrototypeSearchResult
+                    title="Laptops and tablets data"
+                    summary="How many laptops, tablets and routers we've delivered to help disadvantaged children and young people access education."
+                    theme="COVID 19"
+                    topic="Devices"
+                    type="Official statistics"
+                    org="Department for Education (DfE)"
+                    published="8 March 2022"
+                  />
 
+                  <PrototypeSearchResult
+                    title="NEET age 16 to 24"
+                    summary="Estimates from the Labour Force Survey of young people not in education, employment or training (NEET) in England."
+                    theme="Destination of pupils and students"
+                    topic="NEET and participation"
+                    type="National statistics"
+                    org="Department for Education (DfE)"
+                    published="24 February 2022"
+                  />
+
+                  <PrototypeSearchResult
+                    title="Apprenticeships and traineeships"
+                    summary="onthly apprenticeship starts to November 2021, and official statistics covering the apprenticeship service and find an apprenticeship."
+                    theme="Further education"
+                    topic="Further education and skills"
+                    type="Official statistics"
+                    org="Department for Education (DfE)"
+                    published="24 February 2022"
+                  />
+
+                  <PrototypeSearchResult
+                    title="Children's social work workforce"
+                    summary="Information about children's social workers employed in local authorities and agency social workers"
+                    theme="Children's social care"
+                    topic="Children's social work workforce"
+                    type="Official statistics"
+                    org="Department for Education (DfE)"
+                    published="24 February 2022"
+                  />
+
+                  <PrototypeSearchResult
+                    title="Attendance in education and early years settings during the coronavirus (COVID-19) pandemic"
+                    summary="A summary of attendance in education settings up to 10 February 2022."
+                    theme="COVID 19"
+                    topic="Attendance"
+                    type="Official statistics"
+                    org="Department for Education (DfE)"
+                    published="24 February 2022"
+                  />
+
+                  <PrototypeSearchResult
+                    title="Further education and skills"
+                    summary="Statistics covering further education and skills summary data, including apprenticeships and detailed non-apprenticeship adult further education, in England (August to October 2021, reported to date)."
+                    theme="Further education"
+                    topic="Further education and skills"
+                    type="National statistics"
+                    org="Department for Education (DfE)"
+                    published="24 January 2022"
+                  />
+
+                  <PrototypeSearchResult
+                    title="UK revenue from education related exports and transnational education activity"
+                    summary="Statistics on the estimated revenue generated by education related exports and transnational education (TNE) activity in 2019."
+                    theme="Higher education"
+                    topic="Education exports"
+                    type="Experimental statistics"
+                    org="Department for Education (DfE)"
+                    published="16 December 2021"
+                  />
+
+                  <PrototypeSearchResult
+                    title="Parental responsibility measures"
+                    summary="National and local authority data on penalty notices, cases entering fast-track case management, parenting orders and parenting contracts."
+                    theme="Pupils and schools"
+                    topic="Parental responsibility measures"
+                    type="Official statistics"
+                    org="Department for Education (DfE)"
+                    published="16 December 2021"
+                  />
+
+                  <PrototypeSearchResult
+                    title="LA and school expenditure"
+                    summary="How schools and local authorities spent their funding on education, children's services and social care in the financial year 2020 to 2021."
+                    theme="Finance and funding"
+                    topic="Local authority and school finance"
+                    type="Official statistics"
+                    org="Department for Education (DfE)"
+                    published="16 December 2021"
+                  />
+
+                  <PrototypeSearchResult
+                    title="Further education: outcome-based success measures"
+                    summary="Outcomes of learners completing further education training."
+                    theme="Further education"
+                    topic="Further education outcomes"
+                    type="Official statistics"
+                    org="Department for Education (DfE)"
+                    published="9 December 2021"
+                  />
+                </>
+              )}
+
+              {showExclusions && (
                 <PrototypeSearchResult
-                  title="NEET age 16 to 24"
-                  summary="Estimates from the Labour Force Survey of young people not in education, employment or training (NEET) in England."
-                  theme="Destination of pupils and students"
-                  topic="NEET and participation"
+                  title="Permanent exclusions and suspensions in England"
+                  summary="This publication presents statistics on permanent exclusions and suspensions within the 2019/20 academic year across state-funded schools."
+                  theme="Pupils and schools"
+                  topic="Exclusions"
                   type="National statistics"
                   org="Department for Education (DfE)"
-                  published="24 February 2022"
+                  published="29 July 2021"
                 />
+              )}
 
-                <PrototypeSearchResult
-                  title="Apprenticeships and traineeships"
-                  summary="onthly apprenticeship starts to November 2021, and official statistics covering the apprenticeship service and find an apprenticeship."
-                  theme="Further education"
-                  topic="Further education and skills"
-                  type="Official statistics"
-                  org="Department for Education (DfE)"
-                  published="24 February 2022"
-                />
+              {showSchoolCapacity && (
+                <>
+                  {releaseType !== 'adhoc' && (
+                    <>
+                      <PrototypeSearchResult
+                        title="Local authority school places scorecards"
+                        summary="The scorecard release provides a snapshot of the progress local authorities in England are making in delivering good quality primary and secondary school places in 2019."
+                        theme="Pupils and schools"
+                        topic="School capacity"
+                        type="National statistics"
+                        org="Department for Education (DfE)"
+                        published="29 September 2020"
+                      />
+                      <PrototypeSearchResult
+                        title="School capacity"
+                        summary="This release reports on school capacity information in state-funded primary and secondary schools in England in the academic year 2018/19, as of 1 May 2019. Data are as reported by local authorities in the annual School Capacity (SCAP) Survey."
+                        theme="Pupils and schools"
+                        topic="School capacity"
+                        type="Official statistics"
+                        org="Department for Education (DfE)"
+                        published="20 August 2020"
+                      />
+                    </>
+                  )}
 
-                <PrototypeSearchResult
-                  title="Children's social work workforce"
-                  summary="Information about children's social workers employed in local authorities and agency social workers"
-                  theme="Children's social care"
-                  topic="Children's social work workforce"
-                  type="Official statistics"
-                  org="Department for Education (DfE)"
-                  published="24 February 2022"
-                />
+                  <PrototypeSearchResult
+                    title="School places sufficiency survey"
+                    summary="This release provides transparency data from the voluntary one-off survey on school places, sent to local authorities in England, in September 2020"
+                    theme="Pupils and schools"
+                    topic="School capacity"
+                    type="Ad hoc statistics"
+                    org="Department for Education (DfE)"
+                    published="26 March 2020"
+                  />
+                </>
+              )}
 
+              {showSearchResult && (
                 <PrototypeSearchResult
-                  title="Attendance in education and early years settings during the coronavirus (COVID-19) pandemic"
-                  summary="A summary of attendance in education settings up to 10 February 2022."
-                  theme="COVID 19"
-                  topic="Attendance"
-                  type="Official statistics"
-                  org="Department for Education (DfE)"
-                  published="24 February 2022"
-                />
-
-                <PrototypeSearchResult
-                  title="Further education and skills"
-                  summary="Statistics covering further education and skills summary data, including apprenticeships and detailed non-apprenticeship adult further education, in England (August to October 2021, reported to date)."
-                  theme="Further education"
-                  topic="Further education and skills"
+                  title="Schools, pupils and their characteristics"
+                  summary="Statistics on pupils in schools in England as collected in the January 2021 school census. Includes, age, gender, free school meals (FSM eligibility), English as an additional language, ethnicity, school characteristics and class sizes"
+                  theme="Pupils and schools"
+                  topic="School and pupil numbers"
                   type="National statistics"
                   org="Department for Education (DfE)"
-                  published="24 January 2022"
+                  published="17 June 2021"
                 />
-
-                <PrototypeSearchResult
-                  title="UK revenue from education related exports and transnational education activity"
-                  summary="Statistics on the estimated revenue generated by education related exports and transnational education (TNE) activity in 2019."
-                  theme="Higher education"
-                  topic="Education exports"
-                  type="Experimental statistics"
-                  org="Department for Education (DfE)"
-                  published="16 December 2021"
-                />
-
-                <PrototypeSearchResult
-                  title="Parental responsibility measures"
-                  summary="National and local authority data on penalty notices, cases entering fast-track case management, parenting orders and parenting contracts."
-                  theme="Pupils and schools"
-                  topic="Parental responsibility measures"
-                  type="Official statistics"
-                  org="Department for Education (DfE)"
-                  published="16 December 2021"
-                />
-
-                <PrototypeSearchResult
-                  title="LA and school expenditure"
-                  summary="How schools and local authorities spent their funding on education, children's services and social care in the financial year 2020 to 2021."
-                  theme="Finance and funding"
-                  topic="Local authority and school finance"
-                  type="Official statistics"
-                  org="Department for Education (DfE)"
-                  published="16 December 2021"
-                />
-
-                <PrototypeSearchResult
-                  title="Further education: outcome-based success measures"
-                  summary="Outcomes of learners completing further education training."
-                  theme="Further education"
-                  topic="Further education outcomes"
-                  type="Official statistics"
-                  org="Department for Education (DfE)"
-                  published="9 December 2021"
-                />
-              </>
-            )}
-
-            {showExclusions && (
-              <PrototypeSearchResult
-                title="Permanent exclusions and suspensions in England"
-                summary="This publication presents statistics on permanent exclusions and suspensions within the 2019/20 academic year across state-funded schools."
-                theme="Pupils and schools"
-                topic="Exclusions"
-                type="National statistics"
-                org="Department for Education (DfE)"
-                published="29 July 2021"
-              />
-            )}
-
-            {showSchoolCapacity && (
-              <>
-                <PrototypeSearchResult
-                  title="Local authority school places scorecards"
-                  summary="The scorecard release provides a snapshot of the progress local authorities in England are making in delivering good quality primary and secondary school places in 2019."
-                  theme="Pupils and schools"
-                  topic="School capacity"
-                  type="National statistics"
-                  org="Department for Education (DfE)"
-                  published="29 September 2020"
-                />
-                <PrototypeSearchResult
-                  title="School capacity"
-                  summary="This release reports on school capacity information in state-funded primary and secondary schools in England in the academic year 2018/19, as of 1 May 2019. Data are as reported by local authorities in the annual School Capacity (SCAP) Survey."
-                  theme="Pupils and schools"
-                  topic="School capacity"
-                  type="Official statistics"
-                  org="Department for Education (DfE)"
-                  published="20 August 2020"
-                />
-                <PrototypeSearchResult
-                  title="School places sufficiency survey"
-                  summary="This release provides transparency data from the voluntary one-off survey on school places, sent to local authorities in England, in September 2020"
-                  theme="Pupils and schools"
-                  topic="School capacity"
-                  type="Ad hoc statistics"
-                  org="Department for Education (DfE)"
-                  published="26 March 2020"
-                />
-              </>
-            )}
-
-            {showSearchResult && (
-              <PrototypeSearchResult
-                title="Schools, pupils and their characteristics"
-                summary="Statistics on pupils in schools in England as collected in the January 2021 school census. Includes, age, gender, free school meals (FSM eligibility), English as an additional language, ethnicity, school characteristics and class sizes"
-                theme="Pupils and schools"
-                topic="School and pupil numbers"
-                type="National statistics"
-                org="Department for Education (DfE)"
-                published="17 June 2021"
-              />
-            )}
+              )}
+            </div>
 
             {((!showExclusions && !showSchoolCapacity && !showSearchResult) ||
               showAll) && (
-              <nav
-                className="dfe-pagination"
-                role="navigation"
-                aria-label="Pagination"
-              >
-                <ul className={styles.prototypePagination}>
-                  <li>
-                    <a className={styles.prototypePaginationLink} href="#">
-                      <span className={styles.prototypePaginationTitle}>
-                        Previous
-                      </span>
-                      <span className="govuk-visually-hidden">:</span>
-                      <span className="dfe-pagination__page">1 of 6</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a className={styles.prototypePaginationLink} href="#">
-                      <span className={styles.prototypePaginationTitle}>
-                        Next
-                      </span>
-                      <span className="govuk-visually-hidden">:</span>
-                      <span className="dfe-pagination__page">2 of 6</span>
-                    </a>
-                  </li>
-                </ul>
-              </nav>
+              <>
+                <p>Showing page 1 of 6</p>
+                <nav
+                  className="dfe-pagination"
+                  role="navigation"
+                  aria-label="Pagination"
+                >
+                  <ul className={styles.prototypePagination}>
+                    <li>
+                      <a className={styles.prototypePaginationLink} href="#">
+                        <span className={styles.prototypePaginationTitle}>
+                          Previous
+                        </span>
+                        <span className="govuk-visually-hidden">:</span>
+                        <span className="dfe-pagination__page">1 of 6</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a className={styles.prototypePaginationLink} href="#">
+                        <span className={styles.prototypePaginationTitle}>
+                          Next
+                        </span>
+                        <span className="govuk-visually-hidden">:</span>
+                        <span className="dfe-pagination__page">2 of 6</span>
+                      </a>
+                    </li>
+                  </ul>
+                </nav>
+              </>
             )}
           </div>
         </div>
