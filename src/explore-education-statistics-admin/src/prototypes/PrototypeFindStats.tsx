@@ -756,15 +756,26 @@ const PrototypeFindStats = () => {
               )}
 
               {showSearchResult && (
-                <PrototypeSearchResult
-                  title="Schools, pupils and their characteristics"
-                  summary="Statistics on pupils in schools in England as collected in the January 2021 school census. Includes, age, gender, free school meals (FSM eligibility), English as an additional language, ethnicity, school characteristics and class sizes"
-                  theme="Pupils and schools"
-                  topic="School and pupil numbers"
-                  type="National statistics"
-                  org="Department for Education (DfE)"
-                  published="17 June 2021"
-                />
+                <>
+                  <PrototypeSearchResult
+                    title="Schools, pupils and their characteristics"
+                    summary="Statistics on pupils in schools in England as collected in the January 2021 school census. Includes, age, gender, free school meals (FSM eligibility), English as an additional language, ethnicity, school characteristics and class sizes"
+                    theme="Pupils and schools"
+                    topic="School and pupil numbers"
+                    type="National statistics"
+                    org="Department for Education (DfE)"
+                    published="17 June 2021"
+                  />
+                  <PrototypeSearchResult
+                    title="Free school meals: Autumn term"
+                    summary="This release presents data on free school meals (FSM) as collected in the Autumn school census. The number of pupils eligible for free school meals on census day (1 October 2020) and the number of pupils who have become eligible since 23 March 2020, that is since the first COVID-19 lockdown was announced"
+                    theme="Pupils and schools"
+                    topic="School and pupil numbers"
+                    type="Ad hoc statistics"
+                    org="Department for Education (DfE)"
+                    published="30 March 2021"
+                  />
+                </>
               )}
             </div>
 
