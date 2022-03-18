@@ -46,50 +46,46 @@ const PrototypeFindStats = () => {
   return (
     <div className={styles.prototypePublicPage}>
       <PrototypePage title="Find statistics and data" wide>
+        <form className="govuk-!-width-three-quarters">
+          <div
+            className="govuk-form-group govuk-!-margin-bottom-9"
+            style={{ position: 'relative' }}
+          >
+            <h2 className="govuk-label-wrapper">
+              <label className="govuk-label govuk-label--m" htmlFor="search">
+                Search
+              </label>
+            </h2>
+
+            <input
+              type="text"
+              id="search"
+              className="govuk-input"
+              onChange={e => setSearchInput(e.target.value)}
+            />
+            <button
+              type="submit"
+              className={styles2.searchButton}
+              value="Search"
+              onClick={e => {
+                e.preventDefault();
+                console.log(searchInput);
+                setSearchTerm(searchInput);
+              }}
+            >
+              <span className="govuk-visually-hidden">Search</span>
+            </button>
+          </div>
+        </form>
+
         <div className="govuk-grid-row">
           <div className="govuk-grid-column-one-third">
-            <form>
-              <div
-                className="govuk-form-group govuk-!-margin-bottom-9"
-                style={{ position: 'relative' }}
-              >
-                <h2 className="govuk-label-wrapper">
-                  <label
-                    className="govuk-label govuk-label--m"
-                    htmlFor="search"
-                  >
-                    Search
-                  </label>
-                </h2>
-
-                <input
-                  type="text"
-                  id="search"
-                  className="govuk-input"
-                  onChange={e => setSearchInput(e.target.value)}
-                />
-                <button
-                  type="submit"
-                  className={styles2.searchButton}
-                  value="Search"
-                  onClick={e => {
-                    e.preventDefault();
-                    console.log(searchInput);
-                    setSearchTerm(searchInput);
-                  }}
-                >
-                  <span className="govuk-visually-hidden">Search</span>
-                </button>
-              </div>
-            </form>
-            <h2 className="govuk-heading-m">Filter results</h2>
-
-            <div style={{ maxHeight: '300px', overflow: 'auto' }}>
+            <div style={{ maxHeight: '1200px', overflow: 'auto' }}>
               <FormRadioGroup
                 className="govuk-!-padding-left-2"
                 id="theme"
-                legend="Select a theme"
-                legendSize="s"
+                legend="Filter by theme"
+                legendSize="m"
                 name="theme"
                 value={theme}
                 small
@@ -523,9 +519,6 @@ const PrototypeFindStats = () => {
               >
                 <h2 className="govuk-!-margin-bottom-0">
                   {searchTally} result(s)
-                  <span className="govuk-heading-s govuk-!-margin-bottom-0">
-                    {searchQuery}
-                  </span>
                 </h2>
                 <p className="govuk-visually-hidden">
                   Sorted by newest publications
@@ -598,6 +591,71 @@ const PrototypeFindStats = () => {
                 </div>
               </div>
             </div>
+            <hr />
+            <span className="govuk-!-margin-bottom-0">
+              {!theme && searchQuery}
+
+              {theme === 'pupils-and-schools' && (
+                <>
+                  Pupil and schools{' '}
+                  <a
+                    href="#"
+                    onClick={e => {
+                      e.preventDefault();
+                      setTheme('');
+                      setTopic('');
+                    }}
+                  >
+                    remove
+                  </a>
+                  {showExclusions && (
+                    <>
+                      {' '}
+                      and exclusions{' '}
+                      <a
+                        href="#"
+                        onClick={e => {
+                          e.preventDefault();
+                          setTopic('');
+                        }}
+                      >
+                        remove
+                      </a>
+                    </>
+                  )}
+                  {showSchoolCapacity && (
+                    <>
+                      {' '}
+                      and school capacity{' '}
+                      <a
+                        href="#"
+                        onClick={e => {
+                          e.preventDefault();
+                          setTopic('');
+                        }}
+                      >
+                        remove
+                      </a>
+                      {releaseType === 'adhoc' && (
+                        <>
+                          {' '}
+                          showing ad hoc publications{' '}
+                          <a
+                            href="#"
+                            onClick={e => {
+                              e.preventDefault();
+                              setReleaseType('');
+                            }}
+                          >
+                            remove
+                          </a>
+                        </>
+                      )}
+                    </>
+                  )}
+                </>
+              )}
+            </span>
             <hr />
 
             <div id="searchResults">
