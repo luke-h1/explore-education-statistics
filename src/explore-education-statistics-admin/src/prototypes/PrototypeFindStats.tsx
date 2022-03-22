@@ -12,11 +12,12 @@ const PrototypeFindStats = () => {
   const [showTopics, setShowTopics] = useState(false);
   const [searchInput, setSearchInput] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
-  const [theme, setTheme] = useState('');
+  const [theme, setTheme] = useState('all-themes');
   const [topic, setTopic] = useState('');
   const [releaseType, setReleaseType] = useState('');
 
   const showAll = theme === 'all-themes';
+  const showPupilsSchools = theme === 'pupils-and-schools';
   const showExclusions = topic === 'exclusions';
   const showSchoolCapacity = topic === 'school-capacity';
   const showSearchResult =
@@ -28,20 +29,23 @@ const PrototypeFindStats = () => {
 
   let searchQuery = 'Showing all publications';
 
-  if (showSchoolCapacity) {
-    searchTally = releaseType === 'adhoc' ? '1' : '3';
-    searchQuery = 'From: Pupils and schools, school capacity';
-  } else if (showExclusions) {
-    searchTally = '1';
-    searchQuery = 'From: Pupils and schools, schools exclusions';
+  if (showPupilsSchools) {
+    searchTally = '16';
+    if (showSchoolCapacity) {
+      searchTally = releaseType === 'adhoc' ? '1' : '3';
+    } else if (showExclusions) {
+      searchTally = '1';
+    }
   } else if (showSearchResult) {
-    searchTally = '1';
+    searchTally = '2';
     searchQuery = searchTerm;
   }
   if (showAll) {
     searchTally = '62';
     searchQuery = 'Showing all publications';
   }
+
+  console.log(showSearchResult);
 
   return (
     <div className={styles.prototypePublicPage}>
@@ -71,6 +75,8 @@ const PrototypeFindStats = () => {
                 e.preventDefault();
                 console.log(searchInput);
                 setSearchTerm(searchInput);
+                setTheme('');
+                setTopic('');
               }}
             >
               <span className="govuk-visually-hidden">Search</span>
@@ -122,14 +128,14 @@ const PrototypeFindStats = () => {
                     label: 'Further education',
                     value: 'further-educaton',
                     conditional: (
-                      <FormCheckboxGroup
+                      <FormRadioGroup
                         id="topics"
                         legend="Choose topic"
                         legendSize="s"
                         small
                         name="topic"
                         hint="Select one or more topics to filter results for this theme"
-                        value={[topic]}
+                        value={topic}
                         onChange={e => {
                           setTopic(e.target.value);
                         }}
@@ -151,14 +157,14 @@ const PrototypeFindStats = () => {
                     label: 'Higher education',
                     value: 'higher-educaton',
                     conditional: (
-                      <FormCheckboxGroup
+                      <FormRadioGroup
                         id="topics"
                         legend="Choose topic"
                         legendSize="s"
                         small
                         name="topic"
                         hint="Select one or more topics to filter results for this theme"
-                        value={[topic]}
+                        value={topic}
                         onChange={e => {
                           setTopic(e.target.value);
                         }}
@@ -192,18 +198,23 @@ const PrototypeFindStats = () => {
                     label: 'Pupils and schools',
                     value: 'pupils-and-schools',
                     conditional: (
-                      <FormCheckboxGroup
+                      <FormRadioGroup
                         id="topics"
                         legend="Choose topic"
                         legendSize="s"
                         small
                         name="topic"
                         hint="Select one or more topics to filter results for this theme"
-                        value={[topic]}
+                        value={topic}
+                        order={[]}
                         onChange={e => {
                           setTopic(e.target.value);
                         }}
                         options={[
+                          {
+                            label: 'Show all topics',
+                            value: 'show-all-topics',
+                          },
                           {
                             label: 'Academy transfers',
                             value: 'academy-transfers',
@@ -593,226 +604,86 @@ const PrototypeFindStats = () => {
             </div>
             <hr />
             <span className="govuk-!-margin-bottom-0">
-              {!theme && searchQuery}
+              {(!theme || showAll) && (
+                <h3 className="govuk-heading-s">{searchQuery}</h3>
+              )}
 
               {theme === 'pupils-and-schools' && (
-                <>
-                  Pupil and schools{' '}
-                  <a
-                    href="#"
-                    onClick={e => {
-                      e.preventDefault();
-                      setTheme('');
-                      setTopic('');
-                    }}
-                  >
-                    remove
-                  </a>
+                <div>
+                  <h3 className="govuk-heading-s">Showing filtered results</h3>
+                  <span className={styles.prototypeFilterTag}>
+                    Pupil and schools{' '}
+                    <a
+                      href="#"
+                      onClick={e => {
+                        e.preventDefault();
+                        setTheme('all-themes');
+                        setTopic('');
+                      }}
+                    >
+                      remove
+                    </a>
+                  </span>
                   {showExclusions && (
                     <>
                       {' '}
-                      and exclusions{' '}
-                      <a
-                        href="#"
-                        onClick={e => {
-                          e.preventDefault();
-                          setTopic('');
-                        }}
-                      >
-                        remove
-                      </a>
+                      and{' '}
+                      <span className={styles.prototypeFilterTag}>
+                        exclusions{' '}
+                        <a
+                          href="#"
+                          onClick={e => {
+                            e.preventDefault();
+                            setTopic('');
+                          }}
+                        >
+                          remove
+                        </a>
+                      </span>
                     </>
                   )}
                   {showSchoolCapacity && (
                     <>
                       {' '}
-                      and school capacity{' '}
-                      <a
-                        href="#"
-                        onClick={e => {
-                          e.preventDefault();
-                          setTopic('');
-                        }}
-                      >
-                        remove
-                      </a>
+                      and{' '}
+                      <span className={styles.prototypeFilterTag}>
+                        school capacity{' '}
+                        <a
+                          href="#"
+                          onClick={e => {
+                            e.preventDefault();
+                            setTopic('');
+                          }}
+                        >
+                          remove
+                        </a>
+                      </span>
                       {releaseType === 'adhoc' && (
                         <>
                           {' '}
-                          showing ad hoc publications{' '}
-                          <a
-                            href="#"
-                            onClick={e => {
-                              e.preventDefault();
-                              setReleaseType('');
-                            }}
-                          >
-                            remove
-                          </a>
+                          showing{' '}
+                          <span className={styles.prototypeFilterTag}>
+                            ad hoc publications{' '}
+                            <a
+                              href="#"
+                              onClick={e => {
+                                e.preventDefault();
+                                setReleaseType('');
+                              }}
+                            >
+                              remove
+                            </a>
+                          </span>
                         </>
                       )}
                     </>
                   )}
-                </>
+                </div>
               )}
             </span>
             <hr />
 
             <div id="searchResults">
-              {((!showExclusions && !showSchoolCapacity && !showSearchResult) ||
-                theme === 'all-themes') && (
-                <>
-                  <PrototypeSearchResult
-                    title="Laptops and tablets data"
-                    summary="How many laptops, tablets and routers we've delivered to help disadvantaged children and young people access education."
-                    theme="COVID 19"
-                    topic="Devices"
-                    type="Official statistics"
-                    org="Department for Education (DfE)"
-                    published="8 March 2022"
-                  />
-
-                  <PrototypeSearchResult
-                    title="NEET age 16 to 24"
-                    summary="Estimates from the Labour Force Survey of young people not in education, employment or training (NEET) in England."
-                    theme="Destination of pupils and students"
-                    topic="NEET and participation"
-                    type="National statistics"
-                    org="Department for Education (DfE)"
-                    published="24 February 2022"
-                  />
-
-                  <PrototypeSearchResult
-                    title="Apprenticeships and traineeships"
-                    summary="onthly apprenticeship starts to November 2021, and official statistics covering the apprenticeship service and find an apprenticeship."
-                    theme="Further education"
-                    topic="Further education and skills"
-                    type="Official statistics"
-                    org="Department for Education (DfE)"
-                    published="24 February 2022"
-                  />
-
-                  <PrototypeSearchResult
-                    title="Children's social work workforce"
-                    summary="Information about children's social workers employed in local authorities and agency social workers"
-                    theme="Children's social care"
-                    topic="Children's social work workforce"
-                    type="Official statistics"
-                    org="Department for Education (DfE)"
-                    published="24 February 2022"
-                  />
-
-                  <PrototypeSearchResult
-                    title="Attendance in education and early years settings during the coronavirus (COVID-19) pandemic"
-                    summary="A summary of attendance in education settings up to 10 February 2022."
-                    theme="COVID 19"
-                    topic="Attendance"
-                    type="Official statistics"
-                    org="Department for Education (DfE)"
-                    published="24 February 2022"
-                  />
-
-                  <PrototypeSearchResult
-                    title="Further education and skills"
-                    summary="Statistics covering further education and skills summary data, including apprenticeships and detailed non-apprenticeship adult further education, in England (August to October 2021, reported to date)."
-                    theme="Further education"
-                    topic="Further education and skills"
-                    type="National statistics"
-                    org="Department for Education (DfE)"
-                    published="24 January 2022"
-                  />
-
-                  <PrototypeSearchResult
-                    title="UK revenue from education related exports and transnational education activity"
-                    summary="Statistics on the estimated revenue generated by education related exports and transnational education (TNE) activity in 2019."
-                    theme="Higher education"
-                    topic="Education exports"
-                    type="Experimental statistics"
-                    org="Department for Education (DfE)"
-                    published="16 December 2021"
-                  />
-
-                  <PrototypeSearchResult
-                    title="Parental responsibility measures"
-                    summary="National and local authority data on penalty notices, cases entering fast-track case management, parenting orders and parenting contracts."
-                    theme="Pupils and schools"
-                    topic="Parental responsibility measures"
-                    type="Official statistics"
-                    org="Department for Education (DfE)"
-                    published="16 December 2021"
-                  />
-
-                  <PrototypeSearchResult
-                    title="LA and school expenditure"
-                    summary="How schools and local authorities spent their funding on education, children's services and social care in the financial year 2020 to 2021."
-                    theme="Finance and funding"
-                    topic="Local authority and school finance"
-                    type="Official statistics"
-                    org="Department for Education (DfE)"
-                    published="16 December 2021"
-                  />
-
-                  <PrototypeSearchResult
-                    title="Further education: outcome-based success measures"
-                    summary="Outcomes of learners completing further education training."
-                    theme="Further education"
-                    topic="Further education outcomes"
-                    type="Official statistics"
-                    org="Department for Education (DfE)"
-                    published="9 December 2021"
-                  />
-                </>
-              )}
-
-              {showExclusions && (
-                <PrototypeSearchResult
-                  title="Permanent exclusions and suspensions in England"
-                  summary="This publication presents statistics on permanent exclusions and suspensions within the 2019/20 academic year across state-funded schools."
-                  theme="Pupils and schools"
-                  topic="Exclusions"
-                  type="National statistics"
-                  org="Department for Education (DfE)"
-                  published="29 July 2021"
-                />
-              )}
-
-              {showSchoolCapacity && (
-                <>
-                  {releaseType !== 'adhoc' && (
-                    <>
-                      <PrototypeSearchResult
-                        title="Local authority school places scorecards"
-                        summary="The scorecard release provides a snapshot of the progress local authorities in England are making in delivering good quality primary and secondary school places in 2019."
-                        theme="Pupils and schools"
-                        topic="School capacity"
-                        type="National statistics"
-                        org="Department for Education (DfE)"
-                        published="29 September 2020"
-                      />
-                      <PrototypeSearchResult
-                        title="School capacity"
-                        summary="This release reports on school capacity information in state-funded primary and secondary schools in England in the academic year 2018/19, as of 1 May 2019. Data are as reported by local authorities in the annual School Capacity (SCAP) Survey."
-                        theme="Pupils and schools"
-                        topic="School capacity"
-                        type="Official statistics"
-                        org="Department for Education (DfE)"
-                        published="20 August 2020"
-                      />
-                    </>
-                  )}
-
-                  <PrototypeSearchResult
-                    title="School places sufficiency survey"
-                    summary="This release provides transparency data from the voluntary one-off survey on school places, sent to local authorities in England, in September 2020"
-                    theme="Pupils and schools"
-                    topic="School capacity"
-                    type="Ad hoc statistics"
-                    org="Department for Education (DfE)"
-                    published="26 March 2020"
-                  />
-                </>
-              )}
-
               {showSearchResult && (
                 <>
                   <PrototypeSearchResult
@@ -825,7 +696,7 @@ const PrototypeFindStats = () => {
                     published="17 June 2021"
                   />
                   <PrototypeSearchResult
-                    title="Free school meals: Autumn term TEST"
+                    title="Free school meals: Autumn term"
                     summary="This release presents data on free school meals (FSM) as collected in the Autumn school census. The number of pupils eligible for free school meals on census day (1 October 2020) and the number of pupils who have become eligible since 23 March 2020, that is since the first COVID-19 lockdown was announced"
                     theme="Pupils and schools"
                     topic="School and pupil numbers"
@@ -835,9 +706,290 @@ const PrototypeFindStats = () => {
                   />
                 </>
               )}
+
+              {theme === 'all-themes' && !showSearchResult && (
+                <>
+                  <PrototypeSearchResult
+                    title="Laptops and tablets data"
+                    link="https://explore-education-statistics.service.gov.uk/find-statistics/laptops-and-tablets-data"
+                    summary="How many laptops, tablets and routers we've delivered to help disadvantaged children and young people access education."
+                    theme="COVID 19"
+                    topic="Devices"
+                    type="Official statistics"
+                    org="Department for Education (DfE)"
+                    published="8 March 2022"
+                  />
+
+                  <PrototypeSearchResult
+                    title="NEET age 16 to 24"
+                    link="https://explore-education-statistics.service.gov.uk/find-statistics/neet-statistics-annual-brief"
+                    summary="Estimates from the Labour Force Survey of young people not in education, employment or training (NEET) in England."
+                    theme="Destination of pupils and students"
+                    topic="NEET and participation"
+                    type="National statistics"
+                    org="Department for Education (DfE)"
+                    published="24 February 2022"
+                  />
+
+                  <PrototypeSearchResult
+                    title="Apprenticeships and traineeships"
+                    link="https://explore-education-statistics.service.gov.uk/find-statistics/apprenticeships-and-traineeships"
+                    summary="onthly apprenticeship starts to November 2021, and official statistics covering the apprenticeship service and find an apprenticeship."
+                    theme="Further education"
+                    topic="Further education and skills"
+                    type="Official statistics"
+                    org="Department for Education (DfE)"
+                    published="24 February 2022"
+                  />
+
+                  <PrototypeSearchResult
+                    title="Children's social work workforce"
+                    link="https://explore-education-statistics.service.gov.uk/find-statistics/children-s-social-work-workforce"
+                    summary="Information about children's social workers employed in local authorities and agency social workers"
+                    theme="Children's social care"
+                    topic="Children's social work workforce"
+                    type="Official statistics"
+                    org="Department for Education (DfE)"
+                    published="24 February 2022"
+                  />
+
+                  <PrototypeSearchResult
+                    title="Attendance in education and early years settings during the coronavirus (COVID-19) pandemic"
+                    link="https://explore-education-statistics.service.gov.uk/find-statistics/attendance-in-education-and-early-years-settings-during-the-coronavirus-covid-19-outbreak"
+                    summary="A summary of attendance in education settings up to 10 February 2022."
+                    theme="COVID 19"
+                    topic="Attendance"
+                    type="Official statistics"
+                    org="Department for Education (DfE)"
+                    published="24 February 2022"
+                  />
+
+                  <PrototypeSearchResult
+                    title="Further education and skills"
+                    link="https://explore-education-statistics.service.gov.uk/find-statistics/further-education-and-skills"
+                    summary="Statistics covering further education and skills summary data, including apprenticeships and detailed non-apprenticeship adult further education, in England (August to October 2021, reported to date)."
+                    theme="Further education"
+                    topic="Further education and skills"
+                    type="National statistics"
+                    org="Department for Education (DfE)"
+                    published="24 January 2022"
+                  />
+
+                  <PrototypeSearchResult
+                    title="UK revenue from education related exports and transnational education activity"
+                    link="https://explore-education-statistics.service.gov.uk/find-statistics/uk-revenue-from-education-related-exports-and-transnational-education-activity"
+                    summary="Statistics on the estimated revenue generated by education related exports and transnational education (TNE) activity in 2019."
+                    theme="Higher education"
+                    topic="Education exports"
+                    type="Experimental statistics"
+                    org="Department for Education (DfE)"
+                    published="16 December 2021"
+                  />
+
+                  <PrototypeSearchResult
+                    title="Parental responsibility measures"
+                    link="https://explore-education-statistics.service.gov.uk/find-statistics/parental-responsibility-measures"
+                    summary="National and local authority data on penalty notices, cases entering fast-track case management, parenting orders and parenting contracts."
+                    theme="Pupils and schools"
+                    topic="Parental responsibility measures"
+                    type="Official statistics"
+                    org="Department for Education (DfE)"
+                    published="16 December 2021"
+                  />
+
+                  <PrototypeSearchResult
+                    title="LA and school expenditure"
+                    link="https://explore-education-statistics.service.gov.uk/find-statistics/la-and-school-expenditure"
+                    summary="How schools and local authorities spent their funding on education, children's services and social care in the financial year 2020 to 2021."
+                    theme="Finance and funding"
+                    topic="Local authority and school finance"
+                    type="Official statistics"
+                    org="Department for Education (DfE)"
+                    published="16 December 2021"
+                  />
+
+                  <PrototypeSearchResult
+                    title="Further education: outcome-based success measures"
+                    link="https://explore-education-statistics.service.gov.uk/find-statistics/further-education-outcome-based-success-measures"
+                    summary="Outcomes of learners completing further education training."
+                    theme="Further education"
+                    topic="Further education outcomes"
+                    type="Official statistics"
+                    org="Department for Education (DfE)"
+                    published="9 December 2021"
+                  />
+                </>
+              )}
+
+              {showPupilsSchools && (
+                <>
+                  {!showExclusions && !showSchoolCapacity && (
+                    <>
+                      <PrototypeSearchResult
+                        title="Parental responsibility measures"
+                        link="https://explore-education-statistics.service.gov.uk/find-statistics/parental-responsibility-measures"
+                        summary="This release includes information on parental responsibility measures for attendance used by schools and local authorities to improve poor attendance in schools. It includes data on:
+                        penalty notices, 
+                        attendance case management, 
+                        parenting orders and parenting contracts, 
+                        education supervision orders"
+                        theme="Pupils and schools"
+                        topic="Parental responsibility measures"
+                        type="Official statistics"
+                        org="Department for Education (DfE)"
+                        published="16 December 2021"
+                      />
+
+                      <PrototypeSearchResult
+                        title="Local authority school places scorecards"
+                        link="https://explore-education-statistics.service.gov.uk/find-statistics/local-authority-school-places-scorecards"
+                        summary="The scorecard release provides a snapshot of the progress local authorities in England are making in delivering good quality primary and secondary school places in 2019."
+                        theme="Pupils and schools"
+                        topic="School capacity"
+                        type="National statistics"
+                        org="Department for Education (DfE)"
+                        published="29 September 2020"
+                      />
+
+                      <PrototypeSearchResult
+                        title="School capacity"
+                        link="https://explore-education-statistics.service.gov.uk/find-statistics/school-capacity"
+                        summary="This release reports on school capacity information in state-funded primary and secondary schools in England in the academic year 2018/19, as of 1 May 2019. Data are as reported by local authorities in the annual School Capacity (SCAP) Survey."
+                        theme="Pupils and schools"
+                        topic="School capacity"
+                        type="Official statistics"
+                        org="Department for Education (DfE)"
+                        published="20 August 2020"
+                      />
+
+                      <PrototypeSearchResult
+                        title="Admission appeals in England"
+                        link="https://explore-education-statistics.service.gov.uk/find-statistics/admission-appeals-in-england"
+                        summary="These statistics provide information about appeals made following the refusal of a school place application."
+                        theme="Pupils and schools"
+                        topic="Admission appeals"
+                        type="National statistics"
+                        org="Department for Education (DfE)"
+                        published="19 August 2021"
+                      />
+
+                      <PrototypeSearchResult
+                        title="Permanent exclusions and suspensions in England"
+                        link="https://explore-education-statistics.service.gov.uk/find-statistics/permanent-and-fixed-period-exclusions-in-england"
+                        summary="This publication presents statistics on permanent exclusions and suspensions within the 2019/20 academic year across state-funded schools."
+                        theme="Pupils and schools"
+                        topic="Exclusions"
+                        type="National statistics"
+                        org="Department for Education (DfE)"
+                        published="29 July 2021"
+                      />
+
+                      <PrototypeSearchResult
+                        title="Academy transfers and funding"
+                        link="https://explore-education-statistics.service.gov.uk/find-statistics/academy-transfers-and-funding"
+                        summary="This statistics publication analyses the number of academies that have moved trusts from the financial year 2013-14 to 2020-21 and the total grant funding provided. It also compares the reason that academies move trust."
+                        theme="Pupils and schools"
+                        topic="Academy transfers"
+                        type="Official statistics"
+                        org="Department for Education (DfE)"
+                        published="22 July 2021"
+                      />
+
+                      <PrototypeSearchResult
+                        title="National pupil projections"
+                        link="https://explore-education-statistics.service.gov.uk/find-statistics/national-pupil-projections"
+                        summary="This annual release provides national projections for the number of pupils in schools in England by type of school and age."
+                        theme="Pupils and schools"
+                        topic="Pupil projections"
+                        type="Official statistics"
+                        org="Department for Education (DfE)"
+                        published="22 July 2021"
+                      />
+
+                      <PrototypeSearchResult
+                        title="Special educational needs in England"
+                        link="https://explore-education-statistics.service.gov.uk/find-statistics/special-educational-needs-in-england"
+                        summary="This publication combines information from the school census, school level annual school census, general hospital school census and alternative provision census on pupils with special educational needs (SEN). "
+                        theme="Pupils and schools"
+                        topic="Special educational needs (SEN)"
+                        type="Official statistics"
+                        org="Department for Education (DfE)"
+                        published="24 June 2021"
+                      />
+
+                      <PrototypeSearchResult
+                        title="School places sufficiency survey"
+                        link="https://explore-education-statistics.service.gov.uk/find-statistics/school-places-sufficiency-survey"
+                        summary="This release provides transparency data from the voluntary one-off survey on school places, sent to local authorities in England, in September 2020"
+                        theme="Pupils and schools"
+                        topic="School capacity"
+                        type="Ad hoc statistics"
+                        org="Department for Education (DfE)"
+                        published="26 March 2020"
+                      />
+                    </>
+                  )}
+
+                  {showExclusions && (
+                    <PrototypeSearchResult
+                      title="Permanent exclusions and suspensions in England"
+                      link="https://explore-education-statistics.service.gov.uk/find-statistics/permanent-and-fixed-period-exclusions-in-england"
+                      summary="This publication presents statistics on permanent exclusions and suspensions within the 2019/20 academic year across state-funded schools."
+                      theme="Pupils and schools"
+                      topic="Exclusions"
+                      type="National statistics"
+                      org="Department for Education (DfE)"
+                      published="29 July 2021"
+                    />
+                  )}
+
+                  {showSchoolCapacity && (
+                    <>
+                      {releaseType !== 'adhoc' && (
+                        <>
+                          <PrototypeSearchResult
+                            title="Local authority school places scorecards"
+                            link="https://explore-education-statistics.service.gov.uk/find-statistics/local-authority-school-places-scorecards"
+                            summary="The scorecard release provides a snapshot of the progress local authorities in England are making in delivering good quality primary and secondary school places in 2019."
+                            theme="Pupils and schools"
+                            topic="School capacity"
+                            type="National statistics"
+                            org="Department for Education (DfE)"
+                            published="29 September 2020"
+                          />
+                          <PrototypeSearchResult
+                            title="School capacity"
+                            link="https://explore-education-statistics.service.gov.uk/find-statistics/school-capacity"
+                            summary="This release reports on school capacity information in state-funded primary and secondary schools in England in the academic year 2018/19, as of 1 May 2019. Data are as reported by local authorities in the annual School Capacity (SCAP) Survey."
+                            theme="Pupils and schools"
+                            topic="School capacity"
+                            type="Official statistics"
+                            org="Department for Education (DfE)"
+                            published="20 August 2020"
+                          />
+                        </>
+                      )}
+
+                      <PrototypeSearchResult
+                        title="School places sufficiency survey"
+                        link="https://explore-education-statistics.service.gov.uk/find-statistics/school-places-sufficiency-survey"
+                        summary="This release provides transparency data from the voluntary one-off survey on school places, sent to local authorities in England, in September 2020"
+                        theme="Pupils and schools"
+                        topic="School capacity"
+                        type="Ad hoc statistics"
+                        org="Department for Education (DfE)"
+                        published="26 March 2020"
+                      />
+                    </>
+                  )}
+                </>
+              )}
             </div>
 
-            {((!showExclusions && !showSchoolCapacity && !showSearchResult) ||
+            {((!showExclusions &&
+              !showSchoolCapacity &&
+              !showSearchResult &&
+              !showPupilsSchools) ||
               showAll) && (
               <>
                 <p>Showing page 1 of 6</p>
