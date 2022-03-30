@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import classNames from 'classnames';
 import Accordion from '@common/components/Accordion';
 import AccordionSection from '@common/components/AccordionSection';
+import RelatedInformation from '@common/components/RelatedInformation';
+import Link from '@admin/components/Link';
 import styles2 from '@common/components/PageSearchForm.module.scss';
 import { FormCheckboxGroup, FormRadioGroup } from '@common/components/form';
 import PrototypeSearchResult from '@admin/prototypes/components/PrototypeSearchResult';
@@ -49,40 +51,94 @@ const PrototypeFindStats = () => {
 
   return (
     <div className={styles.prototypePublicPage}>
-      <PrototypePage title="Find statistics and data" wide>
-        <form className="govuk-!-width-three-quarters">
-          <div
-            className="govuk-form-group govuk-!-margin-bottom-9"
-            style={{ position: 'relative' }}
-          >
-            <h2 className="govuk-label-wrapper">
-              <label className="govuk-label govuk-label--m" htmlFor="search">
-                Search
-              </label>
-            </h2>
-
-            <input
-              type="text"
-              id="search"
-              className="govuk-input"
-              onChange={e => setSearchInput(e.target.value)}
-            />
-            <button
-              type="submit"
-              className={styles2.searchButton}
-              value="Search"
-              onClick={e => {
-                e.preventDefault();
-                console.log(searchInput);
-                setSearchTerm(searchInput);
-                setTheme('');
-                setTopic('');
-              }}
-            >
-              <span className="govuk-visually-hidden">Search</span>
-            </button>
+      <PrototypePage wide>
+        <div className="govuk-grid-row">
+          <div className="govuk-grid-column-two-thirds">
+            <h1 className="govuk-heading-xl">Find statistics and data</h1>
+            <p className="govuk-body-l">
+              Search and browse statistical summaries and download associated
+              data to help you understand and analyse our range of statistics.
+            </p>
           </div>
-        </form>
+          <div className="govuk-grid-column-one-third">
+            <RelatedInformation heading="Related information">
+              <ul className="govuk-list">
+                <li>
+                  <Link
+                    to="https://www.gov.uk/government/organisations/ofsted/about/statistics"
+                    target="_blank"
+                  >
+                    Ofsted statistics
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="https://www.education-ni.gov.uk/topics/statistics-and-research/statistics"
+                    target="_blank"
+                  >
+                    Educational statistics for Northern Ireland
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="https://www.gov.scot/collections/school-education-statistics/"
+                    target="_blank"
+                  >
+                    Educational statistics for Scotland
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="https://statswales.gov.wales/Catalogue/Education-and-Skills"
+                    target="_blank"
+                  >
+                    Educational statistics for Wales
+                  </Link>
+                </li>
+              </ul>
+            </RelatedInformation>
+          </div>
+        </div>
+        <div className="govuk-grid-row">
+          <div className="govuk-grid-column-two-thirds">
+            <form>
+              <div
+                className="govuk-form-group govuk-!-margin-bottom-9"
+                style={{ position: 'relative' }}
+              >
+                <h2 className="govuk-label-wrapper">
+                  <label
+                    className="govuk-label govuk-label--m"
+                    htmlFor="search"
+                  >
+                    Search
+                  </label>
+                </h2>
+
+                <input
+                  type="text"
+                  id="search"
+                  className="govuk-input"
+                  onChange={e => setSearchInput(e.target.value)}
+                />
+                <button
+                  type="submit"
+                  className={styles2.searchButton}
+                  value="Search"
+                  onClick={e => {
+                    e.preventDefault();
+                    console.log(searchInput);
+                    setSearchTerm(searchInput);
+                    setTheme('');
+                    setTopic('');
+                  }}
+                >
+                  <span className="govuk-visually-hidden">Search</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
 
         <div className="govuk-grid-row">
           <div className="govuk-grid-column-one-third">
@@ -107,6 +163,42 @@ const PrototypeFindStats = () => {
                   {
                     label: "Children's social care",
                     value: 'childrens-social',
+                    conditional: (
+                      <FormRadioGroup
+                        id="topics"
+                        legend="Choose topic"
+                        legendSize="s"
+                        small
+                        name="topic"
+                        hint="Select one or more topics to filter results for this theme"
+                        value={topic}
+                        onChange={e => {
+                          setTopic(e.target.value);
+                        }}
+                        options={[
+                          {
+                            label: 'Children in need and child protection',
+                            value: 'children-in-need',
+                          },
+                          {
+                            label: 'Children looked after',
+                            value: 'children-looked-after',
+                          },
+                          {
+                            label: "Children's social work workforce",
+                            value: 'childrens-social-workforce',
+                          },
+                          {
+                            label: 'Outcomes for children in social care',
+                            value: 'outcomes-for-children',
+                          },
+                          {
+                            label: "Secure children's homes",
+                            value: 'xecure-homes',
+                          },
+                        ]}
+                      />
+                    ),
                   },
                   {
                     label: 'Covid 19',
@@ -318,6 +410,38 @@ const PrototypeFindStats = () => {
                       <div className="govuk-checkboxes__item">
                         <input
                           className="govuk-checkboxes__input"
+                          id="release-type3"
+                          name="release-type"
+                          type="checkbox"
+                          value="adhoc"
+                          onChange={e => setReleaseType(e.target.value)}
+                        />
+                        <label
+                          className="govuk-label govuk-checkboxes__label"
+                          htmlFor="release-type3"
+                        >
+                          Ad hoc statistics
+                        </label>
+                      </div>
+                      <div className="govuk-checkboxes__item">
+                        <input
+                          className="govuk-checkboxes__input"
+                          id="release-type4"
+                          name="release-type"
+                          type="checkbox"
+                          value="adhoc"
+                          onChange={e => setReleaseType(e.target.value)}
+                        />
+                        <label
+                          className="govuk-label govuk-checkboxes__label"
+                          htmlFor="release-type4"
+                        >
+                          Management information
+                        </label>
+                      </div>
+                      <div className="govuk-checkboxes__item">
+                        <input
+                          className="govuk-checkboxes__input"
                           id="release-type1"
                           name="release-type"
                           type="checkbox"
@@ -347,26 +471,11 @@ const PrototypeFindStats = () => {
                           Official statistics
                         </label>
                       </div>
-                      <div className="govuk-checkboxes__item">
-                        <input
-                          className="govuk-checkboxes__input"
-                          id="release-type3"
-                          name="release-type"
-                          type="checkbox"
-                          value="adhoc"
-                          onChange={e => setReleaseType(e.target.value)}
-                        />
-                        <label
-                          className="govuk-label govuk-checkboxes__label"
-                          htmlFor="release-type3"
-                        >
-                          Ad hoc statistics
-                        </label>
-                      </div>
                     </div>
                   </fieldset>
                 </div>
               </AccordionSection>
+              {/*
               <AccordionSection heading="Geographical coverage" goToTop={false}>
                 <div className="govuk-form-group">
                   <fieldset className="govuk-fieldset">
@@ -442,6 +551,7 @@ const PrototypeFindStats = () => {
                   </fieldset>
                 </div>
               </AccordionSection>
+              
               <AccordionSection heading="Organisation" goToTop={false}>
                 <div className="govuk-form-group">
                   <fieldset className="govuk-fieldset">
@@ -518,6 +628,7 @@ const PrototypeFindStats = () => {
                   </fieldset>
                 </div>
               </AccordionSection>
+              */}
             </Accordion>
           </div>
           <div className="govuk-grid-column-two-thirds">
@@ -688,6 +799,7 @@ const PrototypeFindStats = () => {
                 <>
                   <PrototypeSearchResult
                     title="Schools, pupils and their characteristics"
+                    link="https://explore-education-statistics.service.gov.uk/find-statistics/school-pupils-and-their-characteristics"
                     summary="Statistics on pupils in schools in England as collected in the January 2021 school census. Includes, age, gender, free school meals (FSM eligibility), English as an additional language, ethnicity, school characteristics and class sizes"
                     theme="Pupils and schools"
                     topic="School and pupil numbers"
@@ -697,6 +809,7 @@ const PrototypeFindStats = () => {
                   />
                   <PrototypeSearchResult
                     title="Free school meals: Autumn term"
+                    link="https://explore-education-statistics.service.gov.uk/find-statistics/free-school-meals-autumn-term"
                     summary="This release presents data on free school meals (FSM) as collected in the Autumn school census. The number of pupils eligible for free school meals on census day (1 October 2020) and the number of pupils who have become eligible since 23 March 2020, that is since the first COVID-19 lockdown was announced"
                     theme="Pupils and schools"
                     topic="School and pupil numbers"
