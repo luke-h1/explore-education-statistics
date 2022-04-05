@@ -37,7 +37,7 @@ const PrototypeHomepage = () => {
               statistics and data.
             </p>
             <a
-              href="#"
+              href="/prototypes/find-statistics"
               role="button"
               draggable="false"
               className="govuk-button govuk-button--start"

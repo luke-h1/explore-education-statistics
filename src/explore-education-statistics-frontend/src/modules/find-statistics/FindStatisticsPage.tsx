@@ -16,6 +16,7 @@ interface Props {
 }
 
 const FindStatisticsPage: NextPage<Props> = ({ themes = [] }) => {
+  console.log(themes);
   return (
     <Page title="Find statistics and data">
       <div className="govuk-grid-row">
