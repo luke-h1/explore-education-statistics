@@ -51,7 +51,7 @@ const PrototypeFindStats = () => {
 
   return (
     <div className={styles.prototypePublicPage}>
-      <PrototypePage wide>
+      <PrototypePage wide={false}>
         <div className="govuk-grid-row">
           <div className="govuk-grid-column-two-thirds">
             <h1 className="govuk-heading-xl">Find statistics and data</h1>
@@ -142,239 +142,237 @@ const PrototypeFindStats = () => {
 
         <div className="govuk-grid-row">
           <div className="govuk-grid-column-one-third">
-            <div style={{ maxHeight: '1200px', overflow: 'auto' }}>
-              <FormRadioGroup
-                className="govuk-!-padding-left-2"
-                id="theme"
-                legend="Filter by theme"
-                legendSize="m"
-                name="theme"
-                value={theme}
-                small
-                onChange={e => {
-                  setTheme(e.target.value);
-                }}
-                options={[
-                  {
-                    label: 'All themes',
-                    value: 'all-themes',
-                    defaultChecked: true,
-                  },
-                  {
-                    label: "Children's social care",
-                    value: 'childrens-social',
-                    conditional: (
-                      <FormRadioGroup
-                        id="topics"
-                        legend="Choose topic"
-                        legendSize="s"
-                        small
-                        name="topic"
-                        hint="Select one or more topics to filter results for this theme"
-                        value={topic}
-                        onChange={e => {
-                          setTopic(e.target.value);
-                        }}
-                        options={[
-                          {
-                            label: 'Children in need and child protection',
-                            value: 'children-in-need',
-                          },
-                          {
-                            label: 'Children looked after',
-                            value: 'children-looked-after',
-                          },
-                          {
-                            label: "Children's social work workforce",
-                            value: 'childrens-social-workforce',
-                          },
-                          {
-                            label: 'Outcomes for children in social care',
-                            value: 'outcomes-for-children',
-                          },
-                          {
-                            label: "Secure children's homes",
-                            value: 'xecure-homes',
-                          },
-                        ]}
-                      />
-                    ),
-                  },
-                  {
-                    label: 'Covid 19',
-                    value: 'covid-19',
-                  },
-                  {
-                    label: 'Destinations of pupils and students',
-                    value: 'destination-pupils',
-                  },
-                  {
-                    label: 'Early years',
-                    value: 'early-years',
-                  },
-                  {
-                    label: 'Financing and funding',
-                    value: 'finance-funding',
-                  },
-                  {
-                    label: 'Further education',
-                    value: 'further-educaton',
-                    conditional: (
-                      <FormRadioGroup
-                        id="topics"
-                        legend="Choose topic"
-                        legendSize="s"
-                        small
-                        name="topic"
-                        hint="Select one or more topics to filter results for this theme"
-                        value={topic}
-                        onChange={e => {
-                          setTopic(e.target.value);
-                        }}
-                        options={[
-                          { label: 'FE choices', value: 'fe-choices' },
-                          {
-                            label: 'Further education and skills',
-                            value: 'fe-skills',
-                          },
-                          {
-                            label: 'Further education outcomes',
-                            value: 'fe-outcomes',
-                          },
-                        ]}
-                      />
-                    ),
-                  },
-                  {
-                    label: 'Higher education',
-                    value: 'higher-educaton',
-                    conditional: (
-                      <FormRadioGroup
-                        id="topics"
-                        legend="Choose topic"
-                        legendSize="s"
-                        small
-                        name="topic"
-                        hint="Select one or more topics to filter results for this theme"
-                        value={topic}
-                        onChange={e => {
-                          setTopic(e.target.value);
-                        }}
-                        options={[
-                          {
-                            label: 'Education exports',
-                            value: 'education-exports',
-                          },
-                          {
-                            label:
-                              'Higher education graduate employment and earnings',
-                            value: 'grad-earnings',
-                          },
-                          {
-                            label: 'Participation measures in higher education',
-                            value: 'participation-he',
-                          },
-                          {
-                            label: 'Skills Bill: Higher level learners',
-                            value: 'skills-bill',
-                          },
-                          {
-                            label: 'Widening participation in higher education',
-                            value: 'widening-participation',
-                          },
-                        ]}
-                      />
-                    ),
-                  },
-                  {
-                    label: 'Pupils and schools',
-                    value: 'pupils-and-schools',
-                    conditional: (
-                      <FormRadioGroup
-                        id="topics"
-                        legend="Choose topic"
-                        legendSize="s"
-                        small
-                        name="topic"
-                        hint="Select one or more topics to filter results for this theme"
-                        value={topic}
-                        order={[]}
-                        onChange={e => {
-                          setTopic(e.target.value);
-                        }}
-                        options={[
-                          {
-                            label: 'Show all topics',
-                            value: 'show-all-topics',
-                          },
-                          {
-                            label: 'Academy transfers',
-                            value: 'academy-transfers',
-                          },
-                          {
-                            label: 'Admission appeals',
-                            value: 'admission-appeals',
-                          },
-                          { label: 'Exclusions', value: 'exclusions' },
-                          {
-                            label: 'Parental repsonsibility measures',
-                            value: 'resposibility-measures',
-                          },
-                          {
-                            label: 'Pupil absence',
-                            value: 'pupil-absence',
-                          },
-                          {
-                            label: 'School and pupil numbers',
-                            value: 'school-pupil-numbers',
-                          },
-                          {
-                            label: 'School applications',
-                            value: 'school-applications',
-                          },
-                          {
-                            label: 'School capacity',
-                            value: 'school-capacity',
-                          },
-                          {
-                            label: 'Special educational needs (SEN)',
-                            value: 'sen',
-                          },
-                        ]}
-                      />
-                    ),
-                  },
-                  {
-                    label: 'Schools and college outcomes and performance',
-                    value: 'school-college-performance',
-                  },
-                  {
-                    label: 'Teachers and school workforce',
-                    value: 'teachers-workforce',
-                  },
-                  {
-                    label: 'UK training and education statistics',
-                    value: 'uk-training-stats',
-                    conditional: (
-                      <FormCheckboxGroup
-                        id="topics2"
-                        legend="Choose topic"
-                        legendSize="s"
-                        small
-                        name="topic"
-                        value={[topic]}
-                        onChange={e => setTopic(e.target.value)}
-                        options={[
-                          { label: 'Test 1', value: 'test-1' },
-                          { label: 'Test 3', value: 'test-2' },
-                          { label: 'Test 3', value: 'test-3' },
-                        ]}
-                      />
-                    ),
-                  },
-                ]}
-              />
-            </div>
+            <FormRadioGroup
+              className="govuk-!-padding-left-2"
+              id="theme"
+              legend="Filter by theme"
+              legendSize="m"
+              name="theme"
+              value={theme}
+              small
+              onChange={e => {
+                setTheme(e.target.value);
+              }}
+              options={[
+                {
+                  label: 'All themes',
+                  value: 'all-themes',
+                  defaultChecked: true,
+                },
+                {
+                  label: "Children's social care",
+                  value: 'childrens-social',
+                  conditional: (
+                    <FormRadioGroup
+                      id="topics"
+                      legend="Choose topic"
+                      legendSize="s"
+                      small
+                      name="topic"
+                      hint="Select a topic to filter results for this theme"
+                      value={topic}
+                      onChange={e => {
+                        setTopic(e.target.value);
+                      }}
+                      options={[
+                        {
+                          label: 'Children in need and child protection',
+                          value: 'children-in-need',
+                        },
+                        {
+                          label: 'Children looked after',
+                          value: 'children-looked-after',
+                        },
+                        {
+                          label: "Children's social work workforce",
+                          value: 'childrens-social-workforce',
+                        },
+                        {
+                          label: 'Outcomes for children in social care',
+                          value: 'outcomes-for-children',
+                        },
+                        {
+                          label: "Secure children's homes",
+                          value: 'xecure-homes',
+                        },
+                      ]}
+                    />
+                  ),
+                },
+                {
+                  label: 'Covid 19',
+                  value: 'covid-19',
+                },
+                {
+                  label: 'Destinations of pupils and students',
+                  value: 'destination-pupils',
+                },
+                {
+                  label: 'Early years',
+                  value: 'early-years',
+                },
+                {
+                  label: 'Financing and funding',
+                  value: 'finance-funding',
+                },
+                {
+                  label: 'Further education',
+                  value: 'further-educaton',
+                  conditional: (
+                    <FormRadioGroup
+                      id="topics"
+                      legend="Choose topic"
+                      legendSize="s"
+                      small
+                      name="topic"
+                      hint="Select a topic to filter results for this theme"
+                      value={topic}
+                      onChange={e => {
+                        setTopic(e.target.value);
+                      }}
+                      options={[
+                        { label: 'FE choices', value: 'fe-choices' },
+                        {
+                          label: 'Further education and skills',
+                          value: 'fe-skills',
+                        },
+                        {
+                          label: 'Further education outcomes',
+                          value: 'fe-outcomes',
+                        },
+                      ]}
+                    />
+                  ),
+                },
+                {
+                  label: 'Higher education',
+                  value: 'higher-educaton',
+                  conditional: (
+                    <FormRadioGroup
+                      id="topics"
+                      legend="Choose topic"
+                      legendSize="s"
+                      small
+                      name="topic"
+                      hint="Select a topic to filter results for this theme"
+                      value={topic}
+                      onChange={e => {
+                        setTopic(e.target.value);
+                      }}
+                      options={[
+                        {
+                          label: 'Education exports',
+                          value: 'education-exports',
+                        },
+                        {
+                          label:
+                            'Higher education graduate employment and earnings',
+                          value: 'grad-earnings',
+                        },
+                        {
+                          label: 'Participation measures in higher education',
+                          value: 'participation-he',
+                        },
+                        {
+                          label: 'Skills Bill: Higher level learners',
+                          value: 'skills-bill',
+                        },
+                        {
+                          label: 'Widening participation in higher education',
+                          value: 'widening-participation',
+                        },
+                      ]}
+                    />
+                  ),
+                },
+                {
+                  label: 'Pupils and schools',
+                  value: 'pupils-and-schools',
+                  conditional: (
+                    <FormRadioGroup
+                      id="topics"
+                      legend="Choose topic"
+                      legendSize="s"
+                      small
+                      name="topic"
+                      hint="Select a topic to filter results for this theme"
+                      value={topic}
+                      order={[]}
+                      onChange={e => {
+                        setTopic(e.target.value);
+                      }}
+                      options={[
+                        {
+                          label: 'Show all topics',
+                          value: 'show-all-topics',
+                        },
+                        {
+                          label: 'Academy transfers',
+                          value: 'academy-transfers',
+                        },
+                        {
+                          label: 'Admission appeals',
+                          value: 'admission-appeals',
+                        },
+                        { label: 'Exclusions', value: 'exclusions' },
+                        {
+                          label: 'Parental responsibility measures',
+                          value: 'resposibility-measures',
+                        },
+                        {
+                          label: 'Pupil absence',
+                          value: 'pupil-absence',
+                        },
+                        {
+                          label: 'School and pupil numbers',
+                          value: 'school-pupil-numbers',
+                        },
+                        {
+                          label: 'School applications',
+                          value: 'school-applications',
+                        },
+                        {
+                          label: 'School capacity',
+                          value: 'school-capacity',
+                        },
+                        {
+                          label: 'Special educational needs (SEN)',
+                          value: 'sen',
+                        },
+                      ]}
+                    />
+                  ),
+                },
+                {
+                  label: 'Schools and college outcomes and performance',
+                  value: 'school-college-performance',
+                },
+                {
+                  label: 'Teachers and school workforce',
+                  value: 'teachers-workforce',
+                },
+                {
+                  label: 'UK training and education statistics',
+                  value: 'uk-training-stats',
+                  conditional: (
+                    <FormCheckboxGroup
+                      id="topics2"
+                      legend="Choose topic"
+                      legendSize="s"
+                      small
+                      name="topic"
+                      value={[topic]}
+                      onChange={e => setTopic(e.target.value)}
+                      options={[
+                        { label: 'Test 1', value: 'test-1' },
+                        { label: 'Test 3', value: 'test-2' },
+                        { label: 'Test 3', value: 'test-3' },
+                      ]}
+                    />
+                  ),
+                },
+              ]}
+            />
 
             <h2 className="govuk-heading-m govuk-!-margin-top-6">
               Other filters
@@ -632,84 +630,65 @@ const PrototypeFindStats = () => {
             </Accordion>
           </div>
           <div className="govuk-grid-column-two-thirds">
-            <div className="govuk-grid-row">
-              <div
-                className="govuk-grid-column-one-half"
-                role="region"
-                aria-live="polite"
-                aria-atomic="true"
-              >
-                <h2 className="govuk-!-margin-bottom-0">
-                  {searchTally} result(s)
-                </h2>
-                <p className="govuk-visually-hidden">
-                  Sorted by newest publications
-                </p>
-                <a href="#searchResults" className="govuk-skip-link">
-                  Skip to search results
-                </a>
-              </div>
-              <div className="govuk-grid-column-one-half">
-                <div className="govuk-form-group">
-                  <fieldset className="govuk-fieldset">
-                    <legend className="govuk-fieldset__legend govuk-fieldset__legend--s govuk-!-margin-bottom-0">
-                      Sort results
-                    </legend>
-                  </fieldset>
-                  <div className="govuk-radios govuk-radios--small  govuk-radios--inline">
-                    <div className="govuk-radios__item">
-                      <input
-                        type="radio"
-                        className="govuk-radios__input"
-                        name="sort"
-                        id="sort-1"
-                        checked
-                      />
-                      <label
-                        className={classNames(
-                          'govuk-label',
-                          'govuk-radios__label',
-                        )}
-                        htmlFor="sort-1"
-                      >
-                        Newest
-                      </label>
-                    </div>
-                    <div className="govuk-radios__item">
-                      <input
-                        type="radio"
-                        className="govuk-radios__input"
-                        name="sort"
-                        id="sort-2"
-                      />
-                      <label
-                        className={classNames(
-                          'govuk-label',
-                          'govuk-radios__label',
-                        )}
-                        htmlFor="sort-2"
-                      >
-                        Oldest
-                      </label>
-                    </div>
-                    <div className="govuk-radios__item">
-                      <input
-                        type="radio"
-                        className="govuk-radios__input"
-                        name="sort"
-                        id="sort-3"
-                      />
-                      <label
-                        className={classNames(
-                          'govuk-label',
-                          'govuk-radios__label',
-                        )}
-                        htmlFor="sort-3"
-                      >
-                        A to Z
-                      </label>
-                    </div>
-                  </div>
+            <div role="region" aria-live="polite" aria-atomic="true">
+              <h2>{searchTally} result(s)</h2>
+              <p className="govuk-visually-hidden">
+                Sorted by newest publications
+              </p>
+              <a href="#searchResults" className="govuk-skip-link">
+                Skip to search results
+              </a>
+            </div>
+
+            <div className="govuk-form-group govuk-!-margin-bottom-0">
+              <fieldset className="govuk-fieldset">
+                <legend className="govuk-fieldset__legend govuk-fieldset__legend--s govuk-!-margin-bottom-0">
+                  Sort results
+                </legend>
+              </fieldset>
+              <div className="govuk-radios govuk-radios--small  govuk-radios--inline">
+                <div className="govuk-radios__item">
+                  <input
+                    type="radio"
+                    className="govuk-radios__input"
+                    name="sort"
+                    id="sort-1"
+                    checked
+                  />
+                  <label
+                    className={classNames('govuk-label', 'govuk-radios__label')}
+                    htmlFor="sort-1"
+                  >
+                    Newest
+                  </label>
+                </div>
+                <div className="govuk-radios__item">
+                  <input
+                    type="radio"
+                    className="govuk-radios__input"
+                    name="sort"
+                    id="sort-2"
+                  />
+                  <label
+                    className={classNames('govuk-label', 'govuk-radios__label')}
+                    htmlFor="sort-2"
+                  >
+                    Oldest
+                  </label>
+                </div>
+                <div className="govuk-radios__item">
+                  <input
+                    type="radio"
+                    className="govuk-radios__input"
+                    name="sort"
+                    id="sort-3"
+                  />
+                  <label
+                    className={classNames('govuk-label', 'govuk-radios__label')}
+                    htmlFor="sort-3"
+                  >
+                    A to Z
+                  </label>
                 </div>
               </div>
             </div>
@@ -720,8 +699,10 @@ const PrototypeFindStats = () => {
               )}
 
               {theme === 'pupils-and-schools' && (
-                <div>
-                  <h3 className="govuk-heading-s">Showing filtered results</h3>
+                <div className="dfe-flex dfe-flex-wrap dfe-align-items--center">
+                  <h3 className="govuk-heading-s" style={{ width: '100%' }}>
+                    Showing filtered results
+                  </h3>
                   <span className={styles.prototypeFilterTag}>
                     Pupil and schools{' '}
                     <a
@@ -737,8 +718,9 @@ const PrototypeFindStats = () => {
                   </span>
                   {showExclusions && (
                     <>
-                      {' '}
-                      and{' '}
+                      <span className="govuk-!-margin-2 govuk-!-margin-bottom-3">
+                        and
+                      </span>
                       <span className={styles.prototypeFilterTag}>
                         exclusions{' '}
                         <a
@@ -755,8 +737,9 @@ const PrototypeFindStats = () => {
                   )}
                   {showSchoolCapacity && (
                     <>
-                      {' '}
-                      and{' '}
+                      <span className="govuk-!-margin-2 govuk-!-margin-bottom-3">
+                        and
+                      </span>
                       <span className={styles.prototypeFilterTag}>
                         school capacity{' '}
                         <a
@@ -771,8 +754,9 @@ const PrototypeFindStats = () => {
                       </span>
                       {releaseType === 'adhoc' && (
                         <>
-                          {' '}
-                          showing{' '}
+                          <span className="govuk-!-margin-2 govuk-!-margin-bottom-3">
+                            showing
+                          </span>
                           <span className={styles.prototypeFilterTag}>
                             ad hoc publications{' '}
                             <a
