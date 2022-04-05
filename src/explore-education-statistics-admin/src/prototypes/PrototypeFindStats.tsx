@@ -164,11 +164,11 @@ const PrototypeFindStats = () => {
                   value: 'childrens-social',
                   conditional: (
                     <FormRadioGroup
-                      id="topics"
+                      id="childrens-topics"
                       legend="Choose topic"
                       legendSize="s"
                       small
-                      name="topic"
+                      name="childrens-topic"
                       hint="Select a topic to filter results for this theme"
                       value={topic}
                       onChange={e => {
@@ -220,11 +220,11 @@ const PrototypeFindStats = () => {
                   value: 'further-educaton',
                   conditional: (
                     <FormRadioGroup
-                      id="topics"
+                      id="fe-topics"
                       legend="Choose topic"
                       legendSize="s"
                       small
-                      name="topic"
+                      name="fe-topic"
                       hint="Select a topic to filter results for this theme"
                       value={topic}
                       onChange={e => {
@@ -249,11 +249,11 @@ const PrototypeFindStats = () => {
                   value: 'higher-educaton',
                   conditional: (
                     <FormRadioGroup
-                      id="topics"
+                      id="he-topics"
                       legend="Choose topic"
                       legendSize="s"
                       small
-                      name="topic"
+                      name="he-topic"
                       hint="Select a topic to filter results for this theme"
                       value={topic}
                       onChange={e => {
@@ -290,11 +290,11 @@ const PrototypeFindStats = () => {
                   value: 'pupils-and-schools',
                   conditional: (
                     <FormRadioGroup
-                      id="topics"
+                      id="pupils-topics"
                       legend="Choose topic"
                       legendSize="s"
                       small
-                      name="topic"
+                      name="pupils-topic"
                       hint="Select a topic to filter results for this theme"
                       value={topic}
                       order={[]}
@@ -356,11 +356,11 @@ const PrototypeFindStats = () => {
                   value: 'uk-training-stats',
                   conditional: (
                     <FormCheckboxGroup
-                      id="topics2"
+                      id="training-topics"
                       legend="Choose topic"
                       legendSize="s"
                       small
-                      name="topic"
+                      name="traing-topic"
                       value={[topic]}
                       onChange={e => setTopic(e.target.value)}
                       options={[
@@ -713,7 +713,11 @@ const PrototypeFindStats = () => {
                         setTopic('');
                       }}
                     >
-                      remove
+                      remove{' '}
+                      <span className="govuk-visually-hidden">
+                        {' '}
+                        pupil and schools theme
+                      </span>
                     </a>
                   </span>
                   {showExclusions && (
@@ -730,7 +734,11 @@ const PrototypeFindStats = () => {
                             setTopic('');
                           }}
                         >
-                          remove
+                          remove{' '}
+                          <span className="govuk-visually-hidden">
+                            {' '}
+                            exclusions topic
+                          </span>
                         </a>
                       </span>
                     </>
@@ -749,7 +757,11 @@ const PrototypeFindStats = () => {
                             setTopic('');
                           }}
                         >
-                          remove
+                          remove{' '}
+                          <span className="govuk-visually-hidden">
+                            {' '}
+                            school capacity topic
+                          </span>
                         </a>
                       </span>
                       {releaseType === 'adhoc' && (
@@ -766,7 +778,11 @@ const PrototypeFindStats = () => {
                                 setReleaseType('');
                               }}
                             >
-                              remove
+                              remove{' '}
+                              <span className="govuk-visually-hidden">
+                                {' '}
+                                ah hoc publication release type
+                              </span>
                             </a>
                           </span>
                         </>
