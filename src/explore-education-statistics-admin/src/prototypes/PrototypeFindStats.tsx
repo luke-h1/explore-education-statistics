@@ -3,15 +3,21 @@ import React, { useState } from 'react';
 import classNames from 'classnames';
 import Accordion from '@common/components/Accordion';
 import AccordionSection from '@common/components/AccordionSection';
+import Button from '@common/components/Button';
+import Details from '@common/components/Details';
 import RelatedInformation from '@common/components/RelatedInformation';
 import Link from '@admin/components/Link';
 import styles2 from '@common/components/PageSearchForm.module.scss';
 import { FormCheckboxGroup, FormRadioGroup } from '@common/components/form';
+import PrototypeSortFilters from '@admin/prototypes/components/PrototypeSortFilters';
 import PrototypeSearchResult from '@admin/prototypes/components/PrototypeSearchResult';
 import styles from './PrototypePublicPage.module.scss';
 
+const mobileWidth = 480;
+
 const PrototypeFindStats = () => {
   const [showTopics, setShowTopics] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
   const [searchInput, setSearchInput] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [theme, setTheme] = useState('all-themes');
@@ -142,492 +148,532 @@ const PrototypeFindStats = () => {
 
         <div className="govuk-grid-row">
           <div className="govuk-grid-column-one-third">
-            <FormRadioGroup
-              className="govuk-!-padding-left-2"
-              id="theme"
-              legend="Filter by theme"
-              legendSize="m"
-              name="theme"
-              value={theme}
-              small
-              onChange={e => {
-                setTheme(e.target.value);
-              }}
-              options={[
-                {
-                  label: 'All themes',
-                  value: 'all-themes',
-                  defaultChecked: true,
-                },
-                {
-                  label: "Children's social care",
-                  value: 'childrens-social',
-                  conditional: (
-                    <FormRadioGroup
-                      id="childrens-topics"
-                      legend="Choose topic"
-                      legendSize="s"
-                      small
-                      name="childrens-topic"
-                      hint="Select a topic to filter results for this theme"
-                      value={topic}
-                      onChange={e => {
-                        setTopic(e.target.value);
-                      }}
-                      options={[
-                        {
-                          label: 'Children in need and child protection',
-                          value: 'children-in-need',
-                        },
-                        {
-                          label: 'Children looked after',
-                          value: 'children-looked-after',
-                        },
-                        {
-                          label: "Children's social work workforce",
-                          value: 'childrens-social-workforce',
-                        },
-                        {
-                          label: 'Outcomes for children in social care',
-                          value: 'outcomes-for-children',
-                        },
-                        {
-                          label: "Secure children's homes",
-                          value: 'xecure-homes',
-                        },
-                      ]}
-                    />
-                  ),
-                },
-                {
-                  label: 'Covid 19',
-                  value: 'covid-19',
-                },
-                {
-                  label: 'Destinations of pupils and students',
-                  value: 'destination-pupils',
-                },
-                {
-                  label: 'Early years',
-                  value: 'early-years',
-                },
-                {
-                  label: 'Financing and funding',
-                  value: 'finance-funding',
-                },
-                {
-                  label: 'Further education',
-                  value: 'further-educaton',
-                  conditional: (
-                    <FormRadioGroup
-                      id="fe-topics"
-                      legend="Choose topic"
-                      legendSize="s"
-                      small
-                      name="fe-topic"
-                      hint="Select a topic to filter results for this theme"
-                      value={topic}
-                      onChange={e => {
-                        setTopic(e.target.value);
-                      }}
-                      options={[
-                        { label: 'FE choices', value: 'fe-choices' },
-                        {
-                          label: 'Further education and skills',
-                          value: 'fe-skills',
-                        },
-                        {
-                          label: 'Further education outcomes',
-                          value: 'fe-outcomes',
-                        },
-                      ]}
-                    />
-                  ),
-                },
-                {
-                  label: 'Higher education',
-                  value: 'higher-educaton',
-                  conditional: (
-                    <FormRadioGroup
-                      id="he-topics"
-                      legend="Choose topic"
-                      legendSize="s"
-                      small
-                      name="he-topic"
-                      hint="Select a topic to filter results for this theme"
-                      value={topic}
-                      onChange={e => {
-                        setTopic(e.target.value);
-                      }}
-                      options={[
-                        {
-                          label: 'Education exports',
-                          value: 'education-exports',
-                        },
-                        {
-                          label:
-                            'Higher education graduate employment and earnings',
-                          value: 'grad-earnings',
-                        },
-                        {
-                          label: 'Participation measures in higher education',
-                          value: 'participation-he',
-                        },
-                        {
-                          label: 'Skills Bill: Higher level learners',
-                          value: 'skills-bill',
-                        },
-                        {
-                          label: 'Widening participation in higher education',
-                          value: 'widening-participation',
-                        },
-                      ]}
-                    />
-                  ),
-                },
-                {
-                  label: 'Pupils and schools',
-                  value: 'pupils-and-schools',
-                  conditional: (
-                    <FormRadioGroup
-                      id="pupils-topics"
-                      legend="Choose topic"
-                      legendSize="s"
-                      small
-                      name="pupils-topic"
-                      hint="Select a topic to filter results for this theme"
-                      value={topic}
-                      order={[]}
-                      onChange={e => {
-                        setTopic(e.target.value);
-                      }}
-                      options={[
-                        {
-                          label: 'Show all topics',
-                          value: 'show-all-topics',
-                        },
-                        {
-                          label: 'Academy transfers',
-                          value: 'academy-transfers',
-                        },
-                        {
-                          label: 'Admission appeals',
-                          value: 'admission-appeals',
-                        },
-                        { label: 'Exclusions', value: 'exclusions' },
-                        {
-                          label: 'Parental responsibility measures',
-                          value: 'resposibility-measures',
-                        },
-                        {
-                          label: 'Pupil absence',
-                          value: 'pupil-absence',
-                        },
-                        {
-                          label: 'School and pupil numbers',
-                          value: 'school-pupil-numbers',
-                        },
-                        {
-                          label: 'School applications',
-                          value: 'school-applications',
-                        },
-                        {
-                          label: 'School capacity',
-                          value: 'school-capacity',
-                        },
-                        {
-                          label: 'Special educational needs (SEN)',
-                          value: 'sen',
-                        },
-                      ]}
-                    />
-                  ),
-                },
-                {
-                  label: 'Schools and college outcomes and performance',
-                  value: 'school-college-performance',
-                },
-                {
-                  label: 'Teachers and school workforce',
-                  value: 'teachers-workforce',
-                },
-                {
-                  label: 'UK training and education statistics',
-                  value: 'uk-training-stats',
-                  conditional: (
-                    <FormCheckboxGroup
-                      id="training-topics"
-                      legend="Choose topic"
-                      legendSize="s"
-                      small
-                      name="traing-topic"
-                      value={[topic]}
-                      onChange={e => setTopic(e.target.value)}
-                      options={[
-                        { label: 'Test 1', value: 'test-1' },
-                        { label: 'Test 3', value: 'test-2' },
-                        { label: 'Test 3', value: 'test-3' },
-                      ]}
-                    />
-                  ),
-                },
-              ]}
-            />
+            <div
+              className={
+                showFilters
+                  ? styles.prototypeShowMobileOverlay
+                  : styles.prototypeHideMobileOverlay
+              }
+            >
+              <div className={styles.prototypeControlMobileOverlay}>
+                <h2 className="govuk-!-margin-0 govuk-!-margin-left-2">
+                  {' '}
+                  {searchTally} result(s)
+                </h2>
+                <a
+                  href="#"
+                  onClick={e => {
+                    e.preventDefault();
+                    setShowFilters(false);
+                  }}
+                >
+                  Back to results
+                </a>
+              </div>
 
-            <h2 className="govuk-heading-m govuk-!-margin-top-6">
-              Other filters
-            </h2>
+              <FormRadioGroup
+                className={styles.prototypeMainFiltersMobileOverflow}
+                id="theme"
+                legend="Filter by theme"
+                legendSize="m"
+                name="theme"
+                value={theme}
+                small
+                onChange={e => {
+                  setTheme(e.target.value);
+                }}
+                options={[
+                  {
+                    label: 'All themes',
+                    value: 'all-themes',
+                    defaultChecked: true,
+                  },
+                  {
+                    label: "Children's social care",
+                    value: 'childrens-social',
+                    conditional: (
+                      <FormRadioGroup
+                        id="childrens-topics"
+                        legend="Choose topic"
+                        legendSize="s"
+                        small
+                        name="childrens-topic"
+                        hint="Select a topic to filter results for this theme"
+                        value={topic}
+                        onChange={e => {
+                          setTopic(e.target.value);
+                        }}
+                        options={[
+                          {
+                            label: 'Children in need and child protection',
+                            value: 'children-in-need',
+                          },
+                          {
+                            label: 'Children looked after',
+                            value: 'children-looked-after',
+                          },
+                          {
+                            label: "Children's social work workforce",
+                            value: 'childrens-social-workforce',
+                          },
+                          {
+                            label: 'Outcomes for children in social care',
+                            value: 'outcomes-for-children',
+                          },
+                          {
+                            label: "Secure children's homes",
+                            value: 'xecure-homes',
+                          },
+                        ]}
+                      />
+                    ),
+                  },
+                  {
+                    label: 'Covid 19',
+                    value: 'covid-19',
+                  },
+                  {
+                    label: 'Destinations of pupils and students',
+                    value: 'destination-pupils',
+                  },
+                  {
+                    label: 'Early years',
+                    value: 'early-years',
+                  },
+                  {
+                    label: 'Financing and funding',
+                    value: 'finance-funding',
+                  },
+                  {
+                    label: 'Further education',
+                    value: 'further-educaton',
+                    conditional: (
+                      <FormRadioGroup
+                        id="fe-topics"
+                        legend="Choose topic"
+                        legendSize="s"
+                        small
+                        name="fe-topic"
+                        hint="Select a topic to filter results for this theme"
+                        value={topic}
+                        onChange={e => {
+                          setTopic(e.target.value);
+                        }}
+                        options={[
+                          { label: 'FE choices', value: 'fe-choices' },
+                          {
+                            label: 'Further education and skills',
+                            value: 'fe-skills',
+                          },
+                          {
+                            label: 'Further education outcomes',
+                            value: 'fe-outcomes',
+                          },
+                        ]}
+                      />
+                    ),
+                  },
+                  {
+                    label: 'Higher education',
+                    value: 'higher-educaton',
+                    conditional: (
+                      <FormRadioGroup
+                        id="he-topics"
+                        legend="Choose topic"
+                        legendSize="s"
+                        small
+                        name="he-topic"
+                        hint="Select a topic to filter results for this theme"
+                        value={topic}
+                        onChange={e => {
+                          setTopic(e.target.value);
+                        }}
+                        options={[
+                          {
+                            label: 'Education exports',
+                            value: 'education-exports',
+                          },
+                          {
+                            label:
+                              'Higher education graduate employment and earnings',
+                            value: 'grad-earnings',
+                          },
+                          {
+                            label: 'Participation measures in higher education',
+                            value: 'participation-he',
+                          },
+                          {
+                            label: 'Skills Bill: Higher level learners',
+                            value: 'skills-bill',
+                          },
+                          {
+                            label: 'Widening participation in higher education',
+                            value: 'widening-participation',
+                          },
+                        ]}
+                      />
+                    ),
+                  },
+                  {
+                    label: 'Pupils and schools',
+                    value: 'pupils-and-schools',
+                    conditional: (
+                      <FormRadioGroup
+                        id="pupils-topics"
+                        legend="Choose topic"
+                        legendSize="s"
+                        small
+                        name="pupils-topic"
+                        hint="Select a topic to filter results for this theme"
+                        value={topic}
+                        order={[]}
+                        onChange={e => {
+                          setTopic(e.target.value);
+                        }}
+                        options={[
+                          {
+                            label: 'Show all topics',
+                            value: 'show-all-topics',
+                          },
+                          {
+                            label: 'Academy transfers',
+                            value: 'academy-transfers',
+                          },
+                          {
+                            label: 'Admission appeals',
+                            value: 'admission-appeals',
+                          },
+                          { label: 'Exclusions', value: 'exclusions' },
+                          {
+                            label: 'Parental responsibility measures',
+                            value: 'resposibility-measures',
+                          },
+                          {
+                            label: 'Pupil absence',
+                            value: 'pupil-absence',
+                          },
+                          {
+                            label: 'School and pupil numbers',
+                            value: 'school-pupil-numbers',
+                          },
+                          {
+                            label: 'School applications',
+                            value: 'school-applications',
+                          },
+                          {
+                            label: 'School capacity',
+                            value: 'school-capacity',
+                          },
+                          {
+                            label: 'Special educational needs (SEN)',
+                            value: 'sen',
+                          },
+                        ]}
+                      />
+                    ),
+                  },
+                  {
+                    label: 'Schools and college outcomes and performance',
+                    value: 'school-college-performance',
+                  },
+                  {
+                    label: 'Teachers and school workforce',
+                    value: 'teachers-workforce',
+                  },
+                  {
+                    label: 'UK training and education statistics',
+                    value: 'uk-training-stats',
+                    conditional: (
+                      <FormCheckboxGroup
+                        id="training-topics"
+                        legend="Choose topic"
+                        legendSize="s"
+                        small
+                        name="traing-topic"
+                        value={[topic]}
+                        onChange={e => setTopic(e.target.value)}
+                        options={[
+                          { label: 'Test 1', value: 'test-1' },
+                          { label: 'Test 3', value: 'test-2' },
+                          { label: 'Test 3', value: 'test-3' },
+                        ]}
+                      />
+                    ),
+                  },
+                ]}
+              />
 
-            <Accordion id="filters">
-              <AccordionSection heading="Release type" goToTop={false}>
-                <div className="govuk-form-group">
-                  <fieldset className="govuk-fieldset">
-                    <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">
-                      Filter by release type
-                    </legend>
-                    <div
-                      className="govuk-checkboxes govuk-checkboxes--small"
-                      data-module="govuk-checkboxes"
-                    >
-                      <div className="govuk-checkboxes__item">
-                        <input
-                          className="govuk-checkboxes__input"
-                          id="release-show-all"
-                          name="release-type"
-                          type="checkbox"
-                          value="showAll"
-                          onChange={e => setReleaseType(e.target.value)}
-                        />
-                        <label
-                          className="govuk-label govuk-checkboxes__label"
-                          htmlFor="release-show-all"
+              <div className={styles.prototypeOtherFiltersMobileOverflow}>
+                <h2 className="govuk-heading-m govuk-!-margin-top-6">
+                  Other filters
+                </h2>
+
+                <Accordion id="filters">
+                  <AccordionSection heading="Release type" goToTop={false}>
+                    <div className="govuk-form-group">
+                      <fieldset className="govuk-fieldset">
+                        <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">
+                          Filter by release type
+                        </legend>
+                        <div
+                          className="govuk-checkboxes govuk-checkboxes--small"
+                          data-module="govuk-checkboxes"
                         >
-                          Show all
-                        </label>
-                      </div>
-                      <div className="govuk-checkboxes__item">
-                        <input
-                          className="govuk-checkboxes__input"
-                          id="release-type3"
-                          name="release-type"
-                          type="checkbox"
-                          value="adhoc"
-                          onChange={e => setReleaseType(e.target.value)}
-                        />
-                        <label
-                          className="govuk-label govuk-checkboxes__label"
-                          htmlFor="release-type3"
-                        >
-                          Ad hoc statistics
-                        </label>
-                      </div>
-                      <div className="govuk-checkboxes__item">
-                        <input
-                          className="govuk-checkboxes__input"
-                          id="release-type4"
-                          name="release-type"
-                          type="checkbox"
-                          value="adhoc"
-                          onChange={e => setReleaseType(e.target.value)}
-                        />
-                        <label
-                          className="govuk-label govuk-checkboxes__label"
-                          htmlFor="release-type4"
-                        >
-                          Management information
-                        </label>
-                      </div>
-                      <div className="govuk-checkboxes__item">
-                        <input
-                          className="govuk-checkboxes__input"
-                          id="release-type1"
-                          name="release-type"
-                          type="checkbox"
-                          value="national"
-                          onChange={e => setReleaseType(e.target.value)}
-                        />
-                        <label
-                          className="govuk-label govuk-checkboxes__label"
-                          htmlFor="release-type1"
-                        >
-                          National statistics
-                        </label>
-                      </div>
-                      <div className="govuk-checkboxes__item">
-                        <input
-                          className="govuk-checkboxes__input"
-                          id="release-type2"
-                          name="release-type"
-                          type="checkbox"
-                          value="official"
-                          onChange={e => setReleaseType(e.target.value)}
-                        />
-                        <label
-                          className="govuk-label govuk-checkboxes__label"
-                          htmlFor="release-type2"
-                        >
-                          Official statistics
-                        </label>
-                      </div>
+                          <div className="govuk-checkboxes__item">
+                            <input
+                              className="govuk-checkboxes__input"
+                              id="release-show-all"
+                              name="release-type"
+                              type="checkbox"
+                              value="showAll"
+                              onChange={e => setReleaseType(e.target.value)}
+                            />
+                            <label
+                              className="govuk-label govuk-checkboxes__label"
+                              htmlFor="release-show-all"
+                            >
+                              Show all
+                            </label>
+                          </div>
+                          <div className="govuk-checkboxes__item">
+                            <input
+                              className="govuk-checkboxes__input"
+                              id="release-type3"
+                              name="release-type"
+                              type="checkbox"
+                              value="adhoc"
+                              onChange={e => setReleaseType(e.target.value)}
+                            />
+                            <label
+                              className="govuk-label govuk-checkboxes__label"
+                              htmlFor="release-type3"
+                            >
+                              Ad hoc statistics
+                            </label>
+                          </div>
+                          <div className="govuk-checkboxes__item">
+                            <input
+                              className="govuk-checkboxes__input"
+                              id="release-type4"
+                              name="release-type"
+                              type="checkbox"
+                              value="adhoc"
+                              onChange={e => setReleaseType(e.target.value)}
+                            />
+                            <label
+                              className="govuk-label govuk-checkboxes__label"
+                              htmlFor="release-type4"
+                            >
+                              Management information
+                            </label>
+                          </div>
+                          <div className="govuk-checkboxes__item">
+                            <input
+                              className="govuk-checkboxes__input"
+                              id="release-type1"
+                              name="release-type"
+                              type="checkbox"
+                              value="national"
+                              onChange={e => setReleaseType(e.target.value)}
+                            />
+                            <label
+                              className="govuk-label govuk-checkboxes__label"
+                              htmlFor="release-type1"
+                            >
+                              National statistics
+                            </label>
+                          </div>
+                          <div className="govuk-checkboxes__item">
+                            <input
+                              className="govuk-checkboxes__input"
+                              id="release-type2"
+                              name="release-type"
+                              type="checkbox"
+                              value="official"
+                              onChange={e => setReleaseType(e.target.value)}
+                            />
+                            <label
+                              className="govuk-label govuk-checkboxes__label"
+                              htmlFor="release-type2"
+                            >
+                              Official statistics
+                            </label>
+                          </div>
+                        </div>
+                      </fieldset>
                     </div>
-                  </fieldset>
-                </div>
-              </AccordionSection>
-              {/*
-              <AccordionSection heading="Geographical coverage" goToTop={false}>
-                <div className="govuk-form-group">
-                  <fieldset className="govuk-fieldset">
-                    <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">
-                      Filter by geographical coverage
-                    </legend>
-                    <div
-                      className="govuk-checkboxes govuk-checkboxes--small"
-                      data-module="govuk-checkboxes"
-                    >
-                      <div className="govuk-checkboxes__item">
-                        <input
-                          className="govuk-checkboxes__input"
-                          id="type-show-all"
-                          name="type"
-                          type="checkbox"
-                          value="showAll"
-                          onChange={e => setReleaseType(e.target.value)}
-                        />
-                        <label
-                          className="govuk-label govuk-checkboxes__label"
-                          htmlFor="type-show-all"
+                  </AccordionSection>
+                  {/*
+                  <AccordionSection heading="Geographical coverage" goToTop={false}>
+                    <div className="govuk-form-group">
+                      <fieldset className="govuk-fieldset">
+                        <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">
+                          Filter by geographical coverage
+                        </legend>
+                        <div
+                          className="govuk-checkboxes govuk-checkboxes--small"
+                          data-module="govuk-checkboxes"
                         >
-                          Show all
-                        </label>
-                      </div>
-                      <div className="govuk-checkboxes__item">
-                        <input
-                          className="govuk-checkboxes__input"
-                          id="type1"
-                          name="type"
-                          type="checkbox"
-                          value="type1"
-                        />
-                        <label
-                          className="govuk-label govuk-checkboxes__label"
-                          htmlFor="type1"
-                        >
-                          National
-                        </label>
-                      </div>
-                      <div className="govuk-checkboxes__item">
-                        <input
-                          className="govuk-checkboxes__input"
-                          id="type2"
-                          name="type"
-                          type="checkbox"
-                          value="type2"
-                        />
-                        <label
-                          className="govuk-label govuk-checkboxes__label"
-                          htmlFor="type2"
-                        >
-                          Local authority
-                        </label>
-                      </div>
-                      <div className="govuk-checkboxes__item">
-                        <input
-                          className="govuk-checkboxes__input"
-                          id="type3"
-                          name="type"
-                          type="checkbox"
-                          value="type3"
-                        />
-                        <label
-                          className="govuk-label govuk-checkboxes__label"
-                          htmlFor="type3"
-                        >
-                          Parliamentary constituency
-                        </label>
-                      </div>
+                          <div className="govuk-checkboxes__item">
+                            <input
+                              className="govuk-checkboxes__input"
+                              id="type-show-all"
+                              name="type"
+                              type="checkbox"
+                              value="showAll"
+                              onChange={e => setReleaseType(e.target.value)}
+                            />
+                            <label
+                              className="govuk-label govuk-checkboxes__label"
+                              htmlFor="type-show-all"
+                            >
+                              Show all
+                            </label>
+                          </div>
+                          <div className="govuk-checkboxes__item">
+                            <input
+                              className="govuk-checkboxes__input"
+                              id="type1"
+                              name="type"
+                              type="checkbox"
+                              value="type1"
+                            />
+                            <label
+                              className="govuk-label govuk-checkboxes__label"
+                              htmlFor="type1"
+                            >
+                              National
+                            </label>
+                          </div>
+                          <div className="govuk-checkboxes__item">
+                            <input
+                              className="govuk-checkboxes__input"
+                              id="type2"
+                              name="type"
+                              type="checkbox"
+                              value="type2"
+                            />
+                            <label
+                              className="govuk-label govuk-checkboxes__label"
+                              htmlFor="type2"
+                            >
+                              Local authority
+                            </label>
+                          </div>
+                          <div className="govuk-checkboxes__item">
+                            <input
+                              className="govuk-checkboxes__input"
+                              id="type3"
+                              name="type"
+                              type="checkbox"
+                              value="type3"
+                            />
+                            <label
+                              className="govuk-label govuk-checkboxes__label"
+                              htmlFor="type3"
+                            >
+                              Parliamentary constituency
+                            </label>
+                          </div>
+                        </div>
+                      </fieldset>
                     </div>
-                  </fieldset>
-                </div>
-              </AccordionSection>
-              
-              <AccordionSection heading="Organisation" goToTop={false}>
-                <div className="govuk-form-group">
-                  <fieldset className="govuk-fieldset">
-                    <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">
-                      Filter by organisation
-                    </legend>
-                    <div
-                      className="govuk-checkboxes govuk-checkboxes--small"
-                      data-module="govuk-checkboxes"
-                    >
-                      <div className="govuk-checkboxes__item">
-                        <input
-                          className="govuk-checkboxes__input"
-                          id="org-show-all"
-                          name="org"
-                          type="checkbox"
-                          value="showAll"
-                          checked
-                          onChange={e => setReleaseType(e.target.value)}
-                        />
-                        <label
-                          className="govuk-label govuk-checkboxes__label"
-                          htmlFor="type-show-all"
+                  </AccordionSection>
+                  
+                  <AccordionSection heading="Organisation" goToTop={false}>
+                    <div className="govuk-form-group">
+                      <fieldset className="govuk-fieldset">
+                        <legend className="govuk-fieldset__legend govuk-fieldset__legend--s">
+                          Filter by organisation
+                        </legend>
+                        <div
+                          className="govuk-checkboxes govuk-checkboxes--small"
+                          data-module="govuk-checkboxes"
                         >
-                          Show all
-                        </label>
-                      </div>
-                      <div className="govuk-checkboxes__item">
-                        <input
-                          className="govuk-checkboxes__input"
-                          id="org1"
-                          name="org"
-                          type="checkbox"
-                          value="org1"
-                        />
-                        <label
-                          className="govuk-label govuk-checkboxes__label"
-                          htmlFor="org1"
-                        >
-                          Department for Education (DfE)
-                        </label>
-                      </div>
-                      <div className="govuk-checkboxes__item">
-                        <input
-                          className="govuk-checkboxes__input"
-                          id="org2"
-                          name="org"
-                          type="checkbox"
-                          value="org2"
-                        />
-                        <label
-                          className="govuk-label govuk-checkboxes__label"
-                          htmlFor="org2"
-                        >
-                          Ministry of Justice (MoJ)
-                        </label>
-                      </div>
-                      <div className="govuk-checkboxes__item">
-                        <input
-                          className="govuk-checkboxes__input"
-                          id="org3"
-                          name="org"
-                          type="checkbox"
-                          value="org3"
-                        />
-                        <label
-                          className="govuk-label govuk-checkboxes__label"
-                          htmlFor="org3"
-                        >
-                          Ofsted
-                        </label>
-                      </div>
+                          <div className="govuk-checkboxes__item">
+                            <input
+                              className="govuk-checkboxes__input"
+                              id="org-show-all"
+                              name="org"
+                              type="checkbox"
+                              value="showAll"
+                              checked
+                              onChange={e => setReleaseType(e.target.value)}
+                            />
+                            <label
+                              className="govuk-label govuk-checkboxes__label"
+                              htmlFor="type-show-all"
+                            >
+                              Show all
+                            </label>
+                          </div>
+                          <div className="govuk-checkboxes__item">
+                            <input
+                              className="govuk-checkboxes__input"
+                              id="org1"
+                              name="org"
+                              type="checkbox"
+                              value="org1"
+                            />
+                            <label
+                              className="govuk-label govuk-checkboxes__label"
+                              htmlFor="org1"
+                            >
+                              Department for Education (DfE)
+                            </label>
+                          </div>
+                          <div className="govuk-checkboxes__item">
+                            <input
+                              className="govuk-checkboxes__input"
+                              id="org2"
+                              name="org"
+                              type="checkbox"
+                              value="org2"
+                            />
+                            <label
+                              className="govuk-label govuk-checkboxes__label"
+                              htmlFor="org2"
+                            >
+                              Ministry of Justice (MoJ)
+                            </label>
+                          </div>
+                          <div className="govuk-checkboxes__item">
+                            <input
+                              className="govuk-checkboxes__input"
+                              id="org3"
+                              name="org"
+                              type="checkbox"
+                              value="org3"
+                            />
+                            <label
+                              className="govuk-label govuk-checkboxes__label"
+                              htmlFor="org3"
+                            >
+                              Ofsted
+                            </label>
+                          </div>
+                        </div>
+                      </fieldset>
                     </div>
-                  </fieldset>
-                </div>
-              </AccordionSection>
-              */}
-            </Accordion>
+                  </AccordionSection>
+                  */}
+                </Accordion>
+              </div>
+              {window.innerWidth <= mobileWidth && (
+                <>
+                  <a href="#">Clear all filters</a>
+                  <Button
+                    className="govuk-!-margin-top-6"
+                    onClick={e => {
+                      e.preventDefault();
+                      setShowFilters(false);
+                    }}
+                  >
+                    Show results
+                  </Button>
+                </>
+              )}
+            </div>
           </div>
           <div className="govuk-grid-column-two-thirds">
             <div role="region" aria-live="polite" aria-atomic="true">
@@ -640,58 +686,36 @@ const PrototypeFindStats = () => {
               </a>
             </div>
 
-            <div className="govuk-form-group govuk-!-margin-bottom-0">
-              <fieldset className="govuk-fieldset">
-                <legend className="govuk-fieldset__legend govuk-fieldset__legend--s govuk-!-margin-bottom-0">
-                  Sort results
-                </legend>
-              </fieldset>
-              <div className="govuk-radios govuk-radios--small  govuk-radios--inline">
-                <div className="govuk-radios__item">
-                  <input
-                    type="radio"
-                    className="govuk-radios__input"
-                    name="sort"
-                    id="sort-1"
-                    checked
-                  />
+            {window.innerWidth <= mobileWidth ? (
+              <div className="dfe-flex dfe-justify-content--space-between dfe-align-items--center">
+                <Link
+                  to="#"
+                  className="govuk-!-margin-bottom-1"
+                  onClick={e => {
+                    e.preventDefault();
+                    setShowFilters(true);
+                  }}
+                >
+                  Filter results
+                </Link>
+                <div className="dfe-flex dfe-justify-content--space-between dfe-align-items--center">
                   <label
-                    className={classNames('govuk-label', 'govuk-radios__label')}
-                    htmlFor="sort-1"
+                    htmlFor="theme"
+                    className="govuk-label govuk-!-margin-right-2"
                   >
-                    Newest
+                    Sort results
                   </label>
-                </div>
-                <div className="govuk-radios__item">
-                  <input
-                    type="radio"
-                    className="govuk-radios__input"
-                    name="sort"
-                    id="sort-2"
-                  />
-                  <label
-                    className={classNames('govuk-label', 'govuk-radios__label')}
-                    htmlFor="sort-2"
-                  >
-                    Oldest
-                  </label>
-                </div>
-                <div className="govuk-radios__item">
-                  <input
-                    type="radio"
-                    className="govuk-radios__input"
-                    name="sort"
-                    id="sort-3"
-                  />
-                  <label
-                    className={classNames('govuk-label', 'govuk-radios__label')}
-                    htmlFor="sort-3"
-                  >
-                    A to Z
-                  </label>
+                  <select name="sort" id="sort" className="govuk-select">
+                    <option value="">Newest</option>
+                    <option value="">Oldest</option>
+                    <option value="">A to Z</option>
+                  </select>
                 </div>
               </div>
-            </div>
+            ) : (
+              <PrototypeSortFilters />
+            )}
+
             <hr />
             <span className="govuk-!-margin-bottom-0">
               {(!theme || showAll) && (
