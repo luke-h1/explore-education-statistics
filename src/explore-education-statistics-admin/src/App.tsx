@@ -85,13 +85,7 @@ function App() {
                       <ProtectedRoute key={key} {...route} />
                     ))}
 
-                    <ProtectedRoute
-                      path="/prototypes"
-                      protectionAction={user =>
-                        user.permissions.canAccessUserAdministrationPages
-                      }
-                      component={PrototypesEntry}
-                    />
+                    <Route path="/prototypes" component={PrototypesEntry} />
 
                     <ProtectedRoute
                       path="*"
