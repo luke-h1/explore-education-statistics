@@ -8,21 +8,21 @@ interface Props {
 }
 
 const PrototypeModalContent = ({ contentType }: Props) => {
-  const draftTag = <Tag>Draft</Tag>;
-  const approvedTag = <Tag>Approved</Tag>;
-  const inReviewTag = <Tag>In review</Tag>;
-  const amendmentTag = <Tag>Amendment</Tag>;
-  const errorTag = <Tag colour="red">Error</Tag>;
-  const warningTag = <Tag colour="orange">Warning</Tag>;
-  const commentTag = <Tag colour="grey">Unresolved comments</Tag>;
-  const validatingTag = <Tag colour="orange">Validating</Tag>;
-  const scheduledTag = <Tag colour="blue">Scheduled</Tag>;
-  const failedTag = <Tag colour="red">Failed ✖</Tag>;
-  const startedTag = <Tag colour="orange">Started</Tag>;
-  const notStartedTag = <Tag colour="blue">Not started</Tag>;
-  const completeTag = <Tag colour="green">Complete ✓</Tag>;
-  const cancelledTag = <Tag colour="red">PUBLISHING CANCELLED ✖</Tag>;
-  const publishedTag = <Tag colour="green">Published</Tag>;
+  const draftTag = '<Tag>Draft</Tag>';
+  const approvedTag = '<Tag>Approved</Tag>';
+  const inReviewTag = '<Tag>In review</Tag>';
+  const amendmentTag = '<Tag>Amendment</Tag>';
+  const errorTag = '<Tag colour="red">Error</Tag>';
+  const warningTag = '<Tag colour="orange">Warning</Tag>';
+  const commentTag = '<Tag colour="grey">Unresolved comments</Tag>';
+  const validatingTag = '<Tag colour="orange">Validating</Tag>';
+  const scheduledTag = '<Tag colour="blue">Scheduled</Tag>';
+  const failedTag = '<Tag colour="red">Failed ✖</Tag>';
+  const startedTag = '<Tag colour="orange">Started</Tag>';
+  const notStartedTag = '<Tag colour="blue">Not started</Tag>';
+  const completeTag = '<Tag colour="green">Complete ✓</Tag>';
+  const cancelledTag = '<Tag colour="red">PUBLISHING CANCELLED ✖</Tag>';
+  const publishedTag = '<Tag colour="green">Published</Tag>';
 
   return (
     <>

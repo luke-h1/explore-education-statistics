@@ -66,7 +66,7 @@ const PrototypeReleaseSummary = () => {
             <Tag>Draft</Tag>
           </div>
           <Details
-            summary={errorTally}
+            summary="{errorTally}"
             className="govuk-!-margin-bottom-0 govuk-!-margin-left-3"
           >
             <div className="govuk-grid-row">
@@ -122,7 +122,7 @@ const PrototypeReleaseSummary = () => {
                 </InsetText>
               </div>
               <div className="govuk-grid-column-one-third">
-                <InsetText variant="comments" className="govuk-!-margin-0">
+                <InsetText className="govuk-!-margin-0">
                   <h2 className="govuk-heading-s govuk-!-margin-top-0">
                     <Tag colour="grey">2 Unresolved comments</Tag>
                   </h2>
