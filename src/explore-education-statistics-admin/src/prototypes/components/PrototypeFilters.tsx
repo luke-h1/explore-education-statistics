@@ -125,6 +125,8 @@ const PrototypeFilters = ({
               }),
             )}
           />
+          For more information about our release types,{' '}
+          <a href="#">view release types guidance</a>
         </AccordionSection>
       </Accordion>
     </div>

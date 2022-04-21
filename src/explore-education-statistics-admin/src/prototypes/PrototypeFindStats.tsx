@@ -221,7 +221,7 @@ const PrototypeFindStats = () => {
           </div>
           <div className="govuk-grid-column-two-thirds">
             <div role="region" aria-live="polite" aria-atomic="true">
-              <h2>
+              <h2 className="govuk-!-margin-bottom-2">
                 {totalResults} {totalResults !== 1 ? 'results' : 'result'}
               </h2>
               <p className="govuk-visually-hidden">
@@ -231,6 +231,123 @@ const PrototypeFindStats = () => {
                 Skip to search results
               </a>
             </div>
+
+            <span className="govuk-!-margin-bottom-0">
+              {!isFiltered && (
+                <h3 className="govuk-heading-s">Showing all publications</h3>
+              )}
+
+              {isFiltered && (
+                <div className="dfe-flex dfe-flex-wrap dfe-align-items--center">
+                  <div
+                    className="dfe-flex dfe-justify-content--space-between govuk-!-margin-bottom-2"
+                    style={{ width: '100%' }}
+                  >
+                    <h3 className="govuk-heading-s govuk-!-margin-bottom-0">
+                      Filtered by
+                    </h3>
+                    <ButtonText
+                      onClick={() => {
+                        setSelectedTheme('all-themes');
+                        setSelectedReleaseType('all-release-types');
+                        setSelectedTopic('');
+                        setSearchQuery('');
+                        setSearchInput('');
+                        setCurrentPage(0);
+                      }}
+                    >
+                      Clear all filters
+                    </ButtonText>
+                  </div>
+
+                  {searchQuery && (
+                    <span className={styles.prototypeFilterTag}>
+                      {searchQuery}{' '}
+                      <ButtonText
+                        onClick={() => {
+                          setSearchQuery('');
+                          setSearchInput('');
+                          setCurrentPage(0);
+                        }}
+                      >
+                        Clear search query
+                        <span className="govuk-visually-hidden">
+                          {' '}
+                          search query
+                        </span>
+                      </ButtonText>
+                    </span>
+                  )}
+                  {selectedTheme && selectedTheme !== 'all-themes' && (
+                    <span className={styles.prototypeFilterTag}>
+                      {getSelectedTheme(selectedTheme)?.title}{' '}
+                      <ButtonText
+                        onClick={() => {
+                          setSelectedTheme('all-themes');
+                          setSelectedTopic('');
+                          setCurrentPage(0);
+                        }}
+                      >
+                        Clear theme
+                        <span className="govuk-visually-hidden">
+                          {' '}
+                          {getSelectedTheme(selectedTheme)?.title}
+                        </span>
+                      </ButtonText>
+                    </span>
+                  )}
+                  {selectedTopic && !selectedTopic.startsWith('all-topics') && (
+                    <span className={styles.prototypeFilterTag}>
+                      {getSelectedTopic(selectedTheme, selectedTopic)?.title}{' '}
+                      <ButtonText
+                        onClick={() => {
+                          setSelectedTopic(`all-topics-${selectedTheme}`);
+                          setCurrentPage(0);
+                        }}
+                      >
+                        Clear topic
+                        <span className="govuk-visually-hidden">
+                          {' '}
+                          {
+                            getSelectedTopic(selectedTheme, selectedTopic)
+                              ?.title
+                          }
+                        </span>
+                      </ButtonText>
+                    </span>
+                  )}
+                  {selectedReleaseType &&
+                    selectedReleaseType !== 'all-release-types' && (
+                      <span className={styles.prototypeFilterTag}>
+                        {
+                          releaseTypes[
+                            selectedReleaseType as keyof typeof releaseTypes
+                          ]
+                        }{' '}
+                        <ButtonText
+                          onClick={() => {
+                            setSelectedReleaseType('all-release-types');
+                            setCurrentPage(0);
+                          }}
+                        >
+                          Clear type
+                          <span className="govuk-visually-hidden">
+                            {' '}
+                            {
+                              releaseTypes[
+                                selectedReleaseType as keyof typeof releaseTypes
+                              ]
+                            }
+                          </span>
+                        </ButtonText>
+                      </span>
+                    )}
+                </div>
+              )}
+            </span>
+
+            <hr />
+
             {isMobileMedia ? (
               <div className="dfe-flex dfe-justify-content--space-between dfe-align-items--center">
                 <ButtonText
@@ -260,102 +377,7 @@ const PrototypeFindStats = () => {
             )}
 
             <hr />
-            <span className="govuk-!-margin-bottom-0">
-              {!isFiltered && (
-                <h3 className="govuk-heading-s">Showing all publications</h3>
-              )}
 
-              {isFiltered && (
-                <div className="dfe-flex dfe-flex-wrap dfe-align-items--center">
-                  <h3 className="govuk-heading-s" style={{ width: '100%' }}>
-                    Showing filtered results
-                  </h3>
-                  {searchQuery && (
-                    <span className={styles.prototypeFilterTag}>
-                      {searchQuery}{' '}
-                      <ButtonText
-                        onClick={() => {
-                          setSearchQuery('');
-                          setSearchInput('');
-                          setCurrentPage(0);
-                        }}
-                      >
-                        remove
-                        <span className="govuk-visually-hidden">
-                          {' '}
-                          search query
-                        </span>
-                      </ButtonText>
-                    </span>
-                  )}
-                  {selectedTheme && selectedTheme !== 'all-themes' && (
-                    <span className={styles.prototypeFilterTag}>
-                      {getSelectedTheme(selectedTheme)?.title}{' '}
-                      <ButtonText
-                        onClick={() => {
-                          setSelectedTheme('all-themes');
-                          setSelectedTopic('');
-                          setCurrentPage(0);
-                        }}
-                      >
-                        remove
-                        <span className="govuk-visually-hidden">
-                          {' '}
-                          {getSelectedTheme(selectedTheme)?.title}
-                        </span>
-                      </ButtonText>
-                    </span>
-                  )}
-                  {selectedTopic && !selectedTopic.startsWith('all-topics') && (
-                    <span className={styles.prototypeFilterTag}>
-                      {getSelectedTopic(selectedTheme, selectedTopic)?.title}{' '}
-                      <ButtonText
-                        onClick={() => {
-                          setSelectedTopic(`all-topics-${selectedTheme}`);
-                          setCurrentPage(0);
-                        }}
-                      >
-                        remove
-                        <span className="govuk-visually-hidden">
-                          {' '}
-                          {
-                            getSelectedTopic(selectedTheme, selectedTopic)
-                              ?.title
-                          }
-                        </span>
-                      </ButtonText>
-                    </span>
-                  )}
-                  {selectedReleaseType &&
-                    selectedReleaseType !== 'all-release-types' && (
-                      <span className={styles.prototypeFilterTag}>
-                        {
-                          releaseTypes[
-                            selectedReleaseType as keyof typeof releaseTypes
-                          ]
-                        }{' '}
-                        <ButtonText
-                          onClick={() => {
-                            setSelectedReleaseType('all-release-types');
-                            setCurrentPage(0);
-                          }}
-                        >
-                          remove
-                          <span className="govuk-visually-hidden">
-                            {' '}
-                            {
-                              releaseTypes[
-                                selectedReleaseType as keyof typeof releaseTypes
-                              ]
-                            }
-                          </span>
-                        </ButtonText>
-                      </span>
-                    )}
-                </div>
-              )}
-            </span>
-            <hr />
             <div id="searchResults">
               {filteredPublications.length === 0 && <p>No matching results.</p>}
               {filteredPublications.length > 0 &&
