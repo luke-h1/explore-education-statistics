@@ -155,8 +155,9 @@ const PrototypeFindStats = () => {
             </RelatedInformation>
           </div>
         </div>
+
         <div className="govuk-grid-row">
-          <div className="govuk-grid-column-two-thirds">
+          <div className="govuk-grid-column-one-third">
             <form
               onSubmit={e => {
                 e.preventDefault();
@@ -165,7 +166,7 @@ const PrototypeFindStats = () => {
               }}
             >
               <div
-                className="govuk-form-group govuk-!-margin-bottom-9"
+                className="govuk-form-group govuk-!-margin-bottom-6 govuk-!-margin-left-2"
                 style={{ position: 'relative' }}
               >
                 <h2 className="govuk-label-wrapper">
@@ -193,11 +194,7 @@ const PrototypeFindStats = () => {
                 </button>
               </div>
             </form>
-          </div>
-        </div>
 
-        <div className="govuk-grid-row">
-          <div className="govuk-grid-column-one-third">
             <PrototypeFilters
               selectedReleaseType={selectedReleaseType}
               selectedTheme={selectedTheme}

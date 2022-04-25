@@ -20,6 +20,9 @@ import PrototypeAdminAccess from './PrototypeAdminAccess';
 import PrototypeAdminLegacy from './PrototypeAdminLegacy';
 import PrototypeReleaseSummary from './PrototypeReleaseSummary';
 import PrototypeFindStats from './PrototypeFindStats';
+import PrototypeFindStats2 from './PrototypeFindStats2';
+import PrototypeFindStats3 from './PrototypeFindStats3';
+import PrototypeFindStats4 from './PrototypeFindStats4';
 
 interface PrototypeRoute extends RouteProps {
   name: string;
@@ -131,6 +134,21 @@ const prototypeRoutes: PrototypeRoute[] = [
     name: 'Find statistics and data',
     path: '/prototypes/find-statistics',
     component: PrototypeFindStats,
+  },
+  {
+    name: 'Find statistics and data v2',
+    path: '/prototypes/find-statistics2',
+    component: PrototypeFindStats2,
+  },
+  {
+    name: 'Find statistics and data v3',
+    path: '/prototypes/find-statistics3',
+    component: PrototypeFindStats3,
+  },
+  {
+    name: 'Find statistics and data v4',
+    path: '/prototypes/find-statistics4',
+    component: PrototypeFindStats4,
   },
 ];
 

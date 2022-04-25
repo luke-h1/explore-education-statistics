@@ -108,11 +108,28 @@
 }
 
 .prototypeFilterTag {
-  background: govuk-colour('light-grey');
-  border: 1px solid $govuk-border-colour;
-  border-radius: 0.4rem;
   margin: 0 0.5rem 0.5rem 0;
-  padding: 0.5rem;
+
+  button {
+    background: govuk-colour('light-grey');
+    border: 1px solid $govuk-border-colour;
+    border-radius: 0.4rem;
+    box-shadow: none;
+    margin: 0;
+    padding: 0.5rem;
+  }
+}
+
+.prototypeFilterTopic {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  margin-left: 0;
+  &::before {
+    content: '❱';
+    display: block;
+    padding-right: 0.4rem;
+  }
 }
 
 .prototypeControlMobileOverlay {

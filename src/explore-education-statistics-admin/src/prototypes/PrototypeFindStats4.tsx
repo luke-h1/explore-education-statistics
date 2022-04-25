@@ -155,73 +155,15 @@ const PrototypeFindStats = () => {
             </RelatedInformation>
           </div>
         </div>
+
         <div className="govuk-grid-row">
           <div className="govuk-grid-column-two-thirds">
-            <form
-              onSubmit={e => {
-                e.preventDefault();
-                setCurrentPage(0);
-                setSearchQuery(searchInput);
-              }}
+            <div
+              role="region"
+              aria-live="polite"
+              aria-atomic="true"
+              className="govuk-!-margin-top-8"
             >
-              <div
-                className="govuk-form-group govuk-!-margin-bottom-9"
-                style={{ position: 'relative' }}
-              >
-                <h2 className="govuk-label-wrapper">
-                  <label
-                    className="govuk-label govuk-label--m"
-                    htmlFor="search"
-                  >
-                    Search
-                  </label>
-                </h2>
-
-                <input
-                  type="text"
-                  id="search"
-                  className="govuk-input"
-                  value={searchInput}
-                  onChange={e => setSearchInput(e.target.value)}
-                />
-                <button
-                  type="submit"
-                  className={styles2.searchButton}
-                  value="Search"
-                >
-                  <span className="govuk-visually-hidden">Search</span>
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-
-        <div className="govuk-grid-row">
-          <div className="govuk-grid-column-one-third">
-            <PrototypeFilters
-              selectedReleaseType={selectedReleaseType}
-              selectedTheme={selectedTheme}
-              selectedTopic={selectedTopic}
-              showFilters={showFilters}
-              themes={themes}
-              totalResults={totalResults}
-              onCloseFilters={() => setShowFilters(false)}
-              onSelectReleaseType={type => {
-                setSelectedReleaseType(type);
-                setCurrentPage(0);
-              }}
-              onSelectTheme={theme => {
-                setSelectedTheme(theme);
-                setCurrentPage(0);
-              }}
-              onSelectTopic={topic => {
-                setSelectedTopic(topic);
-                setCurrentPage(0);
-              }}
-            />
-          </div>
-          <div className="govuk-grid-column-two-thirds">
-            <div role="region" aria-live="polite" aria-atomic="true">
               <h2 className="govuk-!-margin-bottom-2">
                 {totalResults} {totalResults !== 1 ? 'results' : 'result'}
               </h2>
@@ -451,6 +393,67 @@ const PrototypeFindStats = () => {
                 </nav>
               </>
             )}
+          </div>
+          <div className="govuk-grid-column-one-third">
+            <form
+              className="govuk-!-margin-top-8"
+              onSubmit={e => {
+                e.preventDefault();
+                setCurrentPage(0);
+                setSearchQuery(searchInput);
+              }}
+            >
+              <div
+                className="govuk-form-group govuk-!-margin-bottom-6 govuk-!-margin-left-2"
+                style={{ position: 'relative' }}
+              >
+                <h2 className="govuk-label-wrapper">
+                  <label
+                    className="govuk-label govuk-label--m"
+                    htmlFor="search"
+                  >
+                    Search
+                  </label>
+                </h2>
+
+                <input
+                  type="text"
+                  id="search"
+                  className="govuk-input"
+                  value={searchInput}
+                  onChange={e => setSearchInput(e.target.value)}
+                />
+                <button
+                  type="submit"
+                  className={styles2.searchButton}
+                  value="Search"
+                >
+                  <span className="govuk-visually-hidden">Search</span>
+                </button>
+              </div>
+            </form>
+
+            <PrototypeFilters
+              selectedReleaseType={selectedReleaseType}
+              selectedTheme={selectedTheme}
+              selectedTopic={selectedTopic}
+              showFilters={showFilters}
+              themes={themes}
+              totalResults={totalResults}
+              onCloseFilters={() => setShowFilters(false)}
+              onSelectReleaseType={type => {
+                setSelectedReleaseType(type);
+                setCurrentPage(0);
+              }}
+              onSelectTheme={theme => {
+                setSelectedTheme(theme);
+                setCurrentPage(0);
+              }}
+              onSelectTopic={topic => {
+                setSelectedTopic(topic);
+                setCurrentPage(0);
+              }}
+            />
           </div>
         </div>
       </PrototypePage>

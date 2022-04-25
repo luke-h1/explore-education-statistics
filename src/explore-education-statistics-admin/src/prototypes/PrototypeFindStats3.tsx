@@ -197,29 +197,6 @@ const PrototypeFindStats = () => {
         </div>
 
         <div className="govuk-grid-row">
-          <div className="govuk-grid-column-one-third">
-            <PrototypeFilters
-              selectedReleaseType={selectedReleaseType}
-              selectedTheme={selectedTheme}
-              selectedTopic={selectedTopic}
-              showFilters={showFilters}
-              themes={themes}
-              totalResults={totalResults}
-              onCloseFilters={() => setShowFilters(false)}
-              onSelectReleaseType={type => {
-                setSelectedReleaseType(type);
-                setCurrentPage(0);
-              }}
-              onSelectTheme={theme => {
-                setSelectedTheme(theme);
-                setCurrentPage(0);
-              }}
-              onSelectTopic={topic => {
-                setSelectedTopic(topic);
-                setCurrentPage(0);
-              }}
-            />
-          </div>
           <div className="govuk-grid-column-two-thirds">
             <div role="region" aria-live="polite" aria-atomic="true">
               <h2 className="govuk-!-margin-bottom-2">
@@ -451,6 +428,29 @@ const PrototypeFindStats = () => {
                 </nav>
               </>
             )}
+          </div>
+          <div className="govuk-grid-column-one-third">
+            <PrototypeFilters
+              selectedReleaseType={selectedReleaseType}
+              selectedTheme={selectedTheme}
+              selectedTopic={selectedTopic}
+              showFilters={showFilters}
+              themes={themes}
+              totalResults={totalResults}
+              onCloseFilters={() => setShowFilters(false)}
+              onSelectReleaseType={type => {
+                setSelectedReleaseType(type);
+                setCurrentPage(0);
+              }}
+              onSelectTheme={theme => {
+                setSelectedTheme(theme);
+                setCurrentPage(0);
+              }}
+              onSelectTopic={topic => {
+                setSelectedTopic(topic);
+                setCurrentPage(0);
+              }}
+            />
           </div>
         </div>
       </PrototypePage>
