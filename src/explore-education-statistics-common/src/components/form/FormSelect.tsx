@@ -24,6 +24,8 @@ export interface FormSelectProps extends FormLabelProps {
   error?: string;
   id: string;
   hint?: string;
+  labelBold?: boolean;
+  labelClassName?: string;
   name: string;
   onBlur?: FocusEventHandler;
   onChange?: SelectChangeEventHandler;
@@ -45,6 +47,8 @@ const FormSelect = ({
   hint,
   hideLabel,
   label,
+  labelBold,
+  labelClassName,
   name,
   onBlur,
   onChange,
@@ -57,7 +61,13 @@ const FormSelect = ({
 }: FormSelectProps) => {
   return (
     <>
-      <FormLabel id={id} label={label} hideLabel={hideLabel} />
+      <FormLabel
+        bold={labelBold}
+        className={labelClassName}
+        id={id}
+        label={label}
+        hideLabel={hideLabel}
+      />
 
       {hint && (
         <span id={`${id}-hint`} className="govuk-hint">

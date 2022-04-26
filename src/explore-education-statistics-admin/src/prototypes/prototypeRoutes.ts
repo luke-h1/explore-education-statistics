@@ -23,6 +23,7 @@ import PrototypeFindStats from './PrototypeFindStats';
 import PrototypeFindStats2 from './PrototypeFindStats2';
 import PrototypeFindStats3 from './PrototypeFindStats3';
 import PrototypeFindStats4 from './PrototypeFindStats4';
+import PrototypeFindStats5 from './PrototypeFindStats5';
 
 interface PrototypeRoute extends RouteProps {
   name: string;
@@ -149,6 +150,11 @@ const prototypeRoutes: PrototypeRoute[] = [
     name: 'Find statistics and data v4',
     path: '/prototypes/find-statistics4',
     component: PrototypeFindStats4,
+  },
+  {
+    name: 'Find statistics and data v5',
+    path: '/prototypes/find-statistics5',
+    component: PrototypeFindStats5,
   },
 ];
 
