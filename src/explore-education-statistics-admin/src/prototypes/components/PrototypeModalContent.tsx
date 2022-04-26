@@ -208,8 +208,8 @@ const PrototypeModalContent = ({ contentType }: Props) => {
           <div
             style={{
               maxHeight: '50vh',
-              overflowY: 'scroll',
-              paddingBottom: '1rem',
+              overflowY: 'auto',
+              marginBottom: '2rem',
             }}
           >
             <SummaryList>
