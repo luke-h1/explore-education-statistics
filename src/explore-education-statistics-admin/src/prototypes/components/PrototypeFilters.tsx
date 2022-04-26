@@ -1,11 +1,15 @@
 import styles from '@admin/prototypes/PrototypePublicPage.module.scss';
 import Accordion from '@common/components/Accordion';
 import AccordionSection from '@common/components/AccordionSection';
+import Button from '@common/components/Button';
 import ButtonText from '@common/components/ButtonText';
 import FormRadioGroup from '@admin/prototypes/components/PrototypeFormRadioGroup';
 import { releaseTypes } from '@common/services/types/releaseType';
 import { Theme } from '@common/services/themeService';
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
+import Modal from '@common/components/Modal';
+import useToggle from '@common/hooks/useToggle';
+import ModalContent from '@admin/prototypes/components/PrototypeModalContent';
 
 interface Props {
   selectedReleaseType: string;
@@ -68,6 +72,8 @@ const PrototypeFilters = ({
     );
   }, [selectedTopic, onSelectTopic, themes]);
 
+  const [showHelpTypesModal, toggleHelpTypesModal] = useToggle(false);
+
   return (
     <div
       className={
@@ -125,10 +131,30 @@ const PrototypeFilters = ({
               }),
             )}
           />
-          For more information about our release types,{' '}
-          <a href="#">view release types guidance</a>
+          <a
+            href="#"
+            onClick={() => {
+              toggleHelpTypesModal(true);
+            }}
+          >
+            What are release types?
+          </a>
         </AccordionSection>
       </Accordion>
+      <Modal
+        open={showHelpTypesModal}
+        title="Release types guidance"
+        className="govuk-!-width-one-half"
+      >
+        <ModalContent contentType="helpReleaseTypes" />
+        <Button
+          onClick={() => {
+            toggleHelpTypesModal(false);
+          }}
+        >
+          Close
+        </Button>
+      </Modal>
     </div>
   );
 };
