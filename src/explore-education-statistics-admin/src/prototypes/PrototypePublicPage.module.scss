@@ -137,6 +137,10 @@
   display: none;
 }
 
+.prototypeHideMobileCTA {
+  display: none;
+}
+
 @include govuk-media-query(
   $from: mobile,
   $until: tablet,
@@ -148,11 +152,21 @@
     display: flex;
     justify-content: space-between;
     margin: -1rem;
-    padding: 0.5rem;
+    padding: 1rem;
     position: fixed;
     text-align: right;
     width: calc(100%);
     z-index: 100;
+
+    + :global(.govuk-form-group) {
+      margin-top: 4rem;
+      max-height: 65vh;
+      overflow-y: auto;
+    }
+
+    + :global(.govuk-label) {
+      margin-top: 4rem;
+    }
   }
 
   .prototypeShowMobileOverlay {
@@ -165,6 +179,15 @@
     top: 0;
     width: 100%;
     z-index: 100;
+  }
+
+  .prototypeShowMobileCTA {
+    background: govuk-colour('white');
+    width: 100%;
+  }
+
+  .prototypeHideMobileCTA {
+    display: none;
   }
 
   .prototypeMainFiltersMobileOverflow {

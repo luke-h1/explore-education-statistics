@@ -349,7 +349,7 @@ const PrototypeFindStats = () => {
             {isMobileMedia ? (
               <div className="dfe-flex dfe-justify-content--space-between dfe-align-items--center">
                 <ButtonText
-                  className="govuk-!-margin-bottom-1"
+                  className="govuk-!-margin-bottom-1 govuk-!-font-weight-bold"
                   onClick={() => {
                     setShowFilters(true);
                   }}

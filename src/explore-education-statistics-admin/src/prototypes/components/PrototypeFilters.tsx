@@ -87,7 +87,10 @@ const PrototypeFilters = ({
           {' '}
           {totalResults} result(s)
         </h2>
-        <ButtonText onClick={() => onCloseFilters()}>
+        <ButtonText
+          className="govuk-!-margin-right-1"
+          onClick={() => onCloseFilters()}
+        >
           Back to results
         </ButtonText>
       </div>
@@ -141,6 +144,17 @@ const PrototypeFilters = ({
           </a>
         </AccordionSection>
       </Accordion>
+      <div
+        className={
+          showFilters
+            ? styles.prototypeShowMobileCTA
+            : styles.prototypeHideMobileCTA
+        }
+      >
+        <Button onClick={() => onCloseFilters()}>
+          Show {totalResults} result(s)
+        </Button>
+      </div>
       <Modal
         open={showHelpTypesModal}
         title="Release types guidance"

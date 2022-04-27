@@ -166,7 +166,7 @@ const PrototypeFindStats = () => {
               }}
             >
               <div
-                className="govuk-form-group govuk-!-margin-bottom-6 govuk-!-margin-left-2"
+                className="govuk-form-group govuk-!-margin-bottom-6"
                 style={{ position: 'relative' }}
               >
                 <h2 className="govuk-label-wrapper">
@@ -348,7 +348,7 @@ const PrototypeFindStats = () => {
             {isMobileMedia ? (
               <div className="dfe-flex dfe-justify-content--space-between dfe-align-items--center">
                 <ButtonText
-                  className="govuk-!-margin-bottom-1"
+                  className="govuk-!-margin-bottom-1 govuk-!-font-weight-bold govuk-width-one-third"
                   onClick={() => {
                     setShowFilters(true);
                   }}
