@@ -19,6 +19,12 @@
   :global(.dfe-width-container--wide) {
     max-width: 90vw;
   }
+  :global(.govuk-header__navigation) {
+    display: none !important;
+  }
+  :global(.govuk-header__logotype::after) {
+    display: none;
+  }
 }
 .prototypeCardContainer {
   display: flex;

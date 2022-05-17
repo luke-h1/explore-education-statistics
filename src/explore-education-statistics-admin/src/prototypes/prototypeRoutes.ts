@@ -24,6 +24,7 @@ import PrototypeFindStats2 from './PrototypeFindStats2';
 import PrototypeFindStats3 from './PrototypeFindStats3';
 import PrototypeFindStats4 from './PrototypeFindStats4';
 import PrototypeFindStats5 from './PrototypeFindStats5';
+import PrototypeTableTool from './PrototypeTableToolPage';
 
 interface PrototypeRoute extends RouteProps {
   name: string;
@@ -155,6 +156,11 @@ const prototypeRoutes: PrototypeRoute[] = [
     name: 'Find statistics and data v5',
     path: '/prototypes/find-statistics5',
     component: PrototypeFindStats5,
+  },
+  {
+    name: 'Table tool',
+    path: '/prototypes/table-tool',
+    component: PrototypeTableTool,
   },
 ];
 
