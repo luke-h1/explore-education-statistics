@@ -1,7 +1,580 @@
 import { Theme } from '@common/services/themeService';
 
+export const publications = [
+  {
+    title: 'Characteristics of children in need',
+    type: 'National statistics',
+    published: '2020-11-26T09:30:50.3183279',
+    topic: 'Children in need and child protection',
+    theme: "Children's social care",
+    summary:
+      "These statistics, derived from the annual Children in Need Census, provide data on children in England referred to children's social care services, assessments carried out relating to those children and whether a child became the subject of a child protection plan.",
+  },
+  {
+    title: 'Children looked after in England including adoptions',
+    type: 'National statistics',
+    published: '2021-11-18T09:30:45.7474983',
+    topic: 'Children looked after',
+    theme: "Children's social care",
+    summary:
+      'Information on children looked after (CLA) in England, including numbers of CLA adopted, care leavers and CLA who were missing. Data is taken from the annual SSDA903 data collection which is collected from local authorities in England.',
+  },
+  {
+    title: "Children's social work workforce",
+    type: 'Official statistics',
+    published: '2022-02-24T09:30:16.0231880',
+    topic: "Children's social work workforce",
+    theme: "Children's social care",
+    summary:
+      'This release provides information about children and family social workers and agency social workers employed in local authorities.  The information is based on data collected in an annual census from local authorities in England. The latest collection covers the year from 1 October 2020 to 30 September 2021.',
+  },
+  {
+    title:
+      'Outcomes for children in need, including children looked after by local authorities in England',
+    type: 'National statistics',
+    published: '2021-09-02T10:54:55.6943208',
+    topic: 'Outcomes for children in social care',
+    theme: "Children's social care",
+    summary:
+      'A range of outcome measures at national and local authority level for children in need, including children looked after by local authorities in England.',
+  },
+  {
+    title: 'Outcomes of children in need, including looked after children',
+    type: 'Ad hoc statistics',
+    published: '2020-09-24T08:30:36.8197796',
+    topic: 'Outcomes for children in social care',
+    theme: "Children's social care",
+    summary:
+      'This statistical release and underlying data provide national level information on the educational outcomes and characteristics of children in need (CIN), including looked after children. The following data is available: Rates of Special Educational Needs (SEN) and Free School Meals (FSM), Types of school attended, Attainment in Early Years, Key Stage 1, Key Stage 2 and Key Stage 4, Absence and exclusion rates',
+  },
+  {
+    title: "Children accommodated in secure children's homes",
+    type: 'National statistics',
+    published: '2022-02-10T11:14:53.0757013',
+    topic: "Secure children's homes",
+    theme: "Children's social care",
+    summary:
+      "This release contains statistics on children accommodated in secure children's homes, including: numbers of approved and available places, availability and occupancy rates, children accommodated by gender, age, ethnicity, and length of stay.",
+  },
+  {
+    title: 'Serious incident notifications',
+    type: 'Experimental statistics',
+    published: '2021-07-22T08:30:41.8627057',
+    topic: 'Serious incident notifications',
+    theme: "Children's social care",
+    summary:
+      'Experimental statistics on serious incidents involving children that local authorities have notified the Child Safeguarding Practice Review Panel about. This includes the number of notifiable serious incidents by: age group; gender; ethnicity; disability; notification nature; placement type; and whether the child is known to other agencies or has a Child Protection Plan (CPP).',
+  },
+  {
+    title:
+      'Attendance in education and early years settings during the coronavirus (COVID-19) pandemic',
+    type: 'Official statistics',
+    published: '2022-03-22T12:03:10.8084212',
+    topic: 'Attendance',
+    theme: 'COVID-19',
+    summary:
+      'A summary of attendance in education settings for the 2021/22 academic year, excluding out of term dates as data is not collected. The data covers England only. ',
+  },
+  {
+    title: 'CO2 monitors: cumulative delivery statistics',
+    type: 'Management information',
+    published: '2021-12-16T12:02:43.0387578',
+    topic: 'CO2 monitors',
+    theme: 'COVID-19',
+    summary:
+      'A summary of CO2 monitor delivery to state-funded education?settings, including early years, schools and further education providers up to 10 December 2021. The data covers England only.',
+  },
+  {
+    title: 'Coronavirus (COVID-19) Reporting in Higher Education Providers',
+    type: 'Ad hoc statistics',
+    published: '2021-02-19T12:04:13.3121898',
+    topic: 'Confirmed cases reported by Higher Education providers',
+    theme: 'COVID-19',
+    summary:
+      "This ad hoc statistics publication provides a summary of confirmed coronavirus (COVID-19) cases known to higher education providers (HEP) between 1 August 2020 and 7 April 2021. 'Case' here means a positive test result known to providers and reported to DfE through the Office for Students reporting tool. ",
+  },
+  {
+    title: 'Delivery of air cleaning units',
+    type: 'Management information',
+    published: '2022-03-17T12:16:03.6878439',
+    topic: 'Devices',
+    theme: 'COVID-19',
+    summary:
+      'A summary of air cleaning unit deliveries to state-funded education?settings, including early years, schools and further education providers up to 11 March 2022. This data covers England only.',
+  },
+  {
+    title: 'Laptops and tablets data',
+    type: 'Official statistics',
+    published: '2022-03-08T11:52:49.8467258',
+    topic: 'Devices',
+    theme: 'COVID-19',
+    summary:
+      "How many laptops, tablets and routers we've delivered to help disadvantaged children and young people access education.",
+  },
+  {
+    title: 'COVID mass testing data in education',
+    type: 'Ad hoc statistics',
+    published: '2021-02-12T10:32:02.8281140',
+    topic: 'Testing',
+    theme: 'COVID-19',
+    summary:
+      "This publication is to illustrate the participation in rapid testing for the educational sector so far. Fuller, regular statistics on coronavirus testing in educational settings will be published as part of DHSC's weekly statistics in their NHS test and trace release in due course.",
+  },
+  {
+    title: '16-18 destination measures',
+    type: 'Official statistics',
+    published: '2021-10-21T08:30:40.8478478',
+    topic: 'Destinations of key stage 4 and 16-18 pupils',
+    theme: 'Education outcomes and performance',
+    summary:
+      'These official statistics show the percentage of pupils continuing to a sustained education, apprenticeship or employment destination in the year after completing 16 - 18 study. The release also provides information on destination outcomes for students based on a range of individual characteristics, their geographical location and type of education provider.',
+  },
+  {
+    title: 'Key stage 4 destination measures',
+    type: 'Official statistics',
+    published: '2021-10-21T08:30:37.6085453',
+    topic: 'Destinations of key stage 4 and 16-18 pupils',
+    theme: 'Education outcomes and performance',
+    summary:
+      'Data on key stage 4 (KS4) and 16 to 18 (KS5) students going into apprenticeship, education and employment destinations.',
+  },
+  {
+    title: 'Longer term destinations',
+    type: 'Official statistics',
+    published: '2021-05-20T08:32:12.6153737',
+    topic: 'Destinations of key stage 4 and 16-18 pupils',
+    theme: 'Education outcomes and performance',
+    summary:
+      'Destination measures provide information on the success of schools and colleges in helping young people continue in education, apprenticeships or employment. These experimental statistics show the number of students that have continued in education, an apprenticeship or employment for at least 6 months, at one, three and five years after finishing key stage 4. ',
+  },
+  {
+    title: 'Progression to higher education or training',
+    type: 'Official statistics',
+    published: '2021-10-22T09:59:10.2212760',
+    topic: 'Destinations of key stage 4 and 16-18 pupils',
+    theme: 'Education outcomes and performance',
+    summary:
+      'These statistics show the percentage of level 3 pupils (e.g. those that studied A levels, tech levels and applied general qualifications) continuing to a sustained education or training destination at level 4 or higher (such as degrees, higher apprenticeships and higher national diplomas) in the year after completing 16 to 18 study.',
+  },
+  {
+    title: 'NEET age 16 to 24',
+    type: 'National statistics',
+    published: '2022-03-03T09:30:04.8469752',
+    topic: 'NEET and participation',
+    theme: 'Education outcomes and performance',
+    summary:
+      'Estimates from the Labour Force Survey of young people not in education, employment or training (NEET) in England.',
+  },
+  {
+    title: 'Participation in education and training and employment',
+    type: 'Official statistics',
+    published: '2021-09-02T12:31:54.9439755',
+    topic: 'NEET and participation',
+    theme: 'Education outcomes and performance',
+    summary:
+      'National participation figures for end 2020 and updates to provisional estimates for end 2019. Measures of participation and NEET (not in education, employment or training) for 16 to 18 year olds.',
+  },
+  {
+    title: 'Education provision: children under 5 years of age',
+    type: 'National statistics',
+    published: '2021-07-01T08:30:04.2235827',
+    topic: 'Childcare and early years',
+    theme: 'Early years (pre school)',
+    summary:
+      'Data is collected from local authorities covering schools, maintained nurseries and private, voluntary and independent (PVI) providers including childminders as part of the spring school census and the early years census.',
+  },
+  {
+    title: 'Early years foundation stage profile results',
+    type: 'National statistics',
+    published: '2021-09-02T12:51:41.9533879',
+    topic: 'Early years foundation stage profile',
+    theme: 'Early years (pre school)',
+    summary:
+      'These statistics provide national and local authority level details on the achievement at the end of the early years foundation stage profile (EYFSP) from 2013 to 2019. ',
+  },
+  {
+    title: 'LA and school expenditure',
+    type: 'Official statistics',
+    published: '2021-01-21T09:30:07.8552764',
+    topic: 'Local authority and school finance',
+    theme: 'Teachers, workforce and school funding',
+    summary:
+      "This release contains detailed information on income, expenditure, and revenue reserves of local authority maintained schools. It also includes expenditure by local authorities on education, and children's and young people's services. This includes education by sector, Sure Start children's centres, children looked after, family support services and youth justice. ",
+  },
+  {
+    title: 'Planned LA and school expenditure',
+    type: 'Official statistics',
+    published: '2021-09-30T08:30:35.6222844',
+    topic: 'Local authority and school finance',
+    theme: 'Teachers, workforce and school funding',
+    summary:
+      "This release contains information on local authority (LA) spending plans for education, children's services (including youth justice), early years, high needs place funding and social care for the financial year 2021-22. ",
+  },
+  {
+    title: 'School funding statistics',
+    type: 'Official statistics',
+    published: '2022-01-27T09:30:23.2556644',
+    topic: 'Local authority and school finance',
+    theme: 'Teachers, workforce and school funding',
+    summary:
+      'This publication provides statistics on school revenue funding from financial year 2010 to 2011 through to 2022 to 2023. The aim is to provide an overview of trends in school funding over recent years, as well as detailed information about funding allocations for individual schools for 2021 to 2022.',
+  },
+  {
+    title: 'Student loan forecasts for England',
+    type: 'Official statistics',
+    published: '2021-09-02T13:17:55.5305856',
+    topic: 'Student loan forecasts',
+    theme: 'Teachers, workforce and school funding',
+    summary: '',
+  },
+  {
+    title: 'Apprenticeships and traineeships',
+    type: 'National statistics',
+    published: '2022-01-27T09:30:18.9644575',
+    topic: 'Further education and skills',
+    theme: 'Further education',
+    summary:
+      'The quarterly update released in March 2022 provides provisional in-year apprenticeship and traineeship figures for the first two quarters of the 2021/22 academic year (August 2021 to January 2022).',
+  },
+  {
+    title: 'Apprenticeships in England by industry characteristics ',
+    type: 'Official statistics',
+    published: '2021-03-04T09:30:07.3114529',
+    topic: 'Further education and skills',
+    theme: 'Further education',
+    summary:
+      'This release presents statistics on apprenticeship starts by their employer enterprise characteristics. This allows information about apprentices to be linked to information about their employers, covering: learner characteristics - age and gender, apprenticeship information - level, standard/framework, subject studied, geography of workplace and whether they were supported by levy funds from an Apprenticeship Service Account (ASA), employer enterprise characteristics - industry sector, size band and legal status.',
+  },
+  {
+    title: 'Further education and skills',
+    type: 'National statistics',
+    published: '2022-01-27T09:30:21.2949560',
+    topic: 'Further education and skills',
+    theme: 'Further education',
+    summary:
+      "This statistical release presents provisional data on adult (19+) further education (FE) and skills in England for the first two quarters of the 2021/22 academic year (August 2021 to January 2022).  This includes apprenticeships and traineeships in the overall FE and skills numbers, but for statistics relevant to apprenticeships and traineeships please see the 'Apprenticeships and traineeships release'.",
+  },
+  {
+    title: 'Skills Bootcamps outcomes',
+    type: 'Ad hoc statistics',
+    published: '2021-12-09T09:30:37.8419104',
+    topic: 'Further education and skills',
+    theme: 'Further education',
+    summary:
+      'A summary of provider-reported Skills Bootcamp outcomes between September 2020 and March 2021. This publication provides national level summary estimates of the number of learners completing Skills Bootcamps and their employment outcomes reported to the Department by Skills Bootcamp providers.',
+  },
+  {
+    title:
+      'FE learners going into employment and learning destinations by local authority district',
+    type: 'Ad hoc statistics',
+    published: '2021-01-28T09:30:38.0090994',
+    topic: 'Further education outcomes',
+    theme: 'Further education',
+    summary:
+      "Supplementary data from the 'Further education: outcome-based success measures 2017/18' publication. The numbers (rather than rates) of learners that are counted in each measure, broken down by local authority district level are presented here.",
+  },
+  {
+    title: 'Further education: outcome-based success measures',
+    type: 'Official statistics',
+    published: '2022-03-23T12:12:43.1341675',
+    topic: 'Further education outcomes',
+    theme: 'Further education',
+    summary:
+      'Outcome-based success measures covering the destinations (into employment and learning) and the progression of learners. The measures also include estimates of the earnings outcomes of learners who achieved an apprenticeship, or adult learners who achieved a skills course at full level 2, full level 3, level 4 or higher.',
+  },
+  {
+    title:
+      'UK revenue from education related exports and transnational education activity',
+    type: 'Experimental statistics',
+    published: '2021-12-16T09:30:08.7774613',
+    topic: 'Education exports',
+    theme: 'Higher education',
+    summary:
+      'Estimates of UK revenue from education-related exports and transnational education (TNE) activity for 2019. TNE activity includes education programmes that take place outside the UK, either through partner institutions, or directly through distance learning or international campuses.',
+  },
+  {
+    title: 'Graduate labour market statistics',
+    type: 'Official statistics',
+    published: '2021-06-10T08:30:02.4491442',
+    topic: 'Higher education graduate employment and earnings',
+    theme: 'Higher education',
+    summary:
+      'These statistics show labour market conditions for the following groups living in England: Graduates, Postgraduates, Non-graduates',
+  },
+  {
+    title: 'Graduate outcomes (LEO)',
+    type: 'Official statistics',
+    published: '2021-09-02T13:43:10.3352575',
+    topic: 'Higher education graduate employment and earnings',
+    theme: 'Higher education',
+    summary:
+      'Graduate outcomes (Longitudinal Education Outcomes (LEO)): Employment and earnings outcomes of higher education graduates by subject studied and graduate characteristics. ',
+  },
+  {
+    title: 'Graduate outcomes (LEO): postgraduate outcomes',
+    type: 'Official statistics',
+    published: '2021-09-02T13:47:05.5818295',
+    topic: 'Higher education graduate employment and earnings',
+    theme: 'Higher education',
+    summary:
+      'Graduate outcomes (Longitudinal Education Outcomes (LEO)): Employment and earnings outcomes for those who graduated with a level 7 (masters) or level 8 (doctoral) postgraduate degree by subject studied, current region and domicile.?',
+  },
+  {
+    title: 'Graduate outcomes (LEO): Provider level data',
+    type: 'Official statistics',
+    published: '2021-09-02T13:48:35.9506703',
+    topic: 'Higher education graduate employment and earnings',
+    theme: 'Higher education',
+    summary:
+      'Graduate outcomes (Longitudinal Education Outcomes (LEO)): Employment and earnings outcomes of higher education first degree graduates by provider, subject studied and graduate characteristics. ',
+  },
+  {
+    title: 'Participation measures in higher education',
+    type: 'National statistics',
+    published: '2021-11-25T09:30:54.3955497',
+    topic: 'Participation measures in higher education',
+    theme: 'Higher education',
+    summary:
+      "This statistical publication presents the latest Higher Education Initial Participation (HEIP) measure. The HEIP has been published by DfE (and former Departments) since 2004, and the measure is the sum of the age specific participation rates for the 17 to 30 year-old population in England in each academic year. It can be thought of as a projection of the likelihood of a 17-year-old today participating in higher education by age 30 if the latest year's entry rates persisted in the future.",
+  },
+  {
+    title: 'Higher Level Learners in England',
+    type: 'Ad hoc statistics',
+    published: '2021-10-21T08:30:41.8076031',
+    topic: 'Skills Bill: Higher level learners',
+    theme: 'Higher education',
+    summary:
+      'This ad hoc statistical publication presents an overview of participation in higher-level learning at Further Education Providers (FEPs) and Higher Education Providers (HEPs) for English-domiciled learners in England in the academic year 2018/19. ',
+  },
+  {
+    title: 'Widening participation in higher education',
+    type: 'Official statistics',
+    published: '2021-10-14T08:30:02.3198130',
+    topic: 'Widening participation in higher education',
+    theme: 'Higher education',
+    summary:
+      "Annual statistics on young peoples' participation in higher education by student characteristics, including eligibility for free school meals, gender, ethnicity, special educational need status, first language and region.",
+  },
+  {
+    title: 'Academy transfers and funding',
+    type: 'Official statistics',
+    published: '2021-09-03T07:24:35.4610499',
+    topic: 'Academy transfers',
+    theme: 'Pupils and schools',
+    summary:
+      'This statistics publication analyses the number of academies that have moved trusts from the financial year 2013-14 to 2020-21 and the total grant funding provided. It also compares the reason that academies move trust. ',
+  },
+  {
+    title: 'Admission appeals in England',
+    type: 'National statistics',
+    published: '2021-08-19T08:30:02.5087664',
+    topic: 'Admission appeals',
+    theme: 'Pupils and schools',
+    summary:
+      'These statistics provide information about appeals made following the refusal of a school place application.',
+  },
+  {
+    title: 'Permanent exclusions and suspensions in England',
+    type: 'National statistics',
+    published: '2021-07-29T08:30:09.0901719',
+    topic: 'Exclusions',
+    theme: 'Pupils and schools',
+    summary:
+      'This publication presents statistics on permanent exclusions and suspensions within the 2019/20 academic year across state-funded schools. The publication includes data on: reasons schools report for excluding and suspending pupils, permanent exclusions and suspensions by pupil characteristics, permanent exclusion independent review panels',
+  },
+  {
+    title: 'Parental responsibility measures',
+    type: 'Official statistics',
+    published: '2020-03-26T09:30:04.8434331',
+    topic: 'Parental responsibility measures',
+    theme: 'Pupils and schools',
+    summary:
+      'This release includes information on parental responsibility measures for attendance used by schools and local authorities to improve poor attendance in schools. It includes data on: penalty notices , attendance case management, parenting orders and parenting contracts, education supervision orders',
+  },
+  {
+    title: 'Pupil absence in schools in England',
+    type: 'National statistics',
+    published: '2022-03-24T09:30:15.3954087',
+    topic: 'Pupil absence',
+    theme: 'Pupils and schools',
+    summary:
+      'This release looks at pupil absence across the 2020/21 academic year, including by reason, school types and pupil characteristics.',
+  },
+  {
+    title: 'Pupil absence in schools in England: autumn and spring terms',
+    type: 'National statistics',
+    published: '2021-10-21T08:30:41.3300486',
+    topic: 'Pupil absence',
+    theme: 'Pupils and schools',
+    summary:
+      'This release looks at pupil absence during the Spring 2021 term. For the majority of this term, only children of critical workers and vulnerable pupils could attend school during the period of lockdown from 4 January 2021. Restrictions were lifted on attendance from 8 March 2021 for all other pupils, four school weeks prior to the end of term. ',
+  },
+  {
+    title: 'Pupil absence in schools in England: autumn term',
+    type: 'National statistics',
+    published: '2021-09-03T07:37:39.5429341',
+    topic: 'Pupil absence',
+    theme: 'Pupils and schools',
+    summary:
+      'This release looks at pupil attendance during the Autumn 2020 term. This term coincided with the reopening of schools on 1 September 2020. Schools were expected to be open throughout the whole of the Autumn term although in some schools, where there was a case of coronavirus, pupils were sent home in bubbles to self-isolate',
+  },
+  {
+    title: 'National pupil projections',
+    type: 'Official statistics',
+    published: '2021-07-22T08:30:39.1936462',
+    topic: 'Pupil projections',
+    theme: 'Pupils and schools',
+    summary:
+      'This annual release provides national projections for the number of pupils in schools in England by type of school and age.',
+  },
+  {
+    title: 'Free school meals: Autumn term',
+    type: 'Ad hoc statistics',
+    published: '2021-03-30T08:30:08.5564981',
+    topic: 'School and pupil numbers',
+    theme: 'Pupils and schools',
+    summary:
+      'This release presents data on free school meals (FSM) as collected in the Autumn school census. The number of pupils eligible for free school meals on census day (1 October 2020) and the number of pupils who have become eligible since 23 March 2020, that is since the first COVID-19 lockdown was announced, are presented.',
+  },
+  {
+    title: 'Schools, pupils and their characteristics',
+    type: 'National statistics',
+    published: '2021-06-17T08:30:34.6811442',
+    topic: 'School and pupil numbers',
+    theme: 'Pupils and schools',
+    summary:
+      'This release contains the latest statistics on school and pupil numbers and their characteristics, including: age, gender, free school meals (FSM) eligibility, English as an additional language, ethnicity, school characteristics,class sizes',
+  },
+  {
+    title: 'Secondary and primary school applications and offers',
+    type: 'Official statistics',
+    published: '2021-06-17T08:30:34.9703099',
+    topic: 'School applications',
+    theme: 'Pupils and schools',
+    summary:
+      'These statistics provide the number of offers made to applicants for secondary and primary school places to start in September 2021, and the proportion which received preferred offers.',
+  },
+  {
+    title: 'School places sufficiency survey',
+    type: 'Ad hoc statistics',
+    published: '2021-03-25T09:30:35.1104798',
+    topic: 'School capacity',
+    theme: 'Pupils and schools',
+    summary:
+      'This release provides transparency data from the voluntary one-off survey on school places, sent to local authorities in England, in September 2020. The survey sought to collect information on significant changes to school capacity between academic year 2018/19 and 2019/20, as well as planned places to be added by local authorities in future.  ',
+  },
+  {
+    title: 'Local authority school places scorecards',
+    type: 'Official statistics',
+    published: '2020-09-29T06:48:24.8128286',
+    topic: 'School capacity',
+    theme: 'Pupils and schools',
+    summary:
+      'The scorecard release provides a snapshot of the progress local authorities in England are making in delivering good quality primary and secondary school places in 2019.',
+  },
+  {
+    title: 'School capacity',
+    type: 'Official statistics',
+    published: '2022-03-24T09:30:10.4860300',
+    topic: 'School capacity',
+    theme: 'Pupils and schools',
+    summary:
+      'This release publishes data reported by local authorities in England, in the annual School Capacity (SCAP) survey, as of 1 May 2021',
+  },
+  {
+    title: 'Education, health and care plans',
+    type: 'National statistics',
+    published: '2021-05-13T08:30:06.5056659',
+    topic: 'Special educational needs (SEN)',
+    theme: 'Pupils and schools',
+    summary:
+      'This publication provides data on children and young people with an education, health and care (EHC) plan in England and, historically, for those with a statement of special educational needs (SEN). ',
+  },
+  {
+    title: 'Special educational needs in England',
+    type: 'National statistics',
+    published: '2021-09-03T08:00:21.5148594',
+    topic: 'Special educational needs (SEN)',
+    theme: 'Pupils and schools',
+    summary:
+      'This publication combines information from the school census, school level annual school census, general hospital school census and alternative provision census on pupils with special educational needs (SEN). ',
+  },
+  {
+    title: 'A level and other 16 to 18 results',
+    type: 'National statistics',
+    published: '2021-11-04T09:30:36.2986748',
+    topic: '16 to 19 attainment',
+    theme: 'Education outcomes and performance',
+    summary:
+      'The attainment of students at the end of their 16 to 18 study in England.',
+  },
+  {
+    title: 'Level 2 and 3 attainment age 16 to 25',
+    type: 'National statistics',
+    published: '2022-03-23T12:22:41.9960937',
+    topic: '16 to 19 attainment',
+    theme: 'Education outcomes and performance',
+    summary:
+      'Information on the attainment of young people aged 19 in 2020, based on matched administrative data.',
+  },
+  {
+    title: 'Key stage 4 performance',
+    type: 'National statistics',
+    published: '2022-03-16T15:31:35.0279760',
+    topic: 'GCSEs (key stage 4)',
+    theme: 'Education outcomes and performance',
+    summary:
+      'Statistics on the achievements of young people at the end of key stage 4 in England, in the 2020 to 2021 academic year.',
+  },
+  {
+    title: 'Multi-academy trust performance measures at key stage 2',
+    type: 'Official statistics',
+    published: '2021-09-03T08:33:25.0910305',
+    topic: 'Key stage 2',
+    theme: 'Education outcomes and performance',
+    summary:
+      'This release presents performance measures for multi-academy trusts (MATs). A MAT must have at least three schools that have been with the MAT for at least three years and have results in 2018/19 to be included.',
+  },
+  {
+    title: 'Initial Teacher Training Census',
+    type: 'Official statistics',
+    published: '2021-12-02T09:30:07.4526288',
+    topic: 'Initial teacher training (ITT)',
+    theme: 'Teachers, workforce and funding',
+    summary:
+      'National and provider-level information about the numbers and characteristics of new entrants to Initial Teacher Training (ITT) in England in the training year 2021/22; and 2021/22 PGITT targets. The statistical release also includes information on numbers and characteristics of new entrants to early years ITT. ',
+  },
+  {
+    title: 'Initial teacher training performance profiles',
+    type: 'Official statistics',
+    published: '2021-07-29T08:30:11.8066657',
+    topic: 'Initial teacher training (ITT)',
+    theme: 'Teachers, workforce and funding',
+    summary:
+      'National and provider-level information about the outcomes for final year teacher trainees in England in the academic year 2019/20.  Outcome measures presented are the proportion of final year trainees that gained qualified teacher status, and the employment rates of these qualified teachers. The publication also includes information on the outcomes for assessment only (AO) candidates and early years ITT trainees.',
+  },
+  {
+    title: 'School workforce in England',
+    type: 'National statistics',
+    published: '2021-06-17T08:30:35.1552887',
+    topic: 'School workforce',
+    theme: 'Teachers, workforce and funding',
+    summary:
+      'This release is largely based on the School Workforce Census. The census collects information from schools and local authorities on the school workforce in state-funded schools in England. Independent schools, non-maintained special schools, sixth-form colleges and further education establishments are not included.',
+  },
+  {
+    title: 'Education and training statistics for the UK',
+    type: 'National statistics',
+    published: '2021-11-25T09:30:53.9685045',
+    topic: 'UK education and training statistics',
+    theme: 'Cross-cutting publications',
+    summary:
+      'This release compiles information on education systems across the United Kingdom. Education is devolved in the UK, so each part of the United Kingdom has a separate education system, with different attainment measures.',
+  },
+];
+
 // eslint-disable-next-line import/prefer-default-export
-export const newThemes: Theme[] = [
+export const themes: Theme[] = [
   {
     id: 'e6e31160-fe79-4556-f3a9-08d86094b9e8',
     title: 'Early years (pre school)',

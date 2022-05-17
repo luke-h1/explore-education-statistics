@@ -13,7 +13,7 @@ import {
 import { Theme } from '@common/services/themeService';
 import Link from '@admin/components/Link';
 import styles from '@admin/prototypes/PrototypePublicPage.module.scss';
-import { newThemes } from '@admin/prototypes/data/newThemesData';
+import { themes } from '@admin/prototypes/data/newThemesData';
 import React, { useState } from 'react';
 
 export interface Props {
@@ -25,7 +25,7 @@ export interface Props {
   themeMeta: Theme[];
 }
 
-const PrototypeTableTool = ({ fastTrack, themeMeta = newThemes }: Props) => {
+const PrototypeTableTool = ({ fastTrack, themeMeta = themes }: Props) => {
   const initialState = undefined;
 
   const [loadingFastTrack, setLoadingFastTrack] = useState(false);
