@@ -28,7 +28,7 @@ const PrototypeFrontEndPage = ({
 }: Props) => {
   return (
     <>
-      <PageHeader />
+      <PageHeader wide />
 
       <div
         className={classNames('govuk-width-container', className, {

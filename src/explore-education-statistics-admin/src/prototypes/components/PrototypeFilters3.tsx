@@ -41,6 +41,7 @@ const PrototypeFilters = ({
     }),
   );
 
+  const [showHelpThemesModal, toggleHelpThemesModal] = useToggle(false);
   const [showHelpTypesModal, toggleHelpTypesModal] = useToggle(false);
 
   return (
@@ -64,8 +65,18 @@ const PrototypeFilters = ({
         </ButtonText>
       </div>
 
+      <h3 className="govuk-!-margin-bottom-0">Filter by theme</h3>
+      <a
+        href="#"
+        onClick={() => {
+          toggleHelpThemesModal(true);
+        }}
+      >
+        What are themes?
+      </a>
       <FormRadioGroup
-        className="govuk-!-padding-left-2"
+        legendHidden
+        className="govuk-!-padding-left-2 govuk-!-margin-top-3"
         id="theme"
         legend="Filter by theme"
         legendSize="m"
@@ -78,12 +89,22 @@ const PrototypeFilters = ({
         options={themeFilters}
       />
 
-      <h2 className="govuk-heading-m govuk-!-margin-top-6">Other filters</h2>
+      <h2 className="govuk-heading-m govuk-!-margin-top-6">Advanced filters</h2>
 
       <Accordion id="filters">
         <AccordionSection heading="Release type" goToTop={false}>
+          <h3 className="govuk-!-margin-bottom-0">Filter by release type</h3>
+          <a
+            href="#"
+            onClick={() => {
+              toggleHelpTypesModal(true);
+            }}
+          >
+            What are release types?
+          </a>
           <FormRadioGroup
-            className="govuk-!-padding-left-2"
+            legendHidden
+            className="govuk-!-padding-left-2 govuk-!-margin-top-3"
             id="releaseType"
             legend="Filter by release type"
             legendSize="m"
@@ -102,14 +123,6 @@ const PrototypeFilters = ({
               }),
             )}
           />
-          <a
-            href="#"
-            onClick={() => {
-              toggleHelpTypesModal(true);
-            }}
-          >
-            What are release types?
-          </a>
         </AccordionSection>
       </Accordion>
       <div
@@ -123,6 +136,20 @@ const PrototypeFilters = ({
           Show {totalResults} result(s)
         </Button>
       </div>
+      <Modal
+        open={showHelpThemesModal}
+        title="Themes guidance"
+        className="govuk-!-width-one-half"
+      >
+        <ModalContent contentType="helpThemes" />
+        <Button
+          onClick={() => {
+            toggleHelpThemesModal(false);
+          }}
+        >
+          Close
+        </Button>
+      </Modal>
       <Modal
         open={showHelpTypesModal}
         title="Release types guidance"

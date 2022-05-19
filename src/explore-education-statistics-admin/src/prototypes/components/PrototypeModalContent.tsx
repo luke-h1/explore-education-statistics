@@ -252,6 +252,75 @@ const PrototypeModalContent = ({ contentType }: Props) => {
           </div>
         </>
       )}
+      {contentType === 'helpThemes' && (
+        <>
+          <p>This is a description list of our different publication themes.</p>
+          <div
+            style={{
+              maxHeight: '50vh',
+              overflowY: 'auto',
+              marginBottom: '2rem',
+            }}
+          >
+            <SummaryList>
+              <SummaryListItem term="Early years (pre school)">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Id
+                commodi fuga dignissimos labore. Adipisci eveniet necessitatibus
+                enim, inventore amet praesentium modi, ullam assumenda illo
+                nostrum perferendis. Veritatis vero nostrum nam?
+              </SummaryListItem>
+              <SummaryListItem term="Pupils and schools">
+                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+                Impedit voluptas non cupiditate dignissimos harum reprehenderit
+                dicta. Debitis porro consequuntur veniam? Blanditiis quo facilis
+                excepturi, rerum porro ipsum hic repellendus officia?.
+              </SummaryListItem>
+              <SummaryListItem term="Teachers, workforce and school funding">
+                Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                Voluptas incidunt recusandae autem, dicta doloribus eos
+                molestiae quasi. Dignissimos ipsa quo accusamus pariatur, vitae
+                vero molestias asperiores itaque. Obcaecati, ducimus fuga.
+              </SummaryListItem>
+              <SummaryListItem term="Education outcomes and performance">
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque
+                id nemo assumenda autem hic odit blanditiis, veritatis
+                exercitationem animi repellat quis quisquam aliquam. Ullam,
+                veritatis similique excepturi nisi distinctio deleniti.
+              </SummaryListItem>
+              <SummaryListItem term="Further education">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat
+                soluta error inventore omnis, iure veniam vel quod. Quam ipsum
+                impedit obcaecati distinctio iusto modi, vero, cum optio quis,
+                architecto sequi?
+              </SummaryListItem>
+              <SummaryListItem term="Higher education">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat
+                soluta error inventore omnis, iure veniam vel quod. Quam ipsum
+                impedit obcaecati distinctio iusto modi, vero, cum optio quis,
+                architecto sequi?
+              </SummaryListItem>
+              <SummaryListItem term="Children's social care">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat
+                soluta error inventore omnis, iure veniam vel quod. Quam ipsum
+                impedit obcaecati distinctio iusto modi, vero, cum optio quis,
+                architecto sequi?
+              </SummaryListItem>
+              <SummaryListItem term="COVID-19">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat
+                soluta error inventore omnis, iure veniam vel quod. Quam ipsum
+                impedit obcaecati distinctio iusto modi, vero, cum optio quis,
+                architecto sequi?
+              </SummaryListItem>
+              <SummaryListItem term="Cross-cutting publications">
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat
+                soluta error inventore omnis, iure veniam vel quod. Quam ipsum
+                impedit obcaecati distinctio iusto modi, vero, cum optio quis,
+                architecto sequi?
+              </SummaryListItem>
+            </SummaryList>
+          </div>
+        </>
+      )}
     </>
   );
 };

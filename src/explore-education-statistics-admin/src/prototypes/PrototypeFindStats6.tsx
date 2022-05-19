@@ -15,6 +15,7 @@ import { publications, themes } from '@admin/prototypes/data/newThemesData';
 import orderBy from 'lodash/orderBy';
 import React, { useMemo, useState } from 'react';
 import Button from '@common/components/Button';
+import { callbackify } from 'util';
 
 const PrototypeFindStats = () => {
   const [searchInput, setSearchInput] = useState('');
@@ -117,7 +118,7 @@ const PrototypeFindStats = () => {
                 </li>
                 <li>
                   <Link
-                    to="https://www.gov.scot/collections/school-education-statistics/"
+                    to="https://www.gov.scot/statistics-and-research/?cat=filter&amp;topics=Education&amp;page=1"
                     target="_blank"
                   >
                     Educational statistics for Scotland
@@ -159,10 +160,11 @@ const PrototypeFindStats = () => {
                 </h2>
 
                 <input
-                  type="text"
+                  type="search"
                   id="search"
                   className="govuk-input"
                   value={searchInput}
+                  style={{ width: 'calc(100% - 36px)' }}
                   onChange={e => setSearchInput(e.target.value)}
                 />
                 <button
@@ -207,7 +209,14 @@ const PrototypeFindStats = () => {
 
             <span className="govuk-!-margin-bottom-0">
               {!isFiltered && (
-                <h3 className="govuk-heading-s">Showing all publications</h3>
+                <p>
+                  {totalResults !== 0 && (
+                    <>
+                      Page {currentPage + 1} of {filteredPublications.length},
+                    </>
+                  )}
+                  {` `}showing all publications
+                </p>
               )}
 
               {isFiltered && (
@@ -216,9 +225,17 @@ const PrototypeFindStats = () => {
                     className="dfe-flex dfe-justify-content--space-between govuk-!-margin-bottom-2"
                     style={{ width: '100%' }}
                   >
-                    <h3 className="govuk-heading-s govuk-!-margin-bottom-0">
-                      Filtered by
-                    </h3>
+                    {isFiltered && (
+                      <p className="govuk-!-margin-bottom-0">
+                        {totalResults !== 0 && (
+                          <>
+                            Page {currentPage + 1} of{' '}
+                            {filteredPublications.length},
+                          </>
+                        )}
+                        {` `}filtered by:
+                      </p>
+                    )}
                     <ButtonText
                       onClick={() => {
                         setSelectedTheme('all-themes');
@@ -299,14 +316,17 @@ const PrototypeFindStats = () => {
 
             {isMobileMedia ? (
               <div className="dfe-flex dfe-justify-content--space-between dfe-align-items--center">
-                <ButtonText
-                  className="govuk-!-margin-bottom-1 govuk-!-font-weight-bold govuk-width-one-third"
-                  onClick={() => {
-                    setShowFilters(true);
-                  }}
-                >
-                  Filter results
-                </ButtonText>
+                <div style={{ width: '150px' }}>
+                  <Button
+                    className="govuk-!-margin-bottom-0 govuk-!-font-weight-bold govuk-width-one-third"
+                    variant="secondary"
+                    onClick={() => {
+                      setShowFilters(true);
+                    }}
+                  >
+                    Filter results
+                  </Button>
+                </div>
                 <PrototypeMobileSortFilters
                   sortOrder={selectedSortOrder}
                   onSort={sortOrder => {
