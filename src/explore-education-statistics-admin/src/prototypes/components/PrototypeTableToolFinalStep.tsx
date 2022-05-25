@@ -1,7 +1,7 @@
 import Tag from '@common/components/Tag';
 import useAsyncRetry from '@common/hooks/useAsyncRetry';
 import DownloadTable from '@common/modules/table-tool/components/DownloadTable';
-import TableHeadersForm from '@common/modules/table-tool/components/TableHeadersForm';
+import TableHeadersForm from '@admin/prototypes/components/PrototypeTableHeadersForm';
 import TimePeriodDataTable from '@common/modules/table-tool/components/TimePeriodDataTable';
 import TableToolInfo from '@common/modules/table-tool/components/TableToolInfo';
 import { FullTable } from '@common/modules/table-tool/types/fullTable';
