@@ -136,7 +136,7 @@ export const publications = [
     topic: 'Destinations of key stage 4 and 16-18 pupils',
     theme: 'Education outcomes and performance',
     summary:
-      'Data on key stage 4 (KS4) and 16 to 18 (KS5) students going into apprenticeship, education and employment destinations.',
+      'Data on key stage 4 (KS4, GCSEs or equivalent) and 16 to 18 (KS5, A levels) students going into apprenticeship, education and employment destinations.',
   },
   {
     title: 'Longer term destinations',
@@ -145,7 +145,7 @@ export const publications = [
     topic: 'Destinations of key stage 4 and 16-18 pupils',
     theme: 'Education outcomes and performance',
     summary:
-      'Destination measures provide information on the success of schools and colleges in helping young people continue in education, apprenticeships or employment. These experimental statistics show the number of students that have continued in education, an apprenticeship or employment for at least 6 months, at one, three and five years after finishing key stage 4. ',
+      'Destination measures provide information on the success of schools and colleges in helping young people continue in education, apprenticeships or employment. These experimental statistics show the number of students that have continued in education, an apprenticeship or employment for at least 6 months, at one, three and five years after finishing key stage 4 (KS4, GCSEs or equivalent).',
   },
   {
     title: 'Progression to higher education or training',
@@ -524,7 +524,7 @@ export const publications = [
     topic: 'GCSEs (key stage 4)',
     theme: 'Education outcomes and performance',
     summary:
-      'Statistics on the achievements of young people at the end of key stage 4 in England, in the 2020 to 2021 academic year.',
+      'Statistics on the achievements of young people at the end of key stage 4 (KS4, GCSEs or equivalent) in England, in the 2020 to 2021 academic year.',
   },
   {
     title: 'Multi-academy trust performance measures at key stage 2',
@@ -540,7 +540,7 @@ export const publications = [
     type: 'Official statistics',
     published: '2021-12-02T09:30:07.4526288',
     topic: 'Initial teacher training (ITT)',
-    theme: 'Teachers, workforce and funding',
+    theme: 'Teachers, workforce and school funding',
     summary:
       'National and provider-level information about the numbers and characteristics of new entrants to Initial Teacher Training (ITT) in England in the training year 2021/22; and 2021/22 PGITT targets. The statistical release also includes information on numbers and characteristics of new entrants to early years ITT. ',
   },
@@ -549,7 +549,7 @@ export const publications = [
     type: 'Official statistics',
     published: '2021-07-29T08:30:11.8066657',
     topic: 'Initial teacher training (ITT)',
-    theme: 'Teachers, workforce and funding',
+    theme: 'Teachers, workforce and school funding',
     summary:
       'National and provider-level information about the outcomes for final year teacher trainees in England in the academic year 2019/20.  Outcome measures presented are the proportion of final year trainees that gained qualified teacher status, and the employment rates of these qualified teachers. The publication also includes information on the outcomes for assessment only (AO) candidates and early years ITT trainees.',
   },
@@ -558,7 +558,7 @@ export const publications = [
     type: 'National statistics',
     published: '2021-06-17T08:30:35.1552887',
     topic: 'School workforce',
-    theme: 'Teachers, workforce and funding',
+    theme: 'Teachers, workforce and school funding',
     summary:
       'This release is largely based on the School Workforce Census. The census collects information from schools and local authorities on the school workforce in state-funded schools in England. Independent schools, non-maintained special schools, sixth-form colleges and further education establishments are not included.',
   },
