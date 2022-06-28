@@ -24,7 +24,8 @@ const primaryButton = 0; // https://developer.mozilla.org/en-US/docs/Web/API/Mou
 type SortableOptionChangeEventHandler = (value: Filter[]) => void;
 
 export type FormSortableListProps = {
-  isGroupDragDisabled: boolean;
+  focus?: boolean;
+  readOnly: boolean;
   onBlur?: FocusEventHandler<HTMLDivElement>;
   onChange?: SortableOptionChangeEventHandler;
   onFocus?: FocusEventHandler<HTMLDivElement>;
@@ -34,8 +35,9 @@ export type FormSortableListProps = {
 } & FormFieldsetProps;
 
 const FormSortableList = ({
+  focus = false,
   id,
-  isGroupDragDisabled,
+  readOnly,
   onBlur,
   onChange,
   onFocus,
@@ -44,6 +46,17 @@ const FormSortableList = ({
   value,
   ...props
 }: FormSortableListProps) => {
+  /**
+   * listRef is a div added just to be able to focus the list when it's shown,
+   * as can't focus on the drag/drop elements directly.
+   */
+  const listRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (focus) {
+      listRef.current?.focus();
+    }
+  }, [focus]);
+
   const isFocusWithinRef = useRef(false);
 
   const [selectedIndices, setSelectedIndices] = useState<number[]>([]);
@@ -95,28 +108,24 @@ const FormSortableList = ({
   }, []);
 
   const toggleSelection = (index: number) => {
-    if (isGroupDragDisabled) {
-      setSelectedIndices(prevIndices =>
-        prevIndices.includes(index) ? [] : [index],
-      );
-    }
+    setSelectedIndices(prevIndices =>
+      prevIndices.includes(index) ? [] : [index],
+    );
   };
 
   const toggleSelectionInGroup = (index: number) => {
-    if (isGroupDragDisabled) {
-      setSelectedIndices(prevIndices => {
-        const indexPosition = prevIndices.indexOf(index);
+    setSelectedIndices(prevIndices => {
+      const indexPosition = prevIndices.indexOf(index);
 
-        if (indexPosition === -1) {
-          return [...prevIndices, index];
-        }
+      if (indexPosition === -1) {
+        return [...prevIndices, index];
+      }
 
-        const nextIndices = [...prevIndices];
-        nextIndices.splice(indexPosition, 1);
+      const nextIndices = [...prevIndices];
+      nextIndices.splice(indexPosition, 1);
 
-        return nextIndices;
-      });
-    }
+      return nextIndices;
+    });
   };
 
   const performAction = (
@@ -215,130 +224,163 @@ const FormSortableList = ({
     }
   };
 
+  if (readOnly) {
+    const numItemsToShow = 2;
+    const hasMore = value.length > numItemsToShow;
+    return (
+      <>
+        <h4 className={styles.readOnlyHeading}>{props.legend}</h4>
+        <ol
+          className={classNames(styles.readOnlyList, {
+            [styles.noLastItem]: !hasMore,
+          })}
+        >
+          {value.slice(0, numItemsToShow).map(option => (
+            <li key={option.value} className={styles.readOnlyItem}>
+              {option.label}
+            </li>
+          ))}
+          {hasMore && (
+            <li
+              className={classNames(
+                styles.readOnlyItem,
+                styles.readOnlyLastItem,
+                'govuk-!-font-size-14',
+              )}
+            >
+              + {value.length - numItemsToShow} more
+            </li>
+          )}
+        </ol>
+      </>
+    );
+  }
+
   return (
     <FormFieldset {...props} id={id}>
-      <DragDropContext
-        onDragStart={start => {
-          if (!selectedIndices.includes(start.source.index)) {
-            setSelectedIndices([]);
-          }
+      <div className={styles.focusContainer} ref={listRef} tabIndex={-1}>
+        <DragDropContext
+          onDragStart={start => {
+            if (!selectedIndices.includes(start.source.index)) {
+              setSelectedIndices([]);
+            }
 
-          setDraggingIndex(start.source.index);
-        }}
-        onDragEnd={result => {
-          if (result.destination?.index == null) {
-            return;
-          }
+            setDraggingIndex(start.source.index);
+          }}
+          onDragEnd={result => {
+            if (result.destination?.index == null) {
+              return;
+            }
 
-          const destinationIndex = result.destination.index;
+            const destinationIndex = result.destination.index;
 
-          const selected = selectedIndices.length
-            ? selectedIndices
-            : [result.source.index];
+            const selected = selectedIndices.length
+              ? selectedIndices
+              : [result.source.index];
 
-          const nextValue = reorderMultiple({
-            list: value,
-            destinationIndex,
-            selectedIndices: selected,
-          });
+            const nextValue = reorderMultiple({
+              list: value,
+              destinationIndex,
+              selectedIndices: selected,
+            });
 
-          setDraggingIndex(undefined);
+            setDraggingIndex(undefined);
 
-          const oldOptions = selected.map(index => value[index]);
+            const oldOptions = selected.map(index => value[index]);
 
-          setSelectedIndices(
-            nextValue.reduce<number[]>((acc, option, index) => {
-              if (oldOptions.includes(option)) {
-                acc.push(index);
-              }
+            setSelectedIndices(
+              nextValue.reduce<number[]>((acc, option, index) => {
+                if (oldOptions.includes(option)) {
+                  acc.push(index);
+                }
 
-              return acc;
-            }, []),
-          );
+                return acc;
+              }, []),
+            );
 
-          onChange?.(nextValue);
-        }}
-      >
-        <Droppable droppableId={id}>
-          {(droppableProvided, droppableSnapshot) => (
-            <div
-              // eslint-disable-next-line react/jsx-props-no-spreading
-              {...droppableProvided.droppableProps}
-              className={classNames(styles.list, {
-                [styles.isDraggingOver]: droppableSnapshot.isDraggingOver,
-                [styles.listIsDisabled]: !isGroupDragDisabled,
-              })}
-              ref={droppableProvided.innerRef}
-              onBlur={handleContainerBlur}
-              onFocus={handleContainerFocus}
-              onMouseEnter={onMouseEnter}
-              onMouseLeave={onMouseLeave}
-              aria-hidden={!isGroupDragDisabled}
-            >
-              {value.map((option, index) => (
-                <Draggable
-                  isDragDisabled={!isGroupDragDisabled}
-                  draggableId={option.value}
-                  key={option.value}
-                  index={index}
-                >
-                  {(draggableProvided, draggableSnapshot) => (
-                    <div
-                      // eslint-disable-next-line react/jsx-props-no-spreading
-                      {...draggableProvided.draggableProps}
-                      // eslint-disable-next-line react/jsx-props-no-spreading
-                      {...draggableProvided.dragHandleProps}
-                      className={classNames(styles.option, {
-                        [styles.isDragging]: draggableSnapshot.isDragging,
-                        [styles.isSelected]: selectedIndices.includes(index),
-                        [styles.isGhosted]:
-                          selectedIndices.includes(index) &&
-                          typeof draggingIndex === 'number' &&
-                          draggingIndex !== index,
-                        [styles.isDraggedOutside]:
-                          draggableSnapshot.isDragging &&
-                          !draggableSnapshot.draggingOver,
-                      })}
-                      ref={draggableProvided.innerRef}
-                      role={isGroupDragDisabled ? 'button' : ''}
-                      style={draggableProvided.draggableProps.style}
-                      tabIndex={isGroupDragDisabled ? 0 : -1}
-                      onClick={event => {
-                        handleClick(event, index);
-                      }}
-                      onKeyDown={event =>
-                        handleKeyDown(event, draggableSnapshot, index)
-                      }
-                      onTouchEnd={event => {
-                        handleTouchEnd(event, index);
-                      }}
-                    >
-                      <div className={styles.optionLabel}>
-                        <span>{option.label}</span>
-                        <DragIcon className={styles.dragIcon} />
+            onChange?.(nextValue);
+          }}
+        >
+          <Droppable droppableId={id}>
+            {(droppableProvided, droppableSnapshot) => (
+              <div
+                // eslint-disable-next-line react/jsx-props-no-spreading
+                {...droppableProvided.droppableProps}
+                className={classNames(styles.list, {
+                  [styles.isDraggingOver]: droppableSnapshot.isDraggingOver,
+                })}
+                ref={droppableProvided.innerRef}
+                onBlur={handleContainerBlur}
+                onFocus={handleContainerFocus}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
+              >
+                {value.map((option, index) => (
+                  <Draggable
+                    draggableId={option.value}
+                    key={option.value}
+                    index={index}
+                  >
+                    {(draggableProvided, draggableSnapshot) => (
+                      <div
+                        // eslint-disable-next-line react/jsx-props-no-spreading
+                        {...draggableProvided.draggableProps}
+                        // eslint-disable-next-line react/jsx-props-no-spreading
+                        {...draggableProvided.dragHandleProps}
+                        className={classNames(styles.option, {
+                          [styles.isDragging]: draggableSnapshot.isDragging,
+                          [styles.isSelected]: selectedIndices.includes(index),
+                          [styles.isGhosted]:
+                            selectedIndices.includes(index) &&
+                            typeof draggingIndex === 'number' &&
+                            draggingIndex !== index,
+                          [styles.isDraggedOutside]:
+                            draggableSnapshot.isDragging &&
+                            !draggableSnapshot.draggingOver,
+                        })}
+                        ref={draggableProvided.innerRef}
+                        role="button"
+                        style={draggableProvided.draggableProps.style}
+                        tabIndex={0}
+                        onClick={event => {
+                          handleClick(event, index);
+                        }}
+                        onKeyDown={event =>
+                          handleKeyDown(event, draggableSnapshot, index)
+                        }
+                        onTouchEnd={event => {
+                          handleTouchEnd(event, index);
+                        }}
+                      >
+                        <div className={styles.optionLabel}>
+                          <span>{option.label}</span>
+                          <DragIcon className={styles.dragIcon} />
+                        </div>
+
+                        {selectedIndices.length > 1 &&
+                          draggingIndex === index &&
+                          draggableSnapshot.isDragging && (
+                            <div className={styles.selectedCount}>
+                              {selectedIndices.length}{' '}
+                              <span className="govuk-visually-hidden">
+                                {`${selectedIndices.length} ${
+                                  selectedIndices.length === 1
+                                    ? 'item'
+                                    : 'items'
+                                } selected`}
+                              </span>
+                            </div>
+                          )}
                       </div>
-
-                      {selectedIndices.length > 1 &&
-                        draggingIndex === index &&
-                        draggableSnapshot.isDragging && (
-                          <div className={styles.selectedCount}>
-                            {selectedIndices.length}{' '}
-                            <span className="govuk-visually-hidden">
-                              {`${selectedIndices.length} ${
-                                selectedIndices.length === 1 ? 'item' : 'items'
-                              } selected`}
-                            </span>
-                          </div>
-                        )}
-                    </div>
-                  )}
-                </Draggable>
-              ))}
-              {droppableProvided.placeholder}
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+                    )}
+                  </Draggable>
+                ))}
+                {droppableProvided.placeholder}
+              </div>
+            )}
+          </Droppable>
+        </DragDropContext>
+      </div>
     </FormFieldset>
   );
 };

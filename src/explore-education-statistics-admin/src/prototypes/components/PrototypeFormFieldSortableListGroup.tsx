@@ -13,7 +13,7 @@ import {
 import useToggle from '@common/hooks/useToggle';
 import classNames from 'classnames';
 import { useField } from 'formik';
-import React from 'react';
+import React, { useState } from 'react';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 
 const getGroupLegend = (group: Filter[]) => {
@@ -31,66 +31,60 @@ const getGroupLegend = (group: Filter[]) => {
 
 interface Props<FormValues> {
   id?: string;
-  name: FormValues extends Record<string, unknown> ? keyof FormValues : string;
-  legend: string;
+  hint?: string;
   isDraggingGroup: boolean;
+  legend: string;
+  name: FormValues extends Record<string, unknown> ? keyof FormValues : string;
+  readOnly: boolean;
   onChangeReorderingType: (
     axisName: string,
     isReorderingGroups: boolean,
   ) => void;
   onMoveGroupToOtherAxis: (index: number) => void;
+  onReorderingList: () => void;
 }
 
 function FormFieldSortableListGroup<FormValues>({
+  hint,
   id: customId,
-  name,
-  legend,
   isDraggingGroup = false,
-  onChangeReorderingType,
+  legend,
+  name,
+  readOnly = false,
   onMoveGroupToOtherAxis,
+  onReorderingList,
 }: Props<FormValues>) {
   const { prefixFormId, fieldId } = useFormContext();
   const id = customId ? prefixFormId(customId) : fieldId(name as string);
 
   const [field, meta] = useField(name as string);
-  const [isDragDisabled, toggleDragDisabled] = useToggle(true);
+
+  const [activeList, setActiveList] = useState<number | undefined>(undefined);
 
   return (
     <Droppable droppableId={name as string} direction="horizontal">
-      {(droppableProvided, droppableSnapshot) => (
+      {droppableProvided => (
         <div
           // eslint-disable-next-line react/jsx-props-no-spreading
           {...droppableProvided.droppableProps}
           ref={droppableProvided.innerRef}
           className={classNames(styles.container, {
-            [styles.isDraggingOver]: droppableSnapshot.isDraggingOver,
-            [styles.isDragDisabled]: isDragDisabled,
+            [styles.dragActive]: isDraggingGroup,
           })}
           data-testid={id}
         >
           <FormFieldset
             id={id}
             legend={legend}
+            legendWeight="regular"
             error={meta.error}
             legendSize="m"
+            hint={hint}
           >
-            <Button
-              className={styles.toggleReorderGroups}
-              variant="secondary"
-              onClick={() => {
-                onChangeReorderingType(legend, isDragDisabled);
-                toggleDragDisabled();
-              }}
-            >
-              {isDragDisabled
-                ? `Re-order ${legend.toLowerCase()}`
-                : 'Re-order items'}
-            </Button>
             <div
               className={classNames(styles.groupsContainer, {
-                [styles.isActive]: !isDragDisabled,
+                [styles.isActive]: !readOnly,
               })}
-              id="groupsContainer"
             >
               {field.value.length === 0 && (
                 <div className="govuk-inset-text govuk-!-margin-0">
@@ -108,7 +102,7 @@ function FormFieldSortableListGroup<FormValues>({
                     // eslint-disable-next-line react/no-array-index-key
                     key={index}
                     draggableId={`${name}-${index}`}
-                    isDragDisabled={isDragDisabled}
+                    isDragDisabled={readOnly}
                     index={index}
                   >
                     {(draggableProvided, draggableSnapshot) => (
@@ -122,15 +116,14 @@ function FormFieldSortableListGroup<FormValues>({
                           [styles.isDraggedOutside]:
                             draggableSnapshot.isDragging &&
                             !draggableSnapshot.draggingOver,
-                          [styles.groupIsActive]: !isDragDisabled,
+                          [styles.groupIsActive]: !readOnly,
                         })}
                         ref={draggableProvided.innerRef}
-                        role={isDragDisabled ? '' : 'button'}
-                        tabIndex={isDragDisabled ? -1 : 0}
+                        role={readOnly ? '' : 'button'}
+                        tabIndex={readOnly ? -1 : 0}
                       >
                         <FormFieldSortableList
-                          isGroupDragDisabled={isDragDisabled}
-                          name={`${name}[${index}]`}
+                          focus={activeList === index}
                           legend={
                             <>
                               {getGroupLegend(group)}
@@ -138,22 +131,56 @@ function FormFieldSortableListGroup<FormValues>({
                             </>
                           }
                           legendSize="s"
+                          name={`${name}[${index}]`}
+                          readOnly={activeList !== index}
                         />
                       </div>
                     )}
                   </Draggable>
-                  {!isDragDisabled && !isDraggingGroup && (
-                    <Button
-                      className={styles.moveButton}
-                      onClick={e => {
-                        e.preventDefault();
-                        onMoveGroupToOtherAxis(index);
-                      }}
-                    >
-                      {`Move ${getGroupLegend(group)} group to ${
-                        name === 'rowGroups' ? 'columns' : 'rows'
-                      }`}
-                    </Button>
+                  {!isDraggingGroup && (
+                    <div className={styles.buttonsContainer}>
+                      {activeList === index ? (
+                        <Button
+                          onClick={e => {
+                            e.preventDefault();
+                            setActiveList(undefined);
+                            onReorderingList();
+                          }}
+                        >
+                          Done
+                        </Button>
+                      ) : (
+                        <>
+                          <Button
+                            disabled={readOnly && activeList !== index}
+                            onClick={e => {
+                              e.preventDefault();
+                              setActiveList(index);
+                              onReorderingList();
+                            }}
+                          >
+                            Re-order
+                            <span className="govuk-visually-hidden">
+                              {` items in ${getGroupLegend(group)}`}
+                            </span>
+                          </Button>
+                          <Button
+                            className={styles.moveButton}
+                            disabled={readOnly}
+                            onClick={e => {
+                              e.preventDefault();
+                              onMoveGroupToOtherAxis(index);
+                            }}
+                          >
+                            Move{' '}
+                            <span className="govuk-visually-hidden">
+                              {getGroupLegend(group)}{' '}
+                            </span>
+                            to {name === 'rowGroups' ? 'columns' : 'rows'}
+                          </Button>
+                        </>
+                      )}
+                    </div>
                   )}
                 </div>
               ))}

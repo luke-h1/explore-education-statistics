@@ -1,5 +1,7 @@
+import Button from '@admin/prototypes/components/PrototypeButton';
 import Tag from '@common/components/Tag';
 import useAsyncRetry from '@common/hooks/useAsyncRetry';
+import useToggle from '@common/hooks/useToggle';
 import DownloadTable from '@common/modules/table-tool/components/DownloadTable';
 import TableHeadersForm from '@admin/prototypes/components/PrototypeTableHeadersForm';
 import TimePeriodDataTable from '@common/modules/table-tool/components/TimePeriodDataTable';
@@ -27,6 +29,9 @@ const TableToolFinalStep = ({
   const [currentTableHeaders, setCurrentTableHeaders] = useState<
     TableHeadersConfig
   >();
+  const [showTableHeadersForm, toggleShowTableHeadersForm] = useToggle(false);
+
+  const tableHeadersFormId = 'tableHeaderForm';
 
   useEffect(() => {
     setCurrentTableHeaders(tableHeaders);
@@ -65,27 +70,15 @@ const TableToolFinalStep = ({
       className="govuk-!-margin-bottom-4"
       data-testid="Table tool final step container"
     >
-      <TableHeadersForm
-        initialValues={currentTableHeaders}
-        onSubmit={tableHeaderConfig => {
-          setCurrentTableHeaders(tableHeaderConfig);
-          if (dataTableRef.current) {
-            dataTableRef.current.scrollIntoView({
-              behavior: 'smooth',
-              block: 'start',
-            });
-          }
-        }}
-      />
       {table && currentTableHeaders && (
         <>
-          <div className="govuk-!-margin-bottom-3">
+          <div className="govuk-!-margin-bottom-3 dfe-flex dfe-align-items-start dfe-justify-content--space-between">
             {selectedPublication.selectedRelease.latestData && (
               <Tag strong>This is the latest data</Tag>
             )}
 
             {!selectedPublication.selectedRelease.latestData && (
-              <>
+              <div>
                 <div className="govuk-!-margin-bottom-3">
                   <Tag strong colour="orange">
                     This data is not from the latest release
@@ -103,9 +96,37 @@ const TableToolFinalStep = ({
                     {selectedPublication.latestRelease.title}
                   </span>
                 </Link>
-              </>
+              </div>
+            )}
+            {!showTableHeadersForm && (
+              <Button
+                className="govuk-!-margin-bottom-0 govuk-!-margin-left-"
+                ariaControls={tableHeadersFormId}
+                ariaExpanded={showTableHeadersForm}
+                onClick={toggleShowTableHeadersForm}
+              >
+                Re-order table headers
+              </Button>
             )}
           </div>
+          <TableHeadersForm
+            id={tableHeadersFormId}
+            initialValues={currentTableHeaders}
+            showTableHeadersForm={showTableHeadersForm}
+            onSubmit={tableHeaderConfig => {
+              toggleShowTableHeadersForm.off();
+              setCurrentTableHeaders(tableHeaderConfig);
+              if (dataTableRef.current) {
+                // add a short delay so the reordering form is closed before it scrolls.
+                setTimeout(() => {
+                  dataTableRef?.current?.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start',
+                  });
+                }, 200);
+              }
+            }}
+          />
 
           <TimePeriodDataTable
             ref={dataTableRef}

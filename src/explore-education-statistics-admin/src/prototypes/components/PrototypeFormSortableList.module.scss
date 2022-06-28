@@ -1,30 +1,24 @@
 @import '~govuk-frontend/govuk/base';
 
+.focusContainer {
+  outline: 0;
+}
+
 .list {
   max-height: 40vh;
+  outline: $govuk-focus-width solid $govuk-focus-colour;
+  outline-offset: 0;
   overflow: auto;
 }
 
-.listIsDisabled {
-  opacity: 0.5;
-  overflow: hidden;
-
-  .option:hover {
-    background: govuk-colour('white');
-  }
-}
-
 .isDraggingOver {
-  background: govuk-colour('light-grey');
-  outline: $govuk-focus-width solid $govuk-focus-colour;
-  outline-offset: 0;
+  background: govuk-colour('yellow');
 }
 
 .option {
   background: govuk-colour('white');
   border-bottom: 1px solid govuk-colour('mid-grey');
   padding: govuk-spacing(2);
-  position: relative;
   user-select: none;
 
   &:hover {
@@ -38,6 +32,16 @@
     outline: $govuk-focus-colour solid $govuk-focus-width;
     outline-offset: $govuk-focus-width * -1;
   }
+
+  .isDraggingOver & {
+    background: transparent;
+  }
+
+  &.isDragging {
+    background: govuk-colour('white');
+    border-bottom: transparent;
+    outline: govuk-colour('blue') solid $govuk-focus-width;
+  }
 }
 
 .isSelected {
@@ -47,13 +51,6 @@
   &:hover {
     background: darken(govuk-colour('blue'), 5);
   }
-}
-
-.isDragging {
-  background: govuk-colour('blue');
-  border: $govuk-focus-width solid govuk-colour('black');
-  color: govuk-colour('white');
-  outline: $govuk-focus-colour solid $govuk-focus-width;
 }
 
 .isGhosted {
@@ -69,24 +66,16 @@
 .dragIcon {
   display: block;
   fill: currentColor;
-  height: 18px;
-  position: absolute;
-  right: 0;
-  top: 2px;
-  width: 18px;
+  flex-shrink: 0;
+  height: 1rem;
+  margin-top: 0.2rem;
+  width: 1rem;
 }
 
 .optionLabel {
-  font-weight: $govuk-font-weight-bold;
-  padding-right: govuk-spacing(6);
-  position: relative;
+  display: flex;
+  justify-content: space-between;
   word-break: break-word;
-}
-
-.listIsDisabled {
-  .dragIcon {
-    display: none;
-  }
 }
 
 .selectedCount {
@@ -100,4 +89,33 @@
   position: absolute;
   right: -#{govuk-spacing(5)};
   top: -#{govuk-spacing(5)};
+}
+
+.readOnlyHeading {
+  display: flex;
+  justify-content: space-between;
+}
+
+.readOnlyList {
+  padding: 0;
+
+  &.noLastItem {
+    padding-bottom: 24px;
+  }
+}
+
+.readOnlyItem {
+  border-bottom: 1px solid govuk-colour('mid-grey');
+  list-style: none;
+  margin: 0;
+  overflow: hidden;
+  padding: govuk-spacing(2);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.readOnlyLastItem {
+  border: 0;
+  padding: govuk-spacing(1) 0 0;
+  text-align: center;
 }

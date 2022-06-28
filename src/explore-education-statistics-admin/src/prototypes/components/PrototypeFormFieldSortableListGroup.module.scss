@@ -1,31 +1,22 @@
 @import '~govuk-frontend/govuk/base';
 
+$group-width: 320px;
+
 .container {
-  background-color: govuk-colour('mid-grey');
-  border: 4px solid govuk-colour('light-grey');
+  background-color: govuk-colour('white');
+  border: 2px solid govuk-colour('mid-grey');
   overflow-x: auto;
   padding: govuk-spacing(2);
   position: relative;
   width: 100%;
 
-  &.isDragDisabled {
-    background: none;
+  + .container {
+    border-top: 0;
   }
 
-  &.isDraggingOver {
-    border-color: $govuk-focus-colour;
-  }
-}
-
-.toggleReorderGroups {
-  @include govuk-media-query($from: desktop) {
-    position: absolute;
-    right: govuk-spacing(2);
-    top: govuk-spacing(2);
-
-    &:active {
-      top: govuk-spacing(2);
-    }
+  &.dragActive {
+    background-color: $govuk-focus-colour;
+    border-color: govuk-colour('dark-grey');
   }
 }
 
@@ -44,24 +35,30 @@
 }
 
 .groupContainer {
-  padding: 0 govuk-spacing(1);
+  padding: govuk-spacing(1);
 }
 
 .group {
   background: govuk-colour('light-grey');
+  border: 2px solid govuk-colour('mid-grey');
+  border-bottom: 0;
   box-sizing: border-box;
   display: block;
-  margin-bottom: govuk-spacing(2);
   padding: govuk-spacing(2);
   position: relative;
 
   @include govuk-media-query($from: desktop) {
-    width: 320px;
+    width: $group-width;
   }
 
   legend {
-    padding-right: govuk-spacing(4);
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
   }
+}
+.dragActive .group {
+  border-bottom: 2px solid govuk-colour('mid-grey');
 }
 
 .dragIcon {
@@ -69,8 +66,6 @@
 }
 
 .groupIsActive {
-  background: govuk-colour('white');
-
   &:focus-visible {
     outline: $govuk-focus-colour solid $govuk-focus-width;
   }
@@ -83,24 +78,18 @@
   }
 
   &.isDragging {
-    background: govuk-colour('blue');
-    outline: $govuk-focus-width solid $govuk-focus-colour;
+    background: govuk-colour('white');
+    border-color: govuk-colour('black');
+    outline: $govuk-focus-width solid govuk-colour('blue');
   }
 
   .dragIcon {
     display: block;
     fill: currentColor;
-    height: 18px;
-    position: absolute;
-    right: 16px;
-    top: 12px;
-    width: 18px;
-  }
-}
-
-.isDragging {
-  legend {
-    color: govuk-colour('white');
+    flex-shrink: 0;
+    height: 1rem;
+    margin-top: 0.2rem;
+    width: 1rem;
   }
 }
 
@@ -109,10 +98,24 @@
   outline: none;
 }
 
-.moveButton {
-  max-width: 100%;
+.buttonsContainer {
+  background: govuk-colour('light-grey');
+  border: 2px solid govuk-colour('mid-grey');
+  border-top: 0;
+  box-sizing: border-box;
+  display: flex;
+  padding: govuk-spacing(2);
 
   @include govuk-media-query($from: desktop) {
-    width: 320px;
+    width: $group-width;
   }
+
+  button {
+    flex-grow: 1;
+    margin-bottom: 0;
+  }
+}
+
+.moveButton {
+  margin-left: govuk-spacing(2);
 }

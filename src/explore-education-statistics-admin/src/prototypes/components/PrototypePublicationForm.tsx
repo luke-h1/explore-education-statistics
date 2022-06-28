@@ -123,7 +123,7 @@ const PrototypePublicationForm = ({
                     <p>
                       <a
                         href="#publications"
-                        className="govuk-link govuk-!-margin-top-3 govuk-!-font-size-14"
+                        className="govuk-link govuk-!-margin-top-3 s"
                       >
                         Skip to search results
                       </a>
