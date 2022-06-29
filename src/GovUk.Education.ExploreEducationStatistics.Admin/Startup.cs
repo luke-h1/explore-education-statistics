@@ -357,6 +357,12 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin
              * Services
              */
 
+            var storageSupportsBatchDeletes =
+                Configuration.GetValue<bool>("StorageSupportsBatchDeletes", defaultValue: true);
+            var coreStorageConnectionString = Configuration.GetValue<string>("CoreStorage");
+            var publisherStorageConnectionString = Configuration.GetValue<string>("PublisherStorage");
+
+
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             
             services.AddTransient<IMyReleasePermissionsResolver,
@@ -384,7 +390,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin
             services.AddTransient<IPublishingService, PublishingService>(provider =>
                 new PublishingService(
                     provider.GetService<IPersistenceHelper<ContentDbContext>>(),
-                    new StorageQueueService(Configuration.GetValue<string>("PublisherStorage")),
+                    new StorageQueueService(publisherStorageConnectionString),
                     provider.GetService<IUserService>(),
                     provider.GetRequiredService<ILogger<PublishingService>>()));
             services.AddTransient<IReleasePublishingStatusService, ReleasePublishingStatusService>(s =>
@@ -392,10 +398,12 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin
                     s.GetService<IMapper>(),
                     s.GetService<IUserService>(),
                     s.GetService<IPersistenceHelper<ContentDbContext>>(),
-                    new TableStorageService(Configuration.GetValue<string>("PublisherStorage"))));
+                    new TableStorageService(publisherStorageConnectionString,
+                        storageSupportsBatchDeletes)));
             services.AddTransient<IReleasePublishingStatusRepository, ReleasePublishingStatusRepository>(s =>
                 new ReleasePublishingStatusRepository(
-                    new TableStorageService(Configuration.GetValue<string>("PublisherStorage"))
+                    new TableStorageService(publisherStorageConnectionString, 
+                        storageSupportsBatchDeletes)
                 )
             );
             services.AddTransient<IThemeService, ThemeService>();
@@ -529,9 +537,9 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin
             services.AddTransient<IFileUploadsValidatorService, FileUploadsValidatorService>();
             services.AddTransient(provider => GetBlobStorageService(provider, "CoreStorage"));
             services.AddTransient<ITableStorageService, TableStorageService>(s =>
-                new TableStorageService(Configuration.GetValue<string>("CoreStorage")));
+                new TableStorageService(coreStorageConnectionString, storageSupportsBatchDeletes));
             services.AddTransient<IStorageQueueService, StorageQueueService>(s =>
-                new StorageQueueService(Configuration.GetValue<string>("CoreStorage")));
+                new StorageQueueService(coreStorageConnectionString));
             services.AddTransient<IDataBlockMigrationService, DataBlockMigrationService>();
             services.AddSingleton<IGuidGenerator, SequentialGuidGenerator>();
             AddPersistenceHelper<ContentDbContext>(services);

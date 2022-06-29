@@ -50,18 +50,18 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher
                 .AddDbContext<PublicStatisticsDbContext>(options =>
                     options.UseSqlServer(ConnectionUtils.GetAzureSqlConnectionString("PublicStatisticsDb")))
                 .AddSingleton<IFileStorageService, FileStorageService>(provider =>
-                    new FileStorageService(GetConfigurationValue(provider, "PublisherStorage")))
+                    new FileStorageService(GetConfigurationValue<string>(provider, "PublisherStorage")))
                 .AddScoped(provider => GetBlobCacheService(provider, "PublicStorage"))
                 .AddScoped<IPublishingService, PublishingService>(provider =>
                     new PublishingService(
-                        publicStorageConnectionString: GetConfigurationValue(provider, "PublicStorage"),
+                        publicStorageConnectionString: GetConfigurationValue<string>(provider, "PublicStorage"),
                         privateBlobStorageService: GetBlobStorageService(provider, "CoreStorage"),
                         publicBlobStorageService: GetBlobStorageService(provider, "PublicStorage"),
                         publicBlobCacheService: GetBlobCacheService(provider, "PublicStorage"),
                         methodologyService: provider.GetRequiredService<IMethodologyService>(),
                         publicationService: provider.GetRequiredService<IPublicationService>(),
                         releaseService: provider.GetRequiredService<IReleaseService>(),
-                        contentDbContext: provider.GetService<ContentDbContext>(),
+                        contentDbContext: provider.GetService<ContentDbContext>()!,
                         logger: provider.GetRequiredService<ILogger<PublishingService>>()))
                 .AddScoped<IContentService, ContentService>(provider =>
                     new ContentService(
@@ -74,35 +74,38 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher
                     ))
                 .AddScoped<IReleaseService, ReleaseService>(provider =>
                     new ReleaseService(
-                        contentDbContext: provider.GetService<ContentDbContext>(),
-                        statisticsDbContext: provider.GetService<StatisticsDbContext>(),
-                        publicStatisticsDbContext: provider.GetService<PublicStatisticsDbContext>(),
+                        contentDbContext: provider.GetService<ContentDbContext>()!,
+                        statisticsDbContext: provider.GetService<StatisticsDbContext>()!,
+                        publicStatisticsDbContext: provider.GetService<PublicStatisticsDbContext>()!,
                         publicBlobStorageService: GetBlobStorageService(provider, "PublicStorage"),
-                        methodologyService: provider.GetService<IMethodologyService>(),
-                        releaseSubjectRepository: provider.GetService<IReleaseSubjectRepository>(),
+                        methodologyService: provider.GetService<IMethodologyService>()!,
+                        releaseSubjectRepository: provider.GetService<IReleaseSubjectRepository>()!,
                         logger: provider.GetRequiredService<ILogger<ReleaseService>>(),
                         mapper: provider.GetRequiredService<IMapper>()
                     ))
                 .AddScoped<ITableStorageService, TableStorageService>(provider =>
-                    new TableStorageService(GetConfigurationValue(provider, "PublisherStorage")))
+                    new TableStorageService(GetConfigurationValue<string>(provider, "PublisherStorage"), 
+                        GetConfigurationValue(provider, "StorageSupportsBatchDeletes", defaultValue: true)))
                 .AddScoped<IPublicationService, PublicationService>()
                 .AddScoped<IFastTrackService, FastTrackService>(provider =>
                     new FastTrackService(
                         contentDbContext: provider.GetService<ContentDbContext>(),
                         publicBlobStorageService: GetBlobStorageService(provider, "PublicStorage"),
-                        tableStorageService: new TableStorageService(GetConfigurationValue(provider, "PublicStorage"))))
+                        tableStorageService: new TableStorageService(
+                            GetConfigurationValue<string>(provider, "PublicStorage"),
+                            GetConfigurationValue(provider, "StorageSupportsBatchDeletes", defaultValue: true))))
                 .AddScoped<IMethodologyVersionRepository, MethodologyVersionRepository>()
                 .AddScoped<IMethodologyRepository, MethodologyRepository>()
                 .AddScoped<IMethodologyService, MethodologyService>()
                 .AddScoped<INotificationsService, NotificationsService>(provider =>
                     new NotificationsService(
-                        context: provider.GetService<ContentDbContext>(),
-                        storageQueueService: new StorageQueueService(GetConfigurationValue(provider,
+                        context: provider.GetService<ContentDbContext>()!,
+                        storageQueueService: new StorageQueueService(GetConfigurationValue<string>(provider,
                             "NotificationStorage"))))
                 .AddScoped<IQueueService, QueueService>(provider =>
                     new QueueService(
                         storageQueueService: new StorageQueueService(
-                            storageConnectionString: GetConfigurationValue(provider, "PublisherStorage")
+                            storageConnectionString: GetConfigurationValue<string>(provider, "PublisherStorage")
                         ),
                         releasePublishingStatusService: provider.GetService<IReleasePublishingStatusService>(),
                         logger: provider.GetRequiredService<ILogger<QueueService>>()))
@@ -110,7 +113,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher
                 .AddScoped<IValidationService, ValidationService>()
                 .AddScoped<IReleaseSubjectRepository, ReleaseSubjectRepository>(provider =>
                     new ReleaseSubjectRepository(
-                        statisticsDbContext: provider.GetService<PublicStatisticsDbContext>(),
+                        statisticsDbContext: provider.GetService<PublicStatisticsDbContext>()!,
                         footnoteRepository: new FootnoteRepository(provider.GetService<PublicStatisticsDbContext>())
                     ))
                 .AddScoped<IFilterRepository, FilterRepository>()
@@ -125,23 +128,32 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher
         private static IBlobCacheService GetBlobCacheService(IServiceProvider provider, string connectionStringKey)
         {
             return new BlobCacheService(
-                blobStorageService: GetBlobStorageService(provider, connectionStringKey),
-                logger: provider.GetRequiredService<ILogger<BlobCacheService>>());
+                GetBlobStorageService(provider, connectionStringKey),
+                provider.GetRequiredService<ILogger<BlobCacheService>>());
         }
 
         private static IBlobStorageService GetBlobStorageService(IServiceProvider provider, string connectionStringKey)
         {
-            var connectionString = GetConfigurationValue(provider, connectionStringKey);
+            var connectionString = GetConfigurationValue<string>(provider, connectionStringKey);
             return new BlobStorageService(
                 connectionString,
                 new BlobServiceClient(connectionString),
                 provider.GetRequiredService<ILogger<BlobStorageService>>());
         }
 
-        private static string GetConfigurationValue(IServiceProvider provider, string key)
+        private static TValue GetConfigurationValue<TValue>(
+            IServiceProvider provider, 
+            string key, 
+            TValue? defaultValue = default)
         {
             var configuration = provider.GetService<IConfiguration>();
-            return configuration.GetValue<string>(key);
+            var value = configuration.GetValue<TValue>(key);
+
+            if (value == null && defaultValue == null)
+            {
+                throw new ArgumentException($"No Configuration item found for key \"{key}\"");
+            }
+            return (value ?? defaultValue)!;
         }
     }
 }
