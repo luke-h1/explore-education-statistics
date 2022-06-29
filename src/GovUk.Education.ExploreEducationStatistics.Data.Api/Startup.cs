@@ -158,7 +158,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Api
             services.AddTransient<IFastTrackService, FastTrackService>();
             services.AddSingleton<DataServiceMemoryCache<BoundaryLevel>, DataServiceMemoryCache<BoundaryLevel>>();
             services.AddSingleton<DataServiceMemoryCache<GeoJson>, DataServiceMemoryCache<GeoJson>>();
-            services.AddTransient<ITableStorageService, TableStorageService>(s =>
+            services.AddTransient<ITableStorageService, TableStorageService>(_ =>
                 new TableStorageService(Configuration.GetValue<string>("PublicStorage")));
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ICacheKeyService, CacheKeyService>();
@@ -196,12 +196,10 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Api
         {
             // Enable caching and register any caching services.
             CacheAspect.Enabled = true;
-            BlobCacheAttribute.AddService("default", app.ApplicationServices.GetService<IBlobCacheService>());
+            BlobCacheAttribute.AddService("default", app.ApplicationServices.GetService<IBlobCacheService>()!);
             // Enable cancellation aspects and register request timeout configuration.
             CancellationTokenTimeoutAspect.Enabled = true;
             CancellationTokenTimeoutAttribute.SetTimeoutConfiguration(Configuration.GetSection("RequestTimeouts"));
-
-            UpdateDatabase(app);
 
             if (env.IsDevelopment())
             {
@@ -242,19 +240,6 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Api
 
             app.UseMvc();
             app.UseHealthChecks("/api/health");
-        }
-
-        private static void UpdateDatabase(IApplicationBuilder app)
-        {
-            using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>()
-                .CreateScope())
-            {
-                using (var context = serviceScope.ServiceProvider.GetService<StatisticsDbContext>())
-                {
-                    context.Database.SetCommandTimeout(int.MaxValue);
-                    context.Database.Migrate();
-                }
-            }
         }
     }
 }
