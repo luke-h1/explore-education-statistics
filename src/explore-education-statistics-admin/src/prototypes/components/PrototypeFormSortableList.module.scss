@@ -37,19 +37,16 @@
     background: transparent;
   }
 
-  &.isDragging {
+  &.isDragging,
+  &.isSelected {
     background: govuk-colour('white');
     border-bottom: transparent;
     outline: govuk-colour('blue') solid $govuk-focus-width;
   }
-}
 
-.isSelected {
-  background: govuk-colour('blue');
-  color: govuk-colour('white');
-
-  &:hover {
-    background: darken(govuk-colour('blue'), 5);
+  &.isSelected:not(.isDragging) {
+    background: govuk-colour('blue');
+    color: govuk-colour('white');
   }
 }
 

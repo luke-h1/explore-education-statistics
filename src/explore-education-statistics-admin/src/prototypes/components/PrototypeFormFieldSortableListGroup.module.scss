@@ -23,14 +23,11 @@ $group-width: 320px;
 .groupsContainer {
   display: flex;
   flex-direction: column;
+  position: relative;
   width: 100%;
 
   @include govuk-media-query($from: desktop) {
     flex-direction: row;
-  }
-
-  &.isActive {
-    position: relative;
   }
 }
 
