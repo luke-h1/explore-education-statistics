@@ -84,10 +84,11 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Functions
 
                 try
                 {
-                    if (!EnvironmentUtils.IsLocalEnvironment())
-                    {
-                        await _releaseService.DeletePreviousVersionsStatisticalData(releaseIds);
-                    }
+                    // TODO DW - EES-3369 - OK to delete this?
+                    // if (!EnvironmentUtils.IsLocalEnvironment())
+                    // {
+                    //     await _releaseService.DeletePreviousVersionsStatisticalData(releaseIds);
+                    // }
 
                     // Invalidate the cached trees in case any methodologies/publications
                     // are now accessible for the first time after publishing these releases

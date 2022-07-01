@@ -61,7 +61,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Functions
             ExecutionContext executionContext,
             ILogger logger)
         {
-            logger.LogInformation("{0} triggered at: {1}",
+            logger.LogInformation("{FunctionName} triggered at: {DateTime}",
                 executionContext.FunctionName,
                 DateTime.UtcNow);
 
@@ -74,10 +74,11 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Functions
                 await _contentService.UpdateContent(context, message.ReleaseId);
                 await _releaseService.SetPublishedDates(message.ReleaseId, context.Published);
 
-                if (!EnvironmentUtils.IsLocalEnvironment())
-                {
-                    await _releaseService.DeletePreviousVersionsStatisticalData(message.ReleaseId);
-                }
+                // TODO DW - OK to remove this?
+                // if (!EnvironmentUtils.IsLocalEnvironment())
+                // {
+                //     await _releaseService.DeletePreviousVersionsStatisticalData(message.ReleaseId);
+                // }
 
                 // Invalidate the cached trees in case any methodologies/publications
                 // are now accessible for the first time after publishing these releases

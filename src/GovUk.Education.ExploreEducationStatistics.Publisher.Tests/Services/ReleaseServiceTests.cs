@@ -706,21 +706,21 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
                 await contentDbContext.SaveChangesAsync();
             }
 
-            var publicBlobStorageService = new Mock<IBlobStorageService>(MockBehavior.Strict);
+            var privateBlobStorageService = new Mock<IBlobStorageService>(MockBehavior.Strict);
 
             await using (var contentDbContext = InMemoryContentDbContext(contentDbContextId))
             {
-                publicBlobStorageService.Setup(s =>
+                privateBlobStorageService.Setup(s =>
                         s.CheckBlobExists(PublicReleaseFiles,
                             PublicationARelease2AncillaryReleaseFile.PublicPath()))
                     .ReturnsAsync(true);
 
-                publicBlobStorageService.Setup(s =>
+                privateBlobStorageService.Setup(s =>
                         s.CheckBlobExists(PublicReleaseFiles,
                             PublicationARelease2DataReleaseFile.PublicPath()))
                     .ReturnsAsync(true);
 
-                publicBlobStorageService.Setup(s =>
+                privateBlobStorageService.Setup(s =>
                         s.GetBlob(PublicReleaseFiles,
                             PublicationARelease2AncillaryReleaseFile.PublicPath()))
                     .ReturnsAsync(new BlobInfo
@@ -733,7 +733,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
                         created: null
                     ));
 
-                publicBlobStorageService.Setup(s =>
+                privateBlobStorageService.Setup(s =>
                         s.GetBlob(PublicReleaseFiles,
                             PublicationARelease2DataReleaseFile.PublicPath()))
                     .ReturnsAsync(new BlobInfo
@@ -750,11 +750,11 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
 
 
                 var service = BuildReleaseService(contentDbContext: contentDbContext,
-                    publicBlobStorageService: publicBlobStorageService.Object);
+                    privateBlobStorageService: privateBlobStorageService.Object);
 
                 var result = await service.GetDownloadFiles(PublicationARelease2);
 
-                MockUtils.VerifyAllMocks(publicBlobStorageService);
+                MockUtils.VerifyAllMocks(privateBlobStorageService);
 
                 Assert.Equal(2, result.Count);
                 Assert.Equal(PublicationARelease2AncillaryReleaseFile.File.Id, result[0].Id);
@@ -836,21 +836,21 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
                 await contentDbContext.SaveChangesAsync();
             }
 
-            var publicBlobStorageService = new Mock<IBlobStorageService>(MockBehavior.Strict);
+            var privateBlobStorageService = new Mock<IBlobStorageService>(MockBehavior.Strict);
 
             await using (var contentDbContext = InMemoryContentDbContext(contentDbContextId))
             {
-                publicBlobStorageService.Setup(s =>
+                privateBlobStorageService.Setup(s =>
                         s.CheckBlobExists(PublicReleaseFiles,
                             PublicationARelease2AncillaryReleaseFile.PublicPath()))
                     .ReturnsAsync(true);
 
-                publicBlobStorageService.Setup(s =>
+                privateBlobStorageService.Setup(s =>
                         s.CheckBlobExists(PublicReleaseFiles,
                             PublicationARelease2DataReleaseFile.PublicPath()))
                     .ReturnsAsync(true);
 
-                publicBlobStorageService.Setup(s =>
+                privateBlobStorageService.Setup(s =>
                         s.GetBlob(PublicReleaseFiles,
                             PublicationARelease2AncillaryReleaseFile.PublicPath()))
                     .ReturnsAsync(new BlobInfo
@@ -863,7 +863,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
                         created: null
                     ));
 
-                publicBlobStorageService.Setup(s =>
+                privateBlobStorageService.Setup(s =>
                         s.GetBlob(PublicReleaseFiles,
                             PublicationARelease2DataReleaseFile.PublicPath()))
                     .ReturnsAsync(new BlobInfo
@@ -879,13 +879,13 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
                     ));
 
                 var service = BuildReleaseService(contentDbContext: contentDbContext,
-                    publicBlobStorageService: publicBlobStorageService.Object);
+                    privateBlobStorageService: privateBlobStorageService.Object);
 
                 var result =
                     await service.GetLatestReleaseViewModel(PublicationA.Id, Enumerable.Empty<Guid>(),
                         PublishContext());
 
-                MockUtils.VerifyAllMocks(publicBlobStorageService);
+                MockUtils.VerifyAllMocks(privateBlobStorageService);
 
                 Assert.Equal(PublicationARelease2.Id, result.Id);
                 Assert.Equal("Academic Year Q2 2018/19", result.Title);
@@ -1061,19 +1061,19 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
                 await contentDbContext.SaveChangesAsync();
             }
 
-            var publicBlobStorageService = new Mock<IBlobStorageService>(MockBehavior.Strict);
+            var privateBlobStorageService = new Mock<IBlobStorageService>(MockBehavior.Strict);
 
             await using (var contentDbContext = InMemoryContentDbContext(contentDbContextId))
             {
                 var service = BuildReleaseService(
                     contentDbContext: contentDbContext,
-                    publicBlobStorageService: publicBlobStorageService.Object);
+                    privateBlobStorageService: privateBlobStorageService.Object);
 
                 var result =
                     await service.GetLatestReleaseViewModel(publication.Id, Enumerable.Empty<Guid>(),
                         PublishContext());
 
-                MockUtils.VerifyAllMocks(publicBlobStorageService);
+                MockUtils.VerifyAllMocks(privateBlobStorageService);
 
                 Assert.Equal(release.Id, result.Id);
 
@@ -1122,16 +1122,16 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
                 await contentDbContext.SaveChangesAsync();
             }
 
-            var publicBlobStorageService = new Mock<IBlobStorageService>(MockBehavior.Strict);
+            var privateBlobStorageService = new Mock<IBlobStorageService>(MockBehavior.Strict);
 
             await using (var contentDbContext = InMemoryContentDbContext(contentDbContextId))
             {
                 var service = BuildReleaseService(contentDbContext: contentDbContext,
-                    publicBlobStorageService: publicBlobStorageService.Object);
+                    privateBlobStorageService: privateBlobStorageService.Object);
 
                 var result = await service.GetReleaseViewModel(PublicationARelease1V1.Id, PublishContext());
 
-                MockUtils.VerifyAllMocks(publicBlobStorageService);
+                MockUtils.VerifyAllMocks(privateBlobStorageService);
 
                 Assert.Equal(PublicationARelease1V1.Id, result.Id);
                 Assert.Equal("Academic Year Q1 2018/19", result.Title);
@@ -1298,17 +1298,17 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
                 await contentDbContext.SaveChangesAsync();
             }
 
-            var publicBlobStorageService = new Mock<IBlobStorageService>(MockBehavior.Strict);
+            var privateBlobStorageService = new Mock<IBlobStorageService>(MockBehavior.Strict);
 
             await using (var contentDbContext = InMemoryContentDbContext(contentDbContextId))
             {
                 var service = BuildReleaseService(
                     contentDbContext: contentDbContext,
-                    publicBlobStorageService: publicBlobStorageService.Object);
+                    privateBlobStorageService: privateBlobStorageService.Object);
 
                 var result = await service.GetReleaseViewModel(release.Id, PublishContext());
 
-                MockUtils.VerifyAllMocks(publicBlobStorageService);
+                MockUtils.VerifyAllMocks(privateBlobStorageService);
 
                 Assert.Equal(release.Id, result.Id);
 
@@ -1358,17 +1358,17 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
                 await contentDbContext.SaveChangesAsync();
             }
 
-            var publicBlobStorageService = new Mock<IBlobStorageService>(MockBehavior.Strict);
+            var privateBlobStorageService = new Mock<IBlobStorageService>(MockBehavior.Strict);
 
             await using (var contentDbContext = InMemoryContentDbContext(contentDbContextId))
             {
                 var service = BuildReleaseService(contentDbContext: contentDbContext,
-                    publicBlobStorageService: publicBlobStorageService.Object);
+                    privateBlobStorageService: privateBlobStorageService.Object);
 
                 var context = PublishContext();
                 var result = await service.GetReleaseViewModel(PublicationARelease3.Id, context);
 
-                MockUtils.VerifyAllMocks(publicBlobStorageService);
+                MockUtils.VerifyAllMocks(privateBlobStorageService);
 
                 Assert.Equal(PublicationARelease3.Id, result.Id);
                 Assert.Equal("Academic Year Q3 2018/19", result.Title);
@@ -1401,17 +1401,17 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
                 await contentDbContext.SaveChangesAsync();
             }
 
-            var publicBlobStorageService = new Mock<IBlobStorageService>(MockBehavior.Strict);
+            var privateBlobStorageService = new Mock<IBlobStorageService>(MockBehavior.Strict);
 
             await using (var contentDbContext = InMemoryContentDbContext(contentDbContextId))
             {
                 var service = BuildReleaseService(contentDbContext: contentDbContext,
-                    publicBlobStorageService: publicBlobStorageService.Object);
+                    privateBlobStorageService: privateBlobStorageService.Object);
 
                 var context = PublishContext();
                 var result = await service.GetReleaseViewModel(PublicationARelease1V3NotPublished.Id, context);
 
-                MockUtils.VerifyAllMocks(publicBlobStorageService);
+                MockUtils.VerifyAllMocks(privateBlobStorageService);
 
                 Assert.Equal(PublicationARelease1V3NotPublished.Id, result.Id);
                 Assert.Equal("Academic Year Q1 2018/19", result.Title);
@@ -1444,17 +1444,17 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
                 await contentDbContext.SaveChangesAsync();
             }
 
-            var publicBlobStorageService = new Mock<IBlobStorageService>(MockBehavior.Strict);
+            var privateBlobStorageService = new Mock<IBlobStorageService>(MockBehavior.Strict);
 
             await using (var contentDbContext = InMemoryContentDbContext(contentDbContextId))
             {
                 var service = BuildReleaseService(contentDbContext: contentDbContext,
-                    publicBlobStorageService: publicBlobStorageService.Object);
+                    privateBlobStorageService: privateBlobStorageService.Object);
 
                 var context = PublishContext();
                 var result = await service.GetReleaseViewModel(PublicationARelease1V3NotPublished.Id, context);
 
-                MockUtils.VerifyAllMocks(publicBlobStorageService);
+                MockUtils.VerifyAllMocks(privateBlobStorageService);
 
                 Assert.Equal(PublicationARelease1V3NotPublished.Id, result.Id);
                 Assert.Equal("Academic Year Q1 2018/19", result.Title);
@@ -1684,7 +1684,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
             ContentDbContext? contentDbContext = null,
             StatisticsDbContext? statisticsDbContext = null,
             PublicStatisticsDbContext? publicStatisticsDbContext = null,
-            IBlobStorageService? publicBlobStorageService = null,
+            IBlobStorageService? privateBlobStorageService = null,
             IMethodologyService? methodologyService = null,
             IReleaseSubjectRepository? releaseSubjectRepository = null)
         {
@@ -1692,7 +1692,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Tests.Services
                 contentDbContext ?? new Mock<ContentDbContext>().Object,
                 statisticsDbContext ?? new Mock<StatisticsDbContext>().Object,
                 publicStatisticsDbContext ?? new Mock<PublicStatisticsDbContext>().Object,
-                publicBlobStorageService ?? new Mock<IBlobStorageService>().Object,
+                privateBlobStorageService ?? new Mock<IBlobStorageService>().Object,
                 methodologyService ?? new Mock<IMethodologyService>().Object,
                 releaseSubjectRepository ?? new Mock<IReleaseSubjectRepository>().Object,
                 new Mock<ILogger<ReleaseService>>().Object,

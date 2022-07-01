@@ -32,7 +32,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Services
         private readonly ContentDbContext _contentDbContext;
         private readonly StatisticsDbContext _statisticsDbContext;
         private readonly PublicStatisticsDbContext _publicStatisticsDbContext;
-        private readonly IBlobStorageService _publicBlobStorageService;
+        private readonly IBlobStorageService _privateBlobStorageService;
         private readonly IMethodologyService _methodologyService;
         private readonly IReleaseSubjectRepository _releaseSubjectRepository;
         private readonly ILogger<ReleaseService> _logger;
@@ -41,7 +41,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Services
         public ReleaseService(ContentDbContext contentDbContext,
             StatisticsDbContext statisticsDbContext,
             PublicStatisticsDbContext publicStatisticsDbContext,
-            IBlobStorageService publicBlobStorageService,
+            IBlobStorageService privateBlobStorageService,
             IMethodologyService methodologyService,
             IReleaseSubjectRepository releaseSubjectRepository,
             ILogger<ReleaseService> logger,
@@ -50,7 +50,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Services
             _contentDbContext = contentDbContext;
             _statisticsDbContext = statisticsDbContext;
             _publicStatisticsDbContext = publicStatisticsDbContext;
-            _publicBlobStorageService = publicBlobStorageService;
+            _privateBlobStorageService = privateBlobStorageService;
             _methodologyService = methodologyService;
             _releaseSubjectRepository = releaseSubjectRepository;
             _logger = logger;
@@ -257,31 +257,32 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Services
 
         public async Task CreatePublicStatisticsRelease(Guid releaseId)
         {
-            if (!EnvironmentUtils.IsLocalEnvironment())
-            {
-                var statisticsRelease = await _statisticsDbContext.Release
-                    .AsQueryable()
-                    .SingleOrDefaultAsync(r => r.Id == releaseId);
-
-                var publicStatisticsRelease = await _publicStatisticsDbContext.Release
-                    .AsQueryable()
-                    .SingleOrDefaultAsync(r => r.Id == releaseId);
-
-                if (statisticsRelease != null && publicStatisticsRelease == null)
-                {
-                    await _publicStatisticsDbContext.Release.AddAsync(new Data.Model.Release
-                    {
-                        Id = statisticsRelease.Id,
-                        PublicationId = statisticsRelease.PublicationId,
-                        Year = statisticsRelease.Year,
-                        TimeIdentifier = statisticsRelease.TimeIdentifier,
-                        Slug = statisticsRelease.Slug,
-                        PreviousVersionId = statisticsRelease.PreviousVersionId
-                        // Published date is omitted here as it will be set when publishing completes
-                    });
-                    await _publicStatisticsDbContext.SaveChangesAsync();
-                }
-            }
+            // TODO DW - EES-3369 - OK to delete this?
+            // if (!EnvironmentUtils.IsLocalEnvironment())
+            // {
+            //     var statisticsRelease = await _statisticsDbContext.Release
+            //         .AsQueryable()
+            //         .SingleOrDefaultAsync(r => r.Id == releaseId);
+            //
+            //     var publicStatisticsRelease = await _publicStatisticsDbContext.Release
+            //         .AsQueryable()
+            //         .SingleOrDefaultAsync(r => r.Id == releaseId);
+            //
+            //     if (statisticsRelease != null && publicStatisticsRelease == null)
+            //     {
+            //         await _publicStatisticsDbContext.Release.AddAsync(new Data.Model.Release
+            //         {
+            //             Id = statisticsRelease.Id,
+            //             PublicationId = statisticsRelease.PublicationId,
+            //             Year = statisticsRelease.Year,
+            //             TimeIdentifier = statisticsRelease.TimeIdentifier,
+            //             Slug = statisticsRelease.Slug,
+            //             PreviousVersionId = statisticsRelease.PreviousVersionId
+            //             // Published date is omitted here as it will be set when publishing completes
+            //         });
+            //         await _publicStatisticsDbContext.SaveChangesAsync();
+            //     }
+            // }
         }
 
         public async Task DeletePreviousVersionsStatisticalData(params Guid[] releaseIds)
@@ -305,22 +306,23 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Services
             await _publicStatisticsDbContext.SaveChangesAsync();
         }
 
+        // TODO DW - EES-3369 - get filesize into the db and out of blob storage?
         private async Task<FileInfo> GetPublicFileInfo(Release release, File file)
         {
-            var exists = await _publicBlobStorageService.CheckBlobExists(
-                containerName: PublicReleaseFiles,
-                path: file.PublicPath(release));
+            var exists = await _privateBlobStorageService.CheckBlobExists(
+                containerName: PrivateReleaseFiles,
+                path: file.Path());
 
             if (!exists)
             {
-                _logger.LogWarning("Public blob not found for file: {0} at: {1}", file.Id,
-                    file.PublicPath(release));
+                _logger.LogWarning("Private blob not found for file: {FileId} at: {BlobPath}", file.Id,
+                    file.Path());
                 return file.ToFileInfoNotFound();
             }
 
-            var blob = await _publicBlobStorageService.GetBlob(
-                containerName: PublicReleaseFiles,
-                path: file.PublicPath(release));
+            var blob = await _privateBlobStorageService.GetBlob(
+                containerName: PrivateReleaseFiles,
+                path: file.Path());
 
             var releaseFile = await _contentDbContext.ReleaseFiles
                 .Include(rf => rf.File)

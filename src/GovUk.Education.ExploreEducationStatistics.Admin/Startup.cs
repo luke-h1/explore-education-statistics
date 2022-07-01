@@ -362,7 +362,6 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin
             var coreStorageConnectionString = Configuration.GetValue<string>("CoreStorage");
             var publisherStorageConnectionString = Configuration.GetValue<string>("PublisherStorage");
 
-
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             
             services.AddTransient<IMyReleasePermissionsResolver,
