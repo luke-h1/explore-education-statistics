@@ -118,7 +118,16 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher
                 .AddScoped<IFilterRepository, FilterRepository>()
                 .AddScoped<IFootnoteRepository, FootnoteRepository>()
                 .AddScoped<IIndicatorRepository, IndicatorRepository>()
-                .AddScoped<IPublishingCompletionService, PublishingCompletionService>();
+                .AddScoped<IPublishingCompletionService, PublishingCompletionService>(provider => 
+                    new PublishingCompletionService(
+                        provider.GetService<ContentDbContext>()!,
+                        GetBlobCacheService(provider, "PublicStorage"),
+                        provider.GetService<IContentService>(),
+                        provider.GetService<INotificationsService>(),
+                        provider.GetService<IReleaseService>(),
+                        provider.GetService<IReleasePublishingStatusService>(),
+                        provider.GetService<IPublishingService>(),
+                        provider.GetRequiredService<ILogger<PublishingCompletionService>>()));
 
             AddPersistenceHelper<ContentDbContext>(builder.Services);
             AddPersistenceHelper<StatisticsDbContext>(builder.Services);

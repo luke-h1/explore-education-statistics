@@ -98,7 +98,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Services
             releaseViewModel.SummarySection.Content.ForEach(FilterContentBlock);
             releaseViewModel.KeyStatisticsSection.Content.ForEach(FilterContentBlock);
             releaseViewModel.KeyStatisticsSecondarySection.Content.ForEach(FilterContentBlock);
-            releaseViewModel.RelatedDashboardsSection.Content.ForEach(FilterContentBlock);
+            releaseViewModel.RelatedDashboardsSection?.Content.ForEach(FilterContentBlock);
             releaseViewModel.Content.ForEach(section => section.Content.ForEach(FilterContentBlock));
 
             releaseViewModel.DownloadFiles = await GetDownloadFiles(release);
@@ -136,34 +136,6 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Services
             }
 
             return releaseViewModel;
-        }
-
-        private static void FilterContentBlock(IContentBlockViewModel block)
-        {
-            switch (block)
-            {
-                case HtmlBlockViewModel htmlBlock:
-                    htmlBlock.Body = FilterRegex.Replace(htmlBlock.Body, string.Empty);
-                    break;
-
-                case MarkDownBlockViewModel markdownBlock:
-                    markdownBlock.Body = FilterRegex.Replace(markdownBlock.Body, string.Empty);
-                    break;
-            }
-        }
-
-        public async Task<Release> GetLatestRelease(Guid publicationId, IEnumerable<Guid> includedReleaseIds)
-        {
-            var releases = await _contentDbContext.Releases
-                .Include(r => r.Publication)
-                .Where(release => release.PublicationId == publicationId)
-                .ToListAsync();
-
-            return releases
-                .Where(release => release.IsReleasePublished(includedReleaseIds))
-                .OrderBy(release => release.Year)
-                .ThenBy(release => release.TimePeriodCoverage)
-                .Last();
         }
 
         public async Task<CachedReleaseViewModel> GetLatestReleaseViewModel(Guid publicationId,
