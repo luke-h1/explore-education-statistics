@@ -25,6 +25,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Functions
         private readonly INotificationsService _notificationsService;
         private readonly IReleaseService _releaseService;
         private readonly IReleasePublishingStatusService _releasePublishingStatusService;
+        private readonly IPublishingCompletionService _publishingCompletionService;
 
         public PublishReleaseContentFunction(
             ContentDbContext contentDbContext,
@@ -32,7 +33,8 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Functions
             IContentService contentService,
             INotificationsService notificationsService,
             IReleaseService releaseService,
-            IReleasePublishingStatusService releasePublishingStatusService)
+            IReleasePublishingStatusService releasePublishingStatusService, 
+            IPublishingCompletionService publishingCompletionService)
         {
             _contentDbContext = contentDbContext;
             _blobCacheService = blobCacheService;
@@ -40,6 +42,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Functions
             _notificationsService = notificationsService;
             _releaseService = releaseService;
             _releasePublishingStatusService = releasePublishingStatusService;
+            _publishingCompletionService = publishingCompletionService;
         }
 
         /// <summary>
@@ -72,43 +75,12 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Functions
             try
             {
                 await _contentService.UpdateContent(context, message.ReleaseId);
-                await _releaseService.SetPublishedDates(message.ReleaseId, context.Published);
-
-                // TODO DW - OK to remove this?
-                // if (!EnvironmentUtils.IsLocalEnvironment())
-                // {
-                //     await _releaseService.DeletePreviousVersionsStatisticalData(message.ReleaseId);
-                // }
-
-                // Invalidate the cached trees in case any methodologies/publications
-                // are now accessible for the first time after publishing these releases
-                await _contentService.DeleteCachedTaxonomyBlobs();
-
-                // Invalidate publication cache for release
-                var release = await _contentDbContext.Releases
-                    .Include(r => r.Publication)
-                    .Where(r => r.Id == message.ReleaseId)
-                    .SingleAsync();
-                await _blobCacheService.DeleteItem(new PublicationCacheKey(release.Publication.Slug));
-
-                // Invalidate publication cache for superseded publications, as potentially affected. If newly
-                // published release is first Live release for the publication, the superseding is now enforced
-                await _contentDbContext.Publications
-                    .Where(p => p.SupersededById == release.Publication.Id)
-                    .ToAsyncEnumerable()
-                    .ForEachAwaitAsync(publication =>
-                        _blobCacheService.DeleteItem(new PublicationCacheKey(publication.Slug)));
-
-                await _contentService.DeletePreviousVersionsDownloadFiles(message.ReleaseId);
-                await _contentService.DeletePreviousVersionsContent(message.ReleaseId);
-
-                await _notificationsService.NotifySubscribersIfApplicable(message.ReleaseId);
-
                 await UpdateStage(message.ReleaseId, message.ReleaseStatusId, State.Complete);
+                await _publishingCompletionService.CompletePublishingIfAllStagesComplete(message.ReleaseId, message.ReleaseStatusId);
             }
             catch (Exception e)
             {
-                logger.LogError(e, "Exception occured while executing {0}",
+                logger.LogError(e, "Exception occured while executing {FunctionName}",
                     executionContext.FunctionName);
                 logger.LogError("{StackTrace}", e.StackTrace);
 

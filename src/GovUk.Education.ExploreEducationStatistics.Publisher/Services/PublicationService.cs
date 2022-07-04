@@ -19,11 +19,6 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Services
             _contentDbContext = contentDbContext;
         }
 
-        public async Task<Publication> Get(Guid id)
-        {
-            return await _contentDbContext.Publications.FindAsync(id);
-        }
-
         public List<Publication> GetPublicationsWithPublishedReleases()
         {
             return _contentDbContext.Publications

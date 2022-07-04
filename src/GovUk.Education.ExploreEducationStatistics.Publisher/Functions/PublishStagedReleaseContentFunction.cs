@@ -73,7 +73,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Functions
                     }
                     catch (Exception e)
                     {
-                        logger.LogError(e, "Exception occured while executing {0}",
+                        logger.LogError(e, "Exception occured while executing {FunctionName}",
                             executionContext.FunctionName);
                         await UpdateStage(releaseStatus, Failed,
                             new ReleasePublishingStatusLogMessage($"Exception in publishing stage: {e.Message}"));
@@ -103,7 +103,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Functions
                 }
                 catch (Exception e)
                 {
-                    logger.LogError(e, "Exception occured while executing {0}",
+                    logger.LogError(e, "Exception occured while executing {FunctionName}",
                         executionContext.FunctionName);
                     await UpdateStage(published, Failed,
                         new ReleasePublishingStatusLogMessage($"Exception in publishing stage: {e.Message}"));

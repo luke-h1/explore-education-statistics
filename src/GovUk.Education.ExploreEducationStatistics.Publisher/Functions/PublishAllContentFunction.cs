@@ -44,7 +44,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Functions
             }
             catch (Exception e)
             {
-                logger.LogError(e, "Exception occured while executing {0}",
+                logger.LogError(e, "Exception occured while executing {FunctionName}",
                     executionContext.FunctionName);
                 throw;
             }

@@ -7,6 +7,7 @@ using GovUk.Education.ExploreEducationStatistics.Common.Model;
 using GovUk.Education.ExploreEducationStatistics.Common.Services.Interfaces;
 using GovUk.Education.ExploreEducationStatistics.Content.Model;
 using GovUk.Education.ExploreEducationStatistics.Content.Model.Database;
+using GovUk.Education.ExploreEducationStatistics.Publisher.Model;
 using GovUk.Education.ExploreEducationStatistics.Publisher.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -26,6 +27,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Services
         private readonly IMethodologyService _methodologyService;
         private readonly IPublicationService _publicationService;
         private readonly IReleaseService _releaseService;
+        private readonly IReleasePublishingStatusService _releasePublishingStatusService;
         private readonly ContentDbContext _contentDbContext;
         private readonly ILogger<PublishingService> _logger;
 
@@ -38,7 +40,8 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Services
             IPublicationService publicationService,
             IReleaseService releaseService,
             ContentDbContext contentDbContext,
-            ILogger<PublishingService> logger)
+            ILogger<PublishingService> logger, 
+            IReleasePublishingStatusService releasePublishingStatusService)
         {
             _publicStorageConnectionString = publicStorageConnectionString;
             _privateBlobStorageService = privateBlobStorageService;
@@ -49,6 +52,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Services
             _releaseService = releaseService;
             _contentDbContext = contentDbContext;
             _logger = logger;
+            _releasePublishingStatusService = releasePublishingStatusService;
         }
 
         public async Task PublishStagedReleaseContent(Guid releaseId, string publicationSlug)

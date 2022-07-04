@@ -11,19 +11,13 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Services.Interfac
 {
     public interface IReleaseService
     {
-        Task<Release?> Find(Guid id);
-
         Task<Release> Get(Guid id);
 
         Task<IEnumerable<Release>> List(IEnumerable<Guid> ids);
 
         Task<IEnumerable<Release>> GetAmendedReleases(IEnumerable<Guid> releaseIds);
 
-        Task<List<FileInfo>> GetDownloadFiles(Release release);
-
         Task<List<File>> GetFiles(Guid releaseId, params FileType[] types);
-
-        Task<Release> GetLatestRelease(Guid publicationId, IEnumerable<Guid> includedReleaseIds);
 
         Task<CachedReleaseViewModel> GetLatestReleaseViewModel(Guid publicationId,
             IEnumerable<Guid> includedReleaseIds,
@@ -32,9 +26,5 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher.Services.Interfac
         Task<CachedReleaseViewModel> GetReleaseViewModel(Guid id, PublishContext context);
 
         Task SetPublishedDates(Guid id, DateTime published);
-
-        Task CreatePublicStatisticsRelease(Guid releaseId);
-
-        Task DeletePreviousVersionsStatisticalData(params Guid[] releaseIds);
     }
 }

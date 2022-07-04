@@ -62,7 +62,8 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher
                         publicationService: provider.GetRequiredService<IPublicationService>(),
                         releaseService: provider.GetRequiredService<IReleaseService>(),
                         contentDbContext: provider.GetService<ContentDbContext>()!,
-                        logger: provider.GetRequiredService<ILogger<PublishingService>>()))
+                        logger: provider.GetRequiredService<ILogger<PublishingService>>(),
+                        releasePublishingStatusService: provider.GetRequiredService<IReleasePublishingStatusService>()))
                 .AddScoped<IContentService, ContentService>(provider =>
                     new ContentService(
                         publicBlobStorageService: GetBlobStorageService(provider, "PublicStorage"),
@@ -75,11 +76,9 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher
                 .AddScoped<IReleaseService, ReleaseService>(provider =>
                     new ReleaseService(
                         contentDbContext: provider.GetService<ContentDbContext>()!,
-                        statisticsDbContext: provider.GetService<StatisticsDbContext>()!,
                         publicStatisticsDbContext: provider.GetService<PublicStatisticsDbContext>()!,
                         privateBlobStorageService: GetBlobStorageService(provider, "CoreStorage"),
                         methodologyService: provider.GetService<IMethodologyService>()!,
-                        releaseSubjectRepository: provider.GetService<IReleaseSubjectRepository>()!,
                         logger: provider.GetRequiredService<ILogger<ReleaseService>>(),
                         mapper: provider.GetRequiredService<IMapper>()
                     ))
@@ -118,7 +117,8 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher
                     ))
                 .AddScoped<IFilterRepository, FilterRepository>()
                 .AddScoped<IFootnoteRepository, FootnoteRepository>()
-                .AddScoped<IIndicatorRepository, IndicatorRepository>();
+                .AddScoped<IIndicatorRepository, IndicatorRepository>()
+                .AddScoped<IPublishingCompletionService, PublishingCompletionService>();
 
             AddPersistenceHelper<ContentDbContext>(builder.Services);
             AddPersistenceHelper<StatisticsDbContext>(builder.Services);
