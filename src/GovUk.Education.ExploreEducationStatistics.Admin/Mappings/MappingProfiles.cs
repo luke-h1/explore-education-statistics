@@ -76,6 +76,8 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Mappings
                 .ForMember(dest => dest.ScheduledWithRelease,
                     m => m.Ignore());
 
+            CreateMap<ExternalMethodology, ExternalMethodologyViewModel>();
+
             CreateMap<MethodologyVersion, TitleAndIdViewModel>();
 
             CreateMap<Publication, PublicationViewModel>()
@@ -183,11 +185,8 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Mappings
                             })
                             .ToList(),
                         ExternalMethodology = r.Publication.ExternalMethodology != null
-                            ? new ExternalMethodology
-                            {
-                                Title = r.Publication.ExternalMethodology.Title,
-                                Url = r.Publication.ExternalMethodology.Url
-                            }
+                            ? new ExternalMethodologyViewModel(
+                                r.Publication.ExternalMethodology.Title, r.Publication.ExternalMethodology.Url)
                             : null
                     }))
                 .ForMember(

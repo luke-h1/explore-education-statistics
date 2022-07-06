@@ -21,7 +21,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.ViewModels
 
         public List<TitleAndIdViewModel> Methodologies { get; set; }
 
-        public ExternalMethodology ExternalMethodology { get; set; }
+        public ExternalMethodologyViewModel ExternalMethodology { get; set; }
 
         public Guid TopicId { get; set; }
 
@@ -40,7 +40,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.ViewModels
 
         [Required] public Guid TopicId { get; set; }
 
-        public ExternalMethodology ExternalMethodology { get; set; }
+        public ExternalMethodologySaveViewModel ExternalMethodology { get; set; }
 
         [Required] public ContactSaveViewModel Contact { get; set; }
 

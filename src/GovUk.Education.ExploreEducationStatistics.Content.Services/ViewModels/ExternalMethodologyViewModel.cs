@@ -1,8 +1,3 @@
-﻿namespace GovUk.Education.ExploreEducationStatistics.Content.Services.ViewModels
-{
-    public class ExternalMethodologyViewModel
-    {
-        public string Title { get; set; }
-        public string Url { get; set; }
-    }
-}
+﻿namespace GovUk.Education.ExploreEducationStatistics.Content.Services.ViewModels;
+
+public record ExternalMethodologyViewModel(string Title, string Url);

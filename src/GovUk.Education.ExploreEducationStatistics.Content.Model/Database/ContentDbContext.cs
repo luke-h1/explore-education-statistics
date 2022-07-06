@@ -195,9 +195,11 @@ namespace GovUk.Education.ExploreEducationStatistics.Content.Model.Database
                     p => p.ToString(),
                     p => new Uri(p));
 
-            modelBuilder.Entity<Publication>()
-                .OwnsOne(p => p.ExternalMethodology)
-                .ToTable("ExternalMethodology");
+            modelBuilder.Entity<ExternalMethodology>()
+                .HasOne(e => e.Publication)
+                .WithOne(p => p.ExternalMethodology)
+                .HasForeignKey<ExternalMethodology>(e => e.PublicationId)
+                .IsRequired(false);
 
             modelBuilder.Entity<Publication>()
                 .Property(n => n.Published)

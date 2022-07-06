@@ -97,7 +97,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.ViewModels.ManageCont
 
             public List<TitleAndIdViewModel> Methodologies { get; set; }
 
-            public ExternalMethodology ExternalMethodology { get; set; }
+            public ExternalMethodologyViewModel ExternalMethodology { get; set; }
         }
 
         public class ThemeViewModel

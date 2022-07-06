@@ -38,6 +38,7 @@ public class PublicationService : IPublicationService
     {
         return await _contentPersistenceHelper
             .CheckEntityExists<Publication>(query => query
+                .Include(p => p.ExternalMethodology)
                 .Include(p => p.Releases)
                 .Include(p => p.Contact)
                 .Include(p => p.LegacyReleases)

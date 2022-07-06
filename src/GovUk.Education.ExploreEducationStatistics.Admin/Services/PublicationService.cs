@@ -127,7 +127,11 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Services
                         Title = publication.Title,
                         TopicId = publication.TopicId,
                         Slug = publication.Slug,
-                        ExternalMethodology = publication.ExternalMethodology
+                        ExternalMethodology = new ExternalMethodology
+                        {
+                            Title = publication.ExternalMethodology.Title,
+                            Url = publication.ExternalMethodology.Url
+                        }
                     });
 
                     await _context.SaveChangesAsync();
@@ -189,7 +193,12 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Services
 
                     publication.Title = updatedPublication.Title;
                     publication.TopicId = updatedPublication.TopicId;
-                    publication.ExternalMethodology = updatedPublication.ExternalMethodology;
+                    // TODO EES-3511 External methodology could be null?
+                    publication.ExternalMethodology = new ExternalMethodology
+                    {
+                        Title = updatedPublication.ExternalMethodology.Title,
+                        Url = updatedPublication.ExternalMethodology.Url
+                    };
                     publication.Updated = DateTime.UtcNow;
                     publication.SupersededById = updatedPublication.SupersededById;
 
@@ -349,6 +358,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Services
             return values.Include(p => p.Contact)
                 .Include(p => p.Releases)
                 .ThenInclude(r => r.ReleaseStatuses)
+                .Include(p => p.ExternalMethodology)
                 .Include(p => p.LegacyReleases)
                 .Include(p => p.Topic)
                 .Include(p => p.Methodologies)
