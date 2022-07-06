@@ -195,7 +195,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Api
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             // Enable caching and register any caching services.
-            CacheAspect.Enabled = true;
+            CacheAspect.Enabled = false;
             BlobCacheAttribute.AddService("default", app.ApplicationServices.GetService<IBlobCacheService>());
             // Enable cancellation aspects and register request timeout configuration.
             CancellationTokenTimeoutAspect.Enabled = true;

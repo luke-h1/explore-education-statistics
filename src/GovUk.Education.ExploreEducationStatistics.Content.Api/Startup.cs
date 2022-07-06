@@ -166,7 +166,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Content.Api
             ILogger<Startup> logger)
         {
             // Enable caching and register any caching services
-            CacheAspect.Enabled = true;
+            CacheAspect.Enabled = false;
             BlobCacheAttribute.AddService("default", app.ApplicationServices.GetService<IBlobCacheService>());
 
             if (env.IsDevelopment())

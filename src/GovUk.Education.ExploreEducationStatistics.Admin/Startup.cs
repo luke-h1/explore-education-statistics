@@ -602,7 +602,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             // Enable caching and register any caching services.
-            CacheAspect.Enabled = true;
+            CacheAspect.Enabled = false;
             BlobCacheAttribute.AddService("default", app.ApplicationServices.GetService<IBlobCacheService>());
 
             UpdateDatabase(app, env);
