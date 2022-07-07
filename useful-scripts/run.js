@@ -34,7 +34,7 @@ const projects = {
       projectRoot,
       'src/GovUk.Education.ExploreEducationStatistics.Admin',
     ),
-    command: 'dotnet build && dotnet run',
+    command: 'dotnet clean && dotnet build && dotnet run',
     colour: chalk.green,
   },
   adminKeycloak: {
@@ -62,7 +62,7 @@ const projects = {
       projectRoot,
       'src/GovUk.Education.ExploreEducationStatistics.Content.Api',
     ),
-    command: 'dotnet build && dotnet run',
+    command: 'dotnet clean && dotnet build && dotnet run',
     colour: chalk.cyan,
   },
   data: {
@@ -70,7 +70,7 @@ const projects = {
       projectRoot,
       'src/GovUk.Education.ExploreEducationStatistics.Data.Api',
     ),
-    command: 'dotnet build && dotnet run',
+    command: 'dotnet clean && dotnet build && dotnet run',
     colour: chalk.magenta,
   },
   processor: {

@@ -1,6 +1,5 @@
 ﻿#nullable enable
 using System;
-using System.IO;
 using System.Threading.Tasks;
 using GovUk.Education.ExploreEducationStatistics.Common.Cache.Interfaces;
 using GovUk.Education.ExploreEducationStatistics.Common.Model;
@@ -8,7 +7,6 @@ using GovUk.Education.ExploreEducationStatistics.Common.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 
 namespace GovUk.Education.ExploreEducationStatistics.Common.Services
 {
@@ -40,16 +38,22 @@ namespace GovUk.Education.ExploreEducationStatistics.Common.Services
             return GetItem(cacheKey, () => Task.FromResult(itemSupplier.Invoke()));
         }
 
-        public Task<TItem> GetItem<TItem>(
+        public async Task<TItem> GetItem<TItem>(
             IInMemoryCacheKey cacheKey,
             Func<Task<TItem>> itemSupplier)
             where TItem : class
         {
-            return _cache.GetOrCreateAsync(cacheKey, cacheEntry =>
+            var cachedItem = await GetItem<TItem>(cacheKey);
+
+            if (cachedItem != null)
             {
-                // TODO DW - add sliding window options here
-                return itemSupplier.Invoke();
-            });
+                return cachedItem;
+            }
+
+            var newItem = await itemSupplier.Invoke();
+            // TODO DW - add sliding window options here
+            await SetItem(cacheKey, newItem);
+            return newItem;
         }
 
         public async Task<Either<ActionResult, TItem>> GetItem<TItem>(
@@ -76,14 +80,27 @@ namespace GovUk.Education.ExploreEducationStatistics.Common.Services
         public Task<TItem?> GetItem<TItem>(IInMemoryCacheKey cacheKey)
             where TItem : class
         {
-            return Task.FromResult<TItem?>(_cache.Get<TItem>(cacheKey));
+            var cachedItem = _cache.Get<TItem>(cacheKey);
+
+            _logger.LogInformation(
+                cachedItem == null
+                    ? "Cache miss for cache key {CacheKeyDescription}"
+                    : "Returning cached result for cache key {CacheKeyDescription}",
+                GetCacheKeyDescription(cacheKey));
+
+            return Task.FromResult(cachedItem);
         }
 
         public async Task<object?> GetItem(IInMemoryCacheKey cacheKey, Type targetType)
         {
-            var cachedItem = await GetItem<object>(cacheKey, () => null!);
-            
-            if (cachedItem != null )
+            var cachedItem = await GetItem<object>(cacheKey);
+
+            if (cachedItem != null && cachedItem.GetType().IsInstanceOfType(targetType))
+            {
+                throw new ArgumentException($"Cached type {cachedItem.GetType()} is not an instance of " +
+                                            $"{nameof(targetType)} {targetType} - for cache key {cacheKey}");
+            }
+
             return cachedItem;
         }
 
@@ -92,7 +109,13 @@ namespace GovUk.Education.ExploreEducationStatistics.Common.Services
             TItem item)
         {
             _cache.Set(cacheKey, item);
+            _logger.LogInformation("Setting cached item with cache key {CacheKeyDescription}", GetCacheKeyDescription(cacheKey));
             return Task.CompletedTask;
+        }
+
+        private static string GetCacheKeyDescription(IInMemoryCacheKey cacheKey)
+        {
+            return $"{cacheKey.GetType().Name} {cacheKey.Key}";
         }
     }
 }
