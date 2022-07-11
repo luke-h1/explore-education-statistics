@@ -1,6 +1,6 @@
 ﻿#nullable enable
 using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using GovUk.Education.ExploreEducationStatistics.Common.Cache.Interfaces;
 using GovUk.Education.ExploreEducationStatistics.Common.Services.Interfaces;
@@ -13,8 +13,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Common.Services
     {
         private readonly IMemoryCache _cache;
         private readonly ILogger<InMemoryCacheService> _logger;
-        private readonly List<int> HardExpiryIntervalsInSeconds; 
-
+        
         public InMemoryCacheService(
             IMemoryCache cache,
             ILogger<InMemoryCacheService> logger)
@@ -68,16 +67,35 @@ namespace GovUk.Education.ExploreEducationStatistics.Common.Services
             TItem item,
             InMemoryCacheConfiguration configuration)
         {
-            var expiryTimeFromNow = configuration.ExpiryTimeMillis;
-            
-            
+            int? expiryTimeInMillis = null;
+
+            if (configuration.DurationToCacheInMillis != null && configuration.ExpiryPeriods != null)
+            {
+                var midnightInMillis = DateTime.Today.Millisecond;
+                var nowInMillis = DateTime.UtcNow.Millisecond;
+                var targetExpiryTimeInMillis = nowInMillis + configuration.DurationToCacheInMillis.Value;
+
+                var expiryWindowStartTimesToday = configuration.GetDailyExpiryStartTimesInMillis()
+                    .Select(time => midnightInMillis + time)
+                    .ToList();
+                
+                var currentExpiryWindowStart = expiryWindowStartTimesToday
+                    .First(expiryWindowStart => expiryWindowStart < nowInMillis);
+
+                var nextExpiryWindowStart = expiryWindowStartTimesToday[expiryWindowStartTimesToday.IndexOf(currentExpiryWindowStart) + 1];
+
+                expiryTimeInMillis = Math.Min(targetExpiryTimeInMillis, nextExpiryWindowStart);
+            }
             
             var options = new MemoryCacheEntryOptions
             {
                 Size = configuration.SizeBytes,
-                AbsoluteExpiration = configuration.ExpiryTimeMillis ? 
+                AbsoluteExpiration = expiryTimeInMillis != null 
+                    ? DateTimeOffset.FromUnixTimeMilliseconds(expiryTimeInMillis.Value) 
+                    : null 
             };
-            _cache.Set(cacheKey, item, );
+            
+            _cache.Set(cacheKey, item, options);
             _logger.LogInformation("Setting cached item with cache key {CacheKeyDescription}", GetCacheKeyDescription(cacheKey));
             return Task.CompletedTask;
         }
