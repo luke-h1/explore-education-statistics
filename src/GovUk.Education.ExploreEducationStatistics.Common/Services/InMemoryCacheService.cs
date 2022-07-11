@@ -1,10 +1,9 @@
 ﻿#nullable enable
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using GovUk.Education.ExploreEducationStatistics.Common.Cache.Interfaces;
-using GovUk.Education.ExploreEducationStatistics.Common.Model;
 using GovUk.Education.ExploreEducationStatistics.Common.Services.Interfaces;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
@@ -14,6 +13,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Common.Services
     {
         private readonly IMemoryCache _cache;
         private readonly ILogger<InMemoryCacheService> _logger;
+        private readonly List<int> HardExpiryIntervalsInSeconds; 
 
         public InMemoryCacheService(
             IMemoryCache cache,
@@ -30,65 +30,24 @@ namespace GovUk.Education.ExploreEducationStatistics.Common.Services
             return Task.CompletedTask;
         }
 
-        public Task<TItem> GetItem<TItem>(
-            IInMemoryCacheKey cacheKey,
-            Func<TItem> itemSupplier)
-            where TItem : class
-        {
-            return GetItem(cacheKey, () => Task.FromResult(itemSupplier.Invoke()));
-        }
-
-        public async Task<TItem> GetItem<TItem>(
-            IInMemoryCacheKey cacheKey,
-            Func<Task<TItem>> itemSupplier)
-            where TItem : class
-        {
-            var cachedItem = await GetItem<TItem>(cacheKey);
-
-            if (cachedItem != null)
-            {
-                return cachedItem;
-            }
-
-            var newItem = await itemSupplier.Invoke();
-            // TODO DW - add sliding window options here
-            await SetItem(cacheKey, newItem);
-            return newItem;
-        }
-
-        public async Task<Either<ActionResult, TItem>> GetItem<TItem>(
-            IInMemoryCacheKey cacheKey,
-            Func<Task<Either<ActionResult, TItem>>> itemSupplier)
-            where TItem : class
-        {
-            // Attempt to read blob from the cache container
-            var cachedEntity = await GetItem<TItem>(cacheKey);
-
-            if (cachedEntity != null)
-            {
-                return cachedEntity;
-            }
-
-            // Cache miss - invoke provider instead
-            return await itemSupplier().OnSuccessDo(async entity =>
-            {
-                // Write result to cache as a json blob before returning
-                await SetItem(cacheKey, entity);
-            });
-        }
-
         public Task<TItem?> GetItem<TItem>(IInMemoryCacheKey cacheKey)
             where TItem : class
         {
             var cachedItem = _cache.Get<TItem>(cacheKey);
 
+            if (cachedItem == null)
+            {
+                _logger.LogInformation(
+                    "Cache miss for cache key {CacheKeyDescription}", 
+                    GetCacheKeyDescription(cacheKey));
+                return Task.FromResult((TItem?) null);
+            }
+            
             _logger.LogInformation(
-                cachedItem == null
-                    ? "Cache miss for cache key {CacheKeyDescription}"
-                    : "Returning cached result for cache key {CacheKeyDescription}",
+                "Returning cached result for cache key {CacheKeyDescription}",
                 GetCacheKeyDescription(cacheKey));
 
-            return Task.FromResult(cachedItem);
+            return Task.FromResult(cachedItem)!;
         }
 
         public async Task<object?> GetItem(IInMemoryCacheKey cacheKey, Type targetType)
@@ -106,9 +65,19 @@ namespace GovUk.Education.ExploreEducationStatistics.Common.Services
 
         public Task SetItem<TItem>(
             IInMemoryCacheKey cacheKey,
-            TItem item)
+            TItem item,
+            InMemoryCacheConfiguration configuration)
         {
-            _cache.Set(cacheKey, item);
+            var expiryTimeFromNow = configuration.ExpiryTimeMillis;
+            
+            
+            
+            var options = new MemoryCacheEntryOptions
+            {
+                Size = configuration.SizeBytes,
+                AbsoluteExpiration = configuration.ExpiryTimeMillis ? 
+            };
+            _cache.Set(cacheKey, item, );
             _logger.LogInformation("Setting cached item with cache key {CacheKeyDescription}", GetCacheKeyDescription(cacheKey));
             return Task.CompletedTask;
         }

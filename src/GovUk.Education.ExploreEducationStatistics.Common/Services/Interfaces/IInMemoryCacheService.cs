@@ -5,9 +5,16 @@ using GovUk.Education.ExploreEducationStatistics.Common.Cache.Interfaces;
 using GovUk.Education.ExploreEducationStatistics.Common.Model;
 using Microsoft.AspNetCore.Mvc;
 
-namespace GovUk.Education.ExploreEducationStatistics.Common.Services.Interfaces
+namespace GovUk.Education.ExploreEducationStatistics.Common.Services.Interfaces;
+
+public interface IInMemoryCacheService
 {
-    public interface IInMemoryCacheService : ICacheService<IInMemoryCacheKey>
-    {
-    }
+    Task<object?> GetItem(IInMemoryCacheKey cacheKey, Type targetType);
+
+    Task SetItem<TItem>(IInMemoryCacheKey cacheKey, TItem item, InMemoryCacheConfiguration configuration);
+
+    // TODO DW - remove?
+    Task DeleteItem(IInMemoryCacheKey cacheKey);
 }
+
+public record InMemoryCacheConfiguration(int SizeBytes, int? ExpiryTimeMillis);
