@@ -4,5 +4,5 @@ namespace GovUk.Education.ExploreEducationStatistics.Content.Api.Cache;
 
 public record GetReleaseCacheKey(string PublicationSlug, string ReleaseSlug) : IInMemoryCacheKey
 {
-    public string Key => $"{PublicationSlug}/{ReleaseSlug}";
+    public string Key => $"{GetType().Name}:{PublicationSlug}/{ReleaseSlug}";
 }

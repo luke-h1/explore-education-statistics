@@ -8,6 +8,7 @@ using GovUk.Education.ExploreEducationStatistics.Content.Api.Cache;
 using GovUk.Education.ExploreEducationStatistics.Content.Services.Interfaces;
 using GovUk.Education.ExploreEducationStatistics.Content.Services.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using static GovUk.Education.ExploreEducationStatistics.Common.Services.Interfaces.ExpirySchedule;
 
 namespace GovUk.Education.ExploreEducationStatistics.Content.Api.Controllers
 {
@@ -29,6 +30,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Content.Api.Controllers
                 .HandleFailuresOrOk();
         }
 
+        [InMemoryCache(typeof(GetLatestReleaseCacheKey), expirySchedule: HalfHourly, cacheDurationInSeconds: 30)]
         [HttpGet("publications/{publicationSlug}/releases/latest")]
         public async Task<ActionResult<ReleaseViewModel>> GetLatestRelease(string publicationSlug)
         {
@@ -43,7 +45,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Content.Api.Controllers
                 .HandleFailuresOrOk();
         }
 
-        [InMemoryCache(typeof(GetReleaseCacheKey))]
+        [InMemoryCache(typeof(GetReleaseCacheKey), expirySchedule: HalfHourly, cacheDurationInSeconds: 30)]
         [HttpGet("publications/{publicationSlug}/releases/{releaseSlug}")]
         public async Task<ActionResult<ReleaseViewModel>> GetRelease(string publicationSlug, string releaseSlug)
         {

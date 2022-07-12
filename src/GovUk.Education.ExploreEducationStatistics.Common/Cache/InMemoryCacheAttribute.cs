@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using GovUk.Education.ExploreEducationStatistics.Common.Cache.Interfaces;
 using GovUk.Education.ExploreEducationStatistics.Common.Extensions;
 using GovUk.Education.ExploreEducationStatistics.Common.Services.Interfaces;
+using static GovUk.Education.ExploreEducationStatistics.Common.Services.Interfaces.ExpirySchedule;
 
 namespace GovUk.Education.ExploreEducationStatistics.Common.Cache
 {
@@ -14,6 +15,10 @@ namespace GovUk.Education.ExploreEducationStatistics.Common.Cache
         private static Dictionary<string, IInMemoryCacheService> Services { get; set; } = new();
 
         protected override Type BaseKey => typeof(IInMemoryCacheKey);
+        
+        private int? CacheDurationInSeconds { get; }
+        
+        private ExpirySchedule ExpirySchedule { get; }
 
         /// <summary>
         /// Specify a service to use <see cref="Services"/>.
@@ -21,8 +26,14 @@ namespace GovUk.Education.ExploreEducationStatistics.Common.Cache
         /// </summary>
         public string? ServiceName { get; set; }
 
-        public InMemoryCacheAttribute(Type key) : base(key)
+        public InMemoryCacheAttribute(
+            Type key, 
+            int cacheDurationInSeconds, 
+            ExpirySchedule expirySchedule = None
+            ) : base(key)
         {
+            CacheDurationInSeconds = cacheDurationInSeconds;
+            ExpirySchedule = expirySchedule;
         }
 
         public static void AddService(string name, IInMemoryCacheService service)
@@ -68,8 +79,8 @@ namespace GovUk.Education.ExploreEducationStatistics.Common.Cache
                     return;
                 }
 
-                await service.SetItem(key, value);
-
+                var itemCachingConfiguration = new InMemoryCacheConfiguration(ExpirySchedule, CacheDurationInSeconds);
+                await service.SetItem(key, value, itemCachingConfiguration);
                 return;
             }
 

@@ -1,11 +1,8 @@
 ﻿#nullable enable
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using GovUk.Education.ExploreEducationStatistics.Common.Cache.Interfaces;
-using GovUk.Education.ExploreEducationStatistics.Common.Model;
-using Microsoft.AspNetCore.Mvc;
 using static System.Linq.Enumerable;
 
 namespace GovUk.Education.ExploreEducationStatistics.Common.Services.Interfaces;
@@ -20,32 +17,24 @@ public interface IInMemoryCacheService
     Task DeleteItem(IInMemoryCacheKey cacheKey);
 }
 
-public enum ExpiryPeriod
+public enum ExpirySchedule
 {
     Hourly,
     HalfHourly,
-    Never
+    None
 }
 
-public record InMemoryCacheConfiguration(int SizeBytes, int? DurationToCacheInMillis, ExpiryPeriod? ExpiryPeriods)
+public record InMemoryCacheConfiguration(ExpirySchedule ExpirySchedule, int? CacheDurationInSeconds)
 {
-    public List<int> GetDailyExpiryStartTimesInMillis()
+    public List<int> GetDailyExpiryStartTimesInSeconds()
     {
-        switch (ExpiryPeriods)
+        return ExpirySchedule switch
         {
-            case ExpiryPeriod.HalfHourly: 
-                return Range(0, 48)
-                    .Select(i => i * 30 * 1000)
-                    .ToList();   
-            case ExpiryPeriod.Hourly:
-                return Range(0, 24)
-                    .Select(i => i * 60 * 1000)
-                    .ToList();
-            case ExpiryPeriod.Never:
-                return new List<int>();
-            default:
-                throw new ArgumentException($"Unhandled {nameof(ExpiryPeriods)} value {ExpiryPeriods}");
-        }
+            ExpirySchedule.None => new List<int>(),
+            ExpirySchedule.HalfHourly => Range(0, 48).Select(i => i * 30 * 60).ToList(),
+            ExpirySchedule.Hourly => Range(0, 24).Select(i => i * 60 * 60).ToList(),
+            _ => throw new ArgumentException($"Unhandled {nameof(ExpirySchedule)} value {ExpirySchedule}")
+        };
     }
         
 
