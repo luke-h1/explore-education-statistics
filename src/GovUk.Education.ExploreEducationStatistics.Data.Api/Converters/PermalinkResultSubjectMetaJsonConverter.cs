@@ -73,12 +73,12 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Api.Converters
             throw new InvalidOperationException("Use default serialization.");
         }
 
-        private static Dictionary<string, List<LocationAttributeViewModel>> TransformLocations(
+        private static Dictionary<GeographicLevel, List<LocationAttributeViewModel>> TransformLocations(
             List<LegacyLocationAttributeViewModel> locations)
         {
             var result = locations
                 .GroupBy(location => location.Level)
-                .ToDictionary(pair => pair.Key.ToString().CamelCase(),
+                .ToDictionary(pair => pair.Key,
                     pair => pair.ToList().Select(
                         attribute => new LocationAttributeViewModel
                         {
@@ -95,7 +95,6 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Api.Converters
     /// </summary>
     public record LegacyLocationAttributeViewModel : LabelValue
     {
-        [JsonConverter(typeof(StringEnumConverter), typeof(CamelCaseNamingStrategy))]
         public GeographicLevel Level { get; set; }
 
         public dynamic GeoJson { get; set; }

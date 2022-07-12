@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using GovUk.Education.ExploreEducationStatistics.Common.Extensions;
 using GovUk.Education.ExploreEducationStatistics.Common.Model;
+using GovUk.Education.ExploreEducationStatistics.Common.Model.Data;
 using GovUk.Education.ExploreEducationStatistics.Common.Model.Data.Query;
 using GovUk.Education.ExploreEducationStatistics.Common.Services.Interfaces;
 using GovUk.Education.ExploreEducationStatistics.Common.Services.Interfaces.Security;
@@ -251,7 +252,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Services
             return BuildTimePeriodsViewModels(timePeriods);
         }
 
-        private async Task<Dictionary<string, LocationsMetaViewModel>> GetLocations(Guid subjectId)
+        private async Task<Dictionary<GeographicLevel, LocationsMetaViewModel>> GetLocations(Guid subjectId)
         {
             var locations = await _locationRepository.GetDistinctForSubject(subjectId);
             var locationViewModels = BuildLocationAttributeViewModels(locations,
@@ -259,7 +260,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Services
 
             return locationViewModels
                 .ToDictionary(
-                    pair => pair.Key.ToString().CamelCase(),
+                    pair => pair.Key,
                     pair => new LocationsMetaViewModel
                     {
                         Legend = pair.Key.GetEnumLabel(),

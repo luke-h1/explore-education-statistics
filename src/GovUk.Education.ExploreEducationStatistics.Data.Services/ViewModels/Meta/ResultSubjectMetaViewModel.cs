@@ -1,5 +1,6 @@
 #nullable enable
 using System.Collections.Generic;
+using GovUk.Education.ExploreEducationStatistics.Common.Model.Data;
 
 namespace GovUk.Education.ExploreEducationStatistics.Data.Services.ViewModels.Meta
 {
@@ -11,7 +12,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Services.ViewModels.Me
 
         public List<IndicatorMetaViewModel> Indicators { get; init; } = new();
 
-        public Dictionary<string, List<LocationAttributeViewModel>> Locations { get; set; } = new();
+        public Dictionary<GeographicLevel, List<LocationAttributeViewModel>> Locations { get; set; } = new();
 
         public List<BoundaryLevelViewModel> BoundaryLevels { get; init; } = new();
 

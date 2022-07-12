@@ -199,7 +199,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Services
                 .ToList();
         }
 
-        private async Task<Dictionary<string, List<LocationAttributeViewModel>>> GetLocationViewModels(
+        private async Task<Dictionary<GeographicLevel, List<LocationAttributeViewModel>>> GetLocationViewModels(
             List<Location> locations,
             long? boundaryLevelId,
             Dictionary<GeographicLevel, List<string>>? hierarchies)
@@ -208,7 +208,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Services
 
             return BuildLocationAttributeViewModels(locations, hierarchies, geoJson)
                 .ToDictionary(
-                    pair => pair.Key.ToString().CamelCase(),
+                    pair => pair.Key,
                     pair => pair.Value);
         }
 

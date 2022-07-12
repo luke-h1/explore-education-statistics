@@ -1,5 +1,6 @@
 ﻿#nullable enable
 using System.Collections.Generic;
+using GovUk.Education.ExploreEducationStatistics.Common.Model.Data;
 using GovUk.Education.ExploreEducationStatistics.Data.Services.ViewModels;
 using GovUk.Education.ExploreEducationStatistics.Data.Services.ViewModels.Meta;
 
@@ -21,7 +22,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Api.Models
         /// old Permalinks which already have a legacy 'Locations' field in their JSON serialization of a different type.
         /// See <see cref="PermalinkResultSubjectMetaJsonConverter"/> which is doing the conversion.
         /// </remarks>
-        public Dictionary<string, List<LocationAttributeViewModel>> LocationsHierarchical { get; set; } = new();
+        public Dictionary<GeographicLevel, List<LocationAttributeViewModel>> LocationsHierarchical { get; set; } = new();
 
         public List<BoundaryLevelViewModel> BoundaryLevels { get; init; } = new();
 

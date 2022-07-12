@@ -1,7 +1,10 @@
 using GovUk.Education.ExploreEducationStatistics.Common.Database;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace GovUk.Education.ExploreEducationStatistics.Common.Model.Data
 {
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum GeographicLevel
     {
         [EnumLabelValue("English Devolved Area", "EDA")]

@@ -14,7 +14,6 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Services.ViewModels
 
         public List<Guid> Filters { get; set; } = new();
 
-        [JsonConverter(typeof(StringEnumConverter), typeof(CamelCaseNamingStrategy))]
         public GeographicLevel GeographicLevel { get; set; }
 
         public Guid LocationId { get; set; }

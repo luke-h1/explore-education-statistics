@@ -21,7 +21,6 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Services.ViewModels.Me
 
         public dynamic? GeoJson { get; init; }
 
-        [JsonConverter(typeof(StringEnumConverter), typeof(CamelCaseNamingStrategy))]
         public GeographicLevel? Level { get; init; }
 
         public List<LocationAttributeViewModel>? Options { get; init; }
