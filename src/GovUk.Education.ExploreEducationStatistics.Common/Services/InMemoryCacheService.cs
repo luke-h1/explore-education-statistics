@@ -15,6 +15,8 @@ namespace GovUk.Education.ExploreEducationStatistics.Common.Services
 {
     public class InMemoryCacheService : IInMemoryCacheService
     {
+        private const int MaxCacheSizeInMb = 50;
+    
         private readonly JsonSerializerSettings _jsonSerializerSettings =
             GetJsonSerializerSettings(new CamelCaseNamingStrategy());
         
@@ -22,11 +24,13 @@ namespace GovUk.Education.ExploreEducationStatistics.Common.Services
         private readonly ILogger<InMemoryCacheService> _logger;
         
         public InMemoryCacheService(
-            IMemoryCache cache,
             ILogger<InMemoryCacheService> logger)
         {
-            // TODO DW - set max size options here
-            _cache = cache;
+            _cache = new MemoryCache(new MemoryCacheOptions
+            {
+                SizeLimit = MaxCacheSizeInMb * 1000000,
+                ExpirationScanFrequency = TimeSpan.FromMinutes(1),
+            });
             _logger = logger;
         }
 
