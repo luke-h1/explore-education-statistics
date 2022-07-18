@@ -74,7 +74,6 @@ namespace GovUk.Education.ExploreEducationStatistics.Common.Cache
             throw new ArgumentException($"Cache key must by assignable to {BaseKey.GetPrettyFullName()}");
         }
 
-        // TODO DW - lots of duplication here with BlobCacheAttribute 
         public override async Task Set(ICacheKey cacheKey, object value)
         {
             if (cacheKey is IInMemoryCacheKey key)
