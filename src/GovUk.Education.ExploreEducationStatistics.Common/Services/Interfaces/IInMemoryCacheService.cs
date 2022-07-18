@@ -24,7 +24,11 @@ public interface IInMemoryCacheService
 {
     Task<object?> GetItem(IInMemoryCacheKey cacheKey, Type targetType);
 
-    Task SetItem<TItem>(IInMemoryCacheKey cacheKey, TItem item, InMemoryCacheConfiguration configuration);
+    Task SetItem<TItem>(
+        IInMemoryCacheKey cacheKey, 
+        TItem item, 
+        InMemoryCacheConfiguration configuration,
+        DateTime? nowUtc = null);
 }
 
 /**
@@ -48,7 +52,7 @@ public enum ExpirySchedule
     None
 }
 
-public record InMemoryCacheConfiguration(ExpirySchedule ExpirySchedule, int? CacheDurationInSeconds)
+public record InMemoryCacheConfiguration(ExpirySchedule ExpirySchedule, int CacheDurationInSeconds)
 {
     public List<int> GetDailyExpiryStartTimesInSeconds()
     {

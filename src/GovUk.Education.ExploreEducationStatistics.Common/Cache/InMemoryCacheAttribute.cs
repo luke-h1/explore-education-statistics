@@ -23,7 +23,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Common.Cache
 
         protected override Type BaseKey => typeof(IInMemoryCacheKey);
         
-        private int? CacheDurationInSeconds { get; }
+        private int CacheDurationInSeconds { get; }
         
         private ExpirySchedule ExpirySchedule { get; }
 

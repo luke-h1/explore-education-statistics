@@ -36,7 +36,20 @@ namespace GovUk.Education.ExploreEducationStatistics.Common.Services
 
         public Task<object?> GetItem(IInMemoryCacheKey cacheKey, Type targetType)
         {
-            var cachedItem = _cache.Get<object?>(cacheKey);
+            object? cachedItem;
+
+            try
+            {
+                cachedItem = _cache.Get<object?>(cacheKey);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(
+                    e, 
+                    "Error whilst retrieving cached item for key {CacheKey} - returning null", 
+                    GetCacheKeyDescription(cacheKey));
+                return Task.FromResult((object?) null);
+            }
 
             if (cachedItem == null)
             {
@@ -46,43 +59,55 @@ namespace GovUk.Education.ExploreEducationStatistics.Common.Services
                 return Task.FromResult((object?) null);
             }
             
+            if (!targetType.IsInstanceOfType(cachedItem))
+            {
+                _logger.LogError(
+                    "Cached type {CachedItemType} is not an instance of " +
+                    "{TargetType} for cache key {CacheKey} - returning null",
+                    cachedItem.GetType(), 
+                    nameof(targetType), 
+                    GetCacheKeyDescription(cacheKey));
+
+                return Task.FromResult((object?) null);
+            }
+
             _logger.LogInformation(
                 "Returning cached result for cache key {CacheKeyDescription}",
                 GetCacheKeyDescription(cacheKey));
 
-            if (cachedItem != null && cachedItem.GetType().IsInstanceOfType(targetType))
-            {
-                throw new ArgumentException($"Cached type {cachedItem.GetType()} is not an instance of " +
-                                            $"{nameof(targetType)} {targetType} - for cache key {cacheKey}");
-            }
-
-            return Task.FromResult(cachedItem);
+            return Task.FromResult(cachedItem)!;
         }
 
         public Task SetItem<TItem>(
             IInMemoryCacheKey cacheKey,
             TItem item,
-            InMemoryCacheConfiguration configuration)
+            InMemoryCacheConfiguration configuration,
+            DateTime? nowUtc = null)
         {
-            DateTime? absoluteExpiryTime = null;
+            var now = nowUtc ?? DateTime.UtcNow;
 
-            if (configuration.CacheDurationInSeconds != null && configuration.ExpirySchedule != None)
+            DateTime absoluteExpiryTime;
+
+            if (configuration.ExpirySchedule == None)
             {
-                var midnightToday = DateTime.Today.ToUniversalTime();
-                var now = DateTime.UtcNow;
-                var targetAbsoluteExpiryDateTime = now.AddSeconds(configuration.CacheDurationInSeconds.Value);
+                absoluteExpiryTime = now.AddSeconds(configuration.CacheDurationInSeconds);
+            }
+            else
+            {
+                var midnightToday = now.Date;
+                var targetAbsoluteExpiryDateTime = now.AddSeconds(configuration.CacheDurationInSeconds);
 
                 var expiryWindowStartTimesToday = configuration.GetDailyExpiryStartTimesInSeconds()
                     .Select(milliseconds => midnightToday.AddSeconds(milliseconds))
                     .ToList();
 
-                var midnightTomorrow = DateTime.Today.ToUniversalTime().AddDays(1);
+                var midnightTomorrow = midnightToday.AddDays(1);
                 var nextExpiryWindowStart = expiryWindowStartTimesToday
                     .FirstOrDefault(expiryWindowStart => expiryWindowStart > now, midnightTomorrow);
 
                 absoluteExpiryTime = targetAbsoluteExpiryDateTime < nextExpiryWindowStart 
                     ? targetAbsoluteExpiryDateTime 
-                    : nextExpiryWindowStart.AddMilliseconds(-1);
+                    : nextExpiryWindowStart;
             }
             
             // Calculate an approximate size in bytes for this object. As there is no built-in mechanism
@@ -90,9 +115,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Common.Services
             var json = JsonConvert.SerializeObject(item, null, _jsonSerializerSettings);
             var approximateSizeInBytes = Encoding.GetEncoding("utf-8").GetByteCount(json);
 
-            var expiryTime = absoluteExpiryTime != null 
-                ? new DateTimeOffset(absoluteExpiryTime.Value)
-                : (DateTimeOffset?) null;
+            var expiryTime = new DateTimeOffset(absoluteExpiryTime);
             
             _cache.Set(cacheKey, item, new MemoryCacheEntryOptions
             {

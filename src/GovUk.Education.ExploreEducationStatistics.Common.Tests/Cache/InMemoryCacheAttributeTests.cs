@@ -102,7 +102,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Common.Tests.Cache
             var expectedCacheConfiguration = new InMemoryCacheConfiguration(ExpirySchedule.Hourly, 45);
             
             _inMemoryCacheService
-                .Setup(s => s.SetItem(cacheKey, Capture.In(args), expectedCacheConfiguration))
+                .Setup(s => s.SetItem(cacheKey, Capture.In(args), expectedCacheConfiguration, null))
                 .Returns(Task.CompletedTask);
 
             var result = TestMethods.SingleParam("test");
@@ -115,7 +115,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Common.Tests.Cache
                 Times.Once);
 
             _inMemoryCacheService.Verify(
-                s => s.SetItem(cacheKey, Capture.In(args), expectedCacheConfiguration), 
+                s => s.SetItem(cacheKey, Capture.In(args), expectedCacheConfiguration, null), 
                 Times.Once);
         }
 
@@ -133,7 +133,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Common.Tests.Cache
             var expectedDefaultCacheConfiguration = new InMemoryCacheConfiguration(ExpirySchedule.None, 135);
             
             _inMemoryCacheService
-                .Setup(s => s.SetItem(cacheKey, Capture.In(args), expectedDefaultCacheConfiguration))
+                .Setup(s => s.SetItem(cacheKey, Capture.In(args), expectedDefaultCacheConfiguration, null))
                 .Returns(Task.CompletedTask);
 
             var result = TestMethods.DefaultCacheConfig("test");
@@ -146,7 +146,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Common.Tests.Cache
                 Times.Once);
 
             _inMemoryCacheService.Verify(
-                s => s.SetItem(cacheKey, Capture.In(args), expectedDefaultCacheConfiguration), 
+                s => s.SetItem(cacheKey, Capture.In(args), expectedDefaultCacheConfiguration, null), 
                 Times.Once);
         }
 
@@ -168,7 +168,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Common.Tests.Cache
             var expectedCacheConfiguration = new InMemoryCacheConfiguration(ExpirySchedule.Hourly, 45);
             
             targetInMemoryCacheService
-                .Setup(s => s.SetItem(cacheKey, Capture.In(args), expectedCacheConfiguration))
+                .Setup(s => s.SetItem(cacheKey, Capture.In(args), expectedCacheConfiguration, null))
                 .Returns(Task.CompletedTask);
 
             var result = TestMethods.SpecificCacheService("test");
