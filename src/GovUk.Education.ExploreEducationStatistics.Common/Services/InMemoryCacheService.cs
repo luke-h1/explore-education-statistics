@@ -20,7 +20,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Common.Services
         private readonly JsonSerializerSettings _jsonSerializerSettings =
             GetJsonSerializerSettings(new CamelCaseNamingStrategy());
         
-        private readonly IMemoryCache _cache;
+        private IMemoryCache _cache;
         private readonly ILogger<InMemoryCacheService> _logger;
         
         public InMemoryCacheService(
@@ -32,12 +32,6 @@ namespace GovUk.Education.ExploreEducationStatistics.Common.Services
                 ExpirationScanFrequency = TimeSpan.FromMinutes(1),
             });
             _logger = logger;
-        }
-
-        public Task DeleteItem(IInMemoryCacheKey cacheKey)
-        {
-            _cache.Remove(cacheKey.Key);
-            return Task.CompletedTask;
         }
 
         public Task<object?> GetItem(IInMemoryCacheKey cacheKey, Type targetType)
@@ -128,6 +122,11 @@ namespace GovUk.Education.ExploreEducationStatistics.Common.Services
                 NullValueHandling = NullValueHandling.Ignore,
                 TypeNameHandling = TypeNameHandling.Auto
             };
+        }
+
+        public void SetMemoryCache(IMemoryCache cache)
+        {
+            this._cache = cache;
         }
     }
 }

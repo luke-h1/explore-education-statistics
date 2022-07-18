@@ -12,6 +12,13 @@ namespace GovUk.Education.ExploreEducationStatistics.Common.Cache
 {
     public class InMemoryCacheAttribute : CacheAttribute
     {
+        /**
+         * A Dictionary of available IMemoryCacheService implementations. It is possible here to register
+         * InMemoryCacheServices that can each handle a different cache and with a different configuration. Therefore
+         * we could register services that handle short-lived caches, caches that never expire etc, and the individual
+         * [InMemoryCache] attributes on methods could identify which cache service they need via the "ServiceName"
+         * parameter.
+         */
         private static Dictionary<string, IInMemoryCacheService> Services { get; set; } = new();
 
         protected override Type BaseKey => typeof(IInMemoryCacheKey);
