@@ -155,8 +155,8 @@ const TableHeadersForm = ({
     reorderingGroups: boolean,
   ) => {
     const message = reorderingGroups
-      ? `Re-order ${axisName} selected, click to change to items`
-      : 'Re-order items selected, click to change to groups';
+      ? `Reorder ${axisName} selected, click to change to items`
+      : 'Reorder items selected, click to change to groups';
 
     // Clear the message then repopulate to ensure the new message is read,
     // and only read once.
@@ -178,22 +178,26 @@ const TableHeadersForm = ({
         })}
         id={id}
       >
-        <h3>Re-order table headers</h3>
-        <p className="govuk-hint">
-          Drag and drop or use the keyboard to re-order headers within or
-          between columns and rows. Click the Re-order button on a header group
-          to re-order the items within that group. Hold the Ctrl key and click
-          to select multiple items to drag and drop.{' '}
-        </p>
-        <p className="govuk-hint">
-          For keyboard users, use the Tab key to navigate to items or groups,
-          select and deselect a draggable item with Space and use the arrow keys
-          to move a selected item. To move multiple items, you can press Ctrl
-          and Enter to add an item to your selected items.
-        </p>
-        <p className="govuk-visually-hidden">
-          If you are using a screen reader disable scan mode.
-        </p>
+        <div className="govuk-width-container govuk-!-margin-2 govuk-!-margin-bottom-4">
+          <h3>Move and reorder table headers</h3>
+          <h4>Using a mouse, track pad, touch screen and a keyboard</h4>
+          <p className="govuk-hint">
+            Drag and drop or use the keyboard to reorder headers within or
+            between columns and rows. Click the Reorder button on a header group
+            to reorder the items within that group. Hold the Ctrl key and click
+            to select multiple items to drag and drop.{' '}
+          </p>
+          <h4>Using only a keyboard</h4>
+          <p className="govuk-hint">
+            For keyboard users, use the Tab key to navigate to items or groups,
+            select and deselect a draggable item with Space and use the arrow
+            keys to move a selected item. To move multiple items, you can press
+            Ctrl and Enter to add an item to your selected items.
+          </p>
+          <p className="govuk-visually-hidden">
+            If you are using a screen reader disable scan mode.
+          </p>
+        </div>
         <Formik<FormValues>
           enableReinitialize
           initialValues={{
@@ -228,7 +232,7 @@ const TableHeadersForm = ({
                       PickByType<TableHeadersConfig, Filter[][]>
                     >
                       isDraggingGroup={isDraggingGroup}
-                      legend="Re-order column headers"
+                      legend="Move column headers"
                       name="columnGroups"
                       readOnly={readOnly}
                       onChangeReorderingType={handleSwitchReorderingType}
@@ -246,7 +250,7 @@ const TableHeadersForm = ({
                       PickByType<TableHeadersConfig, Filter[][]>
                     >
                       isDraggingGroup={isDraggingGroup}
-                      legend="Re-order row headers"
+                      legend="Move row headers"
                       name="rowGroups"
                       readOnly={readOnly}
                       onChangeReorderingType={handleSwitchReorderingType}
@@ -265,10 +269,10 @@ const TableHeadersForm = ({
                 <Button
                   ariaControls={id}
                   ariaExpanded={showTableHeadersForm}
-                  className="govuk-!-margin-bottom-0"
+                  className="govuk-!-margin-left-5 govuk-!-margin-top-3"
                   type="submit"
                 >
-                  Save table headers order
+                  Update and view reordered table
                 </Button>
               </Form>
             );

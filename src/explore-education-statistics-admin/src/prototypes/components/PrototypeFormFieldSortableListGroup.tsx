@@ -67,7 +67,7 @@ const GroupButtons = ({
               onClickReorder?.();
             }}
           >
-            Re-order
+            Reorder
             <span className="govuk-visually-hidden">{` items in ${legend}`}</span>
           </Button>
           <Button

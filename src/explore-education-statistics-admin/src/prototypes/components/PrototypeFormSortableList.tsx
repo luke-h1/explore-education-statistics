@@ -245,10 +245,11 @@ const FormSortableList = ({
               className={classNames(
                 styles.readOnlyItem,
                 styles.readOnlyLastItem,
-                'govuk-!-font-size-14',
+                'govuk-!-padding-top-3',
+                'govuk-!-padding-bottom-4',
               )}
             >
-              + {value.length - numItemsToShow} more
+              <a href="#">Show {value.length - numItemsToShow} more</a>
             </li>
           )}
         </ol>

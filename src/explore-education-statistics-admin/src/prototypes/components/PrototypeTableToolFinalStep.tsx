@@ -100,12 +100,12 @@ const TableToolFinalStep = ({
             )}
             {!showTableHeadersForm && (
               <Button
-                className="govuk-!-margin-bottom-0 govuk-!-margin-left-"
+                className="govuk-!-margin-bottom-0"
                 ariaControls={tableHeadersFormId}
                 ariaExpanded={showTableHeadersForm}
                 onClick={toggleShowTableHeadersForm}
               >
-                Re-order table headers
+                Move and reorder table headers
               </Button>
             )}
           </div>
