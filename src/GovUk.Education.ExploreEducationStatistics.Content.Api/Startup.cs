@@ -8,13 +8,10 @@ using GovUk.Education.ExploreEducationStatistics.Common.Config;
 using GovUk.Education.ExploreEducationStatistics.Common.ModelBinding;
 using GovUk.Education.ExploreEducationStatistics.Common.Services;
 using GovUk.Education.ExploreEducationStatistics.Common.Services.Interfaces;
-using GovUk.Education.ExploreEducationStatistics.Common.Services.Interfaces.Security;
-using GovUk.Education.ExploreEducationStatistics.Common.Services.Security;
+using GovUk.Education.ExploreEducationStatistics.Common.Utils;
 using GovUk.Education.ExploreEducationStatistics.Content.Model.Database;
 using GovUk.Education.ExploreEducationStatistics.Content.Model.Repository;
 using GovUk.Education.ExploreEducationStatistics.Content.Model.Repository.Interfaces;
-using GovUk.Education.ExploreEducationStatistics.Content.Security;
-using GovUk.Education.ExploreEducationStatistics.Content.Security.AuthorizationHandlers;
 using GovUk.Education.ExploreEducationStatistics.Content.Services;
 using GovUk.Education.ExploreEducationStatistics.Content.Services.Interfaces;
 using GovUk.Education.ExploreEducationStatistics.Data.Model.Database;
@@ -23,7 +20,6 @@ using GovUk.Education.ExploreEducationStatistics.Data.Model.Repository.Interface
 using GovUk.Education.ExploreEducationStatistics.Data.Services;
 using GovUk.Education.ExploreEducationStatistics.Data.Services.Interfaces;
 using GovUk.Education.ExploreEducationStatistics.Publisher.Model;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -117,7 +113,8 @@ namespace GovUk.Education.ExploreEducationStatistics.Content.Api
                     return new BlobStorageService(
                         connectionString,
                         new BlobServiceClient(connectionString),
-                        provider.GetRequiredService<ILogger<BlobStorageService>>()
+                        provider.GetRequiredService<ILogger<BlobStorageService>>(),
+                        new StorageInstanceCreationUtil()
                     );
                 }
             );
@@ -139,22 +136,10 @@ namespace GovUk.Education.ExploreEducationStatistics.Content.Api
             services.AddTransient<IReleaseFileService, ReleaseFileService>();
             services.AddTransient<IReleaseDataFileRepository, ReleaseDataFileRepository>();
             services.AddTransient<IDataGuidanceFileWriter, DataGuidanceFileWriter>();
-            services.AddTransient<IUserService, UserService>();
             services.AddTransient<IGlossaryService, GlossaryService>();
 
-            services.AddAuthorization(options =>
-            {
-                // does this use have permission to view a specific Publication?
-                options.AddPolicy(ContentSecurityPolicies.CanViewSpecificPublication.ToString(), policy =>
-                    policy.Requirements.Add(new ViewPublicationRequirement()));
-
-                // does this use have permission to view a specific Release?
-                options.AddPolicy(ContentSecurityPolicies.CanViewSpecificRelease.ToString(), policy =>
-                    policy.Requirements.Add(new ViewReleaseRequirement()));
-            });
-
-            services.AddTransient<IAuthorizationHandler, ViewPublicationAuthorizationHandler>();
-            services.AddTransient<IAuthorizationHandler, ViewReleaseAuthorizationHandler>();
+            StartupSecurityConfiguration.ConfigureAuthorizationPolicies(services);
+            StartupSecurityConfiguration.ConfigureResourceBasedAuthorization(services);
 
             AddPersistenceHelper<ContentDbContext>(services);
             AddPersistenceHelper<StatisticsDbContext>(services);
@@ -220,7 +205,9 @@ namespace GovUk.Education.ExploreEducationStatistics.Content.Api
             try
             {
                 var publisherConnectionString = Configuration.GetValue<string>("PublisherStorage");
-                var storageQueueService = new StorageQueueService(publisherConnectionString);
+                var storageQueueService = new StorageQueueService(
+                    publisherConnectionString,
+                    new StorageInstanceCreationUtil());
                 storageQueueService.AddMessage(queueName, new PublishAllContentMessage());
 
                 logger.LogInformation($"Message added to {queueName} queue");

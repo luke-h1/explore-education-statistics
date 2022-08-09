@@ -1,4 +1,5 @@
 import time
+import os
 import argparse
 import json
 import traceback
@@ -6,6 +7,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from typing import Union
 from .get_webdriver import get_webdriver
+from pathlib import Path
 
 
 def wait_until_page_contains_xpath(context, selector):

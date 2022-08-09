@@ -1,4 +1,5 @@
-﻿namespace GovUk.Education.ExploreEducationStatistics.Publisher.Model
+﻿#nullable enable
+namespace GovUk.Education.ExploreEducationStatistics.Publisher.Model
 {
     public static class PublisherQueues
     {

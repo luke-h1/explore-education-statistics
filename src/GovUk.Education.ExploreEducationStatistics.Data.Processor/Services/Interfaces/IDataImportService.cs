@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -18,7 +19,11 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services.Int
 
         Task UpdateStatus(Guid id, DataImportStatus newStatus, double percentageComplete);
 
-        Task Update(Guid id, int rowsPerBatch, int totalRows, int numBatches,
+        Task Update(Guid id,
+            int rowsPerBatch,
+            int importedRows,
+            int totalRows,
+            int numBatches,
             HashSet<GeographicLevel> geographicLevels);
     }
 }
