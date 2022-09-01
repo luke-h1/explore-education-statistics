@@ -32,11 +32,9 @@ namespace GovUk.Education.ExploreEducationStatistics.Content.Services.Tests
         [Fact]
         public async Task GetCachedPublication_PublicationIsCached()
         {
-            BlobCacheAttribute.AddService("public", BlobCacheService.Object);
-
             var cacheKey = new PublicationCacheKey(PublicationSlug);
 
-            BlobCacheService
+            PublicBlobCacheService
                 .Setup(s => s.GetItem(cacheKey, typeof(PublicationViewModel)))
                 .ReturnsAsync(PublicationViewModel);
 
@@ -44,7 +42,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Content.Services.Tests
 
             var result = await service.GetCachedPublication(PublicationSlug);
 
-            VerifyAllMocks(BlobCacheService);
+            VerifyAllMocks(PublicBlobCacheService);
 
             result.AssertRight(PublicationViewModel);
         }
@@ -52,25 +50,45 @@ namespace GovUk.Education.ExploreEducationStatistics.Content.Services.Tests
         [Fact]
         public async Task GetCachedPublication_PublicationIsNotCached()
         {
-            BlobCacheAttribute.AddService("public", BlobCacheService.Object);
-
             var cacheKey = new PublicationCacheKey(PublicationSlug);
 
-            BlobCacheService
+            PublicBlobCacheService
                 .Setup(s => s.GetItem(cacheKey, typeof(PublicationViewModel)))
                 .ReturnsAsync(null);
 
             // Value returned by stub of the un-cached method should be set in the cache
-            BlobCacheService
+            PublicBlobCacheService
                 .Setup(s => s.SetItem<object>(cacheKey, PublicationViewModel))
                 .Returns(Task.CompletedTask);
 
-            // Setup service with a stub of the un-cached method to return a value for when it's not found in the cache
+            // Setup service with a stub of the un-cached method to return the resource
             var service = SetupPublicationServiceStub();
 
             var result = await service.GetCachedPublication(PublicationSlug);
 
-            VerifyAllMocks(BlobCacheService);
+            VerifyAllMocks(PublicBlobCacheService);
+
+            result.AssertRight(PublicationViewModel);
+        }
+
+        [Fact]
+        public async Task UpdatePublication()
+        {
+            var cacheKey = new PublicationCacheKey(PublicationSlug);
+
+            // Value returned by stub of the un-cached method should be set in the cache
+            PublicBlobCacheService
+                .Setup(s => s.SetItem<object>(cacheKey, PublicationViewModel))
+                .Returns(Task.CompletedTask);
+
+            // Setup service with a stub of the un-cached method to return the resource
+            var service = SetupPublicationServiceStub();
+
+            var result = await service.UpdateCachedPublication(PublicationSlug);
+
+            // There should be no attempt on the cache service to get the cached resource
+
+            VerifyAllMocks(PublicBlobCacheService);
 
             result.AssertRight(PublicationViewModel);
         }
