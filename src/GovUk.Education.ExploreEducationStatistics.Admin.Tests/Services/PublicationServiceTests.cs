@@ -1,7 +1,9 @@
 #nullable enable
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using GovUk.Education.ExploreEducationStatistics.Admin.Requests;
 using GovUk.Education.ExploreEducationStatistics.Admin.Services;
 using GovUk.Education.ExploreEducationStatistics.Admin.Services.Interfaces;
 using GovUk.Education.ExploreEducationStatistics.Admin.ViewModels;
@@ -33,7 +35,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
     public class PublicationServiceTests
     {
         [Fact]
-        public async Task GetPublicationsByTopic_CanViewAllPublications()
+        public async Task ListPublications_CanViewAllPublications()
         {
             var topic = new Topic
             {
@@ -60,15 +62,6 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
                 SupersededBy = null,
             };
 
-            var publicationRepository = new Mock<IPublicationRepository>(Strict);
-
-            publicationRepository.Setup(s => s.GetPublicationsForTopic(topic.Id))
-                .ReturnsAsync(new List<Publication>
-                {
-                    publication,
-                });
-            publicationRepository.Setup(s => s.IsSuperseded(publication)).Returns(false);
-
             var userService = new Mock<IUserService>(Strict);
 
             userService.Setup(s => s.GetUserId()).Returns(new Guid());
@@ -78,15 +71,18 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
             var contentDbContextId = Guid.NewGuid().ToString();
             await using (var contentDbContext = InMemoryApplicationDbContext(contentDbContextId))
             {
+                await contentDbContext.Publications.AddRangeAsync(publication);
+                await contentDbContext.SaveChangesAsync();
+            }
+
+            await using (var contentDbContext = InMemoryApplicationDbContext(contentDbContextId))
+            {
                 var publicationService = BuildPublicationService(
                     context: contentDbContext,
-                    userService: userService.Object,
-                    publicationRepository: publicationRepository.Object);
+                    userService: userService.Object);
 
                 var result = await publicationService
-                    .GetPublicationsByTopic(permissions: false, topic.Id);
-
-                VerifyAllMocks(publicationRepository);
+                    .ListPublications(permissions: false, topic.Id);
 
                 var publicationViewModelList = result.AssertRight();
 
@@ -115,36 +111,30 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
         }
 
         [Fact]
-        public async Task GetPublicationsByTopic_CanViewAllPublications_Order()
+        public async Task ListPublications_CanViewAllPublications_Order()
         {
-            var topic = new Topic();
+            var topic = new Topic
+            {
+                Theme = new Theme(),
+            };
 
             var publication1 = new Publication
             {
                 Title = "A",
+                Topic = topic,
             };
 
             var publication2 = new Publication
             {
                 Title = "B",
+                Topic = topic,
             };
 
             var publication3 = new Publication
             {
                 Title = "C",
+                Topic = topic,
             };
-
-            var publicationRepository = new Mock<IPublicationRepository>(Strict);
-
-            publicationRepository.Setup(s => s.GetPublicationsForTopic(topic.Id))
-                .ReturnsAsync(new List<Publication>
-                {
-                    publication2,
-                    publication3,
-                    publication1,
-                });
-
-            publicationRepository.Setup(s => s.IsSuperseded(It.IsAny<Publication>())).Returns(false);
 
             var userService = new Mock<IUserService>(Strict);
 
@@ -155,15 +145,18 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
             var contentDbContextId = Guid.NewGuid().ToString();
             await using (var contentDbContext = InMemoryApplicationDbContext(contentDbContextId))
             {
+                await contentDbContext.AddRangeAsync(publication2, publication3, publication1);
+                await contentDbContext.SaveChangesAsync();
+            }
+
+            await using (var contentDbContext = InMemoryApplicationDbContext(contentDbContextId))
+            {
                 var publicationService = BuildPublicationService(
                     context: contentDbContext,
-                    userService: userService.Object,
-                    publicationRepository: publicationRepository.Object);
+                    userService: userService.Object);
 
                 var result = await publicationService
-                    .GetPublicationsByTopic(permissions: false, topic.Id);
-
-                VerifyAllMocks(publicationRepository);
+                    .ListPublications(permissions: false, topic.Id);
 
                 var publicationViewModelList = result.AssertRight();
 
@@ -180,7 +173,67 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
         }
 
         [Fact]
-        public async Task GetPublicationsByTopic_CanViewAllPublications_Permissions()
+        public async Task ListPublications_CanViewAllPublications_NoTopic()
+        {
+            var publication1 = new Publication
+            {
+                Title = "publication1",
+                Topic = new Topic { Theme = new Theme(), },
+            };
+
+            var publication2 = new Publication
+            {
+                Title = "publication2",
+                Topic = new Topic { Theme = new Theme(), },
+            };
+
+            var publication3 = new Publication
+            {
+                Title = "publication3",
+                Topic = new Topic { Theme = new Theme(), },
+            };
+
+            var userService = new Mock<IUserService>(Strict);
+
+            userService.Setup(s => s.GetUserId()).Returns(new Guid());
+            userService.Setup(s => s.MatchesPolicy(CanAccessSystem)).ReturnsAsync(true);
+            userService.Setup(s => s.MatchesPolicy(CanViewAllPublications)).ReturnsAsync(true);
+
+            var contentDbContextId = Guid.NewGuid().ToString();
+            await using (var contentDbContext = InMemoryApplicationDbContext(contentDbContextId))
+            {
+                await contentDbContext.AddRangeAsync(publication1, publication2, publication3);
+                await contentDbContext.SaveChangesAsync();
+            }
+
+            await using (var contentDbContext = InMemoryApplicationDbContext(contentDbContextId))
+            {
+                var publicationService = BuildPublicationService(
+                    context: contentDbContext,
+                    userService: userService.Object);
+
+                var result = await publicationService
+                    .ListPublications(permissions: false);
+
+                var publicationViewModelList = result.AssertRight();
+
+                Assert.Equal(3, publicationViewModelList.Count);
+                Assert.Equal(publication1.Id, publicationViewModelList[0].Id);
+                Assert.Equal(publication1.Title, publicationViewModelList[0].Title);
+                Assert.Equal(publication1.TopicId, publicationViewModelList[0].Topic.Id);
+
+                Assert.Equal(publication2.Id, publicationViewModelList[1].Id);
+                Assert.Equal(publication2.Title, publicationViewModelList[1].Title);
+                Assert.Equal(publication2.TopicId, publicationViewModelList[1].Topic.Id);
+
+                Assert.Equal(publication3.Id, publicationViewModelList[2].Id);
+                Assert.Equal(publication3.Title, publicationViewModelList[2].Title);
+                Assert.Equal(publication3.TopicId, publicationViewModelList[2].Topic.Id);
+            }
+        }
+
+        [Fact]
+        public async Task ListPublications_CanViewAllPublications_Permissions()
         {
             var topic = new Topic
             {
@@ -194,16 +247,8 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
             var publication = new Publication
             {
                 Title = "Test Publication",
+                Topic = topic,
             };
-
-            var publicationRepository = new Mock<IPublicationRepository>(Strict);
-
-            publicationRepository.Setup(s => s.GetPublicationsForTopic(topic.Id))
-                .ReturnsAsync(new List<Publication>
-                {
-                    publication,
-                });
-            publicationRepository.Setup(s => s.IsSuperseded(publication)).Returns(true);
 
             var userService = new Mock<IUserService>(Strict);
 
@@ -211,26 +256,40 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
             userService.Setup(s => s.MatchesPolicy(CanAccessSystem)).ReturnsAsync(true);
             userService.Setup(s => s.MatchesPolicy(CanViewAllPublications)).ReturnsAsync(true);
 
-            userService.Setup(s => s.MatchesPolicy(publication, CanUpdateSpecificPublication)).ReturnsAsync(true);
+            userService.Setup(s => s.MatchesPolicy(
+                    It.Is<Publication>(p => p.Id == publication.Id),
+                    CanUpdateSpecificPublication))
+                .ReturnsAsync(true);
             userService.Setup(s => s.MatchesPolicy(CanUpdatePublicationTitles)).ReturnsAsync(true);
             userService.Setup(s => s.MatchesPolicy(CanUpdatePublicationSupersededBy)).ReturnsAsync(true);
-            userService.Setup(s => s.MatchesPolicy(publication, CanCreateReleaseForSpecificPublication)).ReturnsAsync(true);
-            userService.Setup(s => s.MatchesPolicy(publication, CanAdoptMethodologyForSpecificPublication)).ReturnsAsync(false);
-            userService.Setup(s => s.MatchesPolicy(publication, CanCreateMethodologyForSpecificPublication)).ReturnsAsync(false);
-            userService.Setup(s => s.MatchesPolicy(publication, CanManageExternalMethodologyForSpecificPublication)).ReturnsAsync(false);
+            userService.Setup(s => s.MatchesPolicy(
+                It.Is<Publication>(p => p.Id == publication.Id),
+                CanCreateReleaseForSpecificPublication)).ReturnsAsync(true);
+            userService.Setup(s => s.MatchesPolicy(
+                It.Is<Publication>(p => p.Id == publication.Id),
+                CanAdoptMethodologyForSpecificPublication)).ReturnsAsync(false);
+            userService.Setup(s => s.MatchesPolicy(
+                It.Is<Publication>(p => p.Id == publication.Id),
+                CanCreateMethodologyForSpecificPublication)).ReturnsAsync(false);
+            userService.Setup(s => s.MatchesPolicy(
+                It.Is<Publication>(p => p.Id == publication.Id),
+                CanManageExternalMethodologyForSpecificPublication)).ReturnsAsync(false);
 
             var contentDbContextId = Guid.NewGuid().ToString();
             await using (var contentDbContext = InMemoryApplicationDbContext(contentDbContextId))
             {
+                await contentDbContext.Publications.AddRangeAsync(publication);
+                await contentDbContext.SaveChangesAsync();
+            }
+
+            await using (var contentDbContext = InMemoryApplicationDbContext(contentDbContextId))
+            {
                 var publicationService = BuildPublicationService(
                     context: contentDbContext,
-                    userService: userService.Object,
-                    publicationRepository: publicationRepository.Object);
+                    userService: userService.Object);
 
                 var result = await publicationService
-                    .GetPublicationsByTopic(permissions: true, topic.Id);
-
-                VerifyAllMocks(publicationRepository);
+                    .ListPublications(permissions: true, topic.Id);
 
                 var publicationViewModelList = result.AssertRight();
 
@@ -238,7 +297,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
 
                 Assert.Equal(publication.Id, publicationViewModel.Id);
 
-                Assert.True(publicationViewModel.IsSuperseded);
+                Assert.False(publicationViewModel.IsSuperseded);
 
                 Assert.NotNull(publicationViewModel.Permissions);
                 Assert.True(publicationViewModel.Permissions!.CanUpdatePublication);
@@ -252,7 +311,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
         }
 
         [Fact]
-        public async Task GetPublicationsByTopic_CannotViewAllPublications()
+        public async Task ListPublications_CannotViewAllPublications()
         {
             var userId = Guid.NewGuid();
 
@@ -281,15 +340,6 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
                 SupersededBy = null,
             };
 
-            var publicationRepository = new Mock<IPublicationRepository>(Strict);
-
-            publicationRepository.Setup(s => s.GetPublicationListForUser(userId, topic.Id))
-                .ReturnsAsync(new List<Publication>
-                {
-                    publication,
-                });
-            publicationRepository.Setup(s => s.IsSuperseded(publication)).Returns(false);
-
             var userService = new Mock<IUserService>(Strict);
 
             userService.Setup(s => s.GetUserId()).Returns(userId);
@@ -299,15 +349,25 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
             var contentDbContextId = Guid.NewGuid().ToString();
             await using (var contentDbContext = InMemoryApplicationDbContext(contentDbContextId))
             {
+                await contentDbContext.Publications.AddRangeAsync(publication);
+                await contentDbContext.UserPublicationRoles.AddRangeAsync(
+                    new UserPublicationRole
+                    {
+                        User = new User { Id = userId, },
+                        Publication = publication,
+                        Role = PublicationRole.Owner,
+                    });
+                await contentDbContext.SaveChangesAsync();
+            }
+
+            await using (var contentDbContext = InMemoryApplicationDbContext(contentDbContextId))
+            {
                 var publicationService = BuildPublicationService(
                     context: contentDbContext,
-                    userService: userService.Object,
-                    publicationRepository: publicationRepository.Object);
+                    userService: userService.Object);
 
                 var result = await publicationService
-                    .GetPublicationsByTopic(permissions: false, topic.Id);
-
-                VerifyAllMocks(publicationRepository);
+                    .ListPublications(permissions: false, topic.Id);
 
                 var publicationViewModelList = result.AssertRight();
 
@@ -336,57 +396,70 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
         }
 
         [Fact]
-        public async Task GetPublicationsByTopic_CannotViewAllPublications_Order()
+        public async Task ListPublications_CannotViewAllPublications_Order()
         {
-            var userId = Guid.NewGuid();
+            var user = new User { Id = Guid.NewGuid(), };
 
-            var topic = new Topic();
+            var topic = new Topic { Theme = new Theme(), };
 
             var publication1 = new Publication
             {
                 Title = "A",
+                Topic = topic,
             };
 
             var publication2 = new Publication
             {
                 Title = "B",
+                Topic = topic,
             };
 
             var publication3 = new Publication
             {
                 Title = "C",
+                Topic = topic,
             };
-
-            var publicationRepository = new Mock<IPublicationRepository>(Strict);
-
-            publicationRepository.Setup(s => s.GetPublicationListForUser(userId, topic.Id))
-                .ReturnsAsync(new List<Publication>
-                {
-                    publication2,
-                    publication3,
-                    publication1,
-                });
-
-            publicationRepository.Setup(s => s.IsSuperseded(It.IsAny<Publication>())).Returns(false);
 
             var userService = new Mock<IUserService>(Strict);
 
-            userService.Setup(s => s.GetUserId()).Returns(userId);
+            userService.Setup(s => s.GetUserId()).Returns(user.Id);
             userService.Setup(s => s.MatchesPolicy(CanAccessSystem)).ReturnsAsync(true);
             userService.Setup(s => s.MatchesPolicy(CanViewAllPublications)).ReturnsAsync(false);
 
             var contentDbContextId = Guid.NewGuid().ToString();
             await using (var contentDbContext = InMemoryApplicationDbContext(contentDbContextId))
             {
+                await contentDbContext.Publications.AddRangeAsync(publication2, publication3, publication1);
+                await contentDbContext.UserPublicationRoles.AddRangeAsync(
+                    new UserPublicationRole
+                    {
+                        User = user,
+                        Publication = publication1,
+                        Role = PublicationRole.Owner,
+                    },
+                    new UserPublicationRole
+                    {
+                        User = user,
+                        Publication = publication2,
+                        Role = PublicationRole.Owner,
+                    },
+                    new UserPublicationRole
+                    {
+                        User = user,
+                        Publication = publication3,
+                        Role = PublicationRole.Owner,
+                    });
+                await contentDbContext.SaveChangesAsync();
+            }
+
+            await using (var contentDbContext = InMemoryApplicationDbContext(contentDbContextId))
+            {
                 var publicationService = BuildPublicationService(
                     context: contentDbContext,
-                    userService: userService.Object,
-                    publicationRepository: publicationRepository.Object);
+                    userService: userService.Object);
 
                 var result = await publicationService
-                    .GetPublicationsByTopic(permissions: false, topic.Id);
-
-                VerifyAllMocks(publicationRepository);
+                    .ListPublications(permissions: false, topic.Id);
 
                 var publicationViewModelList = result.AssertRight();
 
@@ -404,9 +477,91 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
         }
 
         [Fact]
-        public async Task GetPublicationsByTopic_CannotViewAllPublications_Permissions()
+        public async Task ListPublications_CannotViewAllPublications_NoTopic()
         {
-            var userId = new Guid();
+            var user = new User { Id = Guid.NewGuid(), };
+
+            var publication1 = new Publication
+            {
+                Title = "publication1",
+                Topic = new Topic { Theme = new Theme(), },
+            };
+
+            var publication2 = new Publication
+            {
+                Title = "publication2",
+                Topic = new Topic { Theme = new Theme(), },
+            };
+
+            var publication3 = new Publication
+            {
+                Title = "publication3",
+                Topic = new Topic { Theme = new Theme(), },
+            };
+
+            var userService = new Mock<IUserService>(Strict);
+
+            userService.Setup(s => s.GetUserId()).Returns(user.Id);
+            userService.Setup(s => s.MatchesPolicy(CanAccessSystem)).ReturnsAsync(true);
+            userService.Setup(s => s.MatchesPolicy(CanViewAllPublications)).ReturnsAsync(false);
+
+            var contentDbContextId = Guid.NewGuid().ToString();
+            await using (var contentDbContext = InMemoryApplicationDbContext(contentDbContextId))
+            {
+                await contentDbContext.Publications.AddRangeAsync(publication1, publication2, publication3);
+                await contentDbContext.UserPublicationRoles.AddRangeAsync(
+                    new UserPublicationRole
+                    {
+                        User = user,
+                        Publication = publication1,
+                        Role = PublicationRole.Owner,
+                    },
+                    new UserPublicationRole
+                    {
+                        User = user,
+                        Publication = publication2,
+                        Role = PublicationRole.Owner,
+                    },
+                    new UserPublicationRole
+                    {
+                        User = user,
+                        Publication = publication3,
+                        Role = PublicationRole.Owner,
+                    });
+                await contentDbContext.SaveChangesAsync();
+            }
+
+            await using (var contentDbContext = InMemoryApplicationDbContext(contentDbContextId))
+            {
+                var publicationService = BuildPublicationService(
+                    context: contentDbContext,
+                    userService: userService.Object);
+
+                var result = await publicationService
+                    .ListPublications(permissions: false);
+
+                var publicationViewModelList = result.AssertRight();
+
+                Assert.Equal(3, publicationViewModelList.Count);
+
+                Assert.Equal(publication1.Id, publicationViewModelList[0].Id);
+                Assert.Equal(publication1.Title, publicationViewModelList[0].Title);
+                Assert.Equal(publication1.TopicId, publicationViewModelList[0].Topic.Id);
+
+                Assert.Equal(publication2.Id, publicationViewModelList[1].Id);
+                Assert.Equal(publication2.Title, publicationViewModelList[1].Title);
+                Assert.Equal(publication2.TopicId, publicationViewModelList[1].Topic.Id);
+
+                Assert.Equal(publication3.Id, publicationViewModelList[2].Id);
+                Assert.Equal(publication3.Title, publicationViewModelList[2].Title);
+                Assert.Equal(publication3.TopicId, publicationViewModelList[2].Topic.Id);
+            }
+        }
+
+        [Fact]
+        public async Task ListPublications_CannotViewAllPublications_Permissions()
+        {
+            var userId = Guid.NewGuid();
 
             var topic = new Topic
             {
@@ -427,41 +582,53 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
                 SupersededBy = null,
             };
 
-            var publicationRepository = new Mock<IPublicationRepository>(Strict);
-
-            publicationRepository.Setup(s => s.GetPublicationListForUser(userId, topic.Id))
-                .ReturnsAsync(new List<Publication>
-                {
-                    publication,
-                });
-            publicationRepository.Setup(s => s.IsSuperseded(publication)).Returns(false);
-
             var userService = new Mock<IUserService>(Strict);
 
             userService.Setup(s => s.GetUserId()).Returns(userId);
             userService.Setup(s => s.MatchesPolicy(CanAccessSystem)).ReturnsAsync(true);
             userService.Setup(s => s.MatchesPolicy(CanViewAllPublications)).ReturnsAsync(false);
 
-            userService.Setup(s => s.MatchesPolicy(publication, CanUpdateSpecificPublication)).ReturnsAsync(true);
+            userService.Setup(s => s.MatchesPolicy(
+                    It.Is<Publication>(p => p.Id == publication.Id),
+                    CanUpdateSpecificPublication))
+                .ReturnsAsync(true);
             userService.Setup(s => s.MatchesPolicy(CanUpdatePublicationTitles)).ReturnsAsync(true);
             userService.Setup(s => s.MatchesPolicy(CanUpdatePublicationSupersededBy)).ReturnsAsync(true);
-            userService.Setup(s => s.MatchesPolicy(publication, CanCreateReleaseForSpecificPublication)).ReturnsAsync(true);
-            userService.Setup(s => s.MatchesPolicy(publication, CanAdoptMethodologyForSpecificPublication)).ReturnsAsync(false);
-            userService.Setup(s => s.MatchesPolicy(publication, CanCreateMethodologyForSpecificPublication)).ReturnsAsync(false);
-            userService.Setup(s => s.MatchesPolicy(publication, CanManageExternalMethodologyForSpecificPublication)).ReturnsAsync(false);
+            userService.Setup(s => s.MatchesPolicy(
+                It.Is<Publication>(p => p.Id == publication.Id),
+                CanCreateReleaseForSpecificPublication)).ReturnsAsync(true);
+            userService.Setup(s => s.MatchesPolicy(
+                It.Is<Publication>(p => p.Id == publication.Id),
+                CanAdoptMethodologyForSpecificPublication)).ReturnsAsync(false);
+            userService.Setup(s => s.MatchesPolicy(
+                It.Is<Publication>(p => p.Id == publication.Id),
+                CanCreateMethodologyForSpecificPublication)).ReturnsAsync(false);
+            userService.Setup(s => s.MatchesPolicy(
+                It.Is<Publication>(p => p.Id == publication.Id),
+                CanManageExternalMethodologyForSpecificPublication)).ReturnsAsync(false);
 
             var contentDbContextId = Guid.NewGuid().ToString();
             await using (var contentDbContext = InMemoryApplicationDbContext(contentDbContextId))
             {
+                await contentDbContext.Publications.AddRangeAsync(publication);
+                await contentDbContext.UserPublicationRoles.AddRangeAsync(
+                    new UserPublicationRole
+                    {
+                        User = new User { Id = userId },
+                        Publication = publication,
+                        Role = PublicationRole.Owner,
+                    });
+                await contentDbContext.SaveChangesAsync();
+            }
+
+            await using (var contentDbContext = InMemoryApplicationDbContext(contentDbContextId))
+            {
                 var publicationService = BuildPublicationService(
                     context: contentDbContext,
-                    userService: userService.Object,
-                    publicationRepository: publicationRepository.Object);
+                    userService: userService.Object);
 
                 var result = await publicationService
-                    .GetPublicationsByTopic(permissions: true, topic.Id);
-
-                VerifyAllMocks(publicationRepository);
+                    .ListPublications(permissions: true, topic.Id);
 
                 var publicationViewModelList = result.AssertRight();
 
@@ -484,6 +651,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
             var topic = new Topic
             {
                 Id = Guid.NewGuid(),
+                Theme = new Theme(),
             };
 
             // The order they should appear in the result - ordered by descending Year then by descending TimeIdentifier
@@ -514,12 +682,13 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
             var publication1 = new Publication
             {
                 Title = "publication1",
+                Topic = topic,
                 Releases = new List<Release>
                 {
+                    publication1Release1,
                     publication1Release2,
                     publication1Release3,
                     publication1Release4,
-                    publication1Release1,
                 },
             };
 
@@ -537,30 +706,29 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
             };
             var publication2 = new Publication
             {
-                Title = "publication1",
-                Releases = ListOf(publication2Release2, publication2Release1),
+                Title = "publication2",
+                Topic = topic,
+                Releases = ListOf(publication2Release1, publication2Release2),
             };
 
-            var publicationRepository = new Mock<IPublicationRepository>(Strict);
+            var contentDbContextId = Guid.NewGuid().ToString();
+            await using (var contentDbContext = InMemoryApplicationDbContext(contentDbContextId))
+            {
+                await contentDbContext.Publications.AddRangeAsync(publication1, publication2);
+                await contentDbContext.SaveChangesAsync();
+            }
 
-            publicationRepository.Setup(s => s.GetPublicationsForTopic(topic.Id))
-                .ReturnsAsync(ListOf(publication1, publication2));
-
-            publicationRepository.Setup(s => s.IsSuperseded(It.IsAny<Publication>()))
-                .Returns(false);
-
-            await using (var contentDbContext = InMemoryApplicationDbContext())
+            await using (var contentDbContext = InMemoryApplicationDbContext(contentDbContextId))
             {
                 var publicationService = BuildPublicationService(
-                    context: contentDbContext,
-                    publicationRepository: publicationRepository.Object);
+                    context: contentDbContext);
 
                 var result = await publicationService.GetMyPublicationsAndReleasesByTopic(topic.Id);
 
-                VerifyAllMocks(publicationRepository);
-
                 var publicationViewModels = result.AssertRight();
 
+                // NOTE(mark): No ordering of publications anymore - but releases are still ordered
+                // but all this is getting deleted in EES-3576, so going to leave this for now
                 Assert.Equal(2, publicationViewModels.Count);
                 Assert.Equal(publication1.Id, publicationViewModels[0].Id);
 
@@ -585,6 +753,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
             var topic = new Topic
             {
                 Id = Guid.NewGuid(),
+                Theme = new Theme(),
             };
 
             var release = new Release
@@ -629,6 +798,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
             var publication1 = new Publication
             {
                 Title = "publication1",
+                Topic = topic,
                 Releases = ListOf(release),
                 Methodologies = ListOf(
                     new PublicationMethodology
@@ -657,27 +827,20 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
                     }
                 )
             };
-            var publicationRepository = new Mock<IPublicationRepository>(Strict);
 
-            publicationRepository.Setup(s => s.GetPublicationsForTopic(topic.Id))
-                .ReturnsAsync(
-                    new List<Publication>
-                    {
-                        publication1,
-                    });
+            var contentDbContextId = Guid.NewGuid().ToString();
+            await using (var contentDbContext = InMemoryApplicationDbContext(contentDbContextId))
+            {
+                await contentDbContext.Publications.AddRangeAsync(publication1);
+                await contentDbContext.SaveChangesAsync();
+            }
 
-            publicationRepository.Setup(s => s.IsSuperseded(It.IsAny<Publication>()))
-                .Returns(false);
-
-            await using (var contentDbContext = InMemoryApplicationDbContext())
+            await using (var contentDbContext = InMemoryApplicationDbContext(contentDbContextId))
             {
                 var publicationService = BuildPublicationService(
-                    context: contentDbContext,
-                    publicationRepository: publicationRepository.Object);
+                    context: contentDbContext);
 
                 var result = await publicationService.GetMyPublicationsAndReleasesByTopic(topic.Id);
-
-                VerifyAllMocks(publicationRepository);
 
                 var publicationViewModels = result.AssertRight();
 
@@ -708,6 +871,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
             var topic = new Topic
             {
                 Id = Guid.NewGuid(),
+                Theme = new Theme(),
             };
 
             // The order they should appear in result
@@ -742,24 +906,13 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
             var publication1 = new Publication
             {
                 Title = "publication1",
+                Topic = topic,
                 Releases = ListOf(
                     publication1Release2,
                     publication1Release3,
                     publication1Release4,
                     publication1Release1),
             };
-
-            var publicationRepository = new Mock<IPublicationRepository>(Strict);
-
-            publicationRepository.Setup(s => s.GetPublicationsForTopic(topic.Id))
-                .ReturnsAsync(
-                    new List<Publication>
-                    {
-                        publication1,
-                    });
-
-            publicationRepository.Setup(s => s.IsSuperseded(It.IsAny<Publication>()))
-                .Returns(false);
 
             var contentDbContextId = Guid.NewGuid().ToString();
             await using (var contentDbContext = InMemoryApplicationDbContext(contentDbContextId))
@@ -771,13 +924,9 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
             await using (var contentDbContext = InMemoryApplicationDbContext(contentDbContextId))
             {
                 var publicationService = BuildPublicationService(
-                    context: contentDbContext,
-                    publicationRepository: publicationRepository.Object);
+                    context: contentDbContext);
 
                 var result = await publicationService.GetMyPublicationsAndReleasesByTopic(topic.Id);
-
-                VerifyAllMocks(publicationRepository);
-
                 var publicationViewModels = result.AssertRight();
 
                 var publicationViewModel = Assert.Single(publicationViewModels);
@@ -806,6 +955,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
             var topic = new Topic
             {
                 Id = Guid.NewGuid(),
+                Theme = new Theme(),
             };
 
             var publication1Release1 = new Release
@@ -823,6 +973,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
             var publication1 = new Publication
             {
                 Title = "publication1",
+                Topic = topic,
                 Releases = ListOf(publication1Release1, publication1Release2),
             };
 
@@ -848,22 +999,22 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
                     It.IsAny<Release>(), CanMakeAmendmentOfSpecificRelease))
                 .ReturnsAsync(false);
 
-            var publicationRepository = new Mock<IPublicationRepository>(Strict);
-            publicationRepository.Setup(s => s.GetPublicationsForTopic(topic.Id))
-                .ReturnsAsync(ListOf(publication1));
-            publicationRepository.Setup(s => s.IsSuperseded(It.IsAny<Publication>()))
-                .Returns(false);
+            var contentDbContextId = Guid.NewGuid().ToString();
+            await using (var contentDbContext = InMemoryApplicationDbContext(contentDbContextId))
+            {
+                await contentDbContext.Publications.AddRangeAsync(publication1);
+                await contentDbContext.SaveChangesAsync();
+            }
 
-            await using (var contentDbContext = InMemoryApplicationDbContext())
+            await using (var contentDbContext = InMemoryApplicationDbContext(contentDbContextId))
             {
                 var publicationService = BuildPublicationService(
                     context: contentDbContext,
-                    userService: userService.Object,
-                    publicationRepository: publicationRepository.Object);
+                    userService: userService.Object);
 
                 var result = await publicationService.GetMyPublicationsAndReleasesByTopic(topic.Id);
 
-                VerifyAllMocks(publicationRepository, userService);
+                VerifyAllMocks(userService);
 
                 var publicationViewModels = result.AssertRight();
 
@@ -890,11 +1041,12 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
         [Fact]
         public async Task GetMyPublicationsAndReleasesByTopic_NotViewAllReleases_ReleaseOrder()
         {
-            var userId = Guid.NewGuid();
+            var user = new User { Id = Guid.NewGuid(), };
 
             var topic = new Topic
             {
                 Id = Guid.NewGuid(),
+                Theme = new Theme(),
             };
 
             // The order they should appear in result
@@ -925,6 +1077,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
             var publication1 = new Publication
             {
                 Title = "publication1",
+                Topic = topic,
                 Releases = ListOf(
                     publication1Release2,
                     publication1Release3,
@@ -946,7 +1099,8 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
             };
             var publication2 = new Publication
             {
-                Title = "publication1",
+                Title = "publication2",
+                Topic = topic,
                 Releases = ListOf(publication2Release2, publication2Release1),
             };
 
@@ -956,7 +1110,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
             userService.Setup(s => s.MatchesPolicy(CanViewAllReleases))
                 .ReturnsAsync(false);
             userService.Setup(s => s.GetUserId())
-                .Returns(userId);
+                .Returns(user.Id);
             userService
                 .Setup(s => s.MatchesPolicy(
                     It.IsAny<Release>(), CanUpdateSpecificRelease))
@@ -974,18 +1128,23 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
                     It.IsAny<Release>(), CanMakeAmendmentOfSpecificRelease))
                 .ReturnsAsync(false);
 
-            var publicationRepository = new Mock<IPublicationRepository>(Strict);
-            publicationRepository
-                .Setup(s => s.GetPublicationsForTopicRelatedToUser(topic.Id, userId))
-                .ReturnsAsync(ListOf(publication1, publication2));
-            publicationRepository
-                .Setup(s => s.IsSuperseded(It.IsAny<Publication>()))
-                .Returns(false);
-
             var contentDbContextId = Guid.NewGuid().ToString();
             await using (var contentDbContext = InMemoryApplicationDbContext(contentDbContextId))
             {
                 await contentDbContext.Publications.AddRangeAsync(publication1, publication2);
+                await contentDbContext.UserPublicationRoles.AddRangeAsync(
+                    new UserPublicationRole
+                    {
+                        User = user,
+                        Publication = publication1,
+                        Role = PublicationRole.Owner,
+                    },
+                    new UserPublicationRole
+                    {
+                        User = user,
+                        Publication = publication2,
+                        Role = PublicationRole.Owner,
+                    });
                 await contentDbContext.SaveChangesAsync();
             }
 
@@ -993,15 +1152,17 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
             {
                 var publicationService = BuildPublicationService(
                     context: contentDbContext,
-                    userService: userService.Object,
-                    publicationRepository: publicationRepository.Object);
+                    userService: userService.Object);
 
-                var result = await publicationService.GetMyPublicationsAndReleasesByTopic(topic.Id);
+                var result = await publicationService
+                    .GetMyPublicationsAndReleasesByTopic(topic.Id);
 
-                VerifyAllMocks(publicationRepository, userService);
+                VerifyAllMocks(userService);
 
                 var publicationViewModels = result.AssertRight();
 
+                // NOTE(mark): No ordering of publications anymore - but releases are still ordered
+                // but all this is getting deleted in EES-3576, so going to leave this for now
                 Assert.Equal(2, publicationViewModels.Count);
                 Assert.Equal(publication1.Id, publicationViewModels[0].Id);
 
@@ -1030,6 +1191,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
             var topic = new Topic
             {
                 Id = Guid.NewGuid(),
+                Theme = new Theme(),
             };
 
             var release = new Release
@@ -1074,6 +1236,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
             var publication1 = new Publication
             {
                 Title = "publication1",
+                Topic = topic,
                 Releases = ListOf(release),
                 Methodologies = ListOf(
                     new PublicationMethodology
@@ -1132,24 +1295,29 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
             userService.Setup(s => s.MatchesPolicy(It.IsAny<PublicationMethodology>(), CanDropMethodologyLink))
                 .ReturnsAsync(true);
 
-            var publicationRepository = new Mock<IPublicationRepository>(Strict);
+            var contentDbContextId = Guid.NewGuid().ToString();
+            await using (var contentDbContext = InMemoryApplicationDbContext(contentDbContextId))
+            {
+                await contentDbContext.Publications.AddRangeAsync(publication1);
+                await contentDbContext.UserPublicationRoles.AddRangeAsync(
+                    new UserPublicationRole
+                    {
+                        User = new User { Id = userId, },
+                        Publication = publication1,
+                        Role = PublicationRole.Owner,
+                    });
+                await contentDbContext.SaveChangesAsync();
+            }
 
-            publicationRepository.Setup(s => s.GetPublicationsForTopicRelatedToUser(topic.Id, userId))
-                .ReturnsAsync(ListOf(publication1));
-
-            publicationRepository.Setup(s => s.IsSuperseded(It.IsAny<Publication>()))
-                .Returns(false);
-
-            await using (var contentDbContext = InMemoryApplicationDbContext())
+            await using (var contentDbContext = InMemoryApplicationDbContext(contentDbContextId))
             {
                 var publicationService = BuildPublicationService(
                     context: contentDbContext,
-                    userService: userService.Object,
-                    publicationRepository: publicationRepository.Object);
+                    userService: userService.Object);
 
                 var result = await publicationService.GetMyPublicationsAndReleasesByTopic(topic.Id);
 
-                VerifyAllMocks(publicationRepository, userService);
+                VerifyAllMocks(userService);
 
                 var publicationViewModels = result.AssertRight();
 
@@ -1249,7 +1417,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
 
             var publicationRepository = new Mock<IPublicationRepository>(Strict);
 
-            publicationRepository.Setup(s => s.GetPublicationsForTopicRelatedToUser(topic.Id, userId))
+            publicationRepository.Setup(s => s.ListPublicationsForUser(userId, topic.Id))
                 .ReturnsAsync(ListOf(publication1));
 
             publicationRepository.Setup(s => s.IsSuperseded(It.IsAny<Publication>()))
@@ -1348,7 +1516,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
                 .ReturnsAsync(false);
 
             var publicationRepository = new Mock<IPublicationRepository>(Strict);
-            publicationRepository.Setup(s => s.GetPublicationsForTopicRelatedToUser(topic.Id, userId))
+            publicationRepository.Setup(s => s.ListPublicationsForUser(userId, topic.Id))
                 .ReturnsAsync(ListOf(publication1));
             publicationRepository.Setup(s => s.IsSuperseded(It.IsAny<Publication>()))
                 .Returns(false);
@@ -1829,7 +1997,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
 
                 // Service method under test
                 var result = await publicationService.CreatePublication(
-                    new PublicationSaveViewModel
+                    new PublicationSaveRequest
                     {
                         Title = "Test publication",
                         Summary = "Test summary",
@@ -1888,7 +2056,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
 
             // Service method under test
             var result = await publicationService.CreatePublication(
-                new PublicationSaveViewModel
+                new PublicationSaveRequest
                 {
                     Title = "Test publication",
                     TopicId = Guid.NewGuid()
@@ -1927,7 +2095,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
 
                 // Service method under test
                 var result = await publicationService.CreatePublication(
-                    new PublicationSaveViewModel
+                    new PublicationSaveRequest
                     {
                         Title = "Test publication",
                         TopicId = topic.Id
@@ -1996,7 +2164,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
                 // Service method under test
                 var result = await publicationService.UpdatePublication(
                     publication.Id,
-                    new PublicationSaveViewModel
+                    new PublicationSaveRequest
                     {
                         Title = "New title",
                         Summary = "New summary",
@@ -2138,7 +2306,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
                 // Service method under test
                 var result = await publicationService.UpdatePublication(
                     publication.Id,
-                    new PublicationSaveViewModel
+                    new PublicationSaveRequest
                     {
                         Title = "New title",
                         Summary = "New summary",
@@ -2247,7 +2415,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
                 // Service method under test
                 var result = await publicationService.UpdatePublication(
                     publication.Id,
-                    new PublicationSaveViewModel
+                    new PublicationSaveRequest
                     {
                         Title = "Old title",
                         Summary = "New summary",
@@ -2313,7 +2481,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
                 // Service method under test
                 var result = await publicationService.UpdatePublication(
                     publication.Id,
-                    new PublicationSaveViewModel
+                    new PublicationSaveRequest
                     {
                         Title = "New title",
                         Slug = "new-slug",
@@ -2397,7 +2565,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
                 // Service method under test
                 var result = await publicationService.UpdatePublication(
                     publication.Id,
-                    new PublicationSaveViewModel
+                    new PublicationSaveRequest
                     {
                         Title = "New title",
                         Contact = new ContactSaveViewModel
@@ -2498,7 +2666,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
 
                 var result = await publicationService.UpdatePublication(
                     publication.Id,
-                    new PublicationSaveViewModel
+                    new PublicationSaveRequest
                     {
                         Title = "Test title",
                         Slug = "test-slug",
@@ -2552,7 +2720,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
                 // Service method under test
                 var result = await publicationService.UpdatePublication(
                     publication.Id,
-                    new PublicationSaveViewModel
+                    new PublicationSaveRequest
                     {
                         Title = "Test publication",
                         TopicId = Guid.NewGuid(),
@@ -2599,7 +2767,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
                 // Service method under test
                 var result = await publicationService.UpdatePublication(
                     publication.Id,
-                    new PublicationSaveViewModel
+                    new PublicationSaveRequest
                     {
                         Title = "Duplicated title",
                         TopicId = topic.Id,
@@ -3156,7 +3324,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
                 AdminMapper(),
                 new PersistenceHelper<ContentDbContext>(context),
                 userService ?? AlwaysTrueUserService().Object,
-                publicationRepository ?? Mock.Of<IPublicationRepository>(Strict),
+                publicationRepository ?? new PublicationRepository(context),
                 methodologyVersionRepository ?? Mock.Of<IMethodologyVersionRepository>(Strict),
                 publicationCacheService ?? Mock.Of<IPublicationCacheService>(Strict),
                 methodologyCacheService ?? Mock.Of<IMethodologyCacheService>(Strict),

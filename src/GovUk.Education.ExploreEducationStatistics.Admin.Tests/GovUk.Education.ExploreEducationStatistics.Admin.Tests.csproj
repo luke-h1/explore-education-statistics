@@ -35,6 +35,7 @@
 
   <ItemGroup>
     <Folder Include="Controllers\Api\UserManagement" />
+    <Folder Include="ViewModels" />
   </ItemGroup>
 
   <ItemGroup>
