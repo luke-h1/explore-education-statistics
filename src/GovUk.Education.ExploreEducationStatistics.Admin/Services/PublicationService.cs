@@ -325,6 +325,14 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Services
                 .OnSuccess(publication => _mapper.Map<PublicationViewModel>(publication));
         }
 
+        public async Task<Either<ActionResult, ExternalMethodology>> GetExternalMethodology(Guid publicationId)
+        {
+            return await _persistenceHelper
+                .CheckEntityExists<Publication>(publicationId)
+                .OnSuccessDo(_userService.CheckCanViewPublication)
+                .OnSuccess(publication => publication.ExternalMethodology ?? NotFound<ExternalMethodology>());
+        }
+
         public async Task<Either<ActionResult, PaginatedListViewModel<ReleaseSummaryViewModel>>>
             ListActiveReleasesPaginated(
                 Guid publicationId,
