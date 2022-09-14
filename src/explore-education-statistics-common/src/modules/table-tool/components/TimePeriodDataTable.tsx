@@ -23,7 +23,7 @@ import cartesian from '@common/utils/cartesian';
 import formatPretty from '@common/utils/number/formatPretty';
 import get from 'lodash/get';
 import last from 'lodash/last';
-import React, { forwardRef, memo } from 'react';
+import React, { forwardRef, memo, ForwardedRef } from 'react';
 import DataTableCaption from './DataTableCaption';
 import FixedMultiHeaderDataTable from './FixedMultiHeaderDataTable';
 
@@ -225,203 +225,200 @@ interface Props {
   source?: string;
   tableHeadersConfig: TableHeadersConfig;
   onError?: (message: string) => void;
+  dataTableRef?: ForwardedRef<HTMLElement>;
 }
 
-const TimePeriodDataTable = forwardRef<HTMLElement, Props>(
-  function TimePeriodDataTable(
-    {
-      captionTitle,
-      dataBlockId,
-      fullTable,
-      query,
-      source,
-      tableHeadersConfig,
-      onError,
-    }: Props,
-    dataTableRef,
-  ) {
-    try {
-      const { subjectMeta, results } = fullTable;
+export const BaseTimePeriodDataTable = ({
+  captionTitle,
+  dataBlockId,
+  fullTable,
+  query,
+  dataTableRef,
+  source,
+  tableHeadersConfig,
+  onError,
+}: Props) => {
+  try {
+    const { subjectMeta, results } = fullTable;
 
-      if (results.length === 0) {
-        return (
-          <WarningMessage>
-            A table could not be returned. There is no data for the options
-            selected.
-          </WarningMessage>
-        );
-      }
-
-      const rowHeadersCartesian = cartesian(
-        ...tableHeadersConfig.rowGroups,
-        tableHeadersConfig.rows as Filter[],
-      );
-
-      const columnHeadersCartesian = cartesian(
-        ...tableHeadersConfig.columnGroups,
-        tableHeadersConfig.columns as Filter[],
-      );
-
-      // Track which columns actually have text values
-      // as we want to remove empty ones later.
-      const columnsWithText = columnHeadersCartesian.map(() => false);
-
-      const tableHeaderFilters = [
-        ...tableHeadersConfig.columnGroups.flatMap(filterGroup => filterGroup),
-        ...tableHeadersConfig.rowGroups.flatMap(filterGroup => filterGroup),
-        ...tableHeadersConfig.columns,
-        ...tableHeadersConfig.rows,
-      ].map(filter => filter.id);
-
-      const excludedFilters = getExcludedFilters(
-        tableHeaderFilters,
-        subjectMeta,
-      );
-
-      // Group measures by their respective combination of filters
-      // allowing lookups later on to be MUCH faster.
-      const measuresByFilterCombination = groupResultMeasuresByCombination(
-        results,
-        excludedFilters,
-      );
-
-      const showMissingRowsOrColumnsWarning =
-        query &&
-        hasMissingRowsOrColumns(query, subjectMeta, tableHeaderFilters);
-
-      const tableCartesian: TableCell[][] = rowHeadersCartesian.map(
-        rowFilterCombination => {
-          return columnHeadersCartesian.map(
-            (columnFilterCombination, columnIndex) => {
-              const filterCombination = [
-                ...rowFilterCombination,
-                ...columnFilterCombination,
-              ];
-
-              const dataSet = filterCombination.reduce<
-                PartialBy<ExpandedDataSet, 'indicator'>
-              >(
-                (acc, filter) => {
-                  if (filter instanceof CategoryFilter) {
-                    acc.filters.push(filter);
-                  }
-
-                  if (filter instanceof TimePeriodFilter) {
-                    acc.timePeriod = filter;
-                  }
-
-                  if (filter instanceof LocationFilter) {
-                    acc.location = filter;
-                  }
-
-                  if (filter instanceof Indicator) {
-                    acc.indicator = filter;
-                  }
-
-                  return acc;
-                },
-                {
-                  filters: [],
-                },
-              );
-
-              if (!dataSet.indicator) {
-                throw new Error('No indicator for filter combination');
-              }
-
-              const text = getCellText(
-                measuresByFilterCombination,
-                dataSet as ExpandedDataSet,
-              );
-
-              // There is at least one cell in this
-              // column that has a text value.
-              if (text !== EMPTY_CELL_TEXT) {
-                columnsWithText[columnIndex] = true;
-              }
-
-              return {
-                text,
-                rowFilters: rowFilterCombination,
-                columnFilters: columnFilterCombination,
-              };
-            },
-          );
-        },
-      );
-
-      const filteredCartesian = tableCartesian
-        .filter(row => row.some(cell => cell.text !== EMPTY_CELL_TEXT))
-        .map(row => row.filter((_, index) => columnsWithText[index]));
-
-      const rowHeaders = filteredCartesian.reduce<Header[]>((acc, row) => {
-        // Only need to use first column's rowFilters
-        // as they are the same for every column.
-        const filters = optimizeFilters(row[0].rowFilters, [
-          ...tableHeadersConfig.rowGroups,
-          tableHeadersConfig.rows,
-        ]);
-
-        return addFilters(acc, filters);
-      }, []);
-
-      // Only need to use first row's columnFilters
-      // as they are the same for every row.
-      const columnHeaders = filteredCartesian[0].reduce<Header[]>(
-        (acc, column) => {
-          const filters = optimizeFilters(column.columnFilters, [
-            ...tableHeadersConfig.columnGroups,
-            tableHeadersConfig.columns,
-          ]);
-
-          return addFilters(acc, filters);
-        },
-        [],
-      );
-
-      const captionId = dataBlockId
-        ? `dataTableCaption-${dataBlockId}`
-        : 'dataTableCaption';
-
-      const rows = filteredCartesian.map(row => row.map(cell => cell.text));
-
-      return (
-        <>
-          {showMissingRowsOrColumnsWarning && (
-            <WarningMessage>
-              Some rows and columns are not shown in this table as the data does
-              not exist in the underlying file.
-            </WarningMessage>
-          )}
-          <FixedMultiHeaderDataTable
-            caption={
-              <DataTableCaption
-                title={captionTitle}
-                meta={subjectMeta}
-                id={captionId}
-              />
-            }
-            captionId={captionId}
-            columnHeaders={columnHeaders}
-            rowHeaders={rowHeaders}
-            rows={rows}
-            ref={dataTableRef}
-            footnotes={subjectMeta.footnotes}
-            source={source}
-          />
-        </>
-      );
-    } catch (error) {
-      logger.error(error);
-
-      onError?.(isErrorLike(error) ? error.message : 'Unknown error');
-
+    if (results.length === 0) {
       return (
         <WarningMessage>
-          There was a problem rendering the table.
+          A table could not be returned. There is no data for the options
+          selected.
         </WarningMessage>
       );
     }
+
+    const rowHeadersCartesian = cartesian(
+      ...tableHeadersConfig.rowGroups,
+      tableHeadersConfig.rows as Filter[],
+    );
+
+    const columnHeadersCartesian = cartesian(
+      ...tableHeadersConfig.columnGroups,
+      tableHeadersConfig.columns as Filter[],
+    );
+
+    // Track which columns actually have text values
+    // as we want to remove empty ones later.
+    const columnsWithText = columnHeadersCartesian.map(() => false);
+
+    const tableHeaderFilters = [
+      ...tableHeadersConfig.columnGroups.flatMap(filterGroup => filterGroup),
+      ...tableHeadersConfig.rowGroups.flatMap(filterGroup => filterGroup),
+      ...tableHeadersConfig.columns,
+      ...tableHeadersConfig.rows,
+    ].map(filter => filter.id);
+
+    const excludedFilters = getExcludedFilters(tableHeaderFilters, subjectMeta);
+
+    // Group measures by their respective combination of filters
+    // allowing lookups later on to be MUCH faster.
+    const measuresByFilterCombination = groupResultMeasuresByCombination(
+      results,
+      excludedFilters,
+    );
+
+    const showMissingRowsOrColumnsWarning =
+      query && hasMissingRowsOrColumns(query, subjectMeta, tableHeaderFilters);
+
+    const tableCartesian: TableCell[][] = rowHeadersCartesian.map(
+      rowFilterCombination => {
+        return columnHeadersCartesian.map(
+          (columnFilterCombination, columnIndex) => {
+            const filterCombination = [
+              ...rowFilterCombination,
+              ...columnFilterCombination,
+            ];
+
+            const dataSet = filterCombination.reduce<
+              PartialBy<ExpandedDataSet, 'indicator'>
+            >(
+              (acc, filter) => {
+                if (filter instanceof CategoryFilter) {
+                  acc.filters.push(filter);
+                }
+
+                if (filter instanceof TimePeriodFilter) {
+                  acc.timePeriod = filter;
+                }
+
+                if (filter instanceof LocationFilter) {
+                  acc.location = filter;
+                }
+
+                if (filter instanceof Indicator) {
+                  acc.indicator = filter;
+                }
+
+                return acc;
+              },
+              {
+                filters: [],
+              },
+            );
+
+            if (!dataSet.indicator) {
+              throw new Error('No indicator for filter combination');
+            }
+
+            const text = getCellText(
+              measuresByFilterCombination,
+              dataSet as ExpandedDataSet,
+            );
+
+            // There is at least one cell in this
+            // column that has a text value.
+            if (text !== EMPTY_CELL_TEXT) {
+              columnsWithText[columnIndex] = true;
+            }
+
+            return {
+              text,
+              rowFilters: rowFilterCombination,
+              columnFilters: columnFilterCombination,
+            };
+          },
+        );
+      },
+    );
+
+    const filteredCartesian = tableCartesian
+      .filter(row => row.some(cell => cell.text !== EMPTY_CELL_TEXT))
+      .map(row => row.filter((_, index) => columnsWithText[index]));
+
+    const rowHeaders = filteredCartesian.reduce<Header[]>((acc, row) => {
+      // Only need to use first column's rowFilters
+      // as they are the same for every column.
+      const filters = optimizeFilters(row[0].rowFilters, [
+        ...tableHeadersConfig.rowGroups,
+        tableHeadersConfig.rows,
+      ]);
+
+      return addFilters(acc, filters);
+    }, []);
+
+    // Only need to use first row's columnFilters
+    // as they are the same for every row.
+    const columnHeaders = filteredCartesian[0].reduce<Header[]>(
+      (acc, column) => {
+        const filters = optimizeFilters(column.columnFilters, [
+          ...tableHeadersConfig.columnGroups,
+          tableHeadersConfig.columns,
+        ]);
+
+        return addFilters(acc, filters);
+      },
+      [],
+    );
+
+    const captionId = dataBlockId
+      ? `dataTableCaption-${dataBlockId}`
+      : 'dataTableCaption';
+
+    const rows = filteredCartesian.map(row => row.map(cell => cell.text));
+
+    return (
+      <>
+        {showMissingRowsOrColumnsWarning && (
+          <WarningMessage>
+            Some rows and columns are not shown in this table as the data does
+            not exist in the underlying file.
+          </WarningMessage>
+        )}
+        <FixedMultiHeaderDataTable
+          caption={
+            <DataTableCaption
+              title={captionTitle}
+              meta={subjectMeta}
+              id={captionId}
+            />
+          }
+          captionId={captionId}
+          columnHeaders={columnHeaders}
+          rowHeaders={rowHeaders}
+          rows={rows}
+          ref={dataTableRef}
+          footnotes={subjectMeta.footnotes}
+          source={source}
+        />
+      </>
+    );
+  } catch (error) {
+    logger.error(error);
+
+    onError?.(isErrorLike(error) ? error.message : 'Unknown error');
+
+    return (
+      <WarningMessage>There was a problem rendering the table.</WarningMessage>
+    );
+  }
+};
+
+const TimePeriodDataTable = forwardRef<HTMLElement, Props>(
+  function TimePeriodDataTable(props: Props, dataTableRef) {
+    return <BaseTimePeriodDataTable {...props} dataTableRef={dataTableRef} />;
   },
 );
 

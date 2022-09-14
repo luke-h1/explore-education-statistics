@@ -63,3 +63,117 @@ table,
     padding: 0;
   }
 }
+
+// Global styles for the table tool table.
+// These are used for the static version on permalink pages as well
+// as on the table tool.
+.dfe-table-tool-figure {
+  margin: 0;
+
+  figcaption {
+    padding-bottom: govuk-spacing(4);
+  }
+
+  .dfe-width-container--wide & {
+    @include govuk-media-query($from: desktop) {
+      figcaption {
+        max-width: 66.6%;
+
+        @media print {
+          max-width: 100%;
+        }
+      }
+    }
+  }
+}
+
+.dfe-table-tool-container {
+  overflow: auto;
+  padding-right: govuk-spacing(4);
+}
+
+.dfe-table-tool-table {
+  border-collapse: separate;
+
+  th:last-child,
+  td:last-child {
+    padding-right: govuk-spacing(2);
+  }
+
+  tbody th {
+    background: #fff;
+    position: relative;
+    text-align: left !important;
+    z-index: 1;
+  }
+
+  @media print {
+    font-size: 0.8rem;
+    max-height: none;
+    overflow: visible !important;
+    padding-right: 0;
+    width: auto;
+
+    thead {
+      display: table-row-group;
+    }
+
+    table {
+      break-inside: auto;
+    }
+
+    tr,
+    td {
+      break-after: auto;
+      break-inside: avoid;
+    }
+
+    thead th,
+    thead td {
+      transform: none !important;
+    }
+  }
+}
+
+.dfe-table-tool-tableHead {
+  td {
+    background: #fff;
+    position: relative;
+    z-index: 3;
+  }
+
+  th {
+    background: govuk-colour('light-grey');
+    border-bottom: 1px solid $govuk-border-colour;
+    border-right: 1px solid $govuk-border-colour;
+    padding: govuk-spacing(2);
+    position: relative;
+    text-align: center;
+    z-index: 2;
+  }
+
+  tr:first-child:last-child th {
+    background: govuk-colour('white');
+    border-right: 0;
+    text-align: right;
+  }
+
+  th:last-child {
+    border-right: 0;
+  }
+}
+
+.dfe-table-tool-emptyRowHeaderCell {
+  background: #fff;
+  min-width: 100px;
+}
+
+.dfe-table-tool-emptyColumnHeaderCell {
+  background: govuk-colour('light-grey');
+  height: 46px;
+  z-index: 1;
+}
+
+.dfe-table-tool-borderBottom {
+  border-bottom: 1px solid $govuk-border-colour !important;
+}

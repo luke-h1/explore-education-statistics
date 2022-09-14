@@ -4,7 +4,7 @@ import useToggle from '@common/hooks/useToggle';
 import DownloadTable, {
   FileFormat,
 } from '@common/modules/table-tool/components/DownloadTable';
-import TimePeriodDataTable from '@common/modules/table-tool/components/TimePeriodDataTable';
+// import TimePeriodDataTable from '@common/modules/table-tool/components/TimePeriodDataTable';
 import mapFullTable from '@common/modules/table-tool/utils/mapFullTable';
 import mapTableHeadersConfig from '@common/modules/table-tool/utils/mapTableHeadersConfig';
 import permalinkService, { Permalink } from '@common/services/permalinkService';
@@ -16,6 +16,9 @@ import { logEvent } from '@frontend/services/googleAnalyticsService';
 import { GetServerSideProps, NextPage } from 'next';
 import React, { useRef } from 'react';
 
+// Example table html as a string
+const tableString =
+  '<figure class="dfe-table-tool-figure"><figcaption><strong id="dataTableCaption" data-testid="dataTableCaption">&#x27;1&#x27; in Barnsley, Birmingham, Camden and Greenwich between 2020/21 and 2022/23</strong></figcaption><div tabindex="0" class="dfe-table-tool-container FixedMultiHeaderDataTable_container__1Baop" role="region"><table data-testid="dataTableCaption-table" aria-labelledby="dataTableCaption" class="govuk-table dfe-table-tool-table"><thead class="dfe-table-tool-tableHead"><tr><td colSpan="2" rowspan="1" class="dfe-table-tool-borderBottom"></td><th colSpan="1" rowspan="1" scope="col">2020/21</th><th colSpan="1" rowspan="1" scope="col">2021/22</th><th colSpan="1" rowspan="1" scope="col">2022/23</th></tr></thead><tbody><tr><th class="dfe-table-tool-borderBottom" rowspan="2" colSpan="1" scope="rowgroup">Barnsley</th><th class="" rowspan="1" colSpan="1" scope="row">Indicator one</th><td class="govuk-table__cell--numeric">no data</td><td class="govuk-table__cell--numeric">1</td><td class="govuk-table__cell--numeric">no data</td></tr><tr><th class="" rowspan="1" colSpan="1" scope="row">Indicator two</th><td class="govuk-table__cell--numeric">no data</td><td class="govuk-table__cell--numeric">2</td><td class="govuk-table__cell--numeric">no data</td></tr><tr><th class="dfe-table-tool-borderBottom" rowspan="2" colSpan="1" scope="rowgroup">Birmingham</th><th class="" rowspan="1" colSpan="1" scope="row">Indicator one</th><td class="govuk-table__cell--numeric">1</td><td class="govuk-table__cell--numeric">no data</td><td class="govuk-table__cell--numeric">no data</td></tr><tr><th class="" rowspan="1" colSpan="1" scope="row">Indicator two</th><td class="govuk-table__cell--numeric dfe-table-tool-borderBottom">2</td><td class="govuk-table__cell--numeric dfe-table-tool-borderBottom">no data</td><td class="govuk-table__cell--numeric dfe-table-tool-borderBottom">no data</td></tr><tr><th class="dfe-table-tool-borderBottom" rowspan="2" colSpan="1" scope="rowgroup">Camden</th><th class="" rowspan="1" colSpan="1" scope="row">Indicator one</th><td class="govuk-table__cell--numeric">no data</td><td class="govuk-table__cell--numeric">no data</td><td class="govuk-table__cell--numeric">2</td></tr><tr><th class="" rowspan="1" colSpan="1" scope="row">Indicator two</th><td class="govuk-table__cell--numeric">no data</td><td class="govuk-table__cell--numeric">no data</td><td class="govuk-table__cell--numeric">2</td></tr><tr><th class="dfe-table-tool-borderBottom" rowspan="2" colSpan="1" scope="rowgroup">Greenwich</th><th class="" rowspan="1" colSpan="1" scope="row">Indicator one</th><td class="govuk-table__cell--numeric">no data</td><td class="govuk-table__cell--numeric">no data</td><td class="govuk-table__cell--numeric">1</td></tr><tr><th class="" rowspan="1" colSpan="1" scope="row">Indicator two</th><td class="govuk-table__cell--numeric dfe-table-tool-borderBottom">no data</td><td class="govuk-table__cell--numeric dfe-table-tool-borderBottom">no data</td><td class="govuk-table__cell--numeric dfe-table-tool-borderBottom">2</td></tr></tbody></table></div><h3 class="govuk-heading-m">Footnotes</h3><ol class="govuk-list CollapsibleList_listContainer__2sdMZ govuk-list--number" data-testid="footnotes"><li>ewdwed</li></ol></figure>';
 interface Props {
   data: Permalink;
 }
@@ -83,7 +86,8 @@ const PermalinkPage: NextPage<Props> = ({ data }) => {
       )}
 
       <div ref={tableRef}>
-        <TimePeriodDataTable
+        <div dangerouslySetInnerHTML={{ __html: tableString }} />
+        {/* <TimePeriodDataTable
           fullTable={fullTable}
           source={`${publicationName}, ${subjectName}`}
           tableHeadersConfig={tableHeadersConfig}
@@ -95,7 +99,7 @@ const PermalinkPage: NextPage<Props> = ({ data }) => {
               label: message,
             });
           }}
-        />
+        /> */}
       </div>
 
       <div className={styles.hidePrint}>

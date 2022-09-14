@@ -3,7 +3,6 @@ import { FullTableMeta } from '@common/modules/table-tool/types/fullTable';
 import { OmitStrict } from '@common/types';
 import React, { forwardRef, ReactNode, Ref, useEffect, useRef } from 'react';
 import styles from './FixedMultiHeaderDataTable.module.scss';
-import multiHeaderStyles from './MultiHeaderTable.module.scss';
 import MultiHeaderTable, { MultiHeaderTableProps } from './MultiHeaderTable';
 
 const mobileWidth = 1024;
@@ -59,13 +58,13 @@ const FixedMultiHeaderDataTable = forwardRef<HTMLElement, Props>(
     }, []);
 
     return (
-      <figure className={styles.figure} ref={ref}>
+      <figure className="dfe-table-tool-figure" ref={ref}>
         <figcaption>{caption}</figcaption>
 
         <div
           // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
           tabIndex={0}
-          className={styles.container}
+          className={`dfe-table-tool-container ${styles.container}`}
           ref={containerRef}
           role="region"
           onScroll={event => {
@@ -77,7 +76,7 @@ const FixedMultiHeaderDataTable = forwardRef<HTMLElement, Props>(
                 .forEach(el => {
                   if (
                     !el.classList.contains(
-                      multiHeaderStyles.emptyColumnHeaderCell,
+                      'dfe-table-tool-emptyColumnHeaderCell',
                     )
                   ) {
                     // eslint-disable-next-line no-param-reassign
@@ -94,7 +93,7 @@ const FixedMultiHeaderDataTable = forwardRef<HTMLElement, Props>(
 
               mainTableRef.current
                 .querySelectorAll<HTMLTableCellElement>(
-                  `.${multiHeaderStyles.emptyColumnHeaderCell}`,
+                  `.${'dfe-table-tool-emptyColumnHeaderCell'}`,
                 )
                 .forEach(el => {
                   // eslint-disable-next-line no-param-reassign
@@ -110,7 +109,7 @@ const FixedMultiHeaderDataTable = forwardRef<HTMLElement, Props>(
 
               mainTableRef.current
                 .querySelectorAll<HTMLTableCellElement>(
-                  `.${multiHeaderStyles.emptyRowHeaderCell}`,
+                  `.${'dfe-table-tool-emptyRowHeaderCell'}`,
                 )
                 .forEach(el => {
                   // eslint-disable-next-line no-param-reassign

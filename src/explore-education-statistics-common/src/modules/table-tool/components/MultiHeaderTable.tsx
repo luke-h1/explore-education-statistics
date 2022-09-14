@@ -3,7 +3,6 @@ import classNames from 'classnames';
 import last from 'lodash/last';
 import sumBy from 'lodash/sumBy';
 import React, { forwardRef, useMemo } from 'react';
-import styles from './MultiHeaderTable.module.scss';
 
 interface ExpandedHeader {
   id: string;
@@ -15,14 +14,13 @@ interface ExpandedHeader {
 
 export interface MultiHeaderTableProps {
   ariaLabelledBy?: string;
-  className?: string;
   columnHeaders: Header[];
   rowHeaders: Header[];
   rows: string[][];
 }
 
 const MultiHeaderTable = forwardRef<HTMLTableElement, MultiHeaderTableProps>(
-  ({ ariaLabelledBy, className, columnHeaders, rowHeaders, rows }, ref) => {
+  ({ ariaLabelledBy, columnHeaders, rowHeaders, rows }, ref) => {
     // We 'expand' our headers so that we create the real table
     // cells we need to render in array format (instead of a tree).
     const expandedColumnHeaders = useMemo(() => {
@@ -156,10 +154,10 @@ const MultiHeaderTable = forwardRef<HTMLTableElement, MultiHeaderTableProps>(
       <table
         data-testid={ariaLabelledBy && `${ariaLabelledBy}-table`}
         aria-labelledby={ariaLabelledBy}
-        className={classNames('govuk-table', styles.table, className)}
+        className="govuk-table dfe-table-tool-table"
         ref={ref}
       >
-        <thead className={styles.tableHead}>
+        <thead className="dfe-table-tool-tableHead">
           {expandedColumnHeaders.map((columns, rowIndex) => {
             const headingRowKey = `row-${rowIndex}`;
             return (
@@ -168,7 +166,7 @@ const MultiHeaderTable = forwardRef<HTMLTableElement, MultiHeaderTableProps>(
                   <td
                     colSpan={rowHeaderColumnLength}
                     rowSpan={expandedColumnHeaders.length}
-                    className={styles.borderBottom}
+                    className="dfe-table-tool-borderBottom"
                   />
                 )}
 
@@ -181,7 +179,7 @@ const MultiHeaderTable = forwardRef<HTMLTableElement, MultiHeaderTableProps>(
                         key={key}
                         colSpan={column.span}
                         rowSpan={column.crossSpan}
-                        className={styles.emptyColumnHeaderCell}
+                        className="dfe-table-tool-emptyColumnHeaderCell"
                       />
                     );
                   }
@@ -220,9 +218,12 @@ const MultiHeaderTable = forwardRef<HTMLTableElement, MultiHeaderTableProps>(
                     return (
                       <td
                         key={key}
-                        className={classNames(styles.emptyRowHeaderCell, {
-                          [styles.borderBottom]: header.isGroup,
-                        })}
+                        className={classNames(
+                          'dfe-table-tool-emptyRowHeaderCell',
+                          {
+                            'dfe-table-tool-borderBottom': header.isGroup,
+                          },
+                        )}
                         rowSpan={header.span}
                         colSpan={header.crossSpan}
                       />
@@ -233,7 +234,7 @@ const MultiHeaderTable = forwardRef<HTMLTableElement, MultiHeaderTableProps>(
                     <th
                       key={key}
                       className={classNames({
-                        [styles.borderBottom]: header.isGroup,
+                        'dfe-table-tool-borderBottom': header.isGroup,
                       })}
                       rowSpan={header.span}
                       colSpan={header.crossSpan}
@@ -250,7 +251,7 @@ const MultiHeaderTable = forwardRef<HTMLTableElement, MultiHeaderTableProps>(
                     <td
                       key={cellKey}
                       className={classNames('govuk-table__cell--numeric', {
-                        [styles.borderBottom]:
+                        'dfe-table-tool-borderBottom':
                           (rowIndex + 1) % rowHeaders.length === 0,
                       })}
                     >

@@ -17,7 +17,10 @@ import {
   TableDataQuery,
 } from '@common/services/tableBuilderService';
 import { logEvent } from '@frontend/services/googleAnalyticsService';
-import React, { memo, ReactNode, useRef } from 'react';
+import React, { memo, ReactNode, useRef, useState } from 'react';
+import Button from '@common/components/Button';
+import permalinkService from '@frontend/services/permalinkService';
+import mapUnmappedTableHeaders from '@common/modules/table-tool/utils/mapUnmappedTableHeaders';
 
 interface TableToolFinalStepProps {
   query: TableDataQuery;
@@ -63,6 +66,24 @@ const TableToolFinalStep = ({
       );
     }
     return links;
+  };
+
+  // TEST
+  // Gets the table string and render it. wouldn't actually
+  // render it here, would use an id returned to for the
+  // permalink url.
+  const [testTable, setTestTable] = useState<string>();
+
+  const handleGenerateTableString = async () => {
+    // Unmapping the headers as the filter types aren't retained when the
+    // table data is posted so need it to be more explicit which filter types they are.
+    // These are then unmapped in the api to build the table.
+    const unMappedTableHeaders = mapUnmappedTableHeaders(tableHeaders);
+    const { data } = await permalinkService.doStuff({
+      query,
+      tableHeaders: unMappedTableHeaders,
+    });
+    setTestTable(data);
   };
 
   return (
@@ -141,6 +162,10 @@ const TableToolFinalStep = ({
               selectedPublication={selectedPublication}
             />
           </div>
+
+          <Button onClick={handleGenerateTableString}>Click me</Button>
+
+          {testTable && <div dangerouslySetInnerHTML={{ __html: testTable }} />}
 
           <DownloadTable
             fullTable={table}
