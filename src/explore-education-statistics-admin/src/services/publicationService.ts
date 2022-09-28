@@ -46,6 +46,7 @@ export interface ExternalMethodologySaveRequest {
   url: string;
 }
 
+// @MarkFix Remove this
 export interface MyPublication {
   id: string;
   title: string;
@@ -121,6 +122,7 @@ export type UpdatePublicationLegacyRelease = Partial<
 >;
 
 const publicationService = {
+  // @MarkFix remove this
   getMyPublicationsByTopic(topicId: string): Promise<MyPublication[]> {
     return client.get('/me/publications', {
       params: { topicId },
@@ -151,10 +153,6 @@ const publicationService = {
     return client.get<TPublication>(`/publications/${publicationId}`, {
       params: { includePermissions },
     });
-  },
-
-  getMyPublication(publicationId: string): Promise<MyPublication> {
-    return client.get<MyPublication>(`/me/publication/${publicationId}`);
   },
 
   getExternalMethodology(
