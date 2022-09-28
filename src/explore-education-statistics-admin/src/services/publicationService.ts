@@ -122,10 +122,12 @@ export type UpdatePublicationLegacyRelease = Partial<
 >;
 
 const publicationService = {
-  // @MarkFix remove this
-  getMyPublicationsByTopic(topicId: string): Promise<MyPublication[]> {
-    return client.get('/me/publications', {
-      params: { topicId },
+  listPublications(
+    permissions: boolean,
+    topicId?: string,
+  ): Promise<Publication[]> {
+    return client.get('/publications', {
+      params: { permissions, topicId },
     });
   },
 
