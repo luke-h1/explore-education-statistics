@@ -126,6 +126,17 @@ namespace GovUk.Education.ExploreEducationStatistics.Publisher
                         logger: provider.GetRequiredService<ILogger<QueueService>>()))
                 .AddScoped<IReleasePublishingStatusService, ReleasePublishingStatusService>()
                 .AddScoped<IValidationService, ValidationService>()
+                .AddScoped<IPermalinkMigrationService, PermalinkMigrationService>(provider =>
+                {
+                    var connectionString = GetConfigurationValue(provider, "PublicStorage");
+                    return new PermalinkMigrationService(
+                        contentDbContext: provider.GetRequiredService<ContentDbContext>(),
+                        blobServiceClient: new BlobServiceClient(connectionString),
+                        storageQueueService: new StorageQueueService(
+                            GetConfigurationValue(provider, "PublisherStorage"),
+                            new StorageInstanceCreationUtil()
+                        ));
+                })
                 .AddScoped<IReleaseSubjectRepository, ReleaseSubjectRepository>(provider =>
                     new ReleaseSubjectRepository(
                         statisticsDbContext: provider.GetRequiredService<PublicStatisticsDbContext>(),
