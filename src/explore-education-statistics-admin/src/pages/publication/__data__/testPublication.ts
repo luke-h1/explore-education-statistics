@@ -28,5 +28,6 @@ export const testPublication: PublicationWithPermissions = {
     canUpdatePublicationSupersededBy: true,
     canCreateMethodologies: true,
     canManageExternalMethodology: true,
+    canUpdateContributorReleaseRole: true,
   },
 };

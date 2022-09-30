@@ -72,6 +72,7 @@ export interface PublicationPermissions {
   canUpdatePublicationSupersededBy: boolean;
   canCreateMethodologies: boolean;
   canManageExternalMethodology: boolean;
+  canUpdateContributorReleaseRole: boolean;
 }
 
 export interface PublicationWithPermissions extends Publication {
