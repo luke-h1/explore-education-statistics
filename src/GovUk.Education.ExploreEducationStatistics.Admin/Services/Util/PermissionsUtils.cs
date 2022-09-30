@@ -17,6 +17,7 @@ public static class PermissionsUtils
         return new ReleasePermissions
         {
             CanAddPrereleaseUsers = await userService.CheckCanAssignPrereleaseContactsToRelease(release).IsRight(),
+            CanViewRelease = await userService.CheckCanViewRelease(release).IsRight(),
             CanUpdateRelease = await userService.CheckCanUpdateRelease(release).IsRight(),
             CanDeleteRelease = await userService.CheckCanDeleteRelease(release).IsRight(),
             CanMakeAmendmentOfRelease = await userService.CheckCanMakeAmendmentOfRelease(release).IsRight()
