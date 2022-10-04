@@ -133,6 +133,7 @@ user navigates to release summary from admin dashboard
     ...    ${RELEASE_NAME}
     ...    ${THEME_NAME}=%{TEST_THEME_NAME}
     ...    ${TOPIC_NAME}=%{TEST_TOPIC_NAME}
+    ...    ${LINK_TEXT}=Edit
 
     user selects dashboard theme and topic if possible    ${THEME_NAME}    ${TOPIC_NAME}
 
@@ -142,7 +143,9 @@ user navigates to release summary from admin dashboard
     user waits until h3 is visible    Draft releases
 
     ${ROW}=    user gets table row    ${RELEASE_NAME}    testid:publication-draft-releases
-    user clicks element    xpath://a[text()="Edit"]    ${ROW}    # @MarkFix because "user clicks link" doesn't work
+    sleep    100000
+    # @MarkFix because "user clicks link" doesn't work
+    user clicks element    xpath://a[text()="${LINK_TEXT}"]    ${ROW}
 
     user waits until h2 is visible    Release summary    %{WAIT_SMALL}
     user checks summary list contains    Publication title    ${PUBLICATION_NAME}

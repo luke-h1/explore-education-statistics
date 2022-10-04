@@ -25,14 +25,11 @@ Create test publication and release via API
     ${PUBLICATION_ID}=    user creates test publication via api    ${PUBLICATION_NAME}
     user create test release via api    ${PUBLICATION_ID}    CY    2000
 
-Verify release summary
-    user navigates to editable release summary from admin dashboard    ${PUBLICATION_NAME}
-    ...    Calendar Year 2000 (not Live)
-    user waits until h2 is visible    Release summary
-    user checks page contains element    xpath://li/a[text()="Summary" and contains(@aria-current, 'page')]
-    user checks summary list contains    Publication title    ${PUBLICATION_NAME}
-
 Upload subject
+    sleep    1000000
+    user navigates to release summary from admin dashboard    ${PUBLICATION_NAME}
+    ...    Calendar Year 2000
+
     user uploads subject    UI test subject    upload-file-test.csv    upload-file-test.meta.csv
 
 Add metadata guidance
