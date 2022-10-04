@@ -10,7 +10,7 @@ export const testContact: Contact = {
   teamEmail: 'john.smith@test.com',
   teamName: 'Team Smith',
   permissions: {
-    canUpdatePublication: true,
+    canUpdateContact: true,
   },
 };
 

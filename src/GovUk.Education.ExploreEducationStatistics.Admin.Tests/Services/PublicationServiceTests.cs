@@ -3198,7 +3198,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
             Assert.Equal(publication.Contact.TeamEmail, contact.TeamEmail);
 
             Assert.NotNull(contact.Permissions);
-            Assert.False(contact.Permissions!.CanUpdatePublication);
+            Assert.False(contact.Permissions!.CanUpdateContact);
         }
 
         [Fact]

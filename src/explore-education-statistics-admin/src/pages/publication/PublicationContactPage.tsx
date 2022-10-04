@@ -15,7 +15,10 @@ const PublicationContactPage = () => {
   const { publicationId, onReload } = usePublicationContext();
   const [readOnly, toggleReadOnly] = useToggle(true);
 
-  const { value: contact } = useAsyncHandledRetry(
+  const {
+    value: contact,
+    setState: setContact,
+  } = useAsyncHandledRetry(
     async () => publicationService.getContact(publicationId, true),
     [publicationId],
   );
@@ -24,8 +27,13 @@ const PublicationContactPage = () => {
     if (!contact) {
       return;
     }
-    await publicationService.updateContact(publicationId, updatedContact);
+    const nextContact = await publicationService.updateContact(
+      publicationId,
+      updatedContact,
+    );
 
+    setContact({ value: nextContact });
+    toggleReadOnly.on();
     onReload();
   };
 
@@ -62,7 +70,7 @@ const PublicationContactPage = () => {
               {contact.contactTelNo}
             </SummaryListItem>
           </SummaryList>
-          {contact.permissions?.canUpdatePublication && (
+          {contact.permissions?.canUpdateContact && (
             <Button variant="secondary" onClick={toggleReadOnly.off}>
               Edit contact details
             </Button>

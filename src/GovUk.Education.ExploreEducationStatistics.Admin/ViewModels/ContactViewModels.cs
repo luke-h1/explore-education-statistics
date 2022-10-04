@@ -17,7 +17,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.ViewModels
 
         public record ContactPermissions
         {
-            public bool CanUpdatePublication { get; set; }
+            public bool CanUpdateContact { get; set; }
         }
     }
 

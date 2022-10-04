@@ -23,7 +23,7 @@ export const testRelease: Release = {
     contactName: 'Test contact name',
     contactTelNo: '1111 1111 1111',
     permissions: {
-      canUpdatePublication: true,
+      canUpdateContact: true,
     },
   },
   previousVersionId: '',

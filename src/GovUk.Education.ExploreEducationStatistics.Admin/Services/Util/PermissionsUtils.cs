@@ -69,7 +69,8 @@ public static class PermissionsUtils
     {
         return new ContactViewModel.ContactPermissions
         {
-            CanUpdatePublication = await userService.CheckCanUpdatePublication(publication).IsRight(),
+            // EES-3576 Switch so uses Contact specific permission check
+            CanUpdateContact = await userService.CheckCanUpdatePublication(publication).IsRight(),
         };
     }
 }
