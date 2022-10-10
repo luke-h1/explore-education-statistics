@@ -2,7 +2,7 @@ import Header from '@common/modules/table-tool/components/utils/Header';
 import classNames from 'classnames';
 import last from 'lodash/last';
 import sumBy from 'lodash/sumBy';
-import React, { forwardRef, useMemo } from 'react';
+import React, { createElement, forwardRef, useMemo } from 'react';
 import styles from './MultiHeaderTable.module.scss';
 
 interface ExpandedHeader {
@@ -159,117 +159,281 @@ const MultiHeaderTable = forwardRef<HTMLTableElement, MultiHeaderTableProps>(
       header => header.crossSpan,
     );
 
+    type Scope = 'colgroup' | 'col' | 'rowgroup' | 'row';
+    interface TableCellJson {
+      colSpan?: number;
+      rowSpan?: number;
+      scope?: Scope;
+      tag: 'th' | 'td';
+      text?: string;
+    }
+
+    const mapTableToJson = (
+      colHeaders: ExpandedHeader[][],
+      rowHeadersX: ExpandedHeader[][],
+      rowsX: string[][],
+    ) => {
+      const totalColumns = sumBy(rowHeadersX[0], header => header.crossSpan);
+
+      const mappedColHeaders: TableCellJson[][] = colHeaders.map(
+        (columns, rowIndex) => {
+          const row: TableCellJson[][] = [];
+          // add a spacer td to the first header row
+          if (rowIndex === 0) {
+            row.push([
+              {
+                colSpan: totalColumns,
+                rowSpan: colHeaders.length,
+                tag: 'td',
+              },
+            ]);
+          }
+          row.push(
+            columns.map(col => {
+              // Add an empty td instead of a th for empty group headers
+              if (col.id === '') {
+                return {
+                  colSpan: col.span,
+                  rowSpan: col.crossSpan,
+                  text: col.text,
+                  tag: 'td',
+                };
+              }
+              return {
+                colSpan: col.span,
+                rowSpan: col.crossSpan,
+                scope:
+                  rowIndex + col.crossSpan !== colHeaders.length
+                    ? 'colgroup'
+                    : 'col',
+                text: col.text,
+                tag: 'th',
+              };
+            }),
+          );
+
+          return row.flat();
+        },
+      );
+
+      const mappedRows: TableCellJson[][] = rowsX.map((row, rowIndex) => {
+        const rowsArray: TableCellJson[][] = [];
+
+        // add the row header
+        const y: TableCellJson[] = rowHeadersX[rowIndex]?.map(header => {
+          if (header.id === '') {
+            return {
+              rowSpan: header.span,
+              colSpan: header.crossSpan,
+              tag: 'td',
+            };
+          }
+          return {
+            rowSpan: header.span,
+            colSpan: header.crossSpan,
+            scope: header.isGroup ? 'rowgroup' : ('row' as Scope),
+            text: header.text,
+            tag: 'th',
+          };
+        });
+
+        rowsArray.push(y);
+
+        rowsArray.push(
+          row.map(cell => {
+            return {
+              tag: 'td',
+              text: cell,
+            };
+          }),
+        );
+
+        return rowsArray.flat();
+      });
+
+      return { thead: mappedColHeaders, tbody: mappedRows };
+    };
+    const tableJson = mapTableToJson(
+      expandedColumnHeaders,
+      expandedRowHeaders,
+      rows,
+    );
+
+    // console.log('tableJson', tableJson);
+
     return (
-      <table
-        data-testid={ariaLabelledBy && `${ariaLabelledBy}-table`}
-        aria-labelledby={ariaLabelledBy}
-        className={classNames('govuk-table', styles.table, className)}
-        ref={ref}
-      >
-        <thead className={styles.tableHead}>
-          {expandedColumnHeaders.map((columns, rowIndex) => {
-            const headingRowKey = `row-${rowIndex}`;
-            return (
-              <tr key={headingRowKey}>
-                {rowIndex === 0 && (
-                  <td
-                    colSpan={rowHeaderColumnLength}
-                    rowSpan={expandedColumnHeaders.length}
-                    className={styles.borderBottom}
-                  />
+      <>
+        <table
+          data-testid={ariaLabelledBy && `${ariaLabelledBy}-table`}
+          aria-labelledby={ariaLabelledBy}
+          className={classNames('govuk-table', styles.table, className)}
+          ref={ref}
+        >
+          <thead className={styles.tableHead}>
+            {tableJson.thead.map((headerRow, index) => (
+              // eslint-disable-next-line react/no-array-index-key
+              <tr key={`headerRow-${index}`}>
+                {headerRow.map(cell =>
+                  createElement(
+                    cell.tag,
+                    {
+                      colSpan: cell.colSpan,
+                      rowSpan: cell.rowSpan,
+                      scope: cell.scope,
+                      className:
+                        cell.tag === 'th' && !cell.text
+                          ? styles.emptyColumnHeaderCell
+                          : '',
+                    },
+                    cell.text,
+                  ),
                 )}
-
-                {columns.map((column, columnIndex) => {
-                  const key = `${column.text}_${columnIndex}`;
-                  // Add an empty td instead of a th for empty group headers
-                  if (column.id === '') {
-                    return (
-                      <td
-                        key={key}
-                        colSpan={column.span}
-                        rowSpan={column.crossSpan}
-                        className={styles.emptyColumnHeaderCell}
-                      />
-                    );
-                  }
-
+              </tr>
+            ))}
+          </thead>
+          <tbody>
+            {tableJson.tbody.map((bodyRow, index) => (
+              // eslint-disable-next-line react/no-array-index-key
+              <tr key={`bodyRow-${index}`}>
+                {bodyRow.map((cell, i) => {
                   return (
-                    <th
-                      colSpan={column.span}
-                      rowSpan={column.crossSpan}
-                      scope={
-                        rowIndex + column.crossSpan !==
-                        expandedColumnHeaders.length
-                          ? 'colgroup'
-                          : 'col'
-                      }
-                      key={key}
-                    >
-                      {column.text}
-                    </th>
+                    cell &&
+                    createElement(
+                      cell.tag,
+                      {
+                        key: `cell-${i}`,
+                        colSpan: cell.colSpan,
+                        rowSpan: cell.rowSpan,
+                        scope: cell.scope,
+                        className: `${
+                          cell.tag === 'td' ? 'govuk-table__cell--numeric' : ''
+                        }
+                       ${
+                         cell.tag === 'th' && !cell.text
+                           ? styles.emptyRowHeaderCell
+                           : ''
+                       }`,
+                      },
+                      cell.text,
+                    )
                   );
                 })}
               </tr>
-            );
-          })}
-        </thead>
+            ))}
+          </tbody>
+        </table>
 
-        <tbody>
-          {rows.map((row, rowIndex) => {
-            const rowKey = `row-${rowIndex}`;
-            return (
-              <tr key={rowKey}>
-                {expandedRowHeaders[rowIndex]?.map((header, headerIndex) => {
-                  const key = `header-${headerIndex}`;
+        {/* <table
+          data-testid={ariaLabelledBy && `${ariaLabelledBy}-table`}
+          aria-labelledby={ariaLabelledBy}
+          className={classNames('govuk-table', styles.table, className)}
+          ref={ref}
+        >
+          <thead className={styles.tableHead}>
+            {expandedColumnHeaders.map((columns, rowIndex) => {
+              const headingRowKey = `row-${rowIndex}`;
+              return (
+                <tr key={headingRowKey}>
+                  {rowIndex === 0 && (
+                    <td
+                      colSpan={rowHeaderColumnLength}
+                      rowSpan={expandedColumnHeaders.length}
+                      className={styles.borderBottom}
+                    />
+                  )}
 
-                  // Add an empty td instead of a th for empty group headers
-                  if (header.id === '') {
+                  {columns.map((column, columnIndex) => {
+                    const key = `${column.text}_${columnIndex}`;
+                    // Add an empty td instead of a th for empty group headers
+                    if (column.id === '') {
+                      return (
+                        <td
+                          key={key}
+                          colSpan={column.span}
+                          rowSpan={column.crossSpan}
+                          className={styles.emptyColumnHeaderCell}
+                        />
+                      );
+                    }
+
                     return (
-                      <td
+                      <th
+                        colSpan={column.span}
+                        rowSpan={column.crossSpan}
+                        scope={
+                          rowIndex + column.crossSpan !==
+                          expandedColumnHeaders.length
+                            ? 'colgroup'
+                            : 'col'
+                        }
                         key={key}
-                        className={classNames(styles.emptyRowHeaderCell, {
+                      >
+                        {column.text}
+                      </th>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+          </thead>
+
+          <tbody>
+            {rows.map((row, rowIndex) => {
+              const rowKey = `row-${rowIndex}`;
+              return (
+                <tr key={rowKey}>
+                  {expandedRowHeaders[rowIndex]?.map((header, headerIndex) => {
+                    const key = `header-${headerIndex}`;
+
+                    // Add an empty td instead of a th for empty group headers
+                    if (header.id === '') {
+                      return (
+                        <td
+                          key={key}
+                          className={classNames(styles.emptyRowHeaderCell, {
+                            [styles.borderBottom]: header.isGroup,
+                          })}
+                          rowSpan={header.span}
+                          colSpan={header.crossSpan}
+                        />
+                      );
+                    }
+
+                    return (
+                      <th
+                        key={key}
+                        className={classNames({
                           [styles.borderBottom]: header.isGroup,
                         })}
                         rowSpan={header.span}
                         colSpan={header.crossSpan}
-                      />
+                        scope={header.isGroup ? 'rowgroup' : 'row'}
+                      >
+                        {header.text}
+                      </th>
                     );
-                  }
+                  })}
 
-                  return (
-                    <th
-                      key={key}
-                      className={classNames({
-                        [styles.borderBottom]: header.isGroup,
-                      })}
-                      rowSpan={header.span}
-                      colSpan={header.crossSpan}
-                      scope={header.isGroup ? 'rowgroup' : 'row'}
-                    >
-                      {header.text}
-                    </th>
-                  );
-                })}
-
-                {row.map((cell, cellIndex) => {
-                  const cellKey = `cell-${cellIndex}`;
-                  return (
-                    <td
-                      key={cellKey}
-                      className={classNames('govuk-table__cell--numeric', {
-                        [styles.borderBottom]:
-                          (rowIndex + 1) % rowHeaders.length === 0,
-                      })}
-                    >
-                      {cell}
-                    </td>
-                  );
-                })}
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+                  {row.map((cell, cellIndex) => {
+                    const cellKey = `cell-${cellIndex}`;
+                    return (
+                      <td
+                        key={cellKey}
+                        className={classNames('govuk-table__cell--numeric', {
+                          [styles.borderBottom]:
+                            (rowIndex + 1) % rowHeaders.length === 0,
+                        })}
+                      >
+                        {cell}
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table> */}
+      </>
     );
   },
 );
