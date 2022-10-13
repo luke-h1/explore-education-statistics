@@ -335,7 +335,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
             }
 
             var encodingStream = await _blobStorageService.StreamBlob(PrivateReleaseFiles, file.Path());
-            return _fileTypeService.HasMatchingEncodingType(encodingStream, CsvEncodingTypes);
+            return await _fileTypeService.HasMatchingEncodingType(encodingStream, CsvEncodingTypes);
         }
 
         private static int GetNumBatches(int rows, int rowsPerBatch)

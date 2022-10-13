@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using GovUk.Education.ExploreEducationStatistics.Common.Model;
@@ -12,12 +13,14 @@ namespace GovUk.Education.ExploreEducationStatistics.Common.Services.Interfaces
     {
         Task<string> GetMimeType(IFormFile file);
 
+        Task<Encoding> GetEncoding(Stream stream);
+
         Task<bool> HasMatchingMimeType(IFormFile file, IEnumerable<Regex> mimeTypes);
 
-        bool HasMatchingEncodingType(IFormFile file, IEnumerable<string> encodingTypes);
+        Task<bool> HasMatchingEncodingType(IFormFile file, IEnumerable<string> encodingTypes);
 
-        Task<bool> HasMatchingMimeType(Stream stream, IEnumerable<Regex> mimeTypes);
+        bool HasMatchingMimeType(Stream stream, IEnumerable<Regex> mimeTypes);
 
-        bool HasMatchingEncodingType(Stream stream, IEnumerable<string> encodingTypes);
+        Task<bool> HasMatchingEncodingType(Stream stream, IEnumerable<string> encodingTypes);
     }
 }

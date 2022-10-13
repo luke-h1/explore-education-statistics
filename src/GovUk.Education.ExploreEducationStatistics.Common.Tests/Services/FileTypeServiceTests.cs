@@ -2,7 +2,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
+using GovUk.Education.ExploreEducationStatistics.Common.Extensions;
 using GovUk.Education.ExploreEducationStatistics.Common.Services;
 using GovUk.Education.ExploreEducationStatistics.Common.Validators;
 using Microsoft.AspNetCore.Http;
@@ -18,19 +20,23 @@ namespace GovUk.Education.ExploreEducationStatistics.Common.Tests.Services
         
         // we have a possible list of matching mime types that we'd expect to see, that potentially change when run
         // on different operating systems, but are considered valid either way 
-        public readonly string[] ExpectedMimeTypes;
+        public readonly string ExpectedMimeType;
+        public readonly Encoding ExpectedEncoding;
 
-        public FileInfo(string filename, params string[] expectedMimeTypes)
+        public FileInfo(
+            string filename, 
+            string expectedMimeType,
+            Encoding expectedEncoding = null)
         {
             Filename = filename;
-            ExpectedMimeTypes = expectedMimeTypes;
+            ExpectedEncoding = expectedEncoding ?? Encoding.UTF8;
+            ExpectedMimeType = expectedMimeType;
         }
     }
     
     public class FileTypeServiceTests
     {
-        // ideally this would be detected as application/msword, but this is close enough
-        private static readonly FileInfo Doc = new FileInfo("test.doc", "application/CDFV2");
+        private static readonly FileInfo Doc = new FileInfo("test.doc", "application/msword");
         
         private static readonly FileInfo Docx = new FileInfo("test.docx", 
             "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
@@ -41,8 +47,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Common.Tests.Services
         private static readonly FileInfo Odt = new FileInfo("test.odt", 
             "application/vnd.oasis.opendocument.text");
         
-        // ideally this would be detected as application/msexcel or application/vnd.ms-excel, but this is close enough
-        private static readonly FileInfo Xls = new FileInfo("test.xls", "application/CDFV2");
+        private static readonly FileInfo Xls = new FileInfo("test.xls", "application/excel");
         private static readonly FileInfo Xlsx = new FileInfo("test.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         private static readonly FileInfo Xlsx2 = new FileInfo("test2.xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         private static readonly FileInfo Csv = new FileInfo("test.csv", "application/csv");
@@ -175,6 +180,97 @@ namespace GovUk.Education.ExploreEducationStatistics.Common.Tests.Services
         {
             AssertMimeTypeCorrect(Txt);
         }
+
+        [Fact]
+        public void GetEncoding_Doc()
+        {
+            AssertEncodingCorrect(Doc);
+        }
+        
+        [Fact]
+        public void GetEncoding_Docx()
+        {
+            AssertEncodingCorrect(Docx);
+        }
+        
+        [Fact]
+        public void GetEncoding_Ods()
+        {
+            AssertEncodingCorrect(Ods);
+        }
+        
+        [Fact]
+        public void GetEncoding_Odt()
+        {
+            AssertEncodingCorrect(Odt);
+        }
+        
+        [Fact]
+        public void GetEncoding_Xls()
+        {
+            AssertEncodingCorrect(Xls);
+        }
+        
+        [Fact]
+        public void GetEncoding_Xlsx()
+        {
+            AssertEncodingCorrect(Xlsx);
+        }
+
+        [Fact]
+        public void GetEncoding_Xlsx2()
+        {
+            AssertEncodingCorrect(Xlsx2);
+        }
+
+        [Fact]
+        public void GetEncoding_Csv()
+        {
+            AssertEncodingCorrect(Csv);
+        }
+        
+        [Fact]
+        public void GetEncoding_Pdf()
+        {
+            AssertEncodingCorrect(Pdf);
+        }
+        
+        [Fact]
+        public void GetEncoding_Bmp()
+        {
+            AssertEncodingCorrect(Bmp);
+        }
+        
+        [Fact]
+        public void GetEncoding_Jpg()
+        {
+            AssertEncodingCorrect(Jpg);
+        }
+        
+        [Fact]
+        public void GetEncoding_Gif()
+        {
+            AssertEncodingCorrect(Gif);
+        }
+        
+        [Fact]
+        public void GetEncoding_Png()
+        {
+            AssertEncodingCorrect(Png);
+        }
+        
+        [Fact]
+        public void GetEncoding_Txt()
+        {
+            AssertEncodingCorrect(Txt);
+        }
+        
+        [Fact]
+        public void GetEncoding_Ascii()
+        {
+            AssertEncodingCorrect(Txt);
+        }
+
         
         [Fact]
         public void ValidChartFileUploads()
@@ -223,20 +319,47 @@ namespace GovUk.Education.ExploreEducationStatistics.Common.Tests.Services
         {
             var service = new FileTypeService();
 
-            var filePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                "Resources" + Path.DirectorySeparatorChar + fileInfo.Filename);
+            var formFile = GetMockFormFile(fileInfo);
+
+            var result = service.GetMimeType(formFile.Object).Result;
             
+            Assert.True(fileInfo.ExpectedMimeType == result, 
+                $"Detected Mime type {result ?? "null"} was not the expected Mime type of " +
+                $"{fileInfo.ExpectedMimeType}");
+        }
+
+        private static void AssertEncodingCorrect(FileInfo fileInfo)
+        {
+            var service = new FileTypeService();
+
+            var formFile = GetMockFormFile(fileInfo);
+            
+            var result = service.GetEncoding(formFile.Object).Result;
+            
+            Assert.True(fileInfo.ExpectedEncoding.Equals(result), 
+                $"Detected Encoding {result} was not the expected Encoding of {fileInfo.ExpectedEncoding}");
+        }
+
+        private static Mock<IFormFile> GetMockFormFile(FileInfo fileInfo)
+        {
+            var filePath = GetResourcesFilePath(fileInfo);
+
             var formFile = new Mock<IFormFile>();
+            
             formFile
                 .Setup(f => f.OpenReadStream())
                 .Returns(() => File.OpenRead(filePath));
             
-            var result = service.GetMimeType(formFile.Object).Result;
-            
-            Assert.True(fileInfo.ExpectedMimeTypes.Contains(result), 
-                "Expected " + result + " to be contained in the expected mime types list");
+            return formFile;
         }
-        
+
+        private static string GetResourcesFilePath(FileInfo fileInfo)
+        {
+            var filePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty,
+                "Resources" + Path.DirectorySeparatorChar + fileInfo.Filename);
+            return filePath;
+        }
+
         private static void AssertHasMatchingMimeType(FileInfo fileInfo, List<Regex> availableMimeTypes, 
             bool expectedToSucceed)
         {

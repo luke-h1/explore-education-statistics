@@ -108,7 +108,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Services
         private async Task<bool> IsCsvFile(IFormFile file)
         {
             return await _fileTypeService.HasMatchingMimeType(file, AllowedMimeTypesByFileType[FileType.Data])
-                   && _fileTypeService.HasMatchingEncodingType(file, CsvEncodingTypes);
+                   && await _fileTypeService.HasMatchingEncodingType(file, CsvEncodingTypes);
         }
 
         private static bool FileContainsSpacesOrSpecialChars(string filename)
