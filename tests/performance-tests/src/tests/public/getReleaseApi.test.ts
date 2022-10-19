@@ -8,18 +8,18 @@ import getEnvironmentAndUsersFromFile from '../../utils/environmentAndUsers';
 export const options: Options = {
   stages: [
     {
-      duration: '0.1s',
+      duration: '0.5s',
       target: 80,
     },
     {
-      duration: '10m',
+      duration: '60s',
       target: 80,
     },
   ],
   noConnectionReuse: true,
   insecureSkipTLSVerify: true,
-  linger: true,
-  // vus: 5,
+  //linger: true,
+  //vus: 5,
   // duration: '120m',
 };
 
@@ -42,6 +42,7 @@ const performTest = () => {
     response = http.get(
       `${environmentAndUsers.environment.contentApiUrl}/publications/pupil-absence-in-schools-in-england/releases/2016-17`,
       {
+        redirects: 0,
         timeout: '120s',
       },
     );

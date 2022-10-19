@@ -31,8 +31,10 @@ namespace GovUk.Education.ExploreEducationStatistics.Common.Services
             {
                 var result = await _blobStorageService.GetDeserializedJson(cacheKey.Container, cacheKey.Key, targetType);
 
-                _logger.LogDebug("Blob cache {HitOrMiss} - for key {CacheKey}", 
-                    result != null ? "hit" : "miss", key);
+                if (result == null)
+                {
+                    _logger.LogWarning("Blob cache miss - for key {CacheKey}", key);    
+                }
 
                 return result;
             }

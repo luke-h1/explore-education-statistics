@@ -19,7 +19,11 @@ namespace GovUk.Education.ExploreEducationStatistics.Content.Api
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                    webBuilder.ConfigureKestrel(serverOptions => { serverOptions.AddServerHeader = false; });
+                    webBuilder.ConfigureKestrel(serverOptions =>
+                    {
+                        serverOptions.Limits.MaxConcurrentConnections = null;
+                        serverOptions.AddServerHeader = false;
+                    });
                 })
                 .ConfigureLogging(
                     builder =>
