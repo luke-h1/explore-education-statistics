@@ -81,11 +81,8 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
             var metaFileStream = await _blobStorageService.StreamBlob(PrivateReleaseFiles, import.MetaFile.Path());
             var metaFileTable = DataTableUtils.CreateFromStream(metaFileStream);
 
-            _importerService.ImportMeta(metaFileTable, subject, statisticsDbContext);
-            await statisticsDbContext.SaveChangesAsync();
-
+            await _importerService.ImportMeta(metaFileTable, subject, statisticsDbContext);
             await _fileImportService.ImportFiltersAndLocations(import.Id, statisticsDbContext);
-            await statisticsDbContext.SaveChangesAsync();
         }
 
         public async Task ProcessStage3(Guid importId)

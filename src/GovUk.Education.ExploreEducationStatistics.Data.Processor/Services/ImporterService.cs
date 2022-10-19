@@ -119,9 +119,9 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
             _logger = logger;
         }
 
-        public void ImportMeta(DataTable table, Subject subject, StatisticsDbContext context)
+        public async Task ImportMeta(DataTable table, Subject subject, StatisticsDbContext context)
         {
-            _importerMetaService.Import(table.Columns, table.Rows, subject, context);
+            await _importerMetaService.Import(table.Columns, table.Rows, subject, context);
         }
 
         public SubjectMeta GetMeta(DataTable table, Subject subject, StatisticsDbContext context)
@@ -165,7 +165,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
                 var rowValues = CsvUtil.GetRowValues(row);
                 if (CsvUtil.IsRowAllowed(soleGeographicLevel, rowValues, colValues))
                 {
-                    CreateFiltersAndLocationsFromCsv(context, rowValues, colValues, subjectMeta.Filters);
+                    await CreateFiltersAndLocationsFromCsv(context, rowValues, colValues, subjectMeta.Filters);
                 }
 
                 rowCount++;
@@ -276,7 +276,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
             };
         }
 
-        private void CreateFiltersAndLocationsFromCsv(
+        private async Task CreateFiltersAndLocationsFromCsv(
             StatisticsDbContext context,
             List<string> rowValues,
             List<string> colValues,
@@ -284,6 +284,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
         {
             CreateFilterItems(context, rowValues, colValues, filtersMeta);
             GetLocationIdOrCreate(rowValues, colValues, context);
+            await context.SaveChangesAsync();
         }
 
         private void CreateFilterItems(
@@ -297,7 +298,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
                 var filterItemLabel = CsvUtil.Value(rowValues, colValues, filterMeta.Column);
                 var filterGroupLabel = CsvUtil.Value(rowValues, colValues, filterMeta.FilterGroupingColumn);
 
-                _importerFilterService.Find(filterItemLabel, filterGroupLabel, filterMeta.Filter, context);
+                _importerFilterService.FindOrCreate(filterItemLabel, filterGroupLabel, filterMeta.Filter, context);
             }
         }
 
@@ -317,7 +318,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
                 {
                     ObservationId = observationId,
                     FilterItemId = _importerFilterService
-                        .Find(filterItemLabel, filterGroupLabel, filterMeta.Filter, context).Id,
+                        .FindOrCreate(filterItemLabel, filterGroupLabel, filterMeta.Filter, context).Id,
                     FilterId = filterMeta.Filter.Id
                 };
             }).ToList();

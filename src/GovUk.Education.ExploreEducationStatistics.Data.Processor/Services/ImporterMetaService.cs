@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 using GovUk.Education.ExploreEducationStatistics.Common.Services;
 using GovUk.Education.ExploreEducationStatistics.Common.Services.Interfaces;
 using GovUk.Education.ExploreEducationStatistics.Data.Model;
@@ -32,11 +33,11 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
             _guidGenerator = guidGenerator;
         }
 
-        public SubjectMeta Import(DataColumnCollection cols, DataRowCollection rows, Subject subject, StatisticsDbContext context)
+        public async Task<SubjectMeta> Import(DataColumnCollection cols, DataRowCollection rows, Subject subject, StatisticsDbContext context)
         {
             var metaRows = GetMetaRows(CsvUtil.GetColumnValues(cols), rows);
-            var filters = ImportFilters(metaRows, subject, context).ToList();
-            var indicators = ImportIndicators(metaRows, subject, context).ToList();
+            var filters = await ImportFilters(metaRows, subject, context);
+            var indicators = await ImportIndicators(metaRows, subject, context);
             
             return new SubjectMeta
             {
@@ -87,22 +88,31 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
             });
         }
 
-        private IEnumerable<(Filter Filter, string Column, string FilterGroupingColumn)> ImportFilters(
+        private async Task<List<(Filter Filter, string Column, string FilterGroupingColumn)>> ImportFilters(
             IEnumerable<MetaRow> metaRows, Subject subject, StatisticsDbContext context)
         {
             var filters = GetFilters(metaRows, subject, context).ToList();
-            context.Filter.AddRange(filters.Select(triple => triple.Filter));
 
+            var newFilters = filters
+                .Select(triple => triple.Filter)
+                .Where(filter => filter.Id == Guid.Empty);
+            
+            await context.Filter.AddRangeAsync(newFilters);
+            await context.SaveChangesAsync();
             return filters;
         }
 
-        private IEnumerable<(Indicator Indicator, string Column)> ImportIndicators(IEnumerable<MetaRow> metaRows,
+        private async Task<List<(Indicator Indicator, string Column)>> ImportIndicators(IEnumerable<MetaRow> metaRows,
             Subject subject, StatisticsDbContext context)
         {
             var indicators = GetIndicators(metaRows, subject, context).ToList();
-
-            context.Indicator.AddRange(indicators.Select(tuple => tuple.Indicator));
-
+            
+            var newIndicators = indicators
+                .Select(triple => triple.Indicator)
+                .Where(indicator => indicator.Id == Guid.Empty);
+            
+            await context.Indicator.AddRangeAsync(newIndicators);
+            await context.SaveChangesAsync();
             return indicators;
         }
 
