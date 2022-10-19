@@ -217,7 +217,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
             return location;
         }
 
-        private Location? Lookup(
+        public Location? Lookup(
             StatisticsDbContext context,
             GeographicLevel geographicLevel,
             Country country,

@@ -1,3 +1,4 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -144,6 +145,10 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
             var totalRows = rows.Count;
             var soleGeographicLevel = dataImport.HasSoleGeographicLevel();
 
+            var filterItems = new HashSet<Tuple<Filter, string?, string>>();
+            var filterGroups = new Dictionary<string, FilterGroup>();
+            var locations = new HashSet<Location>();
+            
             foreach (DataRow row in rows)
             {
                 if (rowCount % Stage2RowCheck == 0)
@@ -165,11 +170,154 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
                 var rowValues = CsvUtil.GetRowValues(row);
                 if (CsvUtil.IsRowAllowed(soleGeographicLevel, rowValues, colValues))
                 {
-                    await CreateFiltersAndLocationsFromCsv(context, rowValues, colValues, subjectMeta.Filters);
+                    foreach (var filterMeta in subjectMeta.Filters)
+                    {
+                        var filterItemLabel = CsvUtil.Value(rowValues, colValues, filterMeta.Column);
+                        var filterGroupLabel = CsvUtil.Value(rowValues, colValues, filterMeta.FilterGroupingColumn);
+                        
+                        if (filterGroupLabel != null && !filterGroups.ContainsKey(filterGroupLabel))
+                        {
+                            filterGroups.Add(filterGroupLabel, new FilterGroup(filterMeta.Filter, filterGroupLabel));
+                        }
+
+                        filterItems.Add(new Tuple<Filter, string?, string>(filterMeta.Filter, filterGroupLabel, filterItemLabel));
+                    }
+
+                    locations.Add(
+                        ReadLocation(
+                            CsvUtil.GetGeographicLevel(rowValues, colValues),
+                            GetCountry(rowValues, colValues),
+                            GetEnglishDevolvedArea(rowValues, colValues),
+                            GetInstitution(rowValues, colValues),
+                            GetLocalAuthority(rowValues, colValues),
+                            GetLocalAuthorityDistrict(rowValues, colValues),
+                            GetLocalEnterprisePartnership(rowValues, colValues),
+                            GetMayoralCombinedAuthority(rowValues, colValues),
+                            GetMultiAcademyTrust(rowValues, colValues),
+                            GetOpportunityArea(rowValues, colValues),
+                            GetParliamentaryConstituency(rowValues, colValues),
+                            GetPlanningArea(rowValues, colValues),
+                            GetProvider(rowValues, colValues),
+                            GetRegion(rowValues, colValues),
+                            GetRscRegion(rowValues, colValues),
+                            GetSchool(rowValues, colValues),
+                            GetSponsor(rowValues, colValues),
+                            GetWard(rowValues, colValues)
+                        ));
+                    
+                    // CreateFilterItems(context, rowValues, colValues, subjectMeta.Filters);
+                    // GetLocationIdOrCreate(rowValues, colValues, context);
+                    // await context.SaveChangesAsync();
                 }
 
                 rowCount++;
             }
+            
+            _logger.LogError($"{filterGroups.Count} Filter Groups found");
+            _logger.LogError($"{filterItems.Count} Filter Items found");
+            _logger.LogError($"{locations.Count} Locations found");
+
+            var defaultFilterGroups = subjectMeta
+                .Filters
+                .Select(filterMeta => filterMeta.Filter)
+                .ToDictionary(
+                    filter => filter,
+                    filter => new FilterGroup(filter, "Default"));
+            
+            var filterItemEntities = filterItems.Select(filterItem =>
+                new FilterItem(
+                    filterItem.Item3, 
+                    filterItem.Item2 != null ? filterGroups[filterItem.Item2] : defaultFilterGroups[filterItem.Item1]))
+                .ToList();
+
+            _logger.LogError($"Checking for new Locations");
+
+            var newLocations = locations.Where(
+                location => _importerLocationService.Lookup(
+                    context, 
+                    location.GeographicLevel,
+                    location.Country,
+                    location.EnglishDevolvedArea,
+                    location.Institution,
+                    location.LocalAuthority,
+                    location.LocalAuthorityDistrict,
+                    location.LocalEnterprisePartnership,
+                    location.MayoralCombinedAuthority,
+                    location.MultiAcademyTrust,
+                    location.OpportunityArea,
+                    location.ParliamentaryConstituency,
+                    location.PlanningArea,
+                    location.Provider,
+                    location.Region,
+                    location.RscRegion,
+                    location.School,
+                    location.Sponsor,
+                    location.Ward) == null)
+                .ToList();
+            
+            _logger.LogError($"{newLocations.Count} New Locations found");
+            
+            await context.Database.CreateExecutionStrategy().Execute(async () =>
+            {
+                await using var transaction = await context.Database.BeginTransactionAsync();
+
+                _logger.LogError($"Saving {defaultFilterGroups.Count} Default Filter Groups");
+                await context.FilterGroup.AddRangeAsync(defaultFilterGroups.Values);
+                _logger.LogError($"Saving {filterGroups.Count} Filter Groups");
+                await context.FilterGroup.AddRangeAsync(filterGroups.Values);
+                _logger.LogError($"Saving {filterItemEntities.Count} Filter Items");
+                await context.FilterItem.AddRangeAsync(filterItemEntities);
+                _logger.LogError($"Saving {newLocations.Count} New Locations");
+                await context.Location.AddRangeAsync(newLocations);
+                _logger.LogError("Done!");
+
+                await context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                await context.Database.CloseConnectionAsync();
+            });
+        }
+
+        private Location ReadLocation(
+            GeographicLevel geographicLevel,
+            Country country,
+            EnglishDevolvedArea? englishDevolvedArea = null,
+            Institution? institution = null,
+            LocalAuthority? localAuthority = null,
+            LocalAuthorityDistrict? localAuthorityDistrict = null,
+            LocalEnterprisePartnership? localEnterprisePartnership = null,
+            MayoralCombinedAuthority? mayoralCombinedAuthority = null,
+            Mat? multiAcademyTrust = null,
+            OpportunityArea? opportunityArea = null,
+            ParliamentaryConstituency? parliamentaryConstituency = null,
+            PlanningArea? planningArea = null,
+            Provider? provider = null,
+            Region? region = null,
+            RscRegion? rscRegion = null,
+            School? school = null,
+            Sponsor? sponsor = null,
+            Ward? ward = null)
+        {
+            return new Location
+            {
+                GeographicLevel = geographicLevel,
+                Country = country,
+                EnglishDevolvedArea = englishDevolvedArea,
+                Institution = institution,
+                LocalAuthority = localAuthority,
+                LocalAuthorityDistrict = localAuthorityDistrict,
+                LocalEnterprisePartnership = localEnterprisePartnership,
+                MayoralCombinedAuthority = mayoralCombinedAuthority,
+                MultiAcademyTrust = multiAcademyTrust,
+                OpportunityArea = opportunityArea,
+                ParliamentaryConstituency = parliamentaryConstituency,
+                PlanningArea = planningArea,
+                Provider = provider,
+                Region = region,
+                RscRegion = rscRegion,
+                School = school,
+                Sponsor = sponsor,
+                Ward = ward
+            };
         }
 
         public async Task ImportObservations(
