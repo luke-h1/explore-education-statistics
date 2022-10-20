@@ -11,6 +11,8 @@ using GovUk.Education.ExploreEducationStatistics.Common.Services.Interfaces;
 using GovUk.Education.ExploreEducationStatistics.Content.Model;
 using GovUk.Education.ExploreEducationStatistics.Data.Model;
 using GovUk.Education.ExploreEducationStatistics.Data.Model.Database;
+using GovUk.Education.ExploreEducationStatistics.Data.Model.Repository;
+using GovUk.Education.ExploreEducationStatistics.Data.Model.Repository.Interfaces;
 using GovUk.Education.ExploreEducationStatistics.Data.Processor.Exceptions;
 using GovUk.Education.ExploreEducationStatistics.Data.Processor.Models;
 using GovUk.Education.ExploreEducationStatistics.Data.Processor.Services.Interfaces;
@@ -30,6 +32,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
         private readonly IImporterMetaService _importerMetaService;
         private readonly IDataImportService _dataImportService;
         private readonly ILogger<ImporterService> _logger;
+        private readonly IFilterRepository _filterRepository;
 
         private const int Stage2RowCheck = 1000;
 
@@ -109,7 +112,8 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
             ImporterLocationService importerLocationService,
             IImporterMetaService importerMetaService,
             IDataImportService dataImportService, 
-            ILogger<ImporterService> logger)
+            ILogger<ImporterService> logger, 
+            IFilterRepository filterRepository)
         {
             _guidGenerator = guidGenerator;
             _memoryCache = memoryCache;
@@ -118,6 +122,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
             _importerMetaService = importerMetaService;
             _dataImportService = dataImportService;
             _logger = logger;
+            _filterRepository = filterRepository;
         }
 
         public async Task ImportMeta(DataTable table, Subject subject, StatisticsDbContext context)
@@ -234,7 +239,6 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
 
             var newLocations = locations.Where(
                 location => _importerLocationService.Lookup(
-                    context, 
                     location.GeographicLevel,
                     location.Country,
                     location.EnglishDevolvedArea,
@@ -415,39 +419,13 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
             {
                 Id = observationId,
                 FilterItems = GetFilterItems(context, rowValues, colValues, subjectMeta.Filters, observationId),
-                LocationId = GetLocationIdOrCreate(rowValues, colValues, context),
+                LocationId = GetLocationId(rowValues, colValues),
                 Measures = GetMeasures(rowValues, colValues, subjectMeta.Indicators),
                 SubjectId = subject.Id,
                 TimeIdentifier = GetTimeIdentifier(rowValues, colValues),
                 Year = GetYear(rowValues, colValues),
                 CsvRow = csvRowNum
             };
-        }
-
-        private async Task CreateFiltersAndLocationsFromCsv(
-            StatisticsDbContext context,
-            List<string> rowValues,
-            List<string> colValues,
-            IEnumerable<(Filter Filter, string Column, string FilterGroupingColumn)> filtersMeta)
-        {
-            CreateFilterItems(context, rowValues, colValues, filtersMeta);
-            GetLocationIdOrCreate(rowValues, colValues, context);
-            await context.SaveChangesAsync();
-        }
-
-        private void CreateFilterItems(
-            StatisticsDbContext context,
-            IReadOnlyList<string> rowValues,
-            List<string> colValues,
-            IEnumerable<(Filter Filter, string Column, string FilterGroupingColumn)> filtersMeta)
-        {
-            foreach (var filterMeta in filtersMeta)
-            {
-                var filterItemLabel = CsvUtil.Value(rowValues, colValues, filterMeta.Column);
-                var filterGroupLabel = CsvUtil.Value(rowValues, colValues, filterMeta.FilterGroupingColumn);
-
-                _importerFilterService.FindOrCreate(filterItemLabel, filterGroupLabel, filterMeta.Filter, context);
-            }
         }
 
         private ICollection<ObservationFilterItem> GetFilterItems(
@@ -472,12 +450,9 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
             }).ToList();
         }
 
-        private Guid GetLocationIdOrCreate(IReadOnlyList<string> rowValues,
-            List<string> colValues,
-            StatisticsDbContext context)
+        private Guid GetLocationId(IReadOnlyList<string> rowValues, List<string> colValues)
         {
-            return _importerLocationService.FindOrCreate(
-                context,
+            return _importerLocationService.Lookup(
                 CsvUtil.GetGeographicLevel(rowValues, colValues),
                 GetCountry(rowValues, colValues),
                 GetEnglishDevolvedArea(rowValues, colValues),
@@ -496,7 +471,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
                 GetSchool(rowValues, colValues),
                 GetSponsor(rowValues, colValues),
                 GetWard(rowValues, colValues)
-            ).Id;
+            )!.Id;
         }
 
         private static Dictionary<Guid, string> GetMeasures(IReadOnlyList<string> rowValues,
