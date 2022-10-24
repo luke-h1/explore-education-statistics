@@ -238,6 +238,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
 
             var newLocations = locations.Where(
                 location => _importerLocationService.Lookup(
+                    context,
                     location.GeographicLevel,
                     location.Country,
                     location.EnglishDevolvedArea,
@@ -368,7 +369,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
             {
                 Id = observationId,
                 FilterItems = GetFilterItems(context, cells, colValues, subjectMeta.Filters, observationId),
-                LocationId = GetLocationId(cells, colValues),
+                LocationId = GetLocationId(context, cells, colValues),
                 Measures = GetMeasures(cells, colValues, subjectMeta.Indicators),
                 SubjectId = subject.Id,
                 TimeIdentifier = GetTimeIdentifier(cells, colValues),
@@ -399,9 +400,10 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
             }).ToList();
         }
 
-        private Guid GetLocationId(IReadOnlyList<string> cells, List<string> colValues)
+        private Guid GetLocationId(StatisticsDbContext context, IReadOnlyList<string> cells, List<string> colValues)
         {
             return _importerLocationService.Lookup(
+                context,
                 CsvUtil.GetGeographicLevel(cells, colValues),
                 GetCountry(cells, colValues),
                 GetEnglishDevolvedArea(cells, colValues),

@@ -98,11 +98,11 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
             IEnumerable<MetaRow> metaRows, Subject subject, StatisticsDbContext context)
         {
             var filters = GetFilters(metaRows, subject, context).ToList();
-            context.Filter.AddRange(filters.Select(triple => triple.Filter));
 
             var newFilters = filters
                 .Select(triple => triple.Filter)
-                .Where(filter => filter.Id == Guid.Empty);
+                .Where(filter => filter.Id == Guid.Empty)
+                .ToList();
             
             await context.Filter.AddRangeAsync(newFilters);
             await context.SaveChangesAsync();

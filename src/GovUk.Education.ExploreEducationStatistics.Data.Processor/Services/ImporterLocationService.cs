@@ -9,14 +9,8 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
 {
     public class ImporterLocationService
     {
-        private readonly StatisticsDbContext _context;
-
-        public ImporterLocationService(StatisticsDbContext context)
-        {
-            _context = context;
-        }
-
         public Location? Lookup(
+            StatisticsDbContext context,
             GeographicLevel geographicLevel,
             Country country,
             EnglishDevolvedArea? englishDevolvedArea,
@@ -114,7 +108,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
             // This can return multiple results because C# equality is translated directly to SQL equality
             // and our config of SqlServer is using the default case-insensitive collation
             // See https://docs.microsoft.com/en-us/ef/core/miscellaneous/collations-and-case-sensitivity
-            var locations = _context.Location
+            var locations = context.Location
                 .AsNoTracking()
                 .Where(predicateBuilder)
                 .ToList();
