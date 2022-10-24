@@ -15,13 +15,13 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
             _memoryCache = memoryCache;
         }
 
-        public FilterItem Find(string filterItemLabel, string filterGroupLabel, Filter filter, StatisticsDbContext context)
+        public FilterItem FindOrCreate(string filterItemLabel, string filterGroupLabel, Filter filter, StatisticsDbContext context)
         {
             var filterGroup = LookupOrCreateFilterGroup(filter, filterGroupLabel, context);
-            return LookupOrCreateFilterItem(filter, filterGroup, filterItemLabel, context);
+            return LookupOrCreateFilterItem(filterGroup, filterItemLabel, context);
         }
 
-        private FilterItem LookupOrCreateFilterItem(Filter filter, FilterGroup filterGroup, string label, StatisticsDbContext context)
+        private FilterItem LookupOrCreateFilterItem(FilterGroup filterGroup, string label, StatisticsDbContext context)
         {
             if (string.IsNullOrWhiteSpace(label))
             {
@@ -55,7 +55,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
                 return filterGroup;
             }
 
-            filterGroup = context.FilterGroup.AsNoTracking()
+            filterGroup = context.FilterGroup
                           .FirstOrDefault(fg => fg.FilterId == filter.Id && fg.Label == label)
                           ?? context.FilterGroup.Add(new FilterGroup(filter, label)).Entity;
             
@@ -66,14 +66,14 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
 
         private static string GetFilterGroupCacheKey(Filter filter, string filterGroupLabel, StatisticsDbContext context)
         {
-            return typeof(FilterGroup).Name + "_" +
+            return nameof(FilterGroup) + "_" +
                    (filter.Id == null ? context.Entry(filter).Property(e => e.Id).CurrentValue : filter.Id) + "_" +
                    filterGroupLabel.ToLower().Replace(" ", "_");            
         } 
 
         private static string GetFilterItemCacheKey(FilterGroup filterGroup, string filterItemLabel, StatisticsDbContext context)
         {
-            return typeof(FilterItem).Name + "_" +
+            return nameof(FilterItem) + "_" +
                    (filterGroup.Id == null ? context.Entry(filterGroup).Property(e => e.Id).CurrentValue : filterGroup.Id) + "_" +
                    filterItemLabel.ToLower().Replace(" ", "_");
         }
