@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using GovUk.Education.ExploreEducationStatistics.Data.Model;
 using GovUk.Education.ExploreEducationStatistics.Data.Model.Database;
@@ -15,13 +16,13 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
             _memoryCache = memoryCache;
         }
 
-        public FilterItem FindOrCreate(string filterItemLabel, string filterGroupLabel, Filter filter, StatisticsDbContext context)
+        public FilterItem Find(string filterItemLabel, string filterGroupLabel, Filter filter, StatisticsDbContext context)
         {
-            var filterGroup = LookupOrCreateFilterGroup(filter, filterGroupLabel, context);
-            return LookupOrCreateFilterItem(filterGroup, filterItemLabel, context);
+            var filterGroup = LookupFilterGroup(filter, filterGroupLabel, context);
+            return LookupFilterItem(filterGroup, filterItemLabel, context);
         }
 
-        private FilterItem LookupOrCreateFilterItem(FilterGroup filterGroup, string label, StatisticsDbContext context)
+        public FilterItem LookupFilterItem(FilterGroup filterGroup, string label, StatisticsDbContext context)
         {
             if (string.IsNullOrWhiteSpace(label))
             {
@@ -34,15 +35,21 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
                 return filterItem;
             }
 
-            filterItem = context.FilterItem.AsNoTracking().FirstOrDefault(fi => fi.FilterGroupId == filterGroup.Id && fi.Label == label) 
-                         ?? context.FilterItem.Add(new FilterItem(label, filterGroup)).Entity;
+            filterItem = context
+                .FilterItem
+                .AsNoTracking()
+                .First(fi => fi.FilterGroupId == filterGroup.Id && fi.Label == label);
 
-            _memoryCache.Cache.Set(cacheKey, filterItem);
+            _memoryCache.Cache.Set(cacheKey, filterItem, new MemoryCacheEntryOptions
+            {
+                Size = 1,
+                SlidingExpiration = TimeSpan.FromHours(1)
+            });
             
             return filterItem;
         }
 
-        private FilterGroup LookupOrCreateFilterGroup(Filter filter, string label, StatisticsDbContext context)
+        public FilterGroup LookupFilterGroup(Filter filter, string label, StatisticsDbContext context)
         {
             if (string.IsNullOrWhiteSpace(label))
             {
@@ -55,11 +62,15 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
                 return filterGroup;
             }
 
-            filterGroup = context.FilterGroup
-                          .FirstOrDefault(fg => fg.FilterId == filter.Id && fg.Label == label)
-                          ?? context.FilterGroup.Add(new FilterGroup(filter, label)).Entity;
+            filterGroup = context
+                .FilterGroup
+                .First(fg => fg.FilterId == filter.Id && fg.Label == label);
             
-            _memoryCache.Cache.Set(cacheKey, filterGroup);
+            _memoryCache.Cache.Set(cacheKey, filterGroup, new MemoryCacheEntryOptions
+            {
+                Size = 1,
+                SlidingExpiration = TimeSpan.FromHours(1)
+            });
 
             return filterGroup;
         }

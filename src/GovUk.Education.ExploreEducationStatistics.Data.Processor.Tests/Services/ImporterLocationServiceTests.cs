@@ -19,7 +19,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Tests.Servic
         private readonly Country _wales = new("W92000004", "Wales");
 
         [Fact]
-        public async Task FindOrCreate_ExistingLocation()
+        public async Task Find_ExistingLocation()
         {
             var location = new Location
             {
@@ -39,7 +39,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Tests.Servic
 
             await using (var statisticsDbContext = InMemoryStatisticsDbContext(statisticsDbContextId))
             {
-                var result = service.FindOrCreate(
+                var result = service.Find(
                     context: statisticsDbContext,
                     geographicLevel: location.GeographicLevel,
                     country: location.Country);
@@ -49,7 +49,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Tests.Servic
         }
 
         [Fact]
-        public async Task FindOrCreate_NewLocation()
+        public async Task Find_NewLocation()
         {
             var locationId = Guid.NewGuid();
 
@@ -57,13 +57,13 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Tests.Servic
             guidGenerator.Setup(mock => mock.NewGuid())
                 .Returns(locationId);
 
-            var service = BuildService(guidGenerator.Object);
+            var service = BuildService();
 
             var statisticsDbContextId = Guid.NewGuid().ToString();
 
             await using (var statisticsDbContext = InMemoryStatisticsDbContext(statisticsDbContextId))
             {
-                var result = service.FindOrCreate(
+                var result = service.Find(
                     context: statisticsDbContext,
                     geographicLevel: GeographicLevel.Country,
                     country: _england);
@@ -93,7 +93,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Tests.Servic
         }
 
         [Fact]
-        public async Task FindOrCreate_MissingLocalAuthorityCode()
+        public async Task Find_MissingLocalAuthorityCode()
         {
             var locationId = Guid.NewGuid();
 
@@ -101,14 +101,14 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Tests.Servic
             guidGenerator.Setup(mock => mock.NewGuid())
                 .Returns(locationId);
 
-            var service = BuildService(guidGenerator.Object);
+            var service = BuildService();
 
             var statisticsDbContextId = Guid.NewGuid().ToString();
 
             await using (var statisticsDbContext = InMemoryStatisticsDbContext(statisticsDbContextId))
             {
                 // Test creating a Local Authority with no code, e.g. Bedfordshire pre LGR 2009 only has an old code
-                var result = service.FindOrCreate(
+                var result = service.Find(
                     context: statisticsDbContext,
                     geographicLevel: GeographicLevel.LocalAuthority,
                     country: _england,
@@ -147,7 +147,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Tests.Servic
         }
 
         [Fact]
-        public async Task FindOrCreate_UniqueByName()
+        public async Task Find_UniqueByName()
         {
             var result1Id = Guid.NewGuid();
             var result2Id = Guid.NewGuid();
@@ -157,20 +157,20 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Tests.Servic
                 .Returns(result1Id)
                 .Returns(result2Id);
 
-            var service = BuildService(guidGenerator.Object);
+            var service = BuildService();
 
             var statisticsDbContextId = Guid.NewGuid().ToString();
 
             await using (var statisticsDbContext = InMemoryStatisticsDbContext(statisticsDbContextId))
             {
                 // Test creating two Regions with the same code but different names
-                var result1 = service.FindOrCreate(
+                var result1 = service.Find(
                     context: statisticsDbContext,
                     geographicLevel: GeographicLevel.Region,
                     country: _england,
                     region: new Region("1", "North East"));
 
-                var result2 = service.FindOrCreate(
+                var result2 = service.Find(
                     context: statisticsDbContext,
                     geographicLevel: GeographicLevel.Region,
                     country: _england,
@@ -226,7 +226,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Tests.Servic
         }
 
         [Fact]
-        public async Task FindOrCreate_UniqueByCode()
+        public async Task Find_UniqueByCode()
         {
             var result1Id = Guid.NewGuid();
             var result2Id = Guid.NewGuid();
@@ -236,20 +236,20 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Tests.Servic
                 .Returns(result1Id)
                 .Returns(result2Id);
 
-            var service = BuildService(guidGenerator.Object);
+            var service = BuildService();
 
             var statisticsDbContextId = Guid.NewGuid().ToString();
 
             await using (var statisticsDbContext = InMemoryStatisticsDbContext(statisticsDbContextId))
             {
                 // Test creating two Regions with the same name but different codes
-                var result1 = service.FindOrCreate(
+                var result1 = service.Find(
                     context: statisticsDbContext,
                     geographicLevel: GeographicLevel.Region,
                     country: _england,
                     region: new Region("1", "North East"));
 
-                var result2 = service.FindOrCreate(
+                var result2 = service.Find(
                     context: statisticsDbContext,
                     geographicLevel: GeographicLevel.Region,
                     country: _england,
@@ -305,7 +305,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Tests.Servic
         }
 
         [Fact]
-        public async Task FindOrCreate_UniqueByLocalAuthorityOldCode()
+        public async Task Find_UniqueByLocalAuthorityOldCode()
         {
             var result1Id = Guid.NewGuid();
             var result2Id = Guid.NewGuid();
@@ -315,20 +315,20 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Tests.Servic
                 .Returns(result1Id)
                 .Returns(result2Id);
 
-            var service = BuildService(guidGenerator.Object);
+            var service = BuildService();
 
             var statisticsDbContextId = Guid.NewGuid().ToString();
 
             await using (var statisticsDbContext = InMemoryStatisticsDbContext(statisticsDbContextId))
             {
                 // Test creating two Local Authorities which are identical except for different old codes
-                var result1 = service.FindOrCreate(
+                var result1 = service.Find(
                     context: statisticsDbContext,
                     geographicLevel: GeographicLevel.LocalAuthority,
                     country: _england,
                     localAuthority: new LocalAuthority("1", "100", "Westminster"));
 
-                var result2 = service.FindOrCreate(
+                var result2 = service.Find(
                     context: statisticsDbContext,
                     geographicLevel: GeographicLevel.LocalAuthority,
                     country: _england,
@@ -388,7 +388,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Tests.Servic
         }
 
         [Fact]
-        public async Task FindOrCreate_UniqueByGeographicLevel()
+        public async Task Find_UniqueByGeographicLevel()
         {
             var result1Id = Guid.NewGuid();
             var result2Id = Guid.NewGuid();
@@ -398,7 +398,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Tests.Servic
                 .Returns(result1Id)
                 .Returns(result2Id);
 
-            var service = BuildService(guidGenerator.Object);
+            var service = BuildService();
 
             var statisticsDbContextId = Guid.NewGuid().ToString();
 
@@ -410,14 +410,14 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Tests.Servic
                 // Test creating two locations with identical attributes except for GeographicLevel.
                 // This is probably bad data if it's ever supplied but nevertheless they should be separate locations
                 // treated uniquely by geographic level.
-                var result1 = service.FindOrCreate(
+                var result1 = service.Find(
                     context: statisticsDbContext,
                     geographicLevel: GeographicLevel.LocalAuthority,
                     country: _england,
                     localAuthority: localAuthority,
                     localAuthorityDistrict: localAuthorityDistrict);
 
-                var result2 = service.FindOrCreate(
+                var result2 = service.Find(
                     context: statisticsDbContext,
                     geographicLevel: GeographicLevel.LocalAuthorityDistrict,
                     country: _england,
@@ -486,7 +486,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Tests.Servic
         }
 
         [Fact]
-        public async Task FindOrCreate_UniqueByAdditionalAttributes()
+        public async Task Find_UniqueByAdditionalAttributes()
         {
             var result1Id = Guid.NewGuid();
             var result2Id = Guid.NewGuid();
@@ -496,7 +496,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Tests.Servic
                 .Returns(result1Id)
                 .Returns(result2Id);
 
-            var service = BuildService(guidGenerator.Object);
+            var service = BuildService();
 
             var statisticsDbContextId = Guid.NewGuid().ToString();
 
@@ -505,13 +505,13 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Tests.Servic
             await using (var statisticsDbContext = InMemoryStatisticsDbContext(statisticsDbContextId))
             {
                 // Test creating two Providers that are unique by some other attribute e.g. Country
-                var result1 = service.FindOrCreate(
+                var result1 = service.Find(
                     context: statisticsDbContext,
                     geographicLevel: GeographicLevel.Provider,
                     country: _england,
                     provider: provider);
 
-                var result2 = service.FindOrCreate(
+                var result2 = service.Find(
                     context: statisticsDbContext,
                     geographicLevel: GeographicLevel.Provider,
                     country: _wales,
@@ -567,7 +567,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Tests.Servic
         }
 
         [Fact]
-        public async Task FindOrCreate_CaseSensitiveLocationName()
+        public async Task Find_CaseSensitiveLocationName()
         {
             var result1Id = Guid.NewGuid();
             var result2Id = Guid.NewGuid();
@@ -577,13 +577,13 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Tests.Servic
                 .Returns(result1Id)
                 .Returns(result2Id);
 
-            var service = BuildService(guidGenerator.Object);
+            var service = BuildService();
 
             var statisticsDbContextId = Guid.NewGuid().ToString();
 
             await using (var statisticsDbContext = InMemoryStatisticsDbContext(statisticsDbContextId))
             {
-                var result1 = service.FindOrCreate(
+                var result1 = service.Find(
                     context: statisticsDbContext,
                     geographicLevel: GeographicLevel.EnglishDevolvedArea,
                     country: _england,
@@ -596,7 +596,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Tests.Servic
 
             await using (var statisticsDbContext = InMemoryStatisticsDbContext(statisticsDbContextId))
             {
-                var result2 = service.FindOrCreate(
+                var result2 = service.Find(
                     context: statisticsDbContext,
                     geographicLevel: GeographicLevel.EnglishDevolvedArea,
                     country: _england,
@@ -626,12 +626,9 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Tests.Servic
             }
         }
 
-        private static ImporterLocationService BuildService(
-            IGuidGenerator? guidGenerator = null)
+        private static ImporterLocationService BuildService()
         {
-            return new(
-                guidGenerator ?? Mock.Of<IGuidGenerator>(MockBehavior.Strict),
-                new ImporterMemoryCache());
+            return new(new ImporterMemoryCache());
         }
     }
 }

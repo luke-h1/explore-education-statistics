@@ -1,18 +1,104 @@
 #nullable enable
+using System;
 using System.Linq;
+using GovUk.Education.ExploreEducationStatistics.Common.Extensions;
 using GovUk.Education.ExploreEducationStatistics.Common.Model.Data;
 using GovUk.Education.ExploreEducationStatistics.Data.Model;
 using GovUk.Education.ExploreEducationStatistics.Data.Model.Database;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
 {
     public class ImporterLocationService
     {
-        public Location? Lookup(
+        private readonly ImporterMemoryCache _memoryCache;
+        
+        public ImporterLocationService(ImporterMemoryCache memoryCache)
+        {
+            _memoryCache = memoryCache;
+        }
+        
+        public Location? Find(
             StatisticsDbContext context,
             GeographicLevel geographicLevel,
             Country country,
+            EnglishDevolvedArea? englishDevolvedArea = null,
+            Institution? institution = null,
+            LocalAuthority? localAuthority = null,
+            LocalAuthorityDistrict? localAuthorityDistrict = null,
+            LocalEnterprisePartnership? localEnterprisePartnership = null,
+            MayoralCombinedAuthority? mayoralCombinedAuthority = null,
+            Mat? multiAcademyTrust = null,
+            OpportunityArea? opportunityArea = null,
+            ParliamentaryConstituency? parliamentaryConstituency = null,
+            PlanningArea? planningArea = null,
+            Provider? provider = null,
+            Region? region = null,
+            RscRegion? rscRegion = null,
+            School? school = null,
+            Sponsor? sponsor = null,
+            Ward? ward = null)
+        {
+            var cacheKey = GetCacheKey(
+                geographicLevel,
+                country,
+                englishDevolvedArea,
+                institution,
+                localAuthority,
+                localAuthorityDistrict,
+                localEnterprisePartnership,
+                mayoralCombinedAuthority,
+                multiAcademyTrust,
+                opportunityArea,
+                parliamentaryConstituency,
+                planningArea,
+                provider,
+                region,
+                rscRegion,
+                school,
+                sponsor,
+                ward);
+
+            if (_memoryCache.Cache.TryGetValue(cacheKey, out Location location))
+            {
+                return location;
+            }
+            
+            var locationFromDb = Lookup(
+                context, 
+                geographicLevel, 
+                country, 
+                englishDevolvedArea, 
+                institution, 
+                localAuthority, 
+                localAuthorityDistrict,
+                localEnterprisePartnership,
+                mayoralCombinedAuthority,
+                multiAcademyTrust,
+                opportunityArea,
+                parliamentaryConstituency,
+                planningArea,
+                provider,
+                region,
+                rscRegion,
+                school,
+                sponsor,
+                ward);
+            
+            _memoryCache.Cache.Set(cacheKey, locationFromDb, new MemoryCacheEntryOptions
+            {
+                Size = 1,
+                SlidingExpiration = TimeSpan.FromHours(1)
+            });
+
+            return locationFromDb;
+        }
+
+        private static Location? Lookup(
+            StatisticsDbContext context, 
+            GeographicLevel geographicLevel,
+            Country country, 
             EnglishDevolvedArea? englishDevolvedArea,
             Institution? institution,
             LocalAuthority? localAuthority,
@@ -38,46 +124,63 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
                                  && location.Country_Name == country.Name);
 
             predicateBuilder = predicateBuilder
-                .And(location => location.EnglishDevolvedArea_Code == (englishDevolvedArea != null ? englishDevolvedArea.Code : null) 
-                                 && location.EnglishDevolvedArea_Name == (englishDevolvedArea != null ? englishDevolvedArea.Name : null));
+                .And(location =>
+                    location.EnglishDevolvedArea_Code == (englishDevolvedArea != null ? englishDevolvedArea.Code : null)
+                    && location.EnglishDevolvedArea_Name == (englishDevolvedArea != null ? englishDevolvedArea.Name : null));
 
             predicateBuilder = predicateBuilder
-                .And(location => location.Institution_Code == (institution != null ? institution.Code : null) 
+                .And(location => location.Institution_Code == (institution != null ? institution.Code : null)
                                  && location.Institution_Name == (institution != null ? institution.Name : null));
 
             // Also match the old LA code even if blank
             predicateBuilder = predicateBuilder
                 .And(location =>
-                    location.LocalAuthority_Code == (localAuthority != null && localAuthority.Code != null ? localAuthority.Code : null)
-                    && location.LocalAuthority_OldCode == (localAuthority != null && localAuthority.OldCode != null ? localAuthority.OldCode : null)
+                    location.LocalAuthority_Code ==
+                    (localAuthority != null && localAuthority.Code != null ? localAuthority.Code : null)
+                    && location.LocalAuthority_OldCode == (localAuthority != null && localAuthority.OldCode != null
+                        ? localAuthority.OldCode
+                        : null)
                     && location.LocalAuthority_Name == (localAuthority != null ? localAuthority.Name : null));
 
             predicateBuilder = predicateBuilder
-                .And(location => location.LocalAuthorityDistrict_Code == (localAuthorityDistrict != null ? localAuthorityDistrict.Code : null)
-                                 && location.LocalAuthorityDistrict_Name == (localAuthorityDistrict != null ? localAuthorityDistrict.Name : null));
+                .And(location =>
+                    location.LocalAuthorityDistrict_Code ==
+                    (localAuthorityDistrict != null ? localAuthorityDistrict.Code : null)
+                    && location.LocalAuthorityDistrict_Name ==
+                    (localAuthorityDistrict != null ? localAuthorityDistrict.Name : null));
 
             predicateBuilder = predicateBuilder
-                .And(location => location.LocalEnterprisePartnership_Code == (localEnterprisePartnership != null ? localEnterprisePartnership.Code : null)
-                                 && location.LocalEnterprisePartnership_Name == (localEnterprisePartnership != null ? localEnterprisePartnership.Name : null));
+                .And(location =>
+                    location.LocalEnterprisePartnership_Code ==
+                    (localEnterprisePartnership != null ? localEnterprisePartnership.Code : null)
+                    && location.LocalEnterprisePartnership_Name ==
+                    (localEnterprisePartnership != null ? localEnterprisePartnership.Name : null));
 
             predicateBuilder = predicateBuilder
-                .And(location => location.MayoralCombinedAuthority_Code == (mayoralCombinedAuthority != null ? mayoralCombinedAuthority.Code : null)
-                                 && location.MayoralCombinedAuthority_Name == (mayoralCombinedAuthority != null ? mayoralCombinedAuthority.Name : null));
+                .And(location =>
+                    location.MayoralCombinedAuthority_Code ==
+                    (mayoralCombinedAuthority != null ? mayoralCombinedAuthority.Code : null)
+                    && location.MayoralCombinedAuthority_Name ==
+                    (mayoralCombinedAuthority != null ? mayoralCombinedAuthority.Name : null));
 
             predicateBuilder = predicateBuilder
                 .And(location => location.MultiAcademyTrust_Code == (multiAcademyTrust != null ? multiAcademyTrust.Code : null)
-                                 && location.MultiAcademyTrust_Name == (multiAcademyTrust != null ? multiAcademyTrust.Name : null));
+                                 && location.MultiAcademyTrust_Name ==
+                                 (multiAcademyTrust != null ? multiAcademyTrust.Name : null));
 
             predicateBuilder = predicateBuilder
                 .And(location => location.OpportunityArea_Code == (opportunityArea != null ? opportunityArea.Code : null)
                                  && location.OpportunityArea_Name == (opportunityArea != null ? opportunityArea.Name : null));
 
             predicateBuilder = predicateBuilder
-                .And(location => location.ParliamentaryConstituency_Code == (parliamentaryConstituency != null ? parliamentaryConstituency.Code : null)
-                                 && location.ParliamentaryConstituency_Name == (parliamentaryConstituency != null ? parliamentaryConstituency.Name : null));
+                .And(location =>
+                    location.ParliamentaryConstituency_Code ==
+                    (parliamentaryConstituency != null ? parliamentaryConstituency.Code : null)
+                    && location.ParliamentaryConstituency_Name ==
+                    (parliamentaryConstituency != null ? parliamentaryConstituency.Name : null));
 
             predicateBuilder = predicateBuilder
-                .And(location => location.PlanningArea_Code == (planningArea != null ? planningArea.Code : null) 
+                .And(location => location.PlanningArea_Code == (planningArea != null ? planningArea.Code : null)
                                  && location.PlanningArea_Name == (planningArea != null ? planningArea.Name : null));
 
             predicateBuilder = predicateBuilder
@@ -134,5 +237,56 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
                 && location.Ward_Name == ward?.Name
             );
         }
+
+        private static string GetCacheKey(
+            GeographicLevel geographicLevel,
+            Country country,
+            EnglishDevolvedArea? englishDevolvedArea,
+            Institution? institution,
+            LocalAuthority? localAuthority,
+            LocalAuthorityDistrict? localAuthorityDistrict,
+            LocalEnterprisePartnership? localEnterprisePartnership,
+            MayoralCombinedAuthority? mayoralCombinedAuthority,
+            Mat? multiAcademyTrust,
+            OpportunityArea? opportunityArea,
+            ParliamentaryConstituency? parliamentaryConstituency,
+            PlanningArea? planningArea,
+            Provider? provider,
+            Region? region,
+            RscRegion? rscRegion,
+            School? school,
+            Sponsor? sponsor,
+            Ward? ward)
+        {
+            var locationAttributes = new LocationAttribute?[]
+            {
+                country,
+                englishDevolvedArea,
+                institution,
+                localAuthority,
+                localAuthorityDistrict,
+                localEnterprisePartnership,
+                mayoralCombinedAuthority,
+                multiAcademyTrust,
+                parliamentaryConstituency,
+                planningArea,
+                provider,
+                opportunityArea,
+                region,
+                rscRegion,
+                school,
+                sponsor,
+                ward
+            };
+
+            var tokens = locationAttributes
+                .WhereNotNull()
+                .Select(attribute => attribute.GetCacheKey())
+                .ToList();
+
+            const char separator = '_';
+            return $"{geographicLevel}{separator}{tokens.JoinToString(separator)}";
+        }
+
     }
 }

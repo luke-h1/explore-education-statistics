@@ -12,7 +12,6 @@ using GovUk.Education.ExploreEducationStatistics.Common.Services.Interfaces;
 using GovUk.Education.ExploreEducationStatistics.Content.Model;
 using GovUk.Education.ExploreEducationStatistics.Data.Model;
 using GovUk.Education.ExploreEducationStatistics.Data.Model.Database;
-using GovUk.Education.ExploreEducationStatistics.Data.Model.Repository.Interfaces;
 using GovUk.Education.ExploreEducationStatistics.Data.Processor.Exceptions;
 using GovUk.Education.ExploreEducationStatistics.Data.Processor.Models;
 using GovUk.Education.ExploreEducationStatistics.Data.Processor.Services.Interfaces;
@@ -26,7 +25,6 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
     public class ImporterService : IImporterService
     {
         private readonly IGuidGenerator _guidGenerator;
-        private readonly ImporterMemoryCache _memoryCache;
         private readonly ImporterLocationService _importerLocationService;
         private readonly ImporterFilterService _importerFilterService;
         private readonly IImporterMetaService _importerMetaService;
@@ -106,7 +104,6 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
 
         public ImporterService(
             IGuidGenerator guidGenerator,
-            ImporterMemoryCache memoryCache,
             ImporterFilterService importerFilterService,
             ImporterLocationService importerLocationService,
             IImporterMetaService importerMetaService,
@@ -114,7 +111,6 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
             ILogger<ImporterService> logger)
         {
             _guidGenerator = guidGenerator;
-            _memoryCache = memoryCache;
             _importerFilterService = importerFilterService;
             _importerLocationService = importerLocationService;
             _importerMetaService = importerMetaService;
@@ -146,9 +142,6 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
             SubjectMeta subjectMeta,
             StatisticsDbContext context)
         {
-            // Clearing the caches is required here as the seeder shares the cache with all subjects
-            _memoryCache.Clear();
-
             var colValues = await CsvUtil.GetCsvHeaders(dataFileStreamProvider);
             var totalRows = await CsvUtil.GetTotalRows(dataFileStreamProvider);
             var soleGeographicLevel = dataImport.HasSoleGeographicLevel();
@@ -237,7 +230,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
             _logger.LogDebug($"Checking for new Locations");
 
             var newLocations = locations.Where(
-                location => _importerLocationService.Lookup(
+                location => _importerLocationService.Find(
                     context,
                     location.GeographicLevel,
                     location.Country,
@@ -288,8 +281,6 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
             int batchNo,
             StatisticsDbContext context)
         {
-            _memoryCache.Clear();
-            
             var observations = (await GetObservations(
                 import,
                 context,
@@ -394,7 +385,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
                 {
                     ObservationId = observationId,
                     FilterItemId = _importerFilterService
-                        .FindOrCreate(filterItemLabel, filterGroupLabel, filterMeta.Filter, context).Id,
+                        .Find(filterItemLabel, filterGroupLabel, filterMeta.Filter, context).Id,
                     FilterId = filterMeta.Filter.Id
                 };
             }).ToList();
@@ -402,7 +393,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
 
         private Guid GetLocationId(StatisticsDbContext context, IReadOnlyList<string> cells, List<string> colValues)
         {
-            return _importerLocationService.Lookup(
+            return _importerLocationService.Find(
                 context,
                 CsvUtil.GetGeographicLevel(cells, colValues),
                 GetCountry(cells, colValues),

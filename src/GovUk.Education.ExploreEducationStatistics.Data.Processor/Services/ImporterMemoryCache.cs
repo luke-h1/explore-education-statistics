@@ -6,13 +6,10 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
 {
     public class ImporterMemoryCache
     {
-        public MemoryCache Cache { get; set; } = new(new MemoryCacheOptions());
-
-        public void Clear()
+        public MemoryCache Cache { get; set; } = new(new MemoryCacheOptions
         {
-            Cache.Dispose();
-            Cache = new MemoryCache(new MemoryCacheOptions());
-            GC.Collect();
-        }
+            SizeLimit = 200000,
+            ExpirationScanFrequency = TimeSpan.FromMinutes(30)
+        });
     }
 }
