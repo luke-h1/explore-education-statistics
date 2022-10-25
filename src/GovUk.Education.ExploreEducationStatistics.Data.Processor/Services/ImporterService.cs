@@ -265,7 +265,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
                 _logger.LogDebug($"Saving {filterItemEntities.Count} Filter Items");
                 await context.FilterItem.AddRangeAsync(filterItemEntities);
                 _logger.LogDebug($"Saving {newLocations.Count} New Locations");
-                await context.Location.AddRangeAsync(newLocations);
+                await _importerLocationService.CreateAndCache(context, newLocations);
                 _logger.LogDebug("Done!");
 
                 await context.SaveChangesAsync();

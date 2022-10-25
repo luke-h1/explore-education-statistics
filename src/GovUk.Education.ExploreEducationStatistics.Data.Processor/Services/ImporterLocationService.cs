@@ -1,20 +1,28 @@
 #nullable enable
+using System.Collections.Generic;
 using System.Linq;
-using GovUk.Education.ExploreEducationStatistics.Common.Extensions;
+using System.Threading.Tasks;
 using GovUk.Education.ExploreEducationStatistics.Common.Model.Data;
+using GovUk.Education.ExploreEducationStatistics.Common.Services.Interfaces;
 using GovUk.Education.ExploreEducationStatistics.Data.Model;
 using GovUk.Education.ExploreEducationStatistics.Data.Model.Database;
 using Microsoft.EntityFrameworkCore;
+using static GovUk.Education.ExploreEducationStatistics.Common.Services.CollectionUtils;
+using static GovUk.Education.ExploreEducationStatistics.Data.Processor.Services.ImporterMemoryCache;
 
 namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
 {
     public class ImporterLocationService
     {
         private readonly ImporterMemoryCache _memoryCache;
+        private readonly IGuidGenerator _guidGenerator;
         
-        public ImporterLocationService(ImporterMemoryCache memoryCache)
+        public ImporterLocationService(
+            ImporterMemoryCache memoryCache, 
+            IGuidGenerator guidGenerator)
         {
             _memoryCache = memoryCache;
+            _guidGenerator = guidGenerator;
         }
         
         public Location? Find(
@@ -226,55 +234,18 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
             );
         }
 
-        private static string GetCacheKey(
-            GeographicLevel geographicLevel,
-            Country country,
-            EnglishDevolvedArea? englishDevolvedArea,
-            Institution? institution,
-            LocalAuthority? localAuthority,
-            LocalAuthorityDistrict? localAuthorityDistrict,
-            LocalEnterprisePartnership? localEnterprisePartnership,
-            MayoralCombinedAuthority? mayoralCombinedAuthority,
-            Mat? multiAcademyTrust,
-            OpportunityArea? opportunityArea,
-            ParliamentaryConstituency? parliamentaryConstituency,
-            PlanningArea? planningArea,
-            Provider? provider,
-            Region? region,
-            RscRegion? rscRegion,
-            School? school,
-            Sponsor? sponsor,
-            Ward? ward)
+        public async Task<List<Location>> CreateAndCache(StatisticsDbContext context, List<Location> locations)
         {
-            var locationAttributes = new LocationAttribute?[]
-            {
-                country,
-                englishDevolvedArea,
-                institution,
-                localAuthority,
-                localAuthorityDistrict,
-                localEnterprisePartnership,
-                mayoralCombinedAuthority,
-                multiAcademyTrust,
-                parliamentaryConstituency,
-                planningArea,
-                provider,
-                opportunityArea,
-                region,
-                rscRegion,
-                school,
-                sponsor,
-                ward
-            };
-
-            var tokens = locationAttributes
-                .WhereNotNull()
-                .Select(attribute => attribute.GetCacheKey())
+            locations.ForEach(location => location.Id = _guidGenerator.NewGuid());
+            await context.AddRangeAsync(locations);
+            return locations
+                .Select(location => _memoryCache.Set(GetCacheKey(location), location))
                 .ToList();
-
-            const char separator = '_';
-            return $"{geographicLevel}{separator}{tokens.JoinToString(separator)}";
         }
 
+        public async Task<Location> CreateAndCache(StatisticsDbContext context, Location location)
+        {
+            return (await CreateAndCache(context, ListOf(location)))[0];
+        }
     }
 }
