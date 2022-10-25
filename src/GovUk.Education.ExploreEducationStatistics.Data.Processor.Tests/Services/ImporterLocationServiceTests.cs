@@ -19,7 +19,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Tests.Servic
         private readonly Country _wales = new("W92000004", "Wales");
 
         [Fact]
-        public async Task Find_ExistingLocation()
+        public async Task Find()
         {
             var location = new Location
             {

@@ -1,12 +1,10 @@
 #nullable enable
-using System;
 using System.Linq;
 using GovUk.Education.ExploreEducationStatistics.Common.Extensions;
 using GovUk.Education.ExploreEducationStatistics.Common.Model.Data;
 using GovUk.Education.ExploreEducationStatistics.Data.Model;
 using GovUk.Education.ExploreEducationStatistics.Data.Model.Database;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
 {
@@ -60,39 +58,28 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
                 sponsor,
                 ward);
 
-            if (_memoryCache.Cache.TryGetValue(cacheKey, out Location location))
-            {
-                return location;
-            }
-            
-            var locationFromDb = Lookup(
-                context, 
-                geographicLevel, 
-                country, 
-                englishDevolvedArea, 
-                institution, 
-                localAuthority, 
-                localAuthorityDistrict,
-                localEnterprisePartnership,
-                mayoralCombinedAuthority,
-                multiAcademyTrust,
-                opportunityArea,
-                parliamentaryConstituency,
-                planningArea,
-                provider,
-                region,
-                rscRegion,
-                school,
-                sponsor,
-                ward);
-            
-            _memoryCache.Cache.Set(cacheKey, locationFromDb, new MemoryCacheEntryOptions
-            {
-                Size = 1,
-                SlidingExpiration = TimeSpan.FromHours(1)
-            });
-
-            return locationFromDb;
+            return _memoryCache.GetOrCreate(
+                cacheKey, 
+                () => Lookup(
+                    context, 
+                    geographicLevel, 
+                    country, 
+                    englishDevolvedArea, 
+                    institution, 
+                    localAuthority, 
+                    localAuthorityDistrict,
+                    localEnterprisePartnership,
+                    mayoralCombinedAuthority,
+                    multiAcademyTrust,
+                    opportunityArea,
+                    parliamentaryConstituency,
+                    planningArea,
+                    provider,
+                    region,
+                    rscRegion,
+                    school,
+                    sponsor,
+                    ward));
         }
 
         private static Location? Lookup(
@@ -211,7 +198,8 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
             // This can return multiple results because C# equality is translated directly to SQL equality
             // and our config of SqlServer is using the default case-insensitive collation
             // See https://docs.microsoft.com/en-us/ef/core/miscellaneous/collations-and-case-sensitivity
-            var locations = context.Location
+            var locations = context
+                .Location
                 .AsNoTracking()
                 .Where(predicateBuilder)
                 .ToList();
