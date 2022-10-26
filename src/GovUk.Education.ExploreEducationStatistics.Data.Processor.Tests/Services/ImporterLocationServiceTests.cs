@@ -46,10 +46,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Tests.Servic
 
             await using (var statisticsDbContext = InMemoryStatisticsDbContext(statisticsDbContextId))
             {
-                var result = service.Find(
-                    statisticsDbContext,
-                    geographicLevel: location.GeographicLevel,
-                    country: location.Country);
+                var result = service.Find(statisticsDbContext, location);
 
                 Assert.NotNull(result);
                 Assert.Equal(location.Id, result!.Id);
@@ -79,8 +76,11 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Tests.Servic
             {
                 var result = service.Find(
                     statisticsDbContext,
-                    geographicLevel: GeographicLevel.Country, // different level
-                    country: nonMatchingLocation.Country);
+                    new Location
+                    {
+                        GeographicLevel = GeographicLevel.Country, // different level
+                        Country = nonMatchingLocation.Country   
+                    });
 
                 Assert.Null(result);
             }

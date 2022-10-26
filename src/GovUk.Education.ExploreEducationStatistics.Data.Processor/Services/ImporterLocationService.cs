@@ -25,183 +25,94 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
             _guidGenerator = guidGenerator;
         }
         
-        public Location? Find(
-            StatisticsDbContext context,
-            GeographicLevel geographicLevel,
-            Country country,
-            EnglishDevolvedArea? englishDevolvedArea = null,
-            Institution? institution = null,
-            LocalAuthority? localAuthority = null,
-            LocalAuthorityDistrict? localAuthorityDistrict = null,
-            LocalEnterprisePartnership? localEnterprisePartnership = null,
-            MayoralCombinedAuthority? mayoralCombinedAuthority = null,
-            Mat? multiAcademyTrust = null,
-            OpportunityArea? opportunityArea = null,
-            ParliamentaryConstituency? parliamentaryConstituency = null,
-            PlanningArea? planningArea = null,
-            Provider? provider = null,
-            Region? region = null,
-            RscRegion? rscRegion = null,
-            School? school = null,
-            Sponsor? sponsor = null,
-            Ward? ward = null)
+        public Location? Find(StatisticsDbContext context, Location location)
         {
-            var cacheKey = GetCacheKey(
-                geographicLevel,
-                country,
-                englishDevolvedArea,
-                institution,
-                localAuthority,
-                localAuthorityDistrict,
-                localEnterprisePartnership,
-                mayoralCombinedAuthority,
-                multiAcademyTrust,
-                opportunityArea,
-                parliamentaryConstituency,
-                planningArea,
-                provider,
-                region,
-                rscRegion,
-                school,
-                sponsor,
-                ward);
-
             return _memoryCache.GetOrCreate(
-                cacheKey, 
-                () => Lookup(
-                    context, 
-                    geographicLevel, 
-                    country, 
-                    englishDevolvedArea, 
-                    institution, 
-                    localAuthority, 
-                    localAuthorityDistrict,
-                    localEnterprisePartnership,
-                    mayoralCombinedAuthority,
-                    multiAcademyTrust,
-                    opportunityArea,
-                    parliamentaryConstituency,
-                    planningArea,
-                    provider,
-                    region,
-                    rscRegion,
-                    school,
-                    sponsor,
-                    ward));
+                GetCacheKey(location), 
+                () => Lookup(context, location));
         }
 
-        private static Location? Lookup(
-            StatisticsDbContext context, 
-            GeographicLevel geographicLevel,
-            Country country, 
-            EnglishDevolvedArea? englishDevolvedArea,
-            Institution? institution,
-            LocalAuthority? localAuthority,
-            LocalAuthorityDistrict? localAuthorityDistrict,
-            LocalEnterprisePartnership? localEnterprisePartnership,
-            MayoralCombinedAuthority? mayoralCombinedAuthority,
-            Mat? multiAcademyTrust,
-            OpportunityArea? opportunityArea,
-            ParliamentaryConstituency? parliamentaryConstituency,
-            PlanningArea? planningArea,
-            Provider? provider,
-            Region? region,
-            RscRegion? rscRegion,
-            School? school,
-            Sponsor? sponsor,
-            Ward? ward)
+        private static Location? Lookup(StatisticsDbContext context, Location locationToLookup)
         {
             var predicateBuilder = PredicateBuilder.True<Location>()
-                .And(location => location.GeographicLevel == geographicLevel);
+                .And(location => location.GeographicLevel == locationToLookup.GeographicLevel);
 
             predicateBuilder = predicateBuilder
-                .And(location => location.Country_Code == country.Code
-                                 && location.Country_Name == country.Name);
+                .And(location => location.Country_Code == locationToLookup.Country_Code
+                                 && location.Country_Name == locationToLookup.Country_Name);
 
             predicateBuilder = predicateBuilder
                 .And(location =>
-                    location.EnglishDevolvedArea_Code == (englishDevolvedArea != null ? englishDevolvedArea.Code : null)
-                    && location.EnglishDevolvedArea_Name == (englishDevolvedArea != null ? englishDevolvedArea.Name : null));
+                    location.EnglishDevolvedArea_Code == locationToLookup.EnglishDevolvedArea_Code
+                    && location.EnglishDevolvedArea_Name == locationToLookup.EnglishDevolvedArea_Name);
 
             predicateBuilder = predicateBuilder
-                .And(location => location.Institution_Code == (institution != null ? institution.Code : null)
-                                 && location.Institution_Name == (institution != null ? institution.Name : null));
+                .And(location => location.Institution_Code == locationToLookup.Institution_Code
+                                 && location.Institution_Name == locationToLookup.Institution_Name);
 
             // Also match the old LA code even if blank
             predicateBuilder = predicateBuilder
                 .And(location =>
-                    location.LocalAuthority_Code ==
-                    (localAuthority != null && localAuthority.Code != null ? localAuthority.Code : null)
-                    && location.LocalAuthority_OldCode == (localAuthority != null && localAuthority.OldCode != null
-                        ? localAuthority.OldCode
-                        : null)
-                    && location.LocalAuthority_Name == (localAuthority != null ? localAuthority.Name : null));
+                    location.LocalAuthority_Code == locationToLookup.LocalAuthority_Code
+                    && location.LocalAuthority_OldCode == locationToLookup.LocalAuthority_OldCode
+                    && location.LocalAuthority_Name == locationToLookup.LocalAuthority_Name);
 
             predicateBuilder = predicateBuilder
                 .And(location =>
-                    location.LocalAuthorityDistrict_Code ==
-                    (localAuthorityDistrict != null ? localAuthorityDistrict.Code : null)
-                    && location.LocalAuthorityDistrict_Name ==
-                    (localAuthorityDistrict != null ? localAuthorityDistrict.Name : null));
+                    location.LocalAuthorityDistrict_Code == locationToLookup.LocalAuthorityDistrict_Code
+                    && location.LocalAuthorityDistrict_Name == locationToLookup.LocalAuthorityDistrict_Name);
 
             predicateBuilder = predicateBuilder
                 .And(location =>
-                    location.LocalEnterprisePartnership_Code ==
-                    (localEnterprisePartnership != null ? localEnterprisePartnership.Code : null)
-                    && location.LocalEnterprisePartnership_Name ==
-                    (localEnterprisePartnership != null ? localEnterprisePartnership.Name : null));
+                    location.LocalEnterprisePartnership_Code == locationToLookup.LocalEnterprisePartnership_Code
+                    && location.LocalEnterprisePartnership_Name == locationToLookup.LocalEnterprisePartnership_Name);
 
             predicateBuilder = predicateBuilder
                 .And(location =>
-                    location.MayoralCombinedAuthority_Code ==
-                    (mayoralCombinedAuthority != null ? mayoralCombinedAuthority.Code : null)
-                    && location.MayoralCombinedAuthority_Name ==
-                    (mayoralCombinedAuthority != null ? mayoralCombinedAuthority.Name : null));
+                    location.MayoralCombinedAuthority_Code == locationToLookup.MayoralCombinedAuthority_Code
+                    && location.MayoralCombinedAuthority_Name == locationToLookup.MayoralCombinedAuthority_Name);
 
             predicateBuilder = predicateBuilder
-                .And(location => location.MultiAcademyTrust_Code == (multiAcademyTrust != null ? multiAcademyTrust.Code : null)
-                                 && location.MultiAcademyTrust_Name ==
-                                 (multiAcademyTrust != null ? multiAcademyTrust.Name : null));
+                .And(location => location.MultiAcademyTrust_Code == locationToLookup.MultiAcademyTrust_Code
+                                 && location.MultiAcademyTrust_Name == locationToLookup.MultiAcademyTrust_Name);
 
             predicateBuilder = predicateBuilder
-                .And(location => location.OpportunityArea_Code == (opportunityArea != null ? opportunityArea.Code : null)
-                                 && location.OpportunityArea_Name == (opportunityArea != null ? opportunityArea.Name : null));
+                .And(location => location.OpportunityArea_Code == locationToLookup.OpportunityArea_Code
+                                 && location.OpportunityArea_Name == locationToLookup.OpportunityArea_Name);
 
             predicateBuilder = predicateBuilder
                 .And(location =>
-                    location.ParliamentaryConstituency_Code ==
-                    (parliamentaryConstituency != null ? parliamentaryConstituency.Code : null)
-                    && location.ParliamentaryConstituency_Name ==
-                    (parliamentaryConstituency != null ? parliamentaryConstituency.Name : null));
+                    location.ParliamentaryConstituency_Code == locationToLookup.ParliamentaryConstituency_Code
+                    && location.ParliamentaryConstituency_Name == locationToLookup.ParliamentaryConstituency_Name);
 
             predicateBuilder = predicateBuilder
-                .And(location => location.PlanningArea_Code == (planningArea != null ? planningArea.Code : null)
-                                 && location.PlanningArea_Name == (planningArea != null ? planningArea.Name : null));
+                .And(location => location.PlanningArea_Code == locationToLookup.PlanningArea_Code
+                                 && location.PlanningArea_Name == locationToLookup.PlanningArea_Name);
 
             predicateBuilder = predicateBuilder
-                .And(location => location.Provider_Code == (provider != null ? provider.Code : null)
-                                 && location.Provider_Name == (provider != null ? provider.Name : null));
+                .And(location => location.Provider_Code == locationToLookup.Provider_Code
+                                 && location.Provider_Name == locationToLookup.Provider_Name);
 
             predicateBuilder = predicateBuilder
-                .And(location => location.Region_Code == (region != null ? region.Code : null)
-                                 && location.Region_Name == (region != null ? region.Name : null));
+                .And(location => location.Region_Code == locationToLookup.Region_Code
+                                 && location.Region_Name == locationToLookup.Region_Name);
 
             // Note that Name is not included in the predicate here as it is the same as the code
             predicateBuilder = predicateBuilder
-                .And(location => location.RscRegion_Code == (rscRegion != null ? rscRegion.Code : null));
+                .And(location => location.RscRegion_Code == locationToLookup.RscRegion_Code);
 
             predicateBuilder = predicateBuilder
                 .And(location =>
-                    location.School_Code == (school != null ? school.Code : null)
-                    && location.School_Name == (school != null ? school.Name : null));
+                    location.School_Code == locationToLookup.School_Code
+                    && location.School_Name == locationToLookup.School_Name);
 
             predicateBuilder = predicateBuilder
-                .And(location => location.Sponsor_Code == (sponsor != null ? sponsor.Code : null)
-                                 && location.Sponsor_Name == (sponsor != null ? sponsor.Name : null));
+                .And(location => location.Sponsor_Code == locationToLookup.Sponsor_Code
+                                 && location.Sponsor_Name == locationToLookup.Sponsor_Name);
 
             predicateBuilder = predicateBuilder
-                .And(location => location.Ward_Code == (ward != null ? ward.Code : null)
-                                 && location.Ward_Name == (ward != null ? ward.Name : null));
+                .And(location => location.Ward_Code == locationToLookup.Ward_Code
+                                 && location.Ward_Name == locationToLookup.Ward_Name);
 
             // This can return multiple results because C# equality is translated directly to SQL equality
             // and our config of SqlServer is using the default case-insensitive collation
@@ -214,33 +125,47 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services
 
             // Perform case-sensitive comparison on the Name fields
             return locations.FirstOrDefault(location =>
-                location.Country_Name == country.Name
-                && location.EnglishDevolvedArea_Name == englishDevolvedArea?.Name
-                && location.Institution_Name == institution?.Name
-                && location.LocalAuthority_Name == localAuthority?.Name
-                && location.LocalAuthorityDistrict_Name == localAuthorityDistrict?.Name
-                && location.LocalEnterprisePartnership_Name == localEnterprisePartnership?.Name
-                && location.MayoralCombinedAuthority_Name == mayoralCombinedAuthority?.Name
-                && location.MultiAcademyTrust_Name == multiAcademyTrust?.Name
-                && location.OpportunityArea_Name == opportunityArea?.Name
-                && location.ParliamentaryConstituency_Name == parliamentaryConstituency?.Name
-                && location.PlanningArea_Name == planningArea?.Name
-                && location.Provider_Name == provider?.Name
-                && location.Region_Name == region?.Name
-                && location.RscRegion_Code == rscRegion?.Code // RscRegion codes function as the name
-                && location.School_Name == school?.Name
-                && location.Sponsor_Name == sponsor?.Name
-                && location.Ward_Name == ward?.Name
+                location.Country_Name == locationToLookup.Country_Name
+                && location.EnglishDevolvedArea_Name == locationToLookup.EnglishDevolvedArea?.Name
+                && location.Institution_Name == locationToLookup.Institution?.Name
+                && location.LocalAuthority_Name == locationToLookup.LocalAuthority?.Name
+                && location.LocalAuthorityDistrict_Name == locationToLookup.LocalAuthorityDistrict?.Name
+                && location.LocalEnterprisePartnership_Name == locationToLookup.LocalEnterprisePartnership?.Name
+                && location.MayoralCombinedAuthority_Name == locationToLookup.MayoralCombinedAuthority?.Name
+                && location.MultiAcademyTrust_Name == locationToLookup.MultiAcademyTrust?.Name
+                && location.OpportunityArea_Name == locationToLookup.OpportunityArea?.Name
+                && location.ParliamentaryConstituency_Name == locationToLookup.ParliamentaryConstituency?.Name
+                && location.PlanningArea_Name == locationToLookup.PlanningArea?.Name
+                && location.Provider_Name == locationToLookup.Provider?.Name
+                && location.Region_Name == locationToLookup.Region?.Name
+                && location.RscRegion_Code == locationToLookup.RscRegion?.Code // RscRegion codes function as the name
+                && location.School_Name == locationToLookup.School?.Name
+                && location.Sponsor_Name == locationToLookup.Sponsor?.Name
+                && location.Ward_Name == locationToLookup.Ward?.Name
             );
         }
 
         public async Task<List<Location>> CreateAndCache(StatisticsDbContext context, List<Location> locations)
         {
-            locations.ForEach(location => location.Id = _guidGenerator.NewGuid());
-            await context.AddRangeAsync(locations);
-            return locations
-                .Select(location => _memoryCache.Set(GetCacheKey(location), location))
-                .ToList();
+            await locations.
+                ToAsyncEnumerable()
+                .ForEachAwaitAsync(async location =>
+            {
+                var existingLocation = Lookup(context, location);
+
+                if (existingLocation == null)
+                {
+                    // Save and cache the new Location as soon as possible, as Locations are shareable between ongoing
+                    // imports.  Therefore it is best to store it in the database as soon as possible so as to avoid 
+                    // interfering with parallel imports of other Subjects using the same Locations.
+                    location.Id = _guidGenerator.NewGuid();
+                    await context.AddRangeAsync(locations);
+                    await context.SaveChangesAsync();
+                    _memoryCache.Set(GetCacheKey(location), location);
+                }
+            });
+            
+            return locations;
         }
 
         public async Task<Location> CreateAndCache(StatisticsDbContext context, Location location)

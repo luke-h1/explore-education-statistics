@@ -23,7 +23,6 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Model
 
         public Filter(string? hint, string label, string name, Subject subject)
         {
-            Id = Guid.NewGuid();
             Hint = hint;
             Label = label;
             Name = name;

@@ -14,7 +14,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor.Services.Int
 {
     public interface IImporterService
     {
-        Task ImportMeta(
+        Task<SubjectMeta> ImportMeta(
             List<string> metaFileCsvHeaders,
             List<List<string>> metaFileRows, 
             Subject subject, 

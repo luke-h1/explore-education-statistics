@@ -57,6 +57,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Processor
                 .AddSingleton<IDataArchiveService, DataArchiveService>()
                 .AddSingleton<IFileTypeService, FileTypeService>()
                 .AddSingleton<IGuidGenerator, SequentialGuidGenerator>()
+                .AddSingleton<ITransactionHelper, TransactionHelper>()
                 .AddTransient<IProcessorService, ProcessorService>()
                 .BuildServiceProvider();
 

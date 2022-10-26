@@ -25,5 +25,10 @@ namespace GovUk.Education.ExploreEducationStatistics.Common.Services
         {
             return new Tuple<T1, T2>(obj1, obj2!);
         }
+
+        public static Tuple<T1, T2, T3> TupleOf<T1, T2, T3>(T1 obj1, T2? obj2, T3? obj3)
+        {
+            return new Tuple<T1, T2, T3>(obj1, obj2!, obj3!);
+        }
     }
 }
