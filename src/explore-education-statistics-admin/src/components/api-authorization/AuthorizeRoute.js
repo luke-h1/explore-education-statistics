@@ -35,6 +35,7 @@ export default class AuthorizeRoute extends Component {
   render() {
     const { ready, authenticated } = this.state;
     const redirectUrl = `${ApplicationPaths.Login}?${
+      // @MarkFix
       QueryParameterNames.ReturnUrl
     }=${encodeURI(window.location.href)}`;
     if (!ready) {

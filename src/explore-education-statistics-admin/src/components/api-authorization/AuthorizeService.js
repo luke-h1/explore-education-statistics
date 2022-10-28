@@ -100,6 +100,7 @@ export class AuthorizeService {
   }
 
   async completeSignIn(url) {
+    console.log('completeSignIn');
     try {
       await this.ensureUserManagerInitialized();
       const user = await this.userManager.signinCallback(url);
@@ -212,11 +213,14 @@ export class AuthorizeService {
     }
 
     let response = await fetch(
+      // @MarkFix this returns 200 but "Failed to load response data: No resource with given identifier found"
       ApplicationPaths.ApiAuthorizationClientConfigurationUrl,
     );
     if (!response.ok) {
       throw new Error(`Could not load settings for '${ApplicationName}'`);
     }
+
+    console.log('response: ', response);
 
     let settings = await response.json();
     settings.automaticSilentRenew = true;

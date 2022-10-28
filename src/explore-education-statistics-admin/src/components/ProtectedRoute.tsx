@@ -40,6 +40,7 @@ const ProtectedRoute = ({
     return (
       <Redirect
         to={appendQuery(signInService.getSignInLink(), {
+          // @MarkFix
           [QueryParameterNames.ReturnUrl]: encodeURI(window.location.href),
         })}
       />

@@ -736,7 +736,6 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin
             app.UseCookiePolicy();
             app.UseRouting();
             app.UseHealthChecks("/api/health");
-
             app.UseAuthentication();
             app.UseIdentityServer();
             app.UseAuthorization();

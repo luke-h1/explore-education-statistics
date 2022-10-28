@@ -29,14 +29,20 @@ export class Login extends Component {
 
   componentDidMount() {
     const action = this.props.action;
+    console.log('Here!');
     switch (action) {
       case LoginActions.Login:
+        console.log('Here login!');
+        console.log(this.getReturnUrl());
         this.login(this.getReturnUrl());
         break;
       case LoginActions.LoginCallback:
-        this.processLoginCallback();
+        console.log('Here logincallback!');
+        console.log(this.getReturnUrl());
+        this.processLoginCallback(this.getReturnUrl());
         break;
       case LoginActions.LoginFailed:
+        console.log('Here loginfailed!');
         const params = new URLSearchParams(window.location.search);
         const error = params.get(QueryParameterNames.Message);
         this.setState({ message: error });
@@ -81,10 +87,16 @@ export class Login extends Component {
   async login(returnUrl) {
     const state = { returnUrl };
     const result = await authService.signIn(state);
+    console.log('login, result: ', result);
     switch (result.status) {
       case AuthenticationResultStatus.Redirect:
+        console.log('AuthenticationResultStatus.Redirect');
         break;
       case AuthenticationResultStatus.Success:
+        console.log(
+          'AuthenticationResultStatus.Success, returnUrl: ',
+          returnUrl,
+        );
         await this.navigateToReturnUrl(returnUrl);
         break;
       case AuthenticationResultStatus.Fail:
@@ -97,13 +109,17 @@ export class Login extends Component {
 
   async processLoginCallback() {
     const url = window.location.href;
+    console.log('processLoginCallback, url: ', url);
     const result = await authService.completeSignIn(url);
+    console.log('processLoginCallback');
+    console.log(result);
     switch (result.status) {
       case AuthenticationResultStatus.Redirect:
         // There should not be any redirects as the only time completeSignIn finishes
         // is when we are doing a redirect sign in flow.
         throw new Error('Should not redirect.');
       case AuthenticationResultStatus.Success:
+        console.log('AuthenticationResultStatus.Success');
         await this.navigateToReturnUrl(this.getReturnUrl(result.state));
         break;
       case AuthenticationResultStatus.Fail:
@@ -117,22 +133,29 @@ export class Login extends Component {
   }
 
   getReturnUrl(state) {
+    console.log('getReturnUrl, state: ', state);
+    console.log('window.location', window.location);
+    console.log('window.location.search', window.location.search);
     const params = new URLSearchParams(window.location.search);
+    console.log('getReturnUrl, params: ', params);
     const fromQuery = params.get(QueryParameterNames.ReturnUrl);
+    console.log('getReturnUrl, fromQuery: ', fromQuery);
     if (fromQuery && !fromQuery.startsWith(`${window.location.origin}/`)) {
       // This is an extra check to prevent open redirects.
       throw new Error(
         'Invalid return url. The return url needs to have the same origin as the current page.',
       );
     }
-    return (
+    var result =
       (state && state.returnUrl) ||
       fromQuery ||
-      `${window.location.origin}${ApplicationPaths.DefaultLoginRedirectPath}`
-    );
+      `${window.location.origin}${ApplicationPaths.DefaultLoginRedirectPath}`;
+    console.log('result: ', result);
+    return result;
   }
 
   redirectToRegister() {
+    // @MarkFix
     this.redirectToApiAuthorizationPath(
       `${ApplicationPaths.IdentityRegisterPath}?${
         QueryParameterNames.ReturnUrl
@@ -155,6 +178,7 @@ export class Login extends Component {
   navigateToReturnUrl(returnUrl) {
     // It's important that we do a replace here so that we remove the callback uri with the
     // fragment containing the tokens from the browser history.
+    console.log('navigateToReturnUrl, returnUrl: ', returnUrl);
     window.location.replace(returnUrl);
   }
 }
