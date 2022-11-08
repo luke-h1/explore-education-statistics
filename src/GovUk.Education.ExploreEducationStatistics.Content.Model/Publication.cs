@@ -45,14 +45,10 @@ namespace GovUk.Education.ExploreEducationStatistics.Content.Model
 
         public bool Live => Published.HasValue && DateTime.Compare(DateTime.UtcNow, Published.Value) > 0;
 
-        public Release? LatestPublishedRelease()
-        {
-            return Releases
-                .Where(IsLatestPublishedVersionOfRelease)
-                .OrderBy(r => r.Year)
-                .ThenBy(r => r.TimePeriodCoverage)
-                .LastOrDefault();
-        }
+        public Guid? LatestPublishedReleaseId { get; set; }
+
+        // TODO EES-3707 add some comments to explain what this is
+        public Release? LatestPublishedRelease { get; set; }
 
         public Release? LatestRelease()
         {

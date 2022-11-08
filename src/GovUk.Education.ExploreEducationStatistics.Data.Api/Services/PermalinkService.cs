@@ -8,7 +8,6 @@ using GovUk.Education.ExploreEducationStatistics.Common.Model;
 using GovUk.Education.ExploreEducationStatistics.Common.Services.Interfaces;
 using GovUk.Education.ExploreEducationStatistics.Content.Model;
 using GovUk.Education.ExploreEducationStatistics.Content.Model.Database;
-using GovUk.Education.ExploreEducationStatistics.Content.Model.Extensions;
 using GovUk.Education.ExploreEducationStatistics.Content.Model.Repository.Interfaces;
 using GovUk.Education.ExploreEducationStatistics.Data.Api.Converters;
 using GovUk.Education.ExploreEducationStatistics.Data.Api.Models;
@@ -31,6 +30,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Api.Services
         private readonly ITableBuilderService _tableBuilderService;
         private readonly IBlobStorageService _blobStorageService;
         private readonly ISubjectRepository _subjectRepository;
+        private readonly IPublicationRepository _publicationRepository;
         private readonly IReleaseRepository _releaseRepository;
         private readonly IMapper _mapper;
 
@@ -39,6 +39,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Api.Services
             ITableBuilderService tableBuilderService,
             IBlobStorageService blobStorageService,
             ISubjectRepository subjectRepository,
+            IPublicationRepository publicationRepository,
             IReleaseRepository releaseRepository,
             IMapper mapper)
         {
@@ -46,6 +47,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Api.Services
             _tableBuilderService = tableBuilderService;
             _blobStorageService = blobStorageService;
             _subjectRepository = subjectRepository;
+            _publicationRepository = publicationRepository;
             _releaseRepository = releaseRepository;
             _mapper = mapper;
         }
@@ -148,10 +150,10 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Api.Services
             }
 
             var publication = await _contentDbContext.Publications
-                .Include(p => p.Releases)
+                .Include(p => p.LatestPublishedRelease)
                 .SingleAsync(p => p.Id == releasesWithSubject.First().PublicationId);
 
-            var latestRelease = publication.LatestPublishedRelease();
+            var latestRelease = publication.LatestPublishedRelease;
 
             if (latestRelease != null && releasesWithSubject.All(r =>
                     r.Year != latestRelease.Year
@@ -166,12 +168,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Api.Services
                 return PermalinkStatus.SubjectReplacedOrRemoved;
             }
 
-            if (publication.SupersededById != null
-                && (await _contentDbContext.Releases
-                    .Include(p => p.Publication)
-                    .Where(r => r.PublicationId == publication.SupersededById)
-                    .ToListAsync())
-                .Any(r => r.IsLatestPublishedVersionOfRelease()))
+            if (await _publicationRepository.IsSuperseded(publication.Id))
             {
                 return PermalinkStatus.PublicationSuperseded;
             }

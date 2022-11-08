@@ -1,18 +1,24 @@
 #nullable enable
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Net.Mime;
 using System.Threading.Tasks;
 using GovUk.Education.ExploreEducationStatistics.Common.Extensions;
+using GovUk.Education.ExploreEducationStatistics.Common.Model;
 using GovUk.Education.ExploreEducationStatistics.Content.Model;
-using GovUk.Education.ExploreEducationStatistics.Content.Services;
 using GovUk.Education.ExploreEducationStatistics.Content.Services.Interfaces;
 using GovUk.Education.ExploreEducationStatistics.Content.Services.Interfaces.Cache;
 using GovUk.Education.ExploreEducationStatistics.Content.Services.Requests;
 using GovUk.Education.ExploreEducationStatistics.Content.Services.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using static GovUk.Education.ExploreEducationStatistics.Common.Model.SortOrder;
+using static GovUk.Education.ExploreEducationStatistics.Content.Services.Interfaces.IThemeService;
+using static GovUk.Education.ExploreEducationStatistics.Content.Services.Interfaces.IThemeService.PublicationsSortBy;
 
 namespace GovUk.Education.ExploreEducationStatistics.Content.Api.Controllers
 {
+    [ApiController]
     [Route("api")]
     [Produces(MediaTypeNames.Application.Json)]
     public class ThemeController : ControllerBase
@@ -30,25 +36,22 @@ namespace GovUk.Education.ExploreEducationStatistics.Content.Api.Controllers
             _themeService = themeService;
         }
 
-        [HttpGet("find-stats-prototype")]
-        public async Task<ActionResult<List<FindStatsPublicationViewModel>>> GetPublications(
-            [FromQuery(Name = "page")] int page,
-            [FromQuery(Name = "pageSize")] int pageSize = 10,
-            [FromQuery(Name = "searchTerm")] string? searchTerm = null,
-            [FromQuery(Name = "releaseType")] ReleaseType? releaseType = null,
-            [FromQuery(Name = "sortBy")] FindStatsSortBy sortBy = FindStatsSortBy.Title,
-            [FromQuery(Name = "sortOrder")] FindStatsSortOrder sortOrder = FindStatsSortOrder.Asc)
+        [HttpGet("publications")]
+        public async Task<ActionResult<List<PublicationSearchResultViewModel>>> GetPublications(
+            [FromQuery] PublicationsGetRequest request)
         {
-            // TODO Use Min validation for page and pageSize
+            var sort = request.Sort ?? (request.Search == null ? Title : Relevance);
+            var order = request.Order ?? (sort == Title ? Asc : Desc);
 
             return await _themeService
                 .GetPublications(
-                    releaseType,
-                    searchTerm,
-                    page: page,
-                    pageSize: pageSize,
-                    sortBy,
-                    sortOrder)
+                    request.ReleaseType,
+                    request.ThemeId,
+                    request.Search,
+                    sort,
+                    order,
+                    offset: request.Offset,
+                    limit: request.Limit)
                 .HandleFailuresOrOk();
         }
 
@@ -73,5 +76,14 @@ namespace GovUk.Education.ExploreEducationStatistics.Content.Api.Controllers
                 .GetSummariesTree()
                 .HandleFailuresOrOk();
         }
+
+        public record PublicationsGetRequest(
+            ReleaseType? ReleaseType,
+            Guid? ThemeId,
+            [MinLength(3)] string? Search,
+            PublicationsSortBy? Sort,
+            SortOrder? Order,
+            [Range(0, int.MaxValue)] int Offset = 0,
+            [Range(1, int.MaxValue)] int Limit = 10);
     }
 }

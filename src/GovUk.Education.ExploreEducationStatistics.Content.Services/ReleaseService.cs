@@ -58,7 +58,8 @@ namespace GovUk.Education.ExploreEducationStatistics.Content.Services
                     // If no release is requested get the latest published version of the latest published release.
                     // Otherwise get the latest published version of the requested release.
                     return releaseSlug == null
-                        ? publication.LatestPublishedRelease()
+                    // TODO EES-3707 need to include this?
+                        ? publication.LatestPublishedRelease
                         : publication.Releases
                             .SingleOrDefault(r => r.Slug == releaseSlug && r.IsLatestPublishedVersionOfRelease());
                 }).OnSuccess(async release =>

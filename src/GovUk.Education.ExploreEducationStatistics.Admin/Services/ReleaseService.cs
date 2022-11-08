@@ -334,11 +334,11 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Services
         {
             return await _persistenceHelper
                 .CheckEntityExists<Publication>(publicationId, queryable =>
-                    queryable.Include(r => r.Releases))
+                    queryable.Include(r => r.LatestPublishedRelease))
                 .OnSuccess(_userService.CheckCanViewPublication)
                 .OnSuccess(publication =>
                 {
-                    var latestRelease = publication.LatestPublishedRelease();
+                    var latestRelease = publication.LatestPublishedRelease;
                     return latestRelease != null ? new IdTitleViewModel
                     {
                         Id = latestRelease.Id,
@@ -544,8 +544,6 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Services
             // If the release is the latest
             // The contact
             return values.Include(r => r.Publication)
-                .ThenInclude(publication => publication.Releases) // Back refs required to work out latest
-                .Include(r => r.Publication)
                 .ThenInclude(publication => publication.Contact)
                 .Include(r => r.ReleaseStatuses);
         }

@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using GovUk.Education.ExploreEducationStatistics.Common.Converters;
 using GovUk.Education.ExploreEducationStatistics.Common.Model;
 using GovUk.Education.ExploreEducationStatistics.Common.Model.Chart;
 using GovUk.Education.ExploreEducationStatistics.Common.Model.Data;
 using GovUk.Education.ExploreEducationStatistics.Common.Model.Data.Query;
 using GovUk.Education.ExploreEducationStatistics.Common.Utils;
+using GovUk.Education.ExploreEducationStatistics.Content.Model.Database.Migrations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Newtonsoft.Json;
@@ -76,8 +78,27 @@ namespace GovUk.Education.ExploreEducationStatistics.Content.Model.Database
         public DbSet<UserReleaseInvite> UserReleaseInvites { get; set; }
         public DbSet<UserPublicationInvite> UserPublicationInvites { get; set; }
 
+        public IQueryable<FreeTextRank> PublicationsFreeTextTable(string search) =>
+            FromExpression(() => PublicationsFreeTextTable(search));
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.AddFreeTextTableSupport();
+
+            modelBuilder.Entity<Publication>()
+                .Property(p => p.Published)
+                .HasConversion(
+                    v => v,
+                    v => v.HasValue ? DateTime.SpecifyKind(v.Value, DateTimeKind.Utc) : null);
+
+            modelBuilder.Entity<Release>()
+                .HasOne(r => r.Publication)
+                .WithOne(p => p.LatestPublishedRelease)
+                .HasForeignKey<Publication>(p => p.LatestPublishedReleaseId);
+
+            modelBuilder.Entity<Publication>()
+                .HasOne(p => p.LatestPublishedRelease);
+            
             modelBuilder.Entity<Comment>()
                 .Property(comment => comment.Created)
                 .HasConversion(
