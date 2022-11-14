@@ -5,6 +5,9 @@ import {
   EditableBlock,
   EditableContentBlock,
   EditableDataBlock,
+  EditableEmbedBlock,
+  EmbedBlockPostModel,
+  EmbedBlockPutModel,
 } from '@admin/services/types/content';
 import client from '@admin/services/utils/service';
 import {
@@ -18,7 +21,7 @@ import { Dictionary } from '@common/types';
 type ContentSectionViewModel = ContentSection<EditableBlock>;
 
 export interface EditableRelease
-  extends Release<EditableContentBlock, EditableDataBlock> {
+  extends Release<EditableContentBlock, EditableDataBlock, EditableEmbedBlock> {
   approvalStatus: ReleaseApprovalStatus;
   publishScheduled?: string;
   publicationId: string;
@@ -88,6 +91,57 @@ const releaseContentService = {
       `/release/${releaseId}/content/section/${sectionId}/blocks/add`,
       block,
     );
+  },
+
+  // EES-3880 fake endpoint for now
+  addEmbedSectionBlock(
+    releaseId: string,
+    sectionId: string,
+    block: EmbedBlockPostModel,
+  ): Promise<EditableEmbedBlock> {
+    const testBlock: EditableEmbedBlock = {
+      id: 'test-embed-id',
+      comments: [],
+      ...block,
+    };
+    return Promise.resolve(testBlock);
+    // return client.post<EditableEmbedBlock>(
+    //   `/release/${releaseId}/content/section/${sectionId}/blocks/add`,
+    //   block,
+    // );
+  },
+
+  // EES-3880 fake endpoint for now
+  updateEmbedSectionBlock(
+    releaseId: string,
+    sectionId: string,
+    blockId: string,
+    block: EmbedBlockPutModel,
+  ): Promise<EditableEmbedBlock> {
+    const testBlock: EditableEmbedBlock = {
+      id: 'test-embed-id',
+      comments: [],
+      ...block,
+      type: 'EmbedBlock',
+      order: 0,
+    };
+    return Promise.resolve(testBlock);
+    // return client.put<EditableEmbedBlock>(
+    //   `/release/${releaseId}/content/section/${sectionId}/block/${blockId}`,
+    //   block,
+    // );
+  },
+
+  // EES-3880 fake endpoint for now
+  deleteEmbedSectionBlock(
+    releaseId: string,
+    sectionId: string,
+    blockId: string,
+  ): Promise<void> {
+    return Promise.resolve();
+    // return client.delete(
+    //   `/release/${releaseId}/content/section/${sectionId}/block/${blockId}`,
+    // );
   },
 
   updateContentSectionHeading(
