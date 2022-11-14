@@ -1,4 +1,8 @@
-import { ContentBlock, DataBlock } from '@common/services/types/blocks';
+import {
+  ContentBlock,
+  DataBlock,
+  EmbedBlock,
+} from '@common/services/types/blocks';
 import { FileInfo } from '@common/services/types/file';
 import { ReleaseType } from '@common/services/types/releaseType';
 import {
@@ -108,6 +112,7 @@ export interface ListPublicationsRequest {
 export interface Release<
   ContentBlockType extends ContentBlock = ContentBlock,
   DataBlockType extends DataBlock = DataBlock,
+  EmbedBlockType extends EmbedBlock = EmbedBlock,
   PublicationType = Publication
 > {
   id: string;
@@ -128,7 +133,7 @@ export interface Release<
   relatedInformation: BasicLink[];
   type: ReleaseType;
   updates: ReleaseNote[];
-  content: ContentSection<ContentBlockType | DataBlockType>[];
+  content: ContentSection<ContentBlockType | DataBlockType | EmbedBlockType>[];
   downloadFiles: FileInfo[];
   dataLastPublished: string;
   hasPreReleaseAccessList: boolean;
