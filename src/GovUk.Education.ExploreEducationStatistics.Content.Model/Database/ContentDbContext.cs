@@ -62,6 +62,8 @@ namespace GovUk.Education.ExploreEducationStatistics.Content.Model.Database
         public DbSet<DataImport> DataImports { get; set; }
         public DbSet<DataImportError> DataImportErrors { get; set; }
         public DbSet<HtmlBlock> HtmlBlocks { get; set; }
+        public DbSet<EmbedBlock> EmbedBlocks { get; set; }
+        public DbSet<EmbedBlockLink> EmbedBlockLinks { get; set; }
         public DbSet<MarkDownBlock> MarkDownBlocks { get; set; }
         public DbSet<MethodologyNote> MethodologyNotes { get; set; }
         public DbSet<Permalink> Permalinks { get; set; } = null!;
@@ -429,6 +431,15 @@ namespace GovUk.Education.ExploreEducationStatistics.Content.Model.Database
             modelBuilder.Entity<HtmlBlock>()
                 .Property(block => block.Body)
                 .HasColumnName("Body");
+
+            modelBuilder.Entity<EmbedBlockLink>()
+                .Property(block => block.EmbedBlockId)
+                .HasColumnName("EmbedBlockId");
+
+            modelBuilder.Entity<EmbedBlockLink>()
+                .HasOne(eb => eb.EmbedBlockId)
+                .WithOne()
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<MarkDownBlock>()
                 .Property(block => block.Body)

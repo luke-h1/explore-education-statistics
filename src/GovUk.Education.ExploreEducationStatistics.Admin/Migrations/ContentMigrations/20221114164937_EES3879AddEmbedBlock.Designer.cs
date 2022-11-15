@@ -4,6 +4,7 @@ using GovUk.Education.ExploreEducationStatistics.Content.Model.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GovUk.Education.ExploreEducationStatistics.Admin.Migrations.ContentMigrations
 {
     [DbContext(typeof(ContentDbContext))]
-    partial class ContentDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221114164937_EES3879AddEmbedBlock")]
+    partial class EES3879AddEmbedBlock
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -578,9 +580,6 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Migrations.ContentMig
                     b.Property<Guid>("ContactId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("LatestPublishedReleaseId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("LegacyPublicationUrl")
                         .HasColumnType("nvarchar(max)");
 
@@ -612,10 +611,6 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Migrations.ContentMig
                     b.HasKey("Id");
 
                     b.HasIndex("ContactId");
-
-                    b.HasIndex("LatestPublishedReleaseId")
-                        .IsUnique()
-                        .HasFilter("[LatestPublishedReleaseId] IS NOT NULL");
 
                     b.HasIndex("SupersededById");
 
@@ -1377,10 +1372,6 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Migrations.ContentMig
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("GovUk.Education.ExploreEducationStatistics.Content.Model.Release", "LatestPublishedReleaseNew")
-                        .WithOne()
-                        .HasForeignKey("GovUk.Education.ExploreEducationStatistics.Content.Model.Publication", "LatestPublishedReleaseId");
-
                     b.HasOne("GovUk.Education.ExploreEducationStatistics.Content.Model.Publication", "SupersededBy")
                         .WithMany()
                         .HasForeignKey("SupersededById");
@@ -1415,8 +1406,6 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Migrations.ContentMig
                     b.Navigation("Contact");
 
                     b.Navigation("ExternalMethodology");
-
-                    b.Navigation("LatestPublishedReleaseNew");
 
                     b.Navigation("SupersededBy");
 
