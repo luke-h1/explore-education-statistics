@@ -34,4 +34,13 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.ViewModels
 
         [Required] public Guid ContentSectionId { get; set; }
     }
+
+    public record EmbedBlockUpdateRequest
+    {
+        [Required] public Guid EmbedBlockId { get; set; }
+
+        [Required] public string Title { get; init; } = string.Empty;
+
+        [Required] public string Url { get; init; } = string.Empty;
+    }
 }

@@ -30,20 +30,19 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Controllers.Api
                 .HandleFailuresOrOk();
         }
 
-        // @MarkFix
-        //[HttpPut("releases/{releaseId}/embed-blocks")]
-        //public async Task<ActionResult<EmbedBlockViewModel>> CreateEmbedBlock(
-        //    Guid releaseId,
-        //    EmbedBlockUpdateRequest request)
-        //{
-        //    return await _embedBlockService
-        //        .Update(releaseId, request)
-        //        .HandleFailuresOrOk();
-        //}
+        [HttpPut("releases/{releaseId}/embed-blocks")] // @MarkFix remove releaseId from this?
+        public async Task<ActionResult<EmbedBlockViewModel>> UpdateEmbedBlock(
+            Guid releaseId,
+            EmbedBlockUpdateRequest request)
+        {
+            return await _embedBlockService
+                .Update(releaseId, request)
+                .HandleFailuresOrOk();
+        }
 
         // @MarkFix
         //[HttpDelete("releases/{releaseId}/embed-blocks/{embedBlockId}")]
-        //public async Task<ActionResult<EmbedBlockViewModel>> CreateEmbedBlock(
+        //public async Task<ActionResult<EmbedBlockViewModel>> DeleteEmbedBlock(
         //    Guid releaseId,
         //    Guid embedBlockId)
         //{

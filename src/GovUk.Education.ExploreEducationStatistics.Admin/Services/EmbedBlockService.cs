@@ -79,22 +79,28 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Services
 
                     await _contentDbContext.SaveChangesAsync();
 
-                    return new EmbedBlockViewModel();
+                    return new EmbedBlockViewModel(); // @MarkFix
                 });
         }
 
-        // @MarkFix
-        //public async Task<Either<ActionResult, EmbedBlockViewModel>> Update(Guid releaseId,
-        //    EmbedBlockUpdateRequest request)
-        //{
-        //    return await _persistenceHelper
-        //        .CheckEntityExists<Release>(releaseId)
-        //        .OnSuccess(_userService.CheckCanUpdateRelease)
-        //        .OnSuccess(async release =>
-        //        {
-        //            // @MarkFix
-        //        });
-        //}
+        public async Task<Either<ActionResult, EmbedBlockViewModel>> Update(Guid releaseId,
+            EmbedBlockUpdateRequest request)
+        {
+            return await _persistenceHelper
+                .CheckEntityExists<Release>(releaseId)
+                .OnSuccess(_userService.CheckCanUpdateRelease)
+                .OnSuccess(async release =>
+                {
+                    var embedBlock = await _contentDbContext.EmbedBlocks
+                        .SingleAsync(eb => eb.Id == request.EmbedBlockId);
+                    embedBlock.Title = request.Title;
+                    embedBlock.Url = request.Url;
+                    _contentDbContext.Update(embedBlock);
+                    await _contentDbContext.SaveChangesAsync();
+
+                    return new EmbedBlockViewModel(); // @MarkFix
+                });
+        }
 
         // @MarkFix
         //public async Task<Either<ActionResult, Unit>> Delete(Guid releaseId, Guid embedBlockId)
