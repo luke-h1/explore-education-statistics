@@ -102,14 +102,20 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Services
                 });
         }
 
-        // @MarkFix
-        //public async Task<Either<ActionResult, Unit>> Delete(Guid releaseId, Guid embedBlockId)
-        //{
-        //    return await _persistenceHelper
-        //        .CheckEntityExists<Release>(releaseId)
-        //        .OnSuccessDo(_userService.CheckCanUpdateRelease)
-        //        .OnSuccessVoid(r => DeleteEmbedBlock(embedBlockId));
-        //}
+        public async Task<Either<ActionResult, Unit>> Delete(Guid releaseId, Guid embedBlockId)
+        {
+            return await _persistenceHelper
+                .CheckEntityExists<Release>(releaseId)
+                .OnSuccessDo(_userService.CheckCanUpdateRelease)
+                .OnSuccessVoid(async r =>
+                {
+                    var embedBlock = await _contentDbContext.EmbedBlocks.SingleAsync(eb => eb.Id == embedBlockId);
+                    _contentDbContext.EmbedBlocks.Remove(embedBlock);
+                    await _contentDbContext.SaveChangesAsync();
+
+                    // @MarkFix remove content block
+                });
+        }
 
     }
 }

@@ -12,5 +12,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Services.Interfaces
         Task<Either<ActionResult, EmbedBlockViewModel>> Create(Guid releaseId, EmbedBlockCreateRequest request);
 
         Task<Either<ActionResult, EmbedBlockViewModel>> Update(Guid releaseId, EmbedBlockUpdateRequest request);
+
+        Task<Either<ActionResult, Unit>> Delete(Guid releaseId, Guid embedBlockId);
     }
 }

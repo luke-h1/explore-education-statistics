@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using GovUk.Education.ExploreEducationStatistics.Admin.Services.Interfaces;
 using GovUk.Education.ExploreEducationStatistics.Admin.ViewModels;
 using GovUk.Education.ExploreEducationStatistics.Common.Extensions;
+using GovUk.Education.ExploreEducationStatistics.Common.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,15 +41,14 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Controllers.Api
                 .HandleFailuresOrOk();
         }
 
-        // @MarkFix
-        //[HttpDelete("releases/{releaseId}/embed-blocks/{embedBlockId}")]
-        //public async Task<ActionResult<EmbedBlockViewModel>> DeleteEmbedBlock(
-        //    Guid releaseId,
-        //    Guid embedBlockId)
-        //{
-        //    return await _embedBlockService
-        //        .Delete(embedBlockId)
-        //        .HandleFailuresOrOk();
-        //}
+        [HttpDelete("releases/{releaseId}/embed-blocks/{embedBlockId}")]
+        public async Task<ActionResult<Unit>> DeleteEmbedBlock(
+            Guid releaseId,
+            Guid embedBlockId)
+        {
+            return await _embedBlockService
+                .Delete(releaseId, embedBlockId)
+                .HandleFailuresOrOk();
+        }
     }
 }
