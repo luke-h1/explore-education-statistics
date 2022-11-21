@@ -10,8 +10,8 @@ import releaseContentService, {
 import {
   Comment,
   ContentBlockPostModel,
-  EmbedBlockPostModel,
-  EmbedBlockPutModel,
+  EmbedBlockCreateRequest,
+  EmbedBlockUpdateRequest,
 } from '@admin/services/types/content';
 import { Dictionary } from '@admin/types';
 import { useCallback, useMemo } from 'react';
@@ -249,7 +249,7 @@ export default function useReleaseContentActions() {
       releaseId: string;
       sectionId: string;
       sectionKey: ContentSectionKeys;
-      block: EmbedBlockPostModel;
+      block: EmbedBlockCreateRequest;
     }) => {
       const newBlock = await releaseContentService.addEmbedSectionBlock(
         releaseId,
@@ -306,7 +306,7 @@ export default function useReleaseContentActions() {
       sectionId: string;
       blockId: string;
       sectionKey: ContentSectionKeys;
-      block: EmbedBlockPutModel;
+      block: EmbedBlockUpdateRequest;
     }) => {
       const updateBlock = await releaseContentService.updateEmbedSectionBlock(
         releaseId,

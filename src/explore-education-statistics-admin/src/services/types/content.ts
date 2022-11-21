@@ -55,8 +55,8 @@ export type ContentBlockPostModel = Pick<
   'order' | 'type' | 'body'
 >;
 
-export type EmbedBlockPutModel = Pick<EditableEmbedBlock, 'title' | 'url'>;
-export type EmbedBlockPostModel = Pick<
+export type EmbedBlockUpdateRequest = Pick<EditableEmbedBlock, 'title' | 'url'>;
+export type EmbedBlockCreateRequest = Pick<
   EditableEmbedBlock,
   'order' | 'type' | 'title' | 'url'
 >;

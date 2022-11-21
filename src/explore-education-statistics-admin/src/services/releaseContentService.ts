@@ -6,8 +6,8 @@ import {
   EditableContentBlock,
   EditableDataBlock,
   EditableEmbedBlock,
-  EmbedBlockPostModel,
-  EmbedBlockPutModel,
+  EmbedBlockCreateRequest,
+  EmbedBlockUpdateRequest,
 } from '@admin/services/types/content';
 import client from '@admin/services/utils/service';
 import {
@@ -93,30 +93,27 @@ const releaseContentService = {
     );
   },
 
-  // EES-3880 fake endpoint for now
   addEmbedSectionBlock(
     releaseId: string,
     sectionId: string,
-    block: EmbedBlockPostModel,
+    block: EmbedBlockCreateRequest,
   ): Promise<EditableEmbedBlock> {
     const testBlock: EditableEmbedBlock = {
       id: 'test-embed-id',
       comments: [],
       ...block,
     };
-    return Promise.resolve(testBlock);
-    // return client.post<EditableEmbedBlock>(
-    //   `/release/${releaseId}/content/section/${sectionId}/blocks/add`,
-    //   block,
-    // );
+    return client.post<EditableEmbedBlock>(
+      `/release/${releaseId}/embed-blocks`,
+      block,
+    );
   },
 
-  // EES-3880 fake endpoint for now
   updateEmbedSectionBlock(
     releaseId: string,
     sectionId: string,
     blockId: string,
-    block: EmbedBlockPutModel,
+    block: EmbedBlockUpdateRequest,
   ): Promise<EditableEmbedBlock> {
     const testBlock: EditableEmbedBlock = {
       id: 'test-embed-id',
@@ -125,23 +122,18 @@ const releaseContentService = {
       type: 'EmbedBlock',
       order: 0,
     };
-    return Promise.resolve(testBlock);
-    // return client.put<EditableEmbedBlock>(
-    //   `/release/${releaseId}/content/section/${sectionId}/block/${blockId}`,
-    //   block,
-    // );
+    return client.put<EditableEmbedBlock>(
+      `/release/${releaseId}/embed-blocks`,
+      block,
+    );
   },
 
-  // EES-3880 fake endpoint for now
   deleteEmbedSectionBlock(
     releaseId: string,
     sectionId: string,
     blockId: string,
   ): Promise<void> {
-    return Promise.resolve();
-    // return client.delete(
-    //   `/release/${releaseId}/content/section/${sectionId}/block/${blockId}`,
-    // );
+    return client.delete(`/release/${releaseId}/embed-blocks/${blockId}`);
   },
 
   updateContentSectionHeading(
