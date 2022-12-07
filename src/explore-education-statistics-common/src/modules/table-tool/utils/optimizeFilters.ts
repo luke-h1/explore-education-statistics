@@ -15,6 +15,10 @@ export default function optimizeFilters(
   filters: Filter[],
   headerConfig: Filter[][],
 ) {
+
+  console.log('filters', filters);
+  console.log('headerConfig', headerConfig);
+
   const rowColFilters = last(headerConfig);
 
   let optimizedFilters = filters;

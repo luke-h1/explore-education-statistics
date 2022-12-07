@@ -59,9 +59,9 @@ export function mapTableToJson(
   subjectMeta: FullTableMeta,
   results: TableDataResult[],
 ) {
-  console.log('tableHeadersConfig', tableHeadersConfig);
-  console.log('subjectMeta', subjectMeta);
-  console.log('results', results);
+  // console.log('tableHeadersConfig', tableHeadersConfig);
+  // console.log('subjectMeta', subjectMeta);
+  // console.log('results', results);
 
   const rowHeadersCartesian = cartesian(
     ...tableHeadersConfig.rowGroups,
@@ -93,6 +93,8 @@ export function mapTableToJson(
     excludedFilters,
   );
 
+  // maybe extract this to a separate function so it's easier to test 
+  // and makes this function less bulky
   const tableCartesian: TableCell[][] = rowHeadersCartesian.map(
     rowFilterCombination => {
       return columnHeadersCartesian.map(
@@ -161,6 +163,8 @@ export function mapTableToJson(
   const rowHeaders = filteredCartesian.reduce<Header[]>((acc, row) => {
     // Only need to use first column's rowFilters
     // as they are the same for every column.
+
+    // TODO: unit test `optimizeFilters`
     const filters = optimizeFilters(row[0].rowFilters, [
       ...tableHeadersConfig.rowGroups,
       tableHeadersConfig.rows,
@@ -177,6 +181,8 @@ export function mapTableToJson(
       tableHeadersConfig.columns,
     ]);
 
+    console.log('test', filters)
+
     return addFilters(acc, filters);
   }, []);
 
@@ -184,13 +190,20 @@ export function mapTableToJson(
 
   // We 'expand' our headers so that we create the real table
   // cells we need to render in array format (instead of a tree).
+
+  // TODO: unit test `createExpandedColumnHeaders`
   const expandedColumnHeaders = createExpandedColumnHeaders(columnHeaders);
+
+  // TODO: unit test `createExpandedRowHeaders`
   const expandedRowHeaders = createExpandedRowHeaders(rowHeaders);
 
   const totalColumns = sumBy(expandedRowHeaders[0], header => header.crossSpan);
 
+
+  // start of mapping table into json format
   // map table into json format
 
+  // mapTableToJson unit test starts here
   const mappedColHeaders: TableCellJson[][] = expandedColumnHeaders.map(
     (columns, rowIndex) => {
       const row: TableCellJson[][] = [];
@@ -232,6 +245,8 @@ export function mapTableToJson(
     },
   );
 
+
+  // map rows needs unit testing
   const mappedRows = mapRows(rows, expandedRowHeaders);
 
   return {
