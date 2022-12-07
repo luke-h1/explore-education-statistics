@@ -11,11 +11,12 @@ exports[`TimePeriodDataTable renders table with completely empty columns removed
   >
     <tr>
       <td
-        class="borderBottom"
+        class=""
         colspan="3"
         rowspan="2"
       />
       <th
+        class=""
         colspan="3"
         rowspan="1"
         scope="colgroup"
@@ -23,6 +24,7 @@ exports[`TimePeriodDataTable renders table with completely empty columns removed
         First language Known or believed to be other than English
       </th>
       <th
+        class=""
         colspan="1"
         rowspan="1"
         scope="colgroup"
@@ -32,6 +34,7 @@ exports[`TimePeriodDataTable renders table with completely empty columns removed
     </tr>
     <tr>
       <th
+        class=""
         colspan="1"
         rowspan="1"
         scope="col"
@@ -39,6 +42,7 @@ exports[`TimePeriodDataTable renders table with completely empty columns removed
         2013/14
       </th>
       <th
+        class=""
         colspan="1"
         rowspan="1"
         scope="col"
@@ -46,6 +50,7 @@ exports[`TimePeriodDataTable renders table with completely empty columns removed
         2014/15
       </th>
       <th
+        class=""
         colspan="1"
         rowspan="1"
         scope="col"
@@ -53,6 +58,7 @@ exports[`TimePeriodDataTable renders table with completely empty columns removed
         2015/16
       </th>
       <th
+        class=""
         colspan="1"
         rowspan="1"
         scope="col"
@@ -64,7 +70,7 @@ exports[`TimePeriodDataTable renders table with completely empty columns removed
   <tbody>
     <tr>
       <th
-        class="borderBottom"
+        class=""
         colspan="1"
         rowspan="2"
         scope="rowgroup"
@@ -72,7 +78,7 @@ exports[`TimePeriodDataTable renders table with completely empty columns removed
         Coventry
       </th>
       <th
-        class="borderBottom"
+        class=""
         colspan="1"
         rowspan="2"
         scope="rowgroup"
@@ -118,29 +124,29 @@ exports[`TimePeriodDataTable renders table with completely empty columns removed
         Number of overall absence sessions
       </th>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         7,280
       </td>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         6,493
       </td>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         5,142
       </td>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         no data
       </td>
     </tr>
     <tr>
       <th
-        class="borderBottom"
+        class=""
         colspan="1"
         rowspan="2"
         scope="rowgroup"
@@ -148,7 +154,7 @@ exports[`TimePeriodDataTable renders table with completely empty columns removed
         Croydon
       </th>
       <th
-        class="borderBottom"
+        class=""
         colspan="1"
         rowspan="2"
         scope="rowgroup"
@@ -194,22 +200,22 @@ exports[`TimePeriodDataTable renders table with completely empty columns removed
         Number of overall absence sessions
       </th>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         4,390
       </td>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         5,076
       </td>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         5,483
       </td>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         x
       </td>
@@ -229,11 +235,12 @@ exports[`TimePeriodDataTable renders table with completely empty rows removed 1`
   >
     <tr>
       <td
-        class="borderBottom"
+        class=""
         colspan="3"
         rowspan="2"
       />
       <th
+        class=""
         colspan="3"
         rowspan="1"
         scope="colgroup"
@@ -243,6 +250,7 @@ exports[`TimePeriodDataTable renders table with completely empty rows removed 1`
     </tr>
     <tr>
       <th
+        class=""
         colspan="1"
         rowspan="1"
         scope="col"
@@ -250,6 +258,7 @@ exports[`TimePeriodDataTable renders table with completely empty rows removed 1`
         2013/14
       </th>
       <th
+        class=""
         colspan="1"
         rowspan="1"
         scope="col"
@@ -257,6 +266,7 @@ exports[`TimePeriodDataTable renders table with completely empty rows removed 1`
         2014/15
       </th>
       <th
+        class=""
         colspan="1"
         rowspan="1"
         scope="col"
@@ -268,7 +278,7 @@ exports[`TimePeriodDataTable renders table with completely empty rows removed 1`
   <tbody>
     <tr>
       <th
-        class="borderBottom"
+        class=""
         colspan="1"
         rowspan="2"
         scope="rowgroup"
@@ -276,7 +286,7 @@ exports[`TimePeriodDataTable renders table with completely empty rows removed 1`
         Coventry
       </th>
       <th
-        class="borderBottom"
+        class=""
         colspan="1"
         rowspan="2"
         scope="rowgroup"
@@ -317,24 +327,24 @@ exports[`TimePeriodDataTable renders table with completely empty rows removed 1`
         Number of overall absence sessions
       </th>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         7,280
       </td>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         6,493
       </td>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         5,142
       </td>
     </tr>
     <tr>
       <th
-        class="borderBottom"
+        class=""
         colspan="1"
         rowspan="4"
         scope="rowgroup"
@@ -342,7 +352,7 @@ exports[`TimePeriodDataTable renders table with completely empty rows removed 1`
         Croydon
       </th>
       <th
-        class="borderBottom"
+        class=""
         colspan="1"
         rowspan="2"
         scope="rowgroup"
@@ -383,24 +393,24 @@ exports[`TimePeriodDataTable renders table with completely empty rows removed 1`
         Number of overall absence sessions
       </th>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         4,390
       </td>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         5,076
       </td>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         5,483
       </td>
     </tr>
     <tr>
       <th
-        class="borderBottom"
+        class=""
         colspan="1"
         rowspan="2"
         scope="rowgroup"
@@ -441,17 +451,17 @@ exports[`TimePeriodDataTable renders table with completely empty rows removed 1`
         Number of overall absence sessions
       </th>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         x
       </td>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         no data
       </td>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         no data
       </td>
@@ -471,11 +481,12 @@ exports[`TimePeriodDataTable renders table with empty cells when region group is
   >
     <tr>
       <td
-        class="borderBottom"
+        class=""
         colspan="2"
         rowspan="1"
       />
       <th
+        class=""
         colspan="1"
         rowspan="1"
         scope="col"
@@ -502,7 +513,7 @@ exports[`TimePeriodDataTable renders table with empty cells when region group is
     </tr>
     <tr>
       <td
-        class="emptyRowHeaderCell borderBottom"
+        class="govuk-table__cell--numeric"
         colspan="1"
         rowspan="2"
       />
@@ -515,7 +526,7 @@ exports[`TimePeriodDataTable renders table with empty cells when region group is
         Barnsley
       </th>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         21.5%
       </td>
@@ -550,11 +561,12 @@ exports[`TimePeriodDataTable renders table with location hierarchies 1`] = `
   >
     <tr>
       <td
-        class="borderBottom"
+        class=""
         colspan="2"
         rowspan="1"
       />
       <th
+        class=""
         colspan="1"
         rowspan="1"
         scope="col"
@@ -581,7 +593,7 @@ exports[`TimePeriodDataTable renders table with location hierarchies 1`] = `
     </tr>
     <tr>
       <th
-        class="borderBottom"
+        class=""
         colspan="1"
         rowspan="1"
         scope="rowgroup"
@@ -604,7 +616,7 @@ exports[`TimePeriodDataTable renders table with location hierarchies 1`] = `
     </tr>
     <tr>
       <th
-        class="borderBottom"
+        class=""
         colspan="1"
         rowspan="1"
         scope="rowgroup"
@@ -620,7 +632,7 @@ exports[`TimePeriodDataTable renders table with location hierarchies 1`] = `
         Barnet
       </th>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         20.2%
       </td>
@@ -640,11 +652,12 @@ exports[`TimePeriodDataTable renders table with no filters 1`] = `
   >
     <tr>
       <td
-        class="borderBottom"
+        class=""
         colspan="2"
         rowspan="1"
       />
       <th
+        class=""
         colspan="1"
         rowspan="1"
         scope="col"
@@ -652,6 +665,7 @@ exports[`TimePeriodDataTable renders table with no filters 1`] = `
         2014/15
       </th>
       <th
+        class=""
         colspan="1"
         rowspan="1"
         scope="col"
@@ -659,6 +673,7 @@ exports[`TimePeriodDataTable renders table with no filters 1`] = `
         2015/16
       </th>
       <th
+        class=""
         colspan="1"
         rowspan="1"
         scope="col"
@@ -670,7 +685,7 @@ exports[`TimePeriodDataTable renders table with no filters 1`] = `
   <tbody>
     <tr>
       <th
-        class="borderBottom"
+        class=""
         colspan="1"
         rowspan="3"
         scope="rowgroup"
@@ -686,17 +701,17 @@ exports[`TimePeriodDataTable renders table with no filters 1`] = `
         Authorised absence rate
       </th>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         18.3%
       </td>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         18.6%
       </td>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         19.2%
       </td>
@@ -711,17 +726,17 @@ exports[`TimePeriodDataTable renders table with no filters 1`] = `
         Number of authorised absence sessions
       </th>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         1,280,964
       </td>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         1,397,521
       </td>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         1,488,865
       </td>
@@ -736,17 +751,17 @@ exports[`TimePeriodDataTable renders table with no filters 1`] = `
         Number of overall absence sessions
       </th>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         2,212,399
       </td>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         2,453,340
       </td>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         2,637,752
       </td>
@@ -766,11 +781,12 @@ exports[`TimePeriodDataTable renders table with only one of each option 1`] = `
   >
     <tr>
       <td
-        class="borderBottom"
+        class=""
         colspan="1"
         rowspan="1"
       />
       <th
+        class=""
         colspan="1"
         rowspan="1"
         scope="col"
@@ -790,7 +806,7 @@ exports[`TimePeriodDataTable renders table with only one of each option 1`] = `
         England
       </th>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         18.3%
       </td>
@@ -810,11 +826,12 @@ exports[`TimePeriodDataTable renders table with only one of each option and no f
   >
     <tr>
       <td
-        class="borderBottom"
+        class=""
         colspan="1"
         rowspan="1"
       />
       <th
+        class=""
         colspan="1"
         rowspan="1"
         scope="col"
@@ -834,7 +851,7 @@ exports[`TimePeriodDataTable renders table with only one of each option and no f
         England
       </th>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         18.3%
       </td>
@@ -854,11 +871,12 @@ exports[`TimePeriodDataTable renders table with only one of each option and no f
   >
     <tr>
       <td
-        class="borderBottom"
+        class=""
         colspan="1"
         rowspan="1"
       />
       <th
+        class=""
         colspan="1"
         rowspan="1"
         scope="col"
@@ -878,7 +896,7 @@ exports[`TimePeriodDataTable renders table with only one of each option and no f
         England
       </th>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         18.3%
       </td>
@@ -898,11 +916,12 @@ exports[`TimePeriodDataTable renders table with two of every option 1`] = `
   >
     <tr>
       <td
-        class="borderBottom"
+        class=""
         colspan="3"
         rowspan="2"
       />
       <th
+        class=""
         colspan="2"
         rowspan="1"
         scope="colgroup"
@@ -910,6 +929,7 @@ exports[`TimePeriodDataTable renders table with two of every option 1`] = `
         Ethnicity Major Asian Total
       </th>
       <th
+        class=""
         colspan="2"
         rowspan="1"
         scope="colgroup"
@@ -919,6 +939,7 @@ exports[`TimePeriodDataTable renders table with two of every option 1`] = `
     </tr>
     <tr>
       <th
+        class=""
         colspan="1"
         rowspan="1"
         scope="col"
@@ -926,6 +947,7 @@ exports[`TimePeriodDataTable renders table with two of every option 1`] = `
         2013/14
       </th>
       <th
+        class=""
         colspan="1"
         rowspan="1"
         scope="col"
@@ -933,6 +955,7 @@ exports[`TimePeriodDataTable renders table with two of every option 1`] = `
         2014/15
       </th>
       <th
+        class=""
         colspan="1"
         rowspan="1"
         scope="col"
@@ -940,6 +963,7 @@ exports[`TimePeriodDataTable renders table with two of every option 1`] = `
         2013/14
       </th>
       <th
+        class=""
         colspan="1"
         rowspan="1"
         scope="col"
@@ -951,7 +975,7 @@ exports[`TimePeriodDataTable renders table with two of every option 1`] = `
   <tbody>
     <tr>
       <th
-        class="borderBottom"
+        class=""
         colspan="1"
         rowspan="4"
         scope="rowgroup"
@@ -959,7 +983,7 @@ exports[`TimePeriodDataTable renders table with two of every option 1`] = `
         State-funded primary
       </th>
       <th
-        class="borderBottom"
+        class=""
         colspan="1"
         rowspan="2"
         scope="rowgroup"
@@ -1005,29 +1029,29 @@ exports[`TimePeriodDataTable renders table with two of every option 1`] = `
         Number of overall absence sessions
       </th>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         39,697
       </td>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         41,239
       </td>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         41,945
       </td>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         41,228
       </td>
     </tr>
     <tr>
       <th
-        class="borderBottom"
+        class=""
         colspan="1"
         rowspan="2"
         scope="rowgroup"
@@ -1073,29 +1097,29 @@ exports[`TimePeriodDataTable renders table with two of every option 1`] = `
         Number of overall absence sessions
       </th>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         1,512
       </td>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         2,122
       </td>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         1,215
       </td>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         1,268
       </td>
     </tr>
     <tr>
       <th
-        class="borderBottom"
+        class=""
         colspan="1"
         rowspan="4"
         scope="rowgroup"
@@ -1103,7 +1127,7 @@ exports[`TimePeriodDataTable renders table with two of every option 1`] = `
         State-funded secondary
       </th>
       <th
-        class="borderBottom"
+        class=""
         colspan="1"
         rowspan="2"
         scope="rowgroup"
@@ -1149,29 +1173,29 @@ exports[`TimePeriodDataTable renders table with two of every option 1`] = `
         Number of overall absence sessions
       </th>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         34,689
       </td>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         36,083
       </td>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         33,422
       </td>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         37,084
       </td>
     </tr>
     <tr>
       <th
-        class="borderBottom"
+        class=""
         colspan="1"
         rowspan="2"
         scope="rowgroup"
@@ -1217,22 +1241,22 @@ exports[`TimePeriodDataTable renders table with two of every option 1`] = `
         Number of overall absence sessions
       </th>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         752
       </td>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         571
       </td>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         788
       </td>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         1,105
       </td>
@@ -1252,11 +1276,12 @@ exports[`TimePeriodDataTable renders table without indicators when there is only
   >
     <tr>
       <td
-        class="borderBottom"
+        class=""
         colspan="2"
         rowspan="2"
       />
       <th
+        class=""
         colspan="2"
         rowspan="1"
         scope="colgroup"
@@ -1264,6 +1289,7 @@ exports[`TimePeriodDataTable renders table without indicators when there is only
         Ethnicity Major Asian Total
       </th>
       <th
+        class=""
         colspan="2"
         rowspan="1"
         scope="colgroup"
@@ -1273,6 +1299,7 @@ exports[`TimePeriodDataTable renders table without indicators when there is only
     </tr>
     <tr>
       <th
+        class=""
         colspan="1"
         rowspan="1"
         scope="col"
@@ -1280,6 +1307,7 @@ exports[`TimePeriodDataTable renders table without indicators when there is only
         2013/14
       </th>
       <th
+        class=""
         colspan="1"
         rowspan="1"
         scope="col"
@@ -1287,6 +1315,7 @@ exports[`TimePeriodDataTable renders table without indicators when there is only
         2014/15
       </th>
       <th
+        class=""
         colspan="1"
         rowspan="1"
         scope="col"
@@ -1294,6 +1323,7 @@ exports[`TimePeriodDataTable renders table without indicators when there is only
         2013/14
       </th>
       <th
+        class=""
         colspan="1"
         rowspan="1"
         scope="col"
@@ -1305,7 +1335,7 @@ exports[`TimePeriodDataTable renders table without indicators when there is only
   <tbody>
     <tr>
       <th
-        class="borderBottom"
+        class=""
         colspan="1"
         rowspan="2"
         scope="rowgroup"
@@ -1351,29 +1381,29 @@ exports[`TimePeriodDataTable renders table without indicators when there is only
         Barnsley
       </th>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         3.7%
       </td>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         4.3%
       </td>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         2.5%
       </td>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         2.4%
       </td>
     </tr>
     <tr>
       <th
-        class="borderBottom"
+        class=""
         colspan="1"
         rowspan="2"
         scope="rowgroup"
@@ -1419,22 +1449,22 @@ exports[`TimePeriodDataTable renders table without indicators when there is only
         Barnsley
       </th>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         3.3%
       </td>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         2.1%
       </td>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         1.8%
       </td>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         2.6%
       </td>
@@ -1454,11 +1484,12 @@ exports[`TimePeriodDataTable renders table without time period when there is onl
   >
     <tr>
       <td
-        class="borderBottom"
+        class=""
         colspan="2"
         rowspan="1"
       />
       <th
+        class=""
         colspan="1"
         rowspan="1"
         scope="col"
@@ -1466,6 +1497,7 @@ exports[`TimePeriodDataTable renders table without time period when there is onl
         Ethnicity Major Asian Total
       </th>
       <th
+        class=""
         colspan="1"
         rowspan="1"
         scope="col"
@@ -1477,7 +1509,7 @@ exports[`TimePeriodDataTable renders table without time period when there is onl
   <tbody>
     <tr>
       <th
-        class="borderBottom"
+        class=""
         colspan="1"
         rowspan="2"
         scope="rowgroup"
@@ -1513,19 +1545,19 @@ exports[`TimePeriodDataTable renders table without time period when there is onl
         Barnsley
       </th>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         4.3%
       </td>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         2.4%
       </td>
     </tr>
     <tr>
       <th
-        class="borderBottom"
+        class=""
         colspan="1"
         rowspan="2"
         scope="rowgroup"
@@ -1561,12 +1593,12 @@ exports[`TimePeriodDataTable renders table without time period when there is onl
         Barnsley
       </th>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         2.1%
       </td>
       <td
-        class="govuk-table__cell--numeric borderBottom"
+        class="govuk-table__cell--numeric"
       >
         2.6%
       </td>
