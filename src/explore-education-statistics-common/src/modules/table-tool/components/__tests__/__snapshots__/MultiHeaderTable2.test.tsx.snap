@@ -1,0 +1,815 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MultiHeaderTable renders 2x2 table correctly 1`] = `
+<table class="govuk-table table">
+  <thead class="tableHead">
+    <tr>
+      <td colspan="2"
+          rowspan="2"
+          class
+      >
+      </td>
+      <th colspan="2"
+          rowspan="1"
+          scope="colgroup"
+          class
+      >
+        LA 1
+      </th>
+      <th colspan="2"
+          rowspan="1"
+          scope="colgroup"
+          class
+      >
+        LA 2
+      </th>
+    </tr>
+    <tr>
+      <th colspan="1"
+          rowspan="1"
+          scope="col"
+          class
+      >
+        2012/13
+      </th>
+      <th colspan="1"
+          rowspan="1"
+          scope="col"
+          class
+      >
+        2013/14
+      </th>
+      <th colspan="1"
+          rowspan="1"
+          scope="col"
+          class
+      >
+        2012/13
+      </th>
+      <th colspan="1"
+          rowspan="1"
+          scope="col"
+          class
+      >
+        2013/14
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th colspan="1"
+          rowspan="2"
+          scope="rowgroup"
+          class
+      >
+        Category 2 Filter 1
+      </th>
+      <th colspan="1"
+          rowspan="1"
+          scope="row"
+          class
+      >
+        Indicator 1
+      </th>
+      <td class="govuk-table__cell--numeric">
+        331
+      </td>
+      <td class="govuk-table__cell--numeric">
+        76
+      </td>
+      <td class="govuk-table__cell--numeric">
+        2,763
+      </td>
+      <td class="govuk-table__cell--numeric">
+        1,327
+      </td>
+    </tr>
+    <tr>
+      <th colspan="1"
+          rowspan="1"
+          scope="row"
+          class
+      >
+        Indicator 2
+      </th>
+      <td class="govuk-table__cell--numeric">
+        446
+      </td>
+      <td class="govuk-table__cell--numeric">
+        378
+      </td>
+      <td class="govuk-table__cell--numeric">
+        2,817
+      </td>
+      <td class="govuk-table__cell--numeric">
+        2,016
+      </td>
+    </tr>
+    <tr>
+      <th colspan="1"
+          rowspan="2"
+          scope="rowgroup"
+          class
+      >
+        Category 2 Filter 2
+      </th>
+      <th colspan="1"
+          rowspan="1"
+          scope="row"
+          class
+      >
+        Indicator 1
+      </th>
+      <td class="govuk-table__cell--numeric">
+        21,584
+      </td>
+      <td class="govuk-table__cell--numeric">
+        7,697
+      </td>
+      <td class="govuk-table__cell--numeric">
+        103,464
+      </td>
+      <td class="govuk-table__cell--numeric">
+        35,891
+      </td>
+    </tr>
+    <tr>
+      <th colspan="1"
+          rowspan="1"
+          scope="row"
+          class
+      >
+        Indicator 2
+      </th>
+      <td class="govuk-table__cell--numeric">
+        4,322
+      </td>
+      <td class="govuk-table__cell--numeric">
+        3,859
+      </td>
+      <td class="govuk-table__cell--numeric">
+        26,396
+      </td>
+      <td class="govuk-table__cell--numeric">
+        17,018
+      </td>
+    </tr>
+  </tbody>
+</table>
+`;
+
+exports[`MultiHeaderTable renders a table with three levels of column headers and two levels of row headers correctly 1`] = `
+<table class="govuk-table table">
+  <thead class="tableHead">
+    <tr>
+      <td colspan="3"
+          rowspan="3"
+          class
+      >
+      </td>
+      <th colspan="4"
+          rowspan="1"
+          scope="colgroup"
+          class
+      >
+        Category 2 Filter 1
+      </th>
+      <th colspan="4"
+          rowspan="1"
+          scope="colgroup"
+          class
+      >
+        Category 2 Filter 2
+      </th>
+    </tr>
+    <tr>
+      <th colspan="2"
+          rowspan="1"
+          scope="colgroup"
+          class
+      >
+        Category 1 Filter 2
+      </th>
+      <th colspan="2"
+          rowspan="1"
+          scope="colgroup"
+          class
+      >
+        Category 1 Filter 3
+      </th>
+      <th colspan="2"
+          rowspan="1"
+          scope="colgroup"
+          class
+      >
+        Category 1 Filter 2
+      </th>
+      <th colspan="2"
+          rowspan="1"
+          scope="colgroup"
+          class
+      >
+        Category 1 Filter 3
+      </th>
+    </tr>
+    <tr>
+      <th colspan="1"
+          rowspan="1"
+          scope="col"
+          class
+      >
+        2012/13
+      </th>
+      <th colspan="1"
+          rowspan="1"
+          scope="col"
+          class
+      >
+        2013/14
+      </th>
+      <th colspan="1"
+          rowspan="1"
+          scope="col"
+          class
+      >
+        2012/13
+      </th>
+      <th colspan="1"
+          rowspan="1"
+          scope="col"
+          class
+      >
+        2013/14
+      </th>
+      <th colspan="1"
+          rowspan="1"
+          scope="col"
+          class
+      >
+        2012/13
+      </th>
+      <th colspan="1"
+          rowspan="1"
+          scope="col"
+          class
+      >
+        2013/14
+      </th>
+      <th colspan="1"
+          rowspan="1"
+          scope="col"
+          class
+      >
+        2012/13
+      </th>
+      <th colspan="1"
+          rowspan="1"
+          scope="col"
+          class
+      >
+        2013/14
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th colspan="1"
+          rowspan="4"
+          scope="rowgroup"
+          class
+      >
+        Region 1
+      </th>
+      <th colspan="1"
+          rowspan="2"
+          scope="rowgroup"
+          class
+      >
+        LA 1
+      </th>
+      <th colspan="1"
+          rowspan="1"
+          scope="row"
+          class
+      >
+        Indicator 1
+      </th>
+      <td class="govuk-table__cell--numeric">
+        331
+      </td>
+      <td class="govuk-table__cell--numeric">
+        44
+      </td>
+      <td class="govuk-table__cell--numeric">
+        20
+      </td>
+      <td class="govuk-table__cell--numeric">
+        32
+      </td>
+      <td class="govuk-table__cell--numeric">
+        19,340
+      </td>
+      <td class="govuk-table__cell--numeric">
+        7,163
+      </td>
+      <td class="govuk-table__cell--numeric">
+        2,458
+      </td>
+      <td class="govuk-table__cell--numeric">
+        767
+      </td>
+    </tr>
+    <tr>
+      <th colspan="1"
+          rowspan="1"
+          scope="row"
+          class
+      >
+        Indicator 2
+      </th>
+      <td class="govuk-table__cell--numeric">
+        428
+      </td>
+      <td class="govuk-table__cell--numeric">
+        368
+      </td>
+      <td class="govuk-table__cell--numeric">
+        14
+      </td>
+      <td class="govuk-table__cell--numeric">
+        6
+      </td>
+      <td class="govuk-table__cell--numeric">
+        3,830
+      </td>
+      <td class="govuk-table__cell--numeric">
+        3,413
+      </td>
+      <td class="govuk-table__cell--numeric">
+        567
+      </td>
+      <td class="govuk-table__cell--numeric">
+        818
+      </td>
+    </tr>
+    <tr>
+      <th colspan="1"
+          rowspan="2"
+          scope="rowgroup"
+          class
+      >
+        LA 2
+      </th>
+      <th colspan="1"
+          rowspan="1"
+          scope="row"
+          class
+      >
+        Indicator 1
+      </th>
+      <td class="govuk-table__cell--numeric">
+        2,587
+      </td>
+      <td class="govuk-table__cell--numeric">
+        1,285
+      </td>
+      <td class="govuk-table__cell--numeric">
+        122
+      </td>
+      <td class="govuk-table__cell--numeric">
+        42
+      </td>
+      <td class="govuk-table__cell--numeric">
+        99,656
+      </td>
+      <td class="govuk-table__cell--numeric">
+        34,012
+      </td>
+      <td class="govuk-table__cell--numeric">
+        4,872
+      </td>
+      <td class="govuk-table__cell--numeric">
+        2,362
+      </td>
+    </tr>
+    <tr>
+      <th colspan="1"
+          rowspan="1"
+          scope="row"
+          class
+      >
+        Indicator 2
+      </th>
+      <td class="govuk-table__cell--numeric">
+        2,714
+      </td>
+      <td class="govuk-table__cell--numeric">
+        1,933
+      </td>
+      <td class="govuk-table__cell--numeric">
+        127
+      </td>
+      <td class="govuk-table__cell--numeric">
+        97
+      </td>
+      <td class="govuk-table__cell--numeric">
+        25,240
+      </td>
+      <td class="govuk-table__cell--numeric">
+        16,024
+      </td>
+      <td class="govuk-table__cell--numeric">
+        1,801
+      </td>
+      <td class="govuk-table__cell--numeric">
+        1,811
+      </td>
+    </tr>
+    <tr>
+      <th colspan="1"
+          rowspan="4"
+          scope="rowgroup"
+          class
+      >
+        Region 2
+      </th>
+      <th colspan="1"
+          rowspan="2"
+          scope="rowgroup"
+          class
+      >
+        LA 3
+      </th>
+      <th colspan="1"
+          rowspan="1"
+          scope="row"
+          class
+      >
+        Indicator 1
+      </th>
+      <td class="govuk-table__cell--numeric">
+        95
+      </td>
+      <td class="govuk-table__cell--numeric">
+        90
+      </td>
+      <td class="govuk-table__cell--numeric">
+        366
+      </td>
+      <td class="govuk-table__cell--numeric">
+        212
+      </td>
+      <td class="govuk-table__cell--numeric">
+        15,470
+      </td>
+      <td class="govuk-table__cell--numeric">
+        2,631
+      </td>
+      <td class="govuk-table__cell--numeric">
+        6,402
+      </td>
+      <td class="govuk-table__cell--numeric">
+        1,804
+      </td>
+    </tr>
+    <tr>
+      <th colspan="1"
+          rowspan="1"
+          scope="row"
+          class
+      >
+        Indicator 2
+      </th>
+      <td class="govuk-table__cell--numeric">
+        194
+      </td>
+      <td class="govuk-table__cell--numeric">
+        252
+      </td>
+      <td class="govuk-table__cell--numeric">
+        227
+      </td>
+      <td class="govuk-table__cell--numeric">
+        231
+      </td>
+      <td class="govuk-table__cell--numeric">
+        6,301
+      </td>
+      <td class="govuk-table__cell--numeric">
+        6,095
+      </td>
+      <td class="govuk-table__cell--numeric">
+        5,014
+      </td>
+      <td class="govuk-table__cell--numeric">
+        5,011
+      </td>
+    </tr>
+    <tr>
+      <th colspan="1"
+          rowspan="2"
+          scope="rowgroup"
+          class
+      >
+        LA 4
+      </th>
+      <th colspan="1"
+          rowspan="1"
+          scope="row"
+          class
+      >
+        Indicator 1
+      </th>
+      <td class="govuk-table__cell--numeric">
+        734
+      </td>
+      <td class="govuk-table__cell--numeric">
+        639
+      </td>
+      <td class="govuk-table__cell--numeric">
+        56
+      </td>
+      <td class="govuk-table__cell--numeric">
+        20
+      </td>
+      <td class="govuk-table__cell--numeric">
+        19,243
+      </td>
+      <td class="govuk-table__cell--numeric">
+        4,248
+      </td>
+      <td class="govuk-table__cell--numeric">
+        2,608
+      </td>
+      <td class="govuk-table__cell--numeric">
+        727
+      </td>
+    </tr>
+    <tr>
+      <th colspan="1"
+          rowspan="1"
+          scope="row"
+          class
+      >
+        Indicator 2
+      </th>
+      <td class="govuk-table__cell--numeric">
+        286
+      </td>
+      <td class="govuk-table__cell--numeric">
+        294
+      </td>
+      <td class="govuk-table__cell--numeric">
+        17
+      </td>
+      <td class="govuk-table__cell--numeric">
+        24
+      </td>
+      <td class="govuk-table__cell--numeric">
+        7,604
+      </td>
+      <td class="govuk-table__cell--numeric">
+        6,712
+      </td>
+      <td class="govuk-table__cell--numeric">
+        955
+      </td>
+      <td class="govuk-table__cell--numeric">
+        1,059
+      </td>
+    </tr>
+  </tbody>
+</table>
+`;
+
+exports[`MultiHeaderTable renders a table with two levels of column headers and two levels of row headers correctly 1`] = `
+<table class="govuk-table table">
+  <thead class="tableHead">
+    <tr>
+      <td colspan="2"
+          rowspan="2"
+          class
+      >
+      </td>
+      <th colspan="2"
+          rowspan="1"
+          scope="colgroup"
+          class
+      >
+        LA 1
+      </th>
+      <th colspan="2"
+          rowspan="1"
+          scope="colgroup"
+          class
+      >
+        LA 2
+      </th>
+    </tr>
+    <tr>
+      <th colspan="1"
+          rowspan="1"
+          scope="col"
+          class
+      >
+        2012/13
+      </th>
+      <th colspan="1"
+          rowspan="1"
+          scope="col"
+          class
+      >
+        2013/14
+      </th>
+      <th colspan="1"
+          rowspan="1"
+          scope="col"
+          class
+      >
+        2012/13
+      </th>
+      <th colspan="1"
+          rowspan="1"
+          scope="col"
+          class
+      >
+        2013/14
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th colspan="1"
+          rowspan="2"
+          scope="rowgroup"
+          class
+      >
+        Category 2 Filter 1
+      </th>
+      <th colspan="1"
+          rowspan="1"
+          scope="row"
+          class
+      >
+        Indicator 1
+      </th>
+      <td class="govuk-table__cell--numeric">
+        331
+      </td>
+      <td class="govuk-table__cell--numeric">
+        76
+      </td>
+      <td class="govuk-table__cell--numeric">
+        2,763
+      </td>
+      <td class="govuk-table__cell--numeric">
+        1,327
+      </td>
+    </tr>
+    <tr>
+      <th colspan="1"
+          rowspan="1"
+          scope="row"
+          class
+      >
+        Indicator 2
+      </th>
+      <td class="govuk-table__cell--numeric">
+        446
+      </td>
+      <td class="govuk-table__cell--numeric">
+        378
+      </td>
+      <td class="govuk-table__cell--numeric">
+        2,817
+      </td>
+      <td class="govuk-table__cell--numeric">
+        2,016
+      </td>
+    </tr>
+    <tr>
+      <th colspan="1"
+          rowspan="2"
+          scope="rowgroup"
+          class
+      >
+        Category 2 Filter 2
+      </th>
+      <th colspan="1"
+          rowspan="1"
+          scope="row"
+          class
+      >
+        Indicator 1
+      </th>
+      <td class="govuk-table__cell--numeric">
+        21,584
+      </td>
+      <td class="govuk-table__cell--numeric">
+        7,697
+      </td>
+      <td class="govuk-table__cell--numeric">
+        103,464
+      </td>
+      <td class="govuk-table__cell--numeric">
+        35,891
+      </td>
+    </tr>
+    <tr>
+      <th colspan="1"
+          rowspan="1"
+          scope="row"
+          class
+      >
+        Indicator 2
+      </th>
+      <td class="govuk-table__cell--numeric">
+        4,322
+      </td>
+      <td class="govuk-table__cell--numeric">
+        3,859
+      </td>
+      <td class="govuk-table__cell--numeric">
+        26,396
+      </td>
+      <td class="govuk-table__cell--numeric">
+        17,018
+      </td>
+    </tr>
+  </tbody>
+</table>
+`;
+
+exports[`MultiHeaderTable renders table with one \`rowgroup\` header subgroup 1`] = `
+<table class="govuk-table table">
+  <thead class="tableHead">
+    <tr>
+      <td colspan="3"
+          rowspan="1"
+          class
+      >
+      </td>
+      <th colspan="1"
+          rowspan="1"
+          scope="col"
+          class
+      >
+        LA 1
+      </th>
+      <th colspan="1"
+          rowspan="1"
+          scope="col"
+          class
+      >
+        LA 2
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th colspan="1"
+          rowspan="2"
+          scope="rowgroup"
+          class
+      >
+        Indicator 1
+      </th>
+      <th colspan="1"
+          rowspan="2"
+          scope="rowgroup"
+          class
+      >
+        2012/13
+      </th>
+      <th colspan="1"
+          rowspan="1"
+          scope="row"
+          class
+      >
+        Category 2 Filter 1
+      </th>
+      <td class="govuk-table__cell--numeric">
+        21,584
+      </td>
+      <td class="govuk-table__cell--numeric">
+        103,464
+      </td>
+    </tr>
+    <tr>
+      <th colspan="1"
+          rowspan="1"
+          scope="row"
+          class
+      >
+        Category 2 Filter 2
+      </th>
+      <td class="govuk-table__cell--numeric">
+        5,885
+      </td>
+      <td class="govuk-table__cell--numeric">
+        35,839
+      </td>
+    </tr>
+  </tbody>
+</table>
+`;
