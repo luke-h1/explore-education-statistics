@@ -55,6 +55,8 @@ namespace GovUk.Education.ExploreEducationStatistics.Content.Model.Extensions
                 .Select(rcb => rcb.Clone(context))
                 .ToList();
 
+            // @MarkFix copy KeyStatisticDataBlock rows here?
+
             amendment.RelatedInformation = amendment
                 .RelatedInformation
                 .Select(link => link.Clone())
