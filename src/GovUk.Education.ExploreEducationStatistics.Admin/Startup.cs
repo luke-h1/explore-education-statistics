@@ -521,6 +521,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin
             services.AddTransient<IContentService, ContentService>();
             services.AddTransient<IEmbedBlockService, EmbedBlockService>();
             services.AddTransient<IReleaseContentBlockService, ReleaseContentBlockService>();
+            services.AddTransient<IKeyStatisticService, KeyStatisticService>();
             services.AddTransient<ICommentService, CommentService>();
             services.AddTransient<IRelatedInformationService, RelatedInformationService>();
             services.AddTransient<IReplacementService, ReplacementService>();
@@ -752,7 +753,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin
             app.UseAuthorization();
 
             // Deny access to all /Identity routes other than:
-            // 
+            //
             // /Identity/Account/Login
             // /Identity/Account/ExternalLogin
             // /Identity/Account/InviteExpired
@@ -760,8 +761,8 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin
             // This Regex is case insensitive.
             var options = new RewriteOptions()
                 .AddRewrite(
-                    @"^(?i)identity/(?!account/(login|externallogin|inviteexpired))", 
-                    replacement: "/", 
+                    @"^(?i)identity/(?!account/(login|externallogin|inviteexpired))",
+                    replacement: "/",
                     skipRemainingRules: true);
             app.UseRewriter(options);
 
