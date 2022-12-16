@@ -34,6 +34,8 @@ namespace GovUk.Education.ExploreEducationStatistics.Content.Model
         [JsonIgnore, IgnoreMap]
         public DataBlock DataBlock { get; set; } = new();
 
+        // @MarkFix include data block name here?
+
         //public string DataBlockQuery { get; set; } // @MarkFix include this since Trend/etc. are duplicated in the ContentBlocks row too?
     }
 
