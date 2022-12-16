@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using GovUk.Education.ExploreEducationStatistics.Common.Extensions;
 using GovUk.Education.ExploreEducationStatistics.Common.Model;
-using GovUk.Education.ExploreEducationStatistics.Common.Services;
 using GovUk.Education.ExploreEducationStatistics.Content.Model;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -39,6 +38,8 @@ namespace GovUk.Education.ExploreEducationStatistics.Content.Services.ViewModels
         public ContentSectionViewModel? SummarySection { get; }
 
         public ContentSectionViewModel? HeadlinesSection { get; }
+
+        public List<KeyStatistic> KeyStatistics { get; } // @MarkFix switch to view model
 
         public ContentSectionViewModel? KeyStatisticsSection { get; }
 
@@ -75,6 +76,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Content.Services.ViewModels
             Content = release.Content;
             SummarySection = release.SummarySection;
             HeadlinesSection = release.HeadlinesSection;
+            KeyStatistics = release.KeyStatistics;
             KeyStatisticsSection = release.KeyStatisticsSection;
             KeyStatisticsSecondarySection = release.KeyStatisticsSecondarySection;
             RelatedDashboardsSection = release.RelatedDashboardsSection;
