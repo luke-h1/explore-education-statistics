@@ -46,7 +46,10 @@ const ApplicationInsightsTracking = () => {
   return null;
 };
 
-interface Props extends AppProps {
+interface Props
+  extends AppProps<{
+    dehydratedState: unknown;
+  }> {
   cookies: Dictionary<string>;
 }
 

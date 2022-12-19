@@ -63,6 +63,7 @@ src/GovUk.Education.ExploreEducationStatistics.Data.Seed/Files/
 tags
 *.pyc
 *.tmp
+tsconfig.tsbuildinfo
 
 lerna-debug.log
 
