@@ -24,6 +24,8 @@ public class KeyStatisticService : IKeyStatisticService
         _mapper = mapper;
     }
 
+    // @MarkFix CREATE KeyStatisticController.cs next!
+
     public async void CreateKeyStatisticDataBlock(KeyStatisticDataBlockCreateRequest request)
     {
         var keyStatisticDataBlock = _mapper.Map<KeyStatisticDataBlock>(request);
@@ -56,6 +58,16 @@ public class KeyStatisticService : IKeyStatisticService
 
         _context.Remove(keyStat);
 
+        await _context.SaveChangesAsync();
+    }
+
+    public async void DeleteAnyAssociatedWithDataBlock(Guid releaseId, Guid dataBlockId)
+    {
+        var keyStats = await _context
+            .KeyStatisticDataBlock
+            .Where(ks => ks.ReleaseId == releaseId && ks.DataBlockId == dataBlockId)
+            .ToListAsync();
+        _context.KeyStatisticDataBlock.RemoveRange(keyStats);
         await _context.SaveChangesAsync();
     }
 
