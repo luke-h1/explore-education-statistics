@@ -1,6 +1,5 @@
 import EditableKeyStat from '@admin/components/editable/EditableKeyStat';
 import KeyStatDataBlockSelectForm from '@admin/pages/release/content/components/KeyStatDataBlockSelectForm';
-import useReleaseContentActions from '@admin/pages/release/content/contexts/useReleaseContentActions';
 import { EditableRelease } from '@admin/services/releaseContentService';
 import BlockDroppable from '@admin/components/editable/BlockDroppable';
 import Button from '@common/components/Button';
@@ -27,16 +26,12 @@ export interface KeyStatisticsProps {
 }
 
 const KeyStatistics = ({ release, isEditing }: KeyStatisticsProps) => {
-  const {
-    deleteContentSectionBlock,
-    updateSectionBlockOrder,
-  } = useReleaseContentActions();
-
   const [keyStatisticsBlocks, setKeyStatisticsBlocks] = useState(
     release.keyStatistics,
   );
 
   useEffect(() => {
+    // @MarkFix needed?
     setKeyStatisticsBlocks(release.keyStatistics);
   }, [release]);
 
@@ -63,15 +58,9 @@ const KeyStatistics = ({ release, isEditing }: KeyStatisticsProps) => {
         },
         {},
       );
-      await updateSectionBlockOrder({
-        releaseId: release.id,
-        sectionId: release.keyStatisticsSection.id,
-        sectionKey: 'keyStatisticsSection',
-        order,
-      });
       // @MarkFix reorder KeyStatisticBase here
     },
-    [release.id, release.keyStatisticsSection.id, updateSectionBlockOrder],
+    [release.id, release.keyStatistics],
   );
 
   const saveOrder = useCallback(async () => {
@@ -160,14 +149,8 @@ const KeyStatistics = ({ release, isEditing }: KeyStatisticsProps) => {
                           isEditing={isEditing}
                           isReordering={isReordering}
                           onRemove={async () => {
-                            await deleteContentSectionBlock({
-                              releaseId: release.id,
-                              sectionId: release.keyStatisticsSection.id,
-                              blockId: keyStat.id,
-                              sectionKey: 'keyStatisticsSection',
-                            });
                             // @MarkFix call keyStatisticService.Delete here
-                            // call useReleaseContentActions#updateAvailableDataBlocks too
+                            // @MarkFix call useReleaseContentActions#updateAvailableDataBlocks too
                           }}
                         />
                       </div>
@@ -185,26 +168,16 @@ const KeyStatistics = ({ release, isEditing }: KeyStatisticsProps) => {
 
 const AddKeyStatistics = ({ release }: KeyStatisticsProps) => {
   const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
-  const { attachContentSectionBlock } = useReleaseContentActions();
 
-  const { keyStatisticsSection } = release;
+  const { keyStatistics } = release;
 
   const addKeyStatToSection = useCallback(
     async (dataBlockId: string) => {
-      await attachContentSectionBlock({
-        releaseId: release.id,
-        sectionId: release.keyStatisticsSection.id,
-        sectionKey: 'keyStatisticsSection',
-        block: {
-          contentBlockId: dataBlockId,
-          order: release.keyStatisticsSection.content.length || 0,
-        },
-      });
       // @MarkFix call keyStatisticService.Create here
       // call useReleaseContentActions#updateAvailableDataBlocks too
       setIsFormOpen(false);
     },
-    [release.id, release.keyStatisticsSection, attachContentSectionBlock],
+    [release.id, release.keyStatistics],
   );
 
   return (
@@ -223,9 +196,7 @@ const AddKeyStatistics = ({ release }: KeyStatisticsProps) => {
             setIsFormOpen(true);
           }}
         >
-          {`Add ${
-            keyStatisticsSection.content.length > 0 ? 'another ' : ''
-          }key statistic`}
+          {`Add ${keyStatistics.length > 0 ? 'another ' : ''}key statistic`}
         </Button>
       )}
     </>

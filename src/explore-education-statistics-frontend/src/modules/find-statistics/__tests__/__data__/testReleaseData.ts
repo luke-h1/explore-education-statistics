@@ -189,13 +189,6 @@ export const testRelease: Release = {
     ],
   },
   keyStatistics: [], // @MarkFix
-  keyStatisticsSection: {
-    id: 'key-stats-id',
-    order: 1,
-    heading: '',
-    caption: '',
-    content: [],
-  },
   keyStatisticsSecondarySection: {
     id: 'key-stats-secondary-id',
     order: 1,

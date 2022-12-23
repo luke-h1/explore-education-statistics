@@ -9,7 +9,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Content.Model
     {
         Generic,
         ReleaseSummary,
-        KeyStatistics,
+        KeyStatistics, // @MarkFix remove when no such sections in db?
         KeyStatisticsSecondary,
         Headlines,
         RelatedDashboards,

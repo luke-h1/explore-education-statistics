@@ -174,14 +174,6 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services.Manage
                         Release = release,
                         ContentSection = new ()
                         {
-                            Type = ContentSectionType.KeyStatistics
-                        }
-                    },
-                    new ReleaseContentSection
-                    {
-                        Release = release,
-                        ContentSection = new ()
-                        {
                             Type = ContentSectionType.KeyStatisticsSecondary
                         }
                     },
@@ -252,7 +244,6 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services.Manage
                 Assert.NotNull(contentRelease.DataLastPublished);
                 Assert.True(contentRelease.HasDataGuidance);
                 Assert.True(contentRelease.HasPreReleaseAccessList);
-                Assert.Equal(release.KeyStatisticsSection.Id, contentRelease.KeyStatisticsSection.Id);
                 Assert.Equal(release.KeyStatisticsSecondarySection.Id,
                     contentRelease.KeyStatisticsSecondarySection.Id);
                 Assert.Equal(release.HeadlinesSection.Id, contentRelease.HeadlinesSection.Id);
