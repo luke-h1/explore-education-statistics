@@ -342,17 +342,19 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Services.ManageConten
 
             if (typeof(T) == typeof(DataBlock))
             {
-                var keyStatDataBlockIds = _context.KeyStatisticDataBlock
+                var usedDataBlockIds = _context.KeyStatisticDataBlock
                     .Where(ks => ks.ReleaseId == releaseId)
                     .Select(ks => ks.DataBlockId)
                     .ToList();
 
-                return unattachedContentBlocks
+                var result = unattachedContentBlocks
                     .OfType<DataBlock>()
-                    .Where(dataBlock => !keyStatDataBlockIds.Contains(dataBlock.Id))
+                    .Where(dataBlock => !usedDataBlockIds.Contains(dataBlock.Id))
                     .OrderBy(contentBlock => contentBlock.Name)
                     .OfType<T>()
                     .ToList();
+
+                return result;
             }
 
             return unattachedContentBlocks;
