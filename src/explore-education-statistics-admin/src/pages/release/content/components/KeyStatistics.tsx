@@ -19,6 +19,8 @@ import {
   KeyStatisticDataBlock,
   KeyStatisticText,
 } from '@common/services/publicationService';
+import keyStatisticService from '@admin/services/keyStatisticService';
+import useReleaseContentActions from '@admin/pages/release/content/contexts/useReleaseContentActions';
 
 export interface KeyStatisticsProps {
   release: EditableRelease;
@@ -168,13 +170,16 @@ const KeyStatistics = ({ release, isEditing }: KeyStatisticsProps) => {
 
 const AddKeyStatistics = ({ release }: KeyStatisticsProps) => {
   const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
+  const { updateAvailableDataBlocks } = useReleaseContentActions();
 
   const { keyStatistics } = release;
 
   const addKeyStatToSection = useCallback(
     async (dataBlockId: string) => {
-      // @MarkFix call keyStatisticService.Create here
-      // call useReleaseContentActions#updateAvailableDataBlocks too
+      await keyStatisticService.createKeyStatisticDataBlock(release.id, {
+        dataBlockId,
+      });
+      await updateAvailableDataBlocks({ releaseId: release.id });
       setIsFormOpen(false);
     },
     [release.id, release.keyStatistics],

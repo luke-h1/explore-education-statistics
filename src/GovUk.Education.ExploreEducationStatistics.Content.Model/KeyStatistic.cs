@@ -31,8 +31,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Content.Model
     {
         public Guid DataBlockId { get; set; } // @MarkFix copy these rows in amendments and get new dataBlockId?
 
-        [JsonIgnore, IgnoreMap]
-        public DataBlock DataBlock { get; set; } = new();
+        [JsonIgnore, IgnoreMap] public DataBlock DataBlock { get; set; } = null!;
 
         // @MarkFix include data block name here?
 
