@@ -62,37 +62,6 @@ export default function useReleaseContentActions() {
     [dispatch, updateAvailableDataBlocks],
   );
 
-  const updateContentSectionDataBlock = useCallback(
-    async ({
-      releaseId,
-      sectionId,
-      blockId,
-      sectionKey,
-      values,
-    }: {
-      releaseId: string;
-      sectionId: string;
-      blockId: string;
-      sectionKey: ContentSectionKeys;
-      values: KeyStatsFormValues;
-    }) => {
-      const updateBlock = await releaseContentService.updateContentSectionDataBlock(
-        releaseId,
-        sectionId,
-        blockId,
-        values,
-      );
-      dispatch({
-        type: 'UPDATE_SECTION_BLOCK',
-        payload: {
-          meta: { sectionId, blockId, sectionKey },
-          block: updateBlock,
-        },
-      });
-    },
-    [dispatch],
-  );
-
   const updateContentSectionBlock = useCallback(
     async ({
       releaseId,
@@ -521,7 +490,6 @@ export default function useReleaseContentActions() {
       updateAvailableDataBlocks,
       updateBlockComment,
       updateContentSectionBlock,
-      updateContentSectionDataBlock,
       updateContentSectionHeading,
       updateContentSectionsOrder,
       updateEmbedSectionBlock,
@@ -543,7 +511,6 @@ export default function useReleaseContentActions() {
       updateAvailableDataBlocks,
       updateBlockComment,
       updateContentSectionBlock,
-      updateContentSectionDataBlock,
       updateContentSectionHeading,
       updateContentSectionsOrder,
       updateEmbedSectionBlock,
