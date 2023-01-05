@@ -15,6 +15,8 @@ import {
 } from '@admin/services/types/content';
 import { Dictionary } from '@admin/types';
 import { useCallback, useMemo } from 'react';
+import keyStatisticService from '@admin/services/keyStatisticService';
+import keyStat from '@common/modules/find-statistics/components/KeyStat';
 
 export default function useReleaseContentActions() {
   const dispatch = useReleaseContentDispatch();
@@ -462,16 +464,59 @@ export default function useReleaseContentActions() {
     [dispatch],
   );
 
+  const addKeyStatisticDataBlock = useCallback(
+    async ({ releaseId, dataBlockId }) => {
+      const keyStatisticDataBlock = await keyStatisticService.createKeyStatisticDataBlock(
+        releaseId,
+        { dataBlockId },
+      );
+      dispatch({
+        type: 'ADD_KEY_STATISTIC',
+        payload: { keyStatistic: keyStatisticDataBlock },
+      });
+    },
+    [dispatch],
+  );
+
+  const updateKeyStatisticDataBlock = useCallback(
+    async ({ releaseId, keyStatisticId, request }) => {
+      const updatedKeyStatisticDataBlock = await keyStatisticService.updateKeyStatisticDataBlock(
+        releaseId,
+        keyStatisticId,
+        request,
+      );
+      dispatch({
+        type: 'UPDATE_KEY_STATISTIC',
+        payload: { keyStatistic: updatedKeyStatisticDataBlock },
+      });
+    },
+    [dispatch],
+  );
+
+  const deleteKeyStatistic = useCallback(
+    async ({ releaseId, keyStatisticId }) => {
+      await keyStatisticService.deleteKeyStatistic(releaseId, keyStatisticId);
+
+      dispatch({
+        type: 'REMOVE_KEY_STATISTIC',
+        payload: { releaseId, keyStatisticId },
+      });
+    },
+    [dispatch],
+  );
+
   return useMemo(
     () => ({
       addBlockComment,
       addContentSection,
       addContentSectionBlock,
       addEmbedSectionBlock,
+      addKeyStatisticDataBlock,
       attachContentSectionBlock,
       deleteBlockComment,
       deleteContentSectionBlock,
       deleteEmbedSectionBlock,
+      deleteKeyStatistic,
       removeContentSection,
       updateAvailableDataBlocks,
       updateBlockComment,
@@ -481,16 +526,19 @@ export default function useReleaseContentActions() {
       updateContentSectionsOrder,
       updateEmbedSectionBlock,
       updateSectionBlockOrder,
+      updateKeyStatisticDataBlock,
     }),
     [
       addBlockComment,
       addContentSection,
       addContentSectionBlock,
       addEmbedSectionBlock,
+      addKeyStatisticDataBlock,
       attachContentSectionBlock,
       deleteBlockComment,
       deleteContentSectionBlock,
       deleteEmbedSectionBlock,
+      deleteKeyStatistic,
       removeContentSection,
       updateAvailableDataBlocks,
       updateBlockComment,
@@ -500,6 +548,7 @@ export default function useReleaseContentActions() {
       updateContentSectionsOrder,
       updateEmbedSectionBlock,
       updateSectionBlockOrder,
+      updateKeyStatisticDataBlock,
     ],
   );
 }
