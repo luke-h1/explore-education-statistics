@@ -25,17 +25,23 @@ namespace GovUk.Education.ExploreEducationStatistics.Content.Model
         public DateTime Created { get; set; }
 
         public DateTime? Updated { get; set; }
+
+        public KeyStatistic Clone(Release newRelease)
+        {
+            var copy = MemberwiseClone() as KeyStatistic;
+            copy.Id = Guid.NewGuid();
+            copy.Release = newRelease;
+            copy.ReleaseId = newRelease.Id;
+
+            return copy;
+        }
     }
 
     public class KeyStatisticDataBlock : KeyStatistic
     {
-        public Guid DataBlockId { get; set; } // @MarkFix copy these rows in amendments and get new dataBlockId?
+        public Guid DataBlockId { get; set; }
 
         [JsonIgnore, IgnoreMap] public DataBlock DataBlock { get; set; } = null!;
-
-        // @MarkFix include data block name here?
-
-        //public string DataBlockQuery { get; set; } // @MarkFix include this since Trend/etc. are duplicated in the ContentBlocks row too?
     }
 
     public class KeyStatisticText : KeyStatistic
