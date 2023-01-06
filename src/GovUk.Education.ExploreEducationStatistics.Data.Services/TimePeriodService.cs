@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using GovUk.Education.ExploreEducationStatistics.Common.Model;
 using GovUk.Education.ExploreEducationStatistics.Common.Services;
 using GovUk.Education.ExploreEducationStatistics.Data.Model;
@@ -21,27 +22,27 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Services
             _context = context;
         }
 
-        public IList<(int Year, TimeIdentifier TimeIdentifier)> GetTimePeriods(Guid subjectId)
+        public async Task<IList<(int Year, TimeIdentifier TimeIdentifier)>> GetTimePeriods(Guid subjectId)
         {
-            return _context.Observation
-                .AsQueryable()
-                .Where(observation => observation.SubjectId == subjectId)
-                .Select(o => new {o.Year, o.TimeIdentifier})
-                .Distinct()
+            var timePeriods = await _context.Observation
                 .AsNoTracking()
-                .ToList()
+                .Where(observation => observation.SubjectId == subjectId)
+                .Select(o => new { o.Year, o.TimeIdentifier })
+                .ToListAsync();
+
+            return timePeriods
                 .OrderBy(tuple => tuple.Year)
                 .ThenBy(tuple => tuple.TimeIdentifier)
                 .Select(tuple => (tuple.Year, tuple.TimeIdentifier))
                 .ToList();
         }
 
-        public IList<(int Year, TimeIdentifier TimeIdentifier)> GetTimePeriods(
+        public Task<IList<(int Year, TimeIdentifier TimeIdentifier)>> GetTimePeriods(
             IQueryable<Observation> observations)
         {
             return GetDistinctObservationTimePeriods(observations);
         }
-        
+
         public IList<(int Year, TimeIdentifier TimeIdentifier)> GetTimePeriodRange(
             IList<Observation> observations)
         {
@@ -53,14 +54,13 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Services
             return TimePeriodUtil.GetTimePeriodRange(start, end);
         }
 
-        public TimePeriodLabels GetTimePeriodLabels(Guid subjectId)
+        public async Task<TimePeriodLabels> GetTimePeriodLabels(Guid subjectId)
         {
             var observationsQuery = _context
                 .Observation
-                .AsQueryable()
                 .Where(observation => observation.SubjectId == subjectId);
-            
-            var orderedTimePeriods = GetDistinctObservationTimePeriods(observationsQuery);
+
+            var orderedTimePeriods = await GetDistinctObservationTimePeriods(observationsQuery);
 
             if (!orderedTimePeriods.Any())
             {
@@ -75,20 +75,22 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Services
                 TimePeriodLabelFormatter.Format(last.Year, last.TimeIdentifier));
         }
 
-        private static IList<(int Year, TimeIdentifier TimeIdentifier)> GetDistinctObservationTimePeriods(
+        private static async Task<IList<(int Year, TimeIdentifier TimeIdentifier)>> GetDistinctObservationTimePeriods(
             IQueryable<Observation> observations)
         {
-            return observations
+            var timePeriods = await observations
+                .AsNoTracking()
                 .Select(o => new {o.Year, o.TimeIdentifier})
                 .Distinct()
-                .AsNoTracking()
-                .ToList()
+                .ToListAsync();
+
+            return timePeriods
                 .OrderBy(tuple => tuple.Year)
                 .ThenBy(tuple => tuple.TimeIdentifier)
                 .Select(tuple => (tuple.Year, tuple.TimeIdentifier))
                 .ToList();
         }
-        
+
         private static IList<(int Year, TimeIdentifier TimeIdentifier)> GetDistinctObservationTimePeriods(
             IList<Observation> observations)
         {
