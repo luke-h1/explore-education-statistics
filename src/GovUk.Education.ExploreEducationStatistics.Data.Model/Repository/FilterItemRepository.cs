@@ -57,13 +57,19 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Model.Repository
                 .SelectMany(filter => filter.FilterGroups)
                 .Select(filterGroup => filterGroup.Id);
 
-            var filterItems = await _context
-                .FilterItem
+            var filterItemIds = await _context.ObservationFilterItem
+                .Join(matchedObservationIds,
+                    ofi => ofi.ObservationId,
+                    observationId => observationId,
+                    (ofi, _) => ofi.FilterItemId)
+                .Distinct()
+                .ToListAsync();
+
+            var filterItems = await _context.FilterItem
                 .AsNoTracking()
                 .Where(filterItem =>
                     filterGroupIds.Contains(filterItem.FilterGroupId) &&
-                    _context.ObservationFilterItem.Any(ofi =>
-                        ofi.FilterItemId == filterItem.Id && matchedObservationIds.Contains(ofi.ObservationId)))
+                    filterItemIds.Contains(filterItem.Id))
                 .ToListAsync();
 
             var filterGroupsById = filtersForSubject
