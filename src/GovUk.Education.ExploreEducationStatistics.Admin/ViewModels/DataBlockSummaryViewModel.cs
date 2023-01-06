@@ -1,5 +1,6 @@
 #nullable enable
 using System;
+using Newtonsoft.Json;
 
 namespace GovUk.Education.ExploreEducationStatistics.Admin.ViewModels
 {
@@ -19,7 +20,10 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.ViewModels
 
         public string Source { get; set; } = "";
 
+        [JsonIgnore]
         public Guid? ContentSectionId { get; set; }
+
+        public bool InContent { get; set; }
 
         public int ChartsCount { get; set; }
     }
