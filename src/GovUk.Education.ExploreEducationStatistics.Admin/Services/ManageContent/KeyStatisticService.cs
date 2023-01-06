@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using AngleSharp.Html.Dom;
 using AutoMapper;
 using GovUk.Education.ExploreEducationStatistics.Admin.Requests;
 using GovUk.Education.ExploreEducationStatistics.Admin.Services.Interfaces.ManageContent;
@@ -14,6 +13,7 @@ using GovUk.Education.ExploreEducationStatistics.Common.Services.Interfaces.Secu
 using GovUk.Education.ExploreEducationStatistics.Common.Utils;
 using GovUk.Education.ExploreEducationStatistics.Content.Model;
 using GovUk.Education.ExploreEducationStatistics.Content.Model.Database;
+using GovUk.Education.ExploreEducationStatistics.Content.Services.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -38,7 +38,7 @@ public class KeyStatisticService : IKeyStatisticService
         _mapper = mapper;
     }
 
-    public async Task<Either<ActionResult, KeyStatisticDataBlock>> CreateKeyStatisticDataBlock(Guid releaseId, KeyStatisticDataBlockCreateRequest request)
+    public async Task<Either<ActionResult, KeyStatisticDataBlockViewModel>> CreateKeyStatisticDataBlock(Guid releaseId, KeyStatisticDataBlockCreateRequest request)
     {
         return await _persistenceHelper.CheckEntityExists<Release>(releaseId)
             .OnSuccess(_userService.CheckCanUpdateRelease)
@@ -67,11 +67,11 @@ public class KeyStatisticService : IKeyStatisticService
                 await _context.KeyStatisticDataBlock.AddAsync(keyStatisticDataBlock);
                 await _context.SaveChangesAsync();
 
-                return keyStatisticDataBlock;
+                return _mapper.Map<KeyStatisticDataBlockViewModel>(keyStatisticDataBlock);
             });
     }
 
-    public async Task<Either<ActionResult, KeyStatisticDataBlock>> UpdateKeyStatisticDataBlock(
+    public async Task<Either<ActionResult, KeyStatisticDataBlockViewModel>> UpdateKeyStatisticDataBlock(
         Guid releaseId,
         Guid keyStatisticId,
         KeyStatisticDataBlockUpdateRequest request)
@@ -91,7 +91,7 @@ public class KeyStatisticService : IKeyStatisticService
 
                 await _context.SaveChangesAsync();
 
-                return keyStat;
+                return _mapper.Map<KeyStatisticDataBlockViewModel>(keyStat);
             });
     }
 
