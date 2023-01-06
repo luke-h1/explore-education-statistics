@@ -128,6 +128,13 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Services
                         var dataBlocks = await _releaseContentBlockRepository.GetAll<DataBlock>(release.Id);
 
                         return _mapper.Map<List<DataBlockSummaryViewModel>>(dataBlocks)
+                            .Select(model =>
+                            {
+                                model.InContent = model.ContentSectionId != null ||
+                                                  _context.KeyStatisticDataBlock.Any(ks =>
+                                                      ks.DataBlockId == model.Id);
+                                return model;
+                            })
                             .OrderBy(model => model.Name)
                             .ToList();
                     }
