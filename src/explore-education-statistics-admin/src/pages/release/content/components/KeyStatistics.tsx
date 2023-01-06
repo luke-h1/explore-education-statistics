@@ -20,6 +20,7 @@ import {
   KeyStatisticText,
 } from '@common/services/publicationService';
 import useReleaseContentActions from '@admin/pages/release/content/contexts/useReleaseContentActions';
+import keyStatisticService from '@admin/services/keyStatisticService';
 
 export interface KeyStatisticsProps {
   release: EditableRelease;
@@ -63,7 +64,7 @@ const KeyStatistics = ({ release, isEditing }: KeyStatisticsProps) => {
         },
         {},
       );
-      // @MarkFix reorder KeyStatisticBase here
+      await keyStatisticService.reorderKeyStatistics(release.id, order);
     },
     [release.id, release.keyStatistics],
   );

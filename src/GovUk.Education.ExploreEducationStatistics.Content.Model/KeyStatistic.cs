@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 
 namespace GovUk.Education.ExploreEducationStatistics.Content.Model
 {
-    public abstract class KeyStatistic : ICreatedUpdatedTimestamps<DateTime, DateTime?> // @MarkFix created not being set correctly?
+    public abstract class KeyStatistic : ICreatedUpdatedTimestamps<DateTime, DateTime?>
     {
         public Guid Id { get; set; }
 
