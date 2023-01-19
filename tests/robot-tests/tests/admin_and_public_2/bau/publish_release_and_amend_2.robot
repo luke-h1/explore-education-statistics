@@ -1,508 +1,826 @@
 *** Settings ***
+Library             ../../libs/admin_api.py
 Resource            ../../libs/admin-common.robot
 Resource            ../../libs/admin/manage-content-common.robot
-Library             ../../libs/admin_api.py
-
-Force Tags          Admin    Local    Dev    AltersData
+Resource            ../../libs/charts.robot
+Resource            ../../libs/public-common.robot
 
 Suite Setup         user signs in as bau1
 Suite Teardown      user closes the browser
 Test Setup          fail test fast if required
 
+Force Tags          Admin    Local    Dev    AltersData
+
 
 *** Variables ***
-${RELEASE_NAME}         Academic Year Q1 2020/21
-${PUBLICATION_NAME}     UI tests - publish release and amend 2 %{RUN_IDENTIFIER}
-${SUBJECT_NAME}         Seven filters
-${SECOND_SUBJECT}       upload file test
-${THIRD_SUBJECT}        upload file test with filter subject
+${PUBLICATION_NAME}=    UI tests - publish release %{RUN_IDENTIFIER}
+${RELEASE_NAME}=        Financial Year 3000-01
+${DATABLOCK_NAME}=      Dates data block name
 
 
 *** Test Cases ***
-Create publication
-    user selects dashboard theme and topic if possible
-    user clicks link    Create new publication
-    user waits until h1 is visible    Create new publication
-    user creates publication    ${PUBLICATION_NAME}
+Create new publication for "UI tests topic" topic
+    ${PUBLICATION_ID}=    user creates test publication via api    ${PUBLICATION_NAME}
+    user create test release via api    ${PUBLICATION_ID}    FY    3000
 
-Create new release
-    user navigates to publication page from dashboard    ${PUBLICATION_NAME}
-    user creates release from publication page    ${PUBLICATION_NAME}    Academic Year Q1    2020
-    user uploads subject    ${SUBJECT_NAME}    seven_filters.csv    seven_filters.meta.csv
+Go to "Release summary" page
+    user navigates to draft release page from dashboard    ${PUBLICATION_NAME}
+    ...    ${RELEASE_NAME}
 
-Upload another subject (for deletion later)
-    user waits until page contains element    id:dataFileUploadForm-subjectTitle
-    user uploads subject    ${SECOND_SUBJECT}    upload-file-test.csv    upload-file-test.meta.csv
+Verify release summary
+    user checks page contains element    xpath://li/a[text()="Summary" and contains(@aria-current, 'page')]
+    user waits until h2 is visible    Release summary
+    user checks summary list contains    Publication title    ${PUBLICATION_NAME}
 
-Add data guidance to subject
+Upload subject
+    user uploads subject    Dates test subject    dates.csv    dates.meta.csv
+
+Add data guidance
     user clicks link    Data guidance
-    user waits until h2 is visible    Public data guidance    %{WAIT_MEDIUM}
-    user enters text into element    id:dataGuidanceForm-content    Test data guidance content
-    user waits until page contains accordion section    ${SUBJECT_NAME}
-    user enters text into data guidance data file content editor    ${SUBJECT_NAME}
-    ...    data guidance content
-
-Add data guidance to second Subject
     user waits until h2 is visible    Public data guidance
-    user enters text into element    id:dataGuidanceForm-content    Test data guidance content
-    user waits until page contains accordion section    ${SECOND_SUBJECT}    15
-    user enters text into data guidance data file content editor    ${SECOND_SUBJECT}
-    ...    data guidance content
-    user clicks button    Save guidance
-    user waits until page contains button    ${SUBJECT_NAME}
-    user waits until page contains button    ${SECOND_SUBJECT}
 
-Navigate to 'Footnotes' page
+    user waits until page contains element    id:dataGuidanceForm-content
+    user waits until page contains element    id:dataGuidance-dataFiles
+    user enters text into element    id:dataGuidanceForm-content    Test data guidance content
+    user waits until page contains accordion section    Dates test subject
+
+    user checks summary list contains    Filename    dates.csv
+    user checks summary list contains    Geographic levels    National
+    user checks summary list contains    Time period    2020 Week 13 to 2021 Week 24
+
+    user enters text into data guidance data file content editor    Dates test subject
+    ...    Dates test subject test data guidance content
+    user clicks button    Save guidance
+
+Add ancillary file
+    user clicks link    Ancillary file uploads
+    user waits until h2 is visible    Add file to release
+
+    user enters text into element    label:Title    Test ancillary file 1
+    user enters text into element    label:Summary    Test ancillary file 1 summary
+    user chooses file    label:Upload file    ${FILES_DIR}test-file-1.txt
+    user clicks button    Upload file
+
+    user waits until page contains accordion section    Test ancillary file 1
+    user opens accordion section    Test ancillary file 1    id:file-uploads
+
+    ${section_1}=    user gets accordion section content element    Test ancillary file 1    id:file-uploads
+    user checks summary list contains    Title    Test ancillary file 1    ${section_1}
+    user checks summary list contains    Summary    Test ancillary file 1 summary    ${section_1}
+    user checks summary list contains    File    test-file-1.txt    ${section_1}
+    user checks summary list contains    File size    12 B    ${section_1}
+
+    user checks there are x accordion sections    1    id:file-uploads
+
+Navigate to 'Footnotes' section
     user clicks link    Footnotes
     user waits until h2 is visible    Footnotes
 
-Add footnote to second Subject
-    user waits until page contains link    Create footnote
+Add a footnote
     user clicks link    Create footnote
     user waits until h2 is visible    Create footnote
-    user clicks footnote subject radio    ${SECOND_SUBJECT}    Applies to all data
-    user enters text into element    label:Footnote    Footnote 1 ${SECOND_SUBJECT}
+    user clicks footnote subject radio    Dates test subject    Applies to all data
+    user clicks element    id:footnoteForm-content
+    user enters text into element    id:footnoteForm-content
+    ...    Applies to all data 1
     user clicks button    Save footnote
     user waits until h2 is visible    Footnotes
 
-Add second footnote to second Subject
-    user waits until page contains link    Create footnote
+Add a second footnote
     user clicks link    Create footnote
     user waits until h2 is visible    Create footnote
-    user clicks footnote subject radio    ${SECOND_SUBJECT}    Applies to specific data
-    user opens footnote subject dropdown    ${SECOND_SUBJECT}    Indicators
-    user clicks footnote subject checkbox    ${SECOND_SUBJECT}    Indicators    Admission Numbers
-    user enters text into element    label:Footnote    Footnote 2 ${SECOND_SUBJECT}
+    user clicks footnote subject radio    Dates test subject    Applies to all data
+    user clicks element    id:footnoteForm-content
+    user enters text into element    id:footnoteForm-content
+    ...    Applies to all data 2
     user clicks button    Save footnote
     user waits until h2 is visible    Footnotes
 
-Add footnote to subject
-    user waits until page contains link    Create footnote
-    user clicks link    Create footnote
-    user waits until h2 is visible    Create footnote
-    user clicks footnote subject radio    ${SUBJECT_NAME}    Applies to all data
-    user enters text into element    label:Footnote    Footnote 1 ${SUBJECT_NAME}
-    user clicks button    Save footnote
-    user waits until h2 is visible    Footnotes
+Confirm created footnotes
+    user waits until page contains element    testid:Footnote - Applies to all data 1
+    user waits until page contains element    testid:Footnote - Applies to all data 2
 
-Add second footnote to subject
-    user waits until page contains link    Create footnote
-    user clicks link    Create footnote
-    user waits until h2 is visible    Create footnote
-    user clicks footnote subject radio    ${SUBJECT_NAME}    Applies to specific data
-    user opens footnote subject dropdown    ${SUBJECT_NAME}    Cheese
-    user clicks footnote subject checkbox    ${SUBJECT_NAME}    Cheese    Stilton
-    user clicks footnote subject checkbox    ${SUBJECT_NAME}    Cheese    Feta
-    user enters text into element    label:Footnote    Footnote 2 ${SUBJECT_NAME}
-    user clicks button    Save footnote
-    user waits until h2 is visible    Footnotes
+Create data block table
+    user creates data block for dates csv    Dates test subject    ${DATABLOCK_NAME}    Dates table title
+
+Create chart for data block
+    user waits until page contains link    Chart
+    user waits until page does not contain loading spinner
+    user clicks link    Chart
+
+    user clicks button    Choose an infographic as alternative
+    user chooses file    id:chartConfigurationForm-file    ${FILES_DIR}test-infographic.png
+    user checks radio is checked    Use table title
+    user enters text into element    id:chartConfigurationForm-alt    Sample alt text
+
+    user clicks button    Save chart options
+
+    user waits until page contains    Chart preview
+    user checks infographic chart contains alt    id:chartBuilderPreview    Sample alt text
+
+Navigate to 'Content' page
+    user clicks link    Content
+    user waits until h2 is visible    ${PUBLICATION_NAME}
+    user waits until page contains button    Add a summary text block    %{WAIT_SMALL}
+
+Add three accordion sections to release
+    user waits for page to finish loading
+    user waits until page does not contain loading spinner
+    user clicks button    Add new section
+    user changes accordion section title    1    Dates data block
+    user clicks button    Add new section
+    user changes accordion section title    2    Test text
+    user clicks button    Add new section
+    user changes accordion section title    3    Test embedded dashboard section
+
+Add data block to first accordion section
+    user adds data block to editable accordion section    Dates data block    ${DATABLOCK_NAME}
+    ...    id:releaseMainContent
+    ${datablock}=    set variable    xpath://*[@data-testid="Data block - ${DATABLOCK_NAME}"]
+    user waits until page contains element    ${datablock}    %{WAIT_SMALL}
+    user waits until element contains infographic chart    ${datablock}
+    user checks chart title contains    ${datablock}    Dates table title
+    user checks infographic chart contains alt    ${datablock}    Sample alt text
+
+Verify data block table has footnotes
+    ${accordion}=    user opens accordion section    Dates data block    id:releaseMainContent
+    ${data_block_table}=    user gets data block table from parent    ${DATABLOCK_NAME}    ${accordion}
+
+    user checks list has x items    testid:footnotes    2    ${data_block_table}
+    user checks list item contains    testid:footnotes    1
+    ...    Applies to all data 1
+    ...    ${data_block_table}
+    user checks list item contains    testid:footnotes    2
+    ...    Applies to all data 2
+    ...    ${data_block_table}
+
+Add test text to second accordion section
+    user adds text block to editable accordion section    Test text    id:releaseMainContent
+    user adds content to autosaving accordion section text block    Test text    1    Some test text!
+    ...    id:releaseMainContent
+
+Add embedded dashboard to third accordion section
+    user adds embedded dashboard to editable accordion section
+    ...    Test embedded dashboard section
+    ...    Test embedded dashboard title
+    ...    https://department-for-education.shinyapps.io/dfe-shiny-template/
+    ...    id:releaseMainContent
+
+    select frame    xpath://iframe[@title="Test embedded dashboard title"]
+    user waits until h1 is visible    DfE Analytical Services R-Shiny data dashboard template (h1)    90
+    unselect frame
+
+User navigates to Data blocks page
+    user clicks link    Data blocks
+    user waits until h2 is visible    Data blocks    %{WAIT_SMALL}
+
+Edit data block
+    user waits until table is visible
+    user clicks link    Edit block    css:tbody > tr:first-child
+    user waits until h2 is visible    ${DATABLOCK_NAME}
+    user waits until h2 is visible    Data block details
+
+    user enters text into element    id:dataBlockDetailsForm-name    ${DATABLOCK_NAME}
+    user clears element text    id:dataBlockDetailsForm-heading
+    user enters text into element    id:dataBlockDetailsForm-heading    Updated dates table title
+    user clears element text    id:dataBlockDetailsForm-source
+    user enters text into element    id:dataBlockDetailsForm-source    Updated dates source
+
+    user clicks button    Save data block
+    user waits until page contains button    Delete this data block
+
+stop here
+    sleep    1000
 
 Add public prerelease access list
     user clicks link    Pre-release access
     user creates public prerelease access list    Test public access list
 
 Approve release
-    user clicks link    Sign off
+    user approves release for scheduled release    2    12    3001
+
+Verify release is scheduled
+    user checks summary list contains    Current status    Approved
+    user checks summary list contains    Scheduled release
+    ...    ${PUBLISH_DATE_DAY} ${PUBLISH_DATE_MONTH_WORD} ${PUBLISH_DATE_YEAR}
+    user checks summary list contains    Next release expected    December 3001
+
+Approve release for immediate publication
     user approves original release for immediate publication
 
-Go to public Table Tool page
-    user navigates to data tables page on public frontend
+Verify newly published release is on Find Statistics page
+    user checks publication is on find statistics page    ${PUBLICATION_NAME}
 
-Select "Test Topic" publication
-    environment variable should be set    TEST_THEME_NAME
-    environment variable should be set    TEST_TOPIC_NAME
-    user clicks radio    %{TEST_THEME_NAME}
-    user clicks radio    ${PUBLICATION_NAME}
-    user clicks element    id:publicationForm-submit
-    user waits until table tool wizard step is available    2    Choose a subject
-    user checks previous table tool step contains    1    Publication    ${PUBLICATION_NAME}
+Navigate to newly published release page
+    user clicks link    ${PUBLICATION_NAME}
+    user waits until h1 is visible    ${PUBLICATION_NAME}    %{WAIT_MEDIUM}
 
-Select subject
-    user clicks radio    ${SUBJECT_NAME}
-    user clicks element    id:publicationSubjectForm-submit
-    user waits until table tool wizard step is available    3    Choose locations
-    user checks previous table tool step contains    2    Subject    ${SUBJECT_NAME}
+Verify release URL and page caption
+    user checks url contains    %{PUBLIC_URL}/find-statistics/ui-tests-publish-release-%{RUN_IDENTIFIER}
+    user waits until page contains title caption    ${RELEASE_NAME}
 
-Select National location
-    user checks location checkbox is checked    England
+Verify publish and update dates
+    ${PUBLISH_DATE_DAY}=    get current datetime    %-d
+    ${PUBLISH_DATE_MONTH_WORD}=    get current datetime    %B
+    ${PUBLISH_DATE_YEAR}=    get current datetime    %Y
+    set suite variable    ${PUBLISH_DATE_DAY}
+    set suite variable    ${PUBLISH_DATE_MONTH_WORD}
+    set suite variable    ${PUBLISH_DATE_YEAR}
+    user checks summary list contains    Published
+    ...    ${PUBLISH_DATE_DAY} ${PUBLISH_DATE_MONTH_WORD} ${PUBLISH_DATE_YEAR}
+    user checks summary list contains    Next update    December 3001
 
-Click next step button
-    user clicks element    id:locationFiltersForm-submit
-    user waits until table tool wizard step is available    4    Choose time period
+Verify release associated files
+    user opens accordion section    Explore data and files
+    ${downloads}=    user gets accordion section content element    Explore data and files
+    user waits until page contains element    ${downloads}    %{WAIT_SMALL}
 
-Select start date and end date
-    user chooses select option    id:timePeriodForm-start    2012/13
-    user chooses select option    id:timePeriodForm-end    2012/13
-    user clicks element    id:timePeriodForm-submit
-    user waits until table tool wizard step is available    5    Choose your filters
-    user waits until page contains element    id:filtersForm-indicators
-    user checks previous table tool step contains    4    Time period    2012/13
+    user checks element should contain    ${downloads}    Download all data (zip)
+    ...    %{WAIT_SMALL}
+    user checks element should contain    ${downloads}
+    ...    All data used in this release is available as open data for download
+    user checks element should contain    ${downloads}
+    ...    You can view featured tables that we have built for you, or create your own tables from the open data using our table tool
 
-Select Indicators
-    user clicks indicator checkbox    Lower quartile annualised earnings
-    user checks indicator checkbox is checked    Lower quartile annualised earnings
+    user checks element should contain    ${downloads}
+    ...    Browse and download individual open data files from this release in our data catalogue
+    user checks element should contain    ${downloads}
+    ...    Learn more about the data files used in this release using our online guidance
 
-Select cheese filter
-    user opens details dropdown    Cheese
-    user clicks select all for category    Cheese
+    user opens details dropdown    List of all supporting files
+    ${other_files}=    user gets details content element    List of all supporting files
+    ${other_files_1}=    get child element    ${other_files}    css:li:nth-child(1)
 
-Select Number of years after achievement of learning aim filter
-    user opens details dropdown    Number of years after achievement of learning aim
-    user clicks select all for category    Number of years after achievement of learning aim
+    user waits until element contains link    ${other_files_1}    Test ancillary file 1 (txt, 12 B)
+    user opens details dropdown    More details    ${other_files_1}
+    ${other_files_1_details}=    user gets details content element    More details    ${other_files_1}
+    user checks element should contain    ${other_files_1_details}    Test ancillary file 1 summary
 
-Select ethnicity group filter
-    user opens details dropdown    Ethnicity group
-    user clicks select all for category    Ethnicity group
+    download file    link:Test ancillary file 1 (txt, 12 B)    test_ancillary_file_1.txt
+    downloaded file should have first line    test_ancillary_file_1.txt    Test file 1
 
-Select Provision filter
-    user opens details dropdown    Provision
-    user clicks select all for category    Provision
+Verify public metadata guidance document
+    user opens accordion section    Explore data and files
+    user waits until h3 is visible    Open data
+    user clicks link    Data guidance
 
-Click submit button
-    user clicks element    id:filtersForm-submit
+    user checks breadcrumb count should be    4
+    user checks nth breadcrumb contains    1    Home
+    user checks nth breadcrumb contains    2    Find statistics and data
+    user checks nth breadcrumb contains    3    ${PUBLICATION_NAME}
+    user checks nth breadcrumb contains    4    Data guidance
+    user waits until h2 is visible    Data guidance    %{WAIT_SMALL}
 
-Wait until table is generated
-    user waits until page contains button    Generate shareable link
+    user waits until page contains title caption    ${RELEASE_NAME}
+    user waits until h1 is visible    ${PUBLICATION_NAME}
 
-Wait until new footnote is visible
-    user checks page contains    Footnote 1 ${SUBJECT_NAME}
+    user waits until h2 is visible    Data guidance
+    user waits until page contains    Test data guidance content
 
-Validate results table column headings
-    user checks table row heading contains    1    1    Total
-    user checks table row heading contains    2    1    Asian/Asian British
-    user checks table row heading contains    3    1    Black/African/Caribbean/Black British
-    user checks table row heading contains    4    1    Mixed/Multiple ethnic group
-    user checks table row heading contains    5    1    Not Known/Not Provided
-    user checks table row heading contains    6    1    Other Ethnic Group
-    user checks table row heading contains    7    1    White
+    user waits until page contains accordion section    Dates test subject
+    user checks there are x accordion sections    1
 
-Validate row headings
-    user checks table column heading contains    1    1    1 year after study
-    user checks table column heading contains    1    2    2 years after study
-    user checks table column heading contains    1    3    3 years after study
-    user checks table column heading contains    1    4    4 years after study
-    user checks table column heading contains    1    5    5 years after study
+    user opens accordion section    Dates test subject
+    user checks summary list contains    Filename    dates.csv
+    user checks summary list contains    Geographic levels    National
+    user checks summary list contains    Time period    2020 Week 13 to 2021 Week 24
+    user checks summary list contains    Content    Dates test subject test data guidance content
 
-Validate table cells
-    user checks table cell contains    1    1    2
-    user checks table cell contains    2    1    8
-    user checks table cell contains    3    1    2
-    user checks table cell contains    4    1    5
-    user checks table cell contains    5    1    8
-    user checks table cell contains    6    1    8
-    user checks table cell contains    7    1    3
+    user opens details dropdown    Variable names and descriptions
 
-    user checks table cell contains    1    2    2
-    user checks table cell contains    2    2    10
-    user checks table cell contains    3    2    4
-    user checks table cell contains    4    2    8
-    user checks table cell contains    5    2    5
-    user checks table cell contains    6    2    5
-    user checks table cell contains    7    2    6
+    user checks table column heading contains    1    1    Variable name    css:table[data-testid="Variables"]
+    user checks table column heading contains    1    2    Variable description    css:table[data-testid="Variables"]
 
-    user checks table cell contains    1    3    8
-    user checks table cell contains    2    3    3
-    user checks table cell contains    3    3    0
-    user checks table cell contains    4    3    6
-    user checks table cell contains    5    3    3
-    user checks table cell contains    6    3    2
-    user checks table cell contains    7    3    0
+    user checks table cell contains    1    1    children_attending    css:table[data-testid="Variables"]
+    user checks table cell contains    1    2    Number of children attending
+    ...    css:table[data-testid="Variables"]
 
-    user checks table cell contains    1    4    2
-    user checks table cell contains    2    4    3
-    user checks table cell contains    3    4    9
-    user checks table cell contains    4    4    4
-    user checks table cell contains    5    4    7
-    user checks table cell contains    6    4    4
-    user checks table cell contains    7    4    8
+    user checks table cell contains    6    1    date    css:table[data-testid="Variables"]
+    user checks table cell contains    6    2    Date    css:table[data-testid="Variables"]
 
-    user checks table cell contains    1    5    9
-    user checks table cell contains    2    5    0
-    user checks table cell contains    3    5    6
-    user checks table cell contains    4    5    8
-    user checks table cell contains    5    5    1
-    user checks table cell contains    6    5    1
-    user checks table cell contains    7    5    1
+    user checks table cell contains    10    1    otherwise_vulnerable_children_attending
+    ...    css:table[data-testid="Variables"]
+    user checks table cell contains    10    2    Number of otherwise vulnerable children attending
+    ...    css:table[data-testid="Variables"]
 
-Generate the permalink
-    [Documentation]    EES-214
-    user waits until page contains button    Generate shareable link    %{WAIT_SMALL}
-    user clicks button    Generate shareable link
-    user waits until page contains testid    permalink-generated-url
-    ${PERMA_LOCATION_URL}    Get Value    testid:permalink-generated-url
-    Set Suite Variable    ${PERMA_LOCATION_URL}
+    user goes to release page via breadcrumb    ${PUBLICATION_NAME}    ${RELEASE_NAME}
 
-Go to permalink
-    user navigates to public frontend    ${PERMA_LOCATION_URL}
-    user waits until h1 is visible    '${SUBJECT_NAME}' from '${PUBLICATION_NAME}'
-    user checks page does not contain    WARNING
-    user checks page contains    Footnote 1 ${SUBJECT_NAME}
+Verify public pre-release access list
+    user clicks link    Pre-release access list
 
-Return to Admin
+    user checks breadcrumb count should be    4
+    user checks nth breadcrumb contains    1    Home
+    user checks nth breadcrumb contains    2    Find statistics and data
+    user checks nth breadcrumb contains    3    ${PUBLICATION_NAME}
+    user checks nth breadcrumb contains    4    Pre-release access list
+
+    user waits until page contains title caption    ${RELEASE_NAME}
+    user waits until h1 is visible    ${PUBLICATION_NAME}
+
+    user waits until h2 is visible    Pre-release access list
+    user waits until page contains    Published ${PUBLISH_DATE_DAY} ${PUBLISH_DATE_MONTH_WORD} ${PUBLISH_DATE_YEAR}
+    user waits until page contains    Test public access list
+
+Verify accordions are correct
+    user goes to release page via breadcrumb    ${PUBLICATION_NAME}    ${RELEASE_NAME}
+    user checks there are x accordion sections    1    id:data-accordion
+    user checks accordion is in position    Explore data and files    1    id:data-accordion
+
+    user checks there are x accordion sections    3    id:content
+    user checks accordion is in position    Dates data block    1    id:content
+    user checks accordion is in position    Test text    2    id:content
+    user checks accordion is in position    Test embedded dashboard section    3    id:content
+
+    user checks there are x accordion sections    2    id:help-and-support
+    user checks accordion is in position    National statistics    1    id:help-and-support
+    user checks accordion is in position    Contact us    2    id:help-and-support
+
+Verify Dates data block accordion section
+    user opens accordion section    Dates data block    id:content
+    user scrolls to accordion section content    Dates data block    id:content
+    ${section}=    user gets accordion section content element    Dates data block    id:content
+
+    user checks chart title contains    ${section}    Dates table title
+    user checks infographic chart contains alt    ${section}    Sample alt text
+
+    user clicks link by visible text    Table    ${section}
+    user waits until parent contains element    ${section}
+    ...    xpath:.//*[@data-testid="dataTableCaption" and text()="Dates table title"]
+    user waits until parent contains element    ${section}    xpath:.//*[.="Source: Dates source"]
+
+    user checks table column heading contains    1    1    2020 Week 13    ${section}
+    user checks headed table body row cell contains    Number of open settings    1    22,900    ${section}
+    user checks headed table body row cell contains    Proportion of settings open    1    1%    ${section}
+
+    user closes accordion section    Dates data block    id:content
+
+Verify Dates data block table has footnotes
+    ${accordion}=    user opens accordion section    Dates data block    id:content
+    ${data_block_table}=    user gets data block table from parent    ${DATABLOCK_NAME}    ${accordion}
+
+    user checks list has x items    testid:footnotes    2    ${data_block_table}
+    user checks list item contains    testid:footnotes    1
+    ...    Applies to all data 1
+    ...    ${data_block_table}
+    user checks list item contains    testid:footnotes    2
+    ...    Applies to all data 2
+    ...    ${data_block_table}
+
+Verify Test text accordion section contains correct text
+    user opens accordion section    Test text    id:content
+    ${section}=    user gets accordion section content element    Test text    id:content
+    user waits until parent contains element    ${section}    xpath:.//p[text()="Some test text!"]
+    user closes accordion section    Test text    id:content
+
+Verify embedded dashboard accordion section contains dashboard
+    user opens accordion section    Test embedded dashboard section    id:content
+    ${section}=    user gets accordion section content element    Test embedded dashboard section    id:content
+    user waits until parent contains element    ${section}    xpath:.//iframe[@title="Test embedded dashboard title"]
+
+    select frame    xpath://iframe[@title="Test embedded dashboard title"]
+    user waits until h1 is visible    DfE Analytical Services R-Shiny data dashboard template (h1)    %{WAIT_SMALL}
+    unselect frame
+
+Return to Admin and Create amendment
     user navigates to admin dashboard    Bau1
-
-Create release amendment
-    user clicks link    Home
     user creates amendment for release    ${PUBLICATION_NAME}    ${RELEASE_NAME}
 
-Replace subject data
-    user clicks link    Data and files
-    user waits until page contains element    id:dataFileUploadForm-subjectTitle
-    user waits until h2 is visible    Uploaded data files
+Change the Release type
+    user waits until page contains link    Edit release summary
+    user clicks link    Edit release summary
+    user waits until h2 is visible    Edit release summary
+    user checks page contains radio    Experimental statistics
+    user clicks radio    Experimental statistics
+    user clicks button    Update release summary
+    user checks page contains element    xpath://li/a[text()="Summary" and contains(@aria-current, 'page')]
+    user verifies release summary    ${PUBLICATION_NAME}
+    ...    ${PUBLICATION_NAME} summary
+    ...    Financial Year
+    ...    3000-01
+    ...    UI test contact name
+    ...    Experimental statistics
 
-    user waits until page contains accordion section    ${SUBJECT_NAME}
-    user opens accordion section    ${SUBJECT_NAME}
-    ${section}    user gets accordion section content element    ${SUBJECT_NAME}
+Navigate to data replacement page
+    user clicks link    Data and files
+    user waits until h2 is visible    Uploaded data files    %{WAIT_MEDIUM}
+    user waits until page contains accordion section    Dates test subject
+    user opens accordion section    Dates test subject
+
+    ${section}=    user gets accordion section content element    Dates test subject
     user clicks link    Replace data    ${section}
-    user chooses file    id:dataFileUploadForm-dataFile    ${FILES_DIR}dates.csv
-    user chooses file    id:dataFileUploadForm-metadataFile    ${FILES_DIR}dates.meta.csv
+
+    user waits until h2 is visible    Data file details
+    user checks headed table body row contains    Subject title    Dates test subject
+    user checks headed table body row contains    Data file    dates.csv
+    user checks headed table body row contains    Metadata file    dates.meta.csv
+    user checks headed table body row contains    Number of rows    118    wait=%{WAIT_SMALL}
+    user checks headed table body row contains    Data file size    17 Kb    wait=%{WAIT_SMALL}
+    user checks headed table body row contains    Status    Complete    wait=%{WAIT_LONG}
+
+Upload replacement data
+    user waits until h2 is visible    Upload replacement data    %{WAIT_MEDIUM}
+    user chooses file    id:dataFileUploadForm-dataFile    ${FILES_DIR}dates-replacement.csv
+    user chooses file    id:dataFileUploadForm-metadataFile    ${FILES_DIR}dates-replacement.meta.csv
     user clicks button    Upload data files
 
-    user waits until page contains    Footnotes: ERROR    %{WAIT_MEDIUM}
-    user opens details dropdown    Footnote 2 ${SUBJECT_NAME}
-    user clicks button    Delete footnote
-    user clicks button    Confirm
+    user waits until page contains element    testid:Replacement Subject title
+    user checks table column heading contains    1    1    Original file
+    user checks table column heading contains    1    2    Replacement file
 
-    #EES-1442: Bug when Confirm data replacement button doesn't show
-    user reloads page
-    user waits until page contains    Footnotes: OK
-    user waits until page contains    Data blocks: OK
-    user waits until button is enabled    Confirm data replacement
+    user checks headed table body row cell contains    Subject title    1    Dates test subject
+    user checks headed table body row cell contains    Data file    1    dates.csv
+    user checks headed table body row cell contains    Metadata file    1    dates.meta.csv
+    user checks headed table body row cell contains    Number of rows    1    118    wait=%{WAIT_SMALL}
+    user checks headed table body row cell contains    Data file size    1    17 Kb    wait=%{WAIT_SMALL}
+    user checks headed table body row cell contains    Status    1    Data replacement in progress    wait=%{WAIT_LONG}
+
+    user checks headed table body row cell contains    Subject title    2    Dates test subject
+    user checks headed table body row cell contains    Data file    2    dates-replacement.csv
+    user checks headed table body row cell contains    Metadata file    2    dates-replacement.meta.csv
+    user checks headed table body row cell contains    Number of rows    2    118    wait=%{WAIT_SMALL}
+    user checks headed table body row cell contains    Data file size    2    17 Kb    wait=%{WAIT_SMALL}
+    user checks headed table body row cell contains    Status    2    Complete    wait=%{WAIT_LONG}
 
 Confirm data replacement
+    user waits until page contains    Data blocks: OK
+    user waits until page contains    Footnotes: OK
     user clicks button    Confirm data replacement
-    user waits until h2 is visible    Data replacement complete    %{WAIT_MEDIUM}
+    user waits until h2 is visible    Data replacement complete
 
-Delete second subject file
+Verify existing data guidance for amendment
     user clicks link    Data and files
-    user waits until h2 is visible    Add data file to release
-    user deletes subject file    ${SECOND_SUBJECT}
+    user clicks link    Data guidance
+    user waits until h2 is visible    Public data guidance
 
-Navigate to 'Content' page for release amendment
+    user waits until element contains    id:dataGuidanceForm-content    Test data guidance content
+
+    user waits until page contains accordion section    Dates test subject
+
+    user checks summary list contains    Filename    dates-replacement.csv
+    user checks summary list contains    Geographic levels    National
+    user checks summary list contains    Time period    2020 Week 13 to 2021 Week 24
+
+    ${editor}=    user gets data guidance data file content editor    Dates test subject
+    user waits until element contains    ${editor}    Dates test subject test data guidance content
+
+Update existing data guidance for amendment
+    user enters text into element    id:dataGuidanceForm-content    Updated test data guidance content
+    user enters text into data guidance data file content editor    Dates test subject
+    ...    Updated Dates test subject test data guidance content
+
+    user clicks button    Save guidance
+
+Navigate to 'Footnotes' section for amendment
+    user clicks link    Footnotes
+    user waits until h2 is visible    Footnotes
+
+Add a footnote to amendment
+    user waits until page contains link    Create footnote
+    user clicks link    Create footnote
+    user waits until h2 is visible    Create footnote
+    user clicks footnote subject radio    Dates test subject    Applies to all data
+    user clicks element    id:footnoteForm-content
+    user enters text into element    id:footnoteForm-content
+    ...    Applies to all data 3
+    user clicks button    Save footnote
+    user waits until h2 is visible    Footnotes
+
+Confirm amendment has footnotes
+    user waits until h2 is visible    Footnotes
+    user waits until page contains element    testid:Footnote - Applies to all data 1
+    user waits until page contains element    testid:Footnote - Applies to all data 2
+    user waits until page contains element    testid:Footnote - Applies to all data 3
+
+Add ancillary file to amendment
+    user clicks link    Data and files
+    user clicks link    Ancillary file uploads
+    user waits until h2 is visible    Add file to release
+
+    user enters text into element    label:Title    Test ancillary file 2
+    user enters text into element    label:Summary    Test ancillary file 2 summary
+    user chooses file    label:Upload file    ${FILES_DIR}test-file-2.txt
+    user clicks button    Upload file
+
+    user waits until page contains accordion section    Test ancillary file 2
+    user opens accordion section    Test ancillary file 2    id:file-uploads
+
+    ${section_2}=    user gets accordion section content element    Test ancillary file 2    id:file-uploads
+    user checks summary list contains    Title    Test ancillary file 2    ${section_2}
+    user checks summary list contains    Summary    Test ancillary file 2 summary    ${section_2}
+    user checks summary list contains    File    test-file-2.txt    ${section_2}
+    user checks summary list contains    File size    24 B    ${section_2}
+
+    user checks there are x accordion sections    2    id:file-uploads
+
+User navigates to Data blocks page
+    user clicks link    Data blocks
+    user waits until h2 is visible    Data blocks    %{WAIT_SMALL}
+
+Edit data block for amendment
+    user waits until table is visible
+
+    user checks table body has x rows    1
+    user checks table cell contains    1    1    ${DATABLOCK_NAME}
+    user checks table cell contains    1    2    Yes
+    user checks table cell contains    1    3    Yes
+    user checks table cell contains    1    4    None
+
+    user clicks link    Edit block    css:tbody > tr:first-child
+
+    user waits until h2 is visible    ${DATABLOCK_NAME}
+    user waits until h2 is visible    Data block details
+
+    user clicks element    testid:wizardStep-4-goToButton
+    user clicks button    Confirm
+
+    user opens details dropdown    Date
+    user clicks category checkbox    Date    24/03/2020
+    user checks category checkbox is checked    Date    24/03/2020
+
+    user clicks element    id:filtersForm-submit
+    user waits until results table appears    %{WAIT_LONG}
+
+    user checks table column heading contains    1    1    2020 Week 13
+    user checks headed table body row cell contains    Number of open settings    1    23,000
+    user checks headed table body row cell contains    Proportion of settings open    1    2%
+    user checks headed table body row cell contains    Number of open settings    1    23,600
+    user checks headed table body row cell contains    Proportion of settings open    1    1%
+
+Save data block for amendment
+    user enters text into element    id:dataBlockDetailsForm-name    ${DATABLOCK_NAME}
+    user enters text into element    id:dataBlockDetailsForm-heading    Updated dates table title
+    user enters text into element    id:dataBlockDetailsForm-source    Updated dates source
+
+    user clicks button    Save data block
+    user waits until page contains button    Delete this data block
+
+Update data block chart for amendment
+    user waits until page contains link    Chart    %{WAIT_SMALL}
+    user waits until page does not contain loading spinner
+    user clicks link    Chart
+
+    user waits until page contains element    id:chartConfigurationForm-title    %{WAIT_SMALL}
+
+    user checks radio is checked    Use table title
+    user clicks radio    Set an alternative title
+    user enters text into element    id:chartConfigurationForm-title    Updated sample title
+    user checks input field contains    id:chartConfigurationForm-title    Updated sample title
+    user enters text into element    id:chartConfigurationForm-alt    Updated sample alt text
+    user checks textarea contains    id:chartConfigurationForm-alt    Updated sample alt text
+
+    user clicks button    Save chart options
+    user waits until page does not contain loading spinner
+    user waits until page contains element    id:chartBuilderPreview
+    user checks infographic chart contains alt    id:chartBuilderPreview    Updated sample alt text
+
+Navigate to 'Content' page for amendment
     user clicks link    Content
     user waits until h2 is visible    ${PUBLICATION_NAME}
     user waits until page contains button    Add a summary text block
 
-Add release note to release amendment
+Verify amended Dates data block table has footnotes
+    ${accordion}=    user opens accordion section    Dates data block    id:releaseMainContent
+    ${data_block_table}=    user gets data block table from parent    ${DATABLOCK_NAME}    ${accordion}
+
+    user checks list has x items    testid:footnotes    2    ${data_block_table}
+    user checks list item contains    testid:footnotes    1
+    ...    Applies to all data 1
+    ...    ${data_block_table}
+    user checks list item contains    testid:footnotes    2
+    ...    Applies to all data 2
+    ...    ${data_block_table}
+
+    user clicks button    Show 1 more footnote    ${data_block_table}
+    user checks list has x items    testid:footnotes    3    ${data_block_table}
+    user checks list item contains    testid:footnotes    3
+    ...    Applies to all data 3
+    ...    ${data_block_table}
+
+Update second accordion section text for amendment
+    user opens accordion section    Test text    id:releaseMainContent
+    user adds content to autosaving accordion section text block    Test text    1    Updated test text!
+    ...    id:releaseMainContent
+
+Update embedded dashboard title
+    user updates embedded dashboard in editable accordion section
+    ...    Test embedded dashboard section
+    ...    Test embedded dashboard title updated
+    ...    https://department-for-education.shinyapps.io/dfe-shiny-template/
+    ...    id:releaseMainContent
+
+    user closes accordion section    Test embedded dashboard section    id:releaseMainContent
+
+Add release note to amendment
     user clicks button    Add note
     user enters text into element    id:createReleaseNoteForm-reason    Test release note one
     user clicks button    Save note
-    ${date}    get current datetime    %-d %B %Y
+    ${date}=    get current datetime    %-d %B %Y
     user waits until element contains    css:#releaseNotes li:nth-of-type(1) time    ${date}
     user waits until element contains    css:#releaseNotes li:nth-of-type(1) p    Test release note one
 
-Go to "Sign off" page
+Update public prerelease access list for amendment
+    user clicks link    Pre-release access
+    user updates public prerelease access list    Updated public access list
+
+Approve amendment for immediate release
     user clicks link    Sign off
-    user waits until h3 is visible    Release status history
-
-Validate Release status table row is correct
-    user waits until page contains element    css:table
-    user checks element count is x    xpath://table/tbody/tr    1
-    ${datetime}    get current datetime    %-d %B %Y
-    table cell should contain    css:table    2    1    ${datetime}    # Date
-    table cell should contain    css:table    2    2    Approved    # Status
-    table cell should contain    css:table    2    3    Approved by UI tests    # Internal note
-    table cell should contain    css:table    2    4    1    # Release version
-    table cell should contain    css:table    2    5    ees-test.bau1@education.gov.uk    # By user
-
-Approve release amendment
     user approves amended release for immediate publication
 
-Check new release status history entry is present
-    user waits until h3 is visible    Release status history    10
-    table cell should contain    testid:release-status-history    2    4    2    # Release version 2
+Verify amendment is on Find Statistics page again
+    user checks publication is on find statistics page    ${PUBLICATION_NAME}
 
-Go to permalink page & check for error element to be present
-    user navigates to public frontend    ${PERMA_LOCATION_URL}
-    user waits until page contains
-    ...    WARNING - The data used in this table may be invalid as the subject file has been amended or removed since its creation.
+Navigate to amendment release page
+    user clicks link    ${PUBLICATION_NAME}
+    user waits until h1 is visible    ${PUBLICATION_NAME}    %{WAIT_MEDIUM}
+    user waits until page contains title caption    ${RELEASE_NAME}
 
-Check the table has the same results as original table
-    user checks table row heading contains    1    1    Total
-    user checks table row heading contains    2    1    Asian/Asian British
-    user checks table row heading contains    3    1    Black/African/Caribbean/Black British
-    user checks table row heading contains    4    1    Mixed/Multiple ethnic group
-    user checks table row heading contains    5    1    Not Known/Not Provided
-    user checks table row heading contains    6    1    Other Ethnic Group
-    user checks table row heading contains    7    1    White
+    user checks url contains    %{PUBLIC_URL}/find-statistics/ui-tests-publish-release-%{RUN_IDENTIFIER}
 
-    user checks table column heading contains    1    1    1 year after study
-    user checks table column heading contains    1    2    2 years after study
-    user checks table column heading contains    1    3    3 years after study
-    user checks table column heading contains    1    4    4 years after study
-    user checks table column heading contains    1    5    5 years after study
+    user checks breadcrumb count should be    3
+    user checks nth breadcrumb contains    1    Home
+    user checks nth breadcrumb contains    2    Find statistics and data
+    user checks nth breadcrumb contains    3    ${PUBLICATION_NAME}
 
-    user checks table cell contains    1    1    2
-    user checks table cell contains    2    1    8
-    user checks table cell contains    3    1    2
-    user checks table cell contains    4    1    5
-    user checks table cell contains    5    1    8
-    user checks table cell contains    6    1    8
-    user checks table cell contains    7    1    3
+Verify amendment is displayed as the latest release
+    user checks page does not contain    View latest data:
+    user checks page does not contain    See other releases (1)
 
-    user checks table cell contains    1    2    2
-    user checks table cell contains    2    2    10
-    user checks table cell contains    3    2    4
-    user checks table cell contains    4    2    8
-    user checks table cell contains    5    2    5
-    user checks table cell contains    6    2    5
-    user checks table cell contains    7    2    6
+Verify amendment is published
+    user checks summary list contains    Published
+    ...    ${PUBLISH_DATE_DAY} ${PUBLISH_DATE_MONTH_WORD} ${PUBLISH_DATE_YEAR}
+    user checks summary list contains    Next update    December 3001
 
-    user checks table cell contains    1    3    8
-    user checks table cell contains    2    3    3
-    user checks table cell contains    3    3    0
-    user checks table cell contains    4    3    6
-    user checks table cell contains    5    3    3
-    user checks table cell contains    6    3    2
-    user checks table cell contains    7    3    0
+Verify amendment files
+    user opens accordion section    Explore data and files
+    ${downloads}=    user gets accordion section content element    Explore data and files
+    user checks element should contain    ${downloads}    Download all data (zip)
+    ...    %{WAIT_SMALL}
 
-    user checks table cell contains    1    4    2
-    user checks table cell contains    2    4    3
-    user checks table cell contains    3    4    9
-    user checks table cell contains    4    4    4
-    user checks table cell contains    5    4    7
-    user checks table cell contains    6    4    4
-    user checks table cell contains    7    4    8
+    user opens details dropdown    List of all supporting files
+    ${other_files}=    user gets details content element    List of all supporting files
+    ${other_files_1}=    get child element    ${other_files}    css:li:nth-child(1)
+    ${other_files_2}=    get child element    ${other_files}    css:li:nth-child(2)
 
-    user checks table cell contains    1    5    9
-    user checks table cell contains    2    5    0
-    user checks table cell contains    3    5    6
-    user checks table cell contains    4    5    8
-    user checks table cell contains    5    5    1
-    user checks table cell contains    6    5    1
-    user checks table cell contains    7    5    1
+    user waits until element contains link    ${other_files_1}    Test ancillary file 1 (txt, 12 B)
+    user opens details dropdown    More details    ${other_files_1}
+    ${other_files_1_details}=    user gets details content element    More details    ${other_files_1}
+    user checks element should contain    ${other_files_1_details}    Test ancillary file 1 summary
+    download file    link:Test ancillary file 1 (txt, 12 B)    test_ancillary_file_1.txt
+    downloaded file should have first line    test_ancillary_file_1.txt    Test file 1
 
-Check amended release doesn't contain deleted subject
-    user navigates to public frontend    %{PUBLIC_URL}/data-tables
-    user waits until h1 is visible    Create your own tables
-    user clicks radio    %{TEST_THEME_NAME}
-    user clicks radio    ${PUBLICATION_NAME}
-    user clicks element    id:publicationForm-submit
-    user waits until table tool wizard step is available    2    Choose a subject
-    user checks previous table tool step contains    1    Publication    ${PUBLICATION_NAME}
-    user checks page does not contain    ${SECOND_SUBJECT}
+    user waits until element contains link    ${other_files_2}    Test ancillary file 2 (txt, 24 B)
+    user opens details dropdown    More details    ${other_files_2}
+    ${other_files_2_details}=    user gets details content element    More details    ${other_files_2}
+    user checks element should contain    ${other_files_2_details}    Test ancillary file 2 summary
 
-Create amendment to modify release
+    download file    link:Test ancillary file 2 (txt, 24 B)    test_ancillary_file_2.txt
+    downloaded file should have first line    test_ancillary_file_2.txt    Test file 2
+
+Verify amendment public metadata guidance document
+    user opens accordion section    Explore data and files
+    user waits until h3 is visible    Open data
+    user clicks link    Data guidance
+
+    user checks breadcrumb count should be    4
+    user checks nth breadcrumb contains    1    Home
+    user checks nth breadcrumb contains    2    Find statistics and data
+    user checks nth breadcrumb contains    3    ${PUBLICATION_NAME}
+    user checks nth breadcrumb contains    4    Data guidance
+    user waits until h2 is visible    Data guidance
+
+    user waits until page contains title caption    ${RELEASE_NAME}
+    user waits until h1 is visible    ${PUBLICATION_NAME}
+
+    user waits until h2 is visible    Data guidance
+    user waits until page contains    Updated test data guidance content
+
+    user waits until page contains accordion section    Dates test subject
+    user checks there are x accordion sections    1
+
+    user opens accordion section    Dates test subject
+    user checks summary list contains    Filename    dates-replacement.csv
+    user checks summary list contains    Geographic levels    National
+    user checks summary list contains    Time period    2020 Week 13 to 2021 Week 24
+    user checks summary list contains    Content    Updated Dates test subject test data guidance content
+
+    user opens details dropdown    Variable names and descriptions
+
+    user checks table column heading contains    1    1    Variable name
+    user checks table column heading contains    1    2    Variable description
+
+    user checks table cell contains    1    1    children_attending
+    user checks table cell contains    1    2    Number of children attending
+
+    user checks table cell contains    6    1    date
+    user checks table cell contains    6    2    Date
+
+    user checks table cell contains    10    1    otherwise_vulnerable_children_attending
+    user checks table cell contains    10    2    Number of otherwise vulnerable children attending
+
+    user goes to release page via breadcrumb    ${PUBLICATION_NAME}    ${RELEASE_NAME}
+
+Verify amendment public pre-release access list
+    user clicks link    Pre-release access list
+
+    user checks breadcrumb count should be    4
+    user checks nth breadcrumb contains    1    Home
+    user checks nth breadcrumb contains    2    Find statistics and data
+    user checks nth breadcrumb contains    3    ${PUBLICATION_NAME}
+    user checks nth breadcrumb contains    4    Pre-release access list
+
+    user waits until page contains title caption    ${RELEASE_NAME}
+    user waits until h1 is visible    ${PUBLICATION_NAME}
+
+    user waits until h2 is visible    Pre-release access list
+    user waits until page contains    Published ${PUBLISH_DATE_DAY} ${PUBLISH_DATE_MONTH_WORD} ${PUBLISH_DATE_YEAR}
+    user waits until page contains    Updated public access list
+
+Verify amendment accordions are correct
+    user goes to release page via breadcrumb    ${PUBLICATION_NAME}    ${RELEASE_NAME}
+    user checks accordion is in position    Dates data block    1    id:content
+    user checks accordion is in position    Test text    2    id:content
+    user checks accordion is in position    Test embedded dashboard section    3    id:content
+    user checks accordion is in position    Experimental statistics    1    id:help-and-support
+    user checks accordion is in position    Contact us    2    id:help-and-support
+
+Verify amendment Dates data block accordion section
+    user opens accordion section    Dates data block    id:content
+    user scrolls to accordion section content    Dates data block    id:content
+    ${section}=    user gets accordion section content element    Dates data block    id:content
+
+    user checks chart title contains    ${section}    Updated sample title
+    user checks infographic chart contains alt    ${section}    Updated sample alt text
+
+    user clicks link by visible text    Table    ${section}
+    user waits until parent contains element    ${section}
+    ...    xpath:.//*[@data-testid="dataTableCaption" and text()="Updated dates table title"]
+    user waits until parent contains element    ${section}    xpath:.//*[.="Source: Updated dates source"]
+
+    user checks table column heading contains    1    1    2020 Week 13    ${section}
+    user checks headed table body row cell contains    Number of open settings    1    23,000    ${section}
+    user checks headed table body row cell contains    Proportion of settings open    1    2%    ${section}
+    user checks headed table body row cell contains    Number of open settings    1    23,600    ${section}
+    user checks headed table body row cell contains    Proportion of settings open    1    1%    ${section}
+    user closes accordion section    Dates data block    id:content
+
+Verify amendment Dates data block table has footnotes
+    ${accordion}=    user opens accordion section    Dates data block    id:content
+    ${data_block_table}=    user gets data block table from parent    ${DATABLOCK_NAME}    ${accordion}
+
+    user checks list has x items    testid:footnotes    2    ${data_block_table}
+    user checks list item contains    testid:footnotes    1
+    ...    Applies to all data 1
+    ...    ${data_block_table}
+    user checks list item contains    testid:footnotes    2
+    ...    Applies to all data 2
+    ...    ${data_block_table}
+
+    user clicks button    Show 1 more footnote    ${data_block_table}
+    user checks list has x items    testid:footnotes    3    ${data_block_table}
+    user checks list item contains    testid:footnotes    3
+    ...    Applies to all data 3
+    ...    ${data_block_table}
+
+Verify amendment Test text accordion section contains correct text
+    user opens accordion section    Test text    id:content
+    ${section}=    user gets accordion section content element    Test text    id:content
+    user checks element contains    ${section}    Updated test text!
+    user closes accordion section    Test text    id:content
+
+Verify amendment embedded dashboard accordion section is correct
+    user opens accordion section    Test embedded dashboard section    id:content
+    ${section}=    user gets accordion section content element    Test embedded dashboard section    id:content
+    user checks element contains child element    ${section}
+    ...    xpath:.//iframe[@title="Test embedded dashboard title updated"]
+    user closes accordion section    Test embedded dashboard section    id:content
+
+Check next release date can be updated
     user navigates to admin dashboard    Bau1
     user creates amendment for release    ${PUBLICATION_NAME}    ${RELEASE_NAME}
+    user clicks link    Sign off
+    user clicks button    Edit release status
+    user waits until h2 is visible    Edit release status    %{WAIT_SMALL}
+    user enters text into element    releaseStatusForm-nextReleaseDate-month    08
+    user enters text into element    id:releaseStatusForm-nextReleaseDate-year    4001
+    user clicks button    Update status
 
-Add subject to release
-    user uploads subject    ${THIRD_SUBJECT}    upload-file-test-with-filter.csv
-    ...    upload-file-test-with-filter.meta.csv
-
-Add data guidance to third subject
-    user clicks link    Data guidance
-    user enters text into data guidance data file content editor    ${THIRD_SUBJECT}    meta content
-    user clicks button    Save guidance
-
-Navigate to 'Footnotes' Tab
-    user clicks link    Footnotes
-    user waits until h2 is visible    Footnotes
-
-Add footnote to "upload file test filter" subject file
-    user waits until page contains link    Create footnote
-    user clicks link    Create footnote
-    user waits until h2 is visible    Create footnote
-    user clicks footnote subject radio    ${THIRD_SUBJECT}    Applies to all data
-    user clicks element    label:Footnote
-    user enters text into element    label:Footnote    upload file test filter footnote
-    user clicks button    Save footnote
-    user waits until page contains element    testid:Footnote - upload file test filter footnote
-    user waits until h2 is visible    Footnotes
-
-Update Seven filters footnote
-    user clicks link    Edit footnote    testid:Footnote - Footnote 1 ${SUBJECT_NAME}
-    user clicks element    label:Footnote
-    user enters text into element    label:Footnote    Updating ${SUBJECT_NAME} footnote
-    user clicks button    Save footnote
-    user waits until page contains element    testid:Footnote - Updating ${SUBJECT_NAME} footnote
-
-Add release note for new release amendment
+Leave release note for amendment
     user clicks link    Content
     user clicks button    Add note
-    user enters text into element    id:createReleaseNoteForm-reason    Test release note two
+    user enters text into element    testid:comment-textarea    updated amendment
     user clicks button    Save note
-    ${date}    get current datetime    %-d %B %Y
-    user waits until element contains    css:#releaseNotes li:nth-of-type(1) time    ${date}
-    user waits until element contains    css:#releaseNotes li:nth-of-type(1) p    Test release note two
 
-Go to "Sign off" to approve amended release for immediate publication
-    user clicks link    Sign off
+Approve release amendment for immedate publication
     user approves amended release for immediate publication
 
-Go to public Table Tool page for amendment
-    user navigates to public frontend    %{PUBLIC_URL}/data-tables
-    user waits until h1 is visible    Create your own tables
+Save public release link for later use
+    user waits until page contains element    testid:public-release-url
+    ${PUBLIC_RELEASE_LINK}=    Get Value    xpath://*[@data-testid="public-release-url"]
+    check that variable is not empty    PUBLIC_RELEASE_LINK    ${PUBLIC_RELEASE_LINK}
+    Set Suite Variable    ${PUBLIC_RELEASE_LINK}
 
-Select publication
-    user clicks radio    %{TEST_THEME_NAME}
-    user clicks radio    ${PUBLICATION_NAME}
-    user clicks element    id:publicationForm-submit
-    user waits until table tool wizard step is available    2    Choose a subject
-    user checks previous table tool step contains    1    Publication    ${PUBLICATION_NAME}
-    #user checks page does not contain    ${SECOND_SUBJECT}    # EES-1360
+Navigate to amended public release
+    user navigates to public frontend    ${PUBLIC_RELEASE_LINK}
 
-Select subject again
-    user clicks radio    ${SUBJECT_NAME}
-    user clicks element    id:publicationSubjectForm-submit
-    user waits until table tool wizard step is available    3    Choose locations
-    user checks previous table tool step contains    2    Subject    ${SUBJECT_NAME}
-
-Select National location filter
-    user checks location checkbox is checked    England
-
-Click the next step button
-    user clicks element    id:locationFiltersForm-submit
-    user waits until table tool wizard step is available    4    Choose time period
-
-Select start date + end date
-    user chooses select option    id:timePeriodForm-start    2020 Week 13
-    user chooses select option    id:timePeriodForm-end    2021 Week 24
-    user clicks element    id:timePeriodForm-submit
-    user waits until table tool wizard step is available    5    Choose your filters
-    user waits until page contains element    id:filtersForm-indicators
-
-Select four indicators
-    user clicks indicator checkbox    Number of open settings
-    user checks indicator checkbox is checked    Number of open settings
-    user clicks indicator checkbox    Number of children attending
-    user checks indicator checkbox is checked    Number of children attending
-    user clicks indicator checkbox    Number of children of critical workers attending
-    user checks indicator checkbox is checked    Number of children of critical workers attending
-    user clicks indicator checkbox    Response rate
-    user checks indicator checkbox is checked    Response rate
-
-Select the date cateogory
-    user opens details dropdown    Date
-    user clicks select all for category    Date
-
-Attempt to generate a table that is too large
-    user clicks element    id:filtersForm-submit
-    user waits until page contains
-    ...    Could not create table as the filters chosen may exceed the maximum allowed table size.
-    user waits until page contains    Select different filters or download the subject data.
-    user waits until page contains button    Download Seven filters (csv, 17 Kb)    %{WAIT_MEDIUM}
-
-Reduce the number of selected Dates and generate a smaller table
-    user clicks unselect all for category    Date
-    user clicks category checkbox    Date    23/03/2020
-    user clicks category checkbox    Date    24/03/2020
-    user clicks category checkbox    Date    25/03/2020
-    user clicks element    id:filtersForm-submit
-    user waits until page contains    Generate shareable link    %{WAIT_SMALL}
-
-Validate generated table
-    user checks page contains    Updating ${SUBJECT_NAME} footnote
-
-Generate the new permalink
-    [Documentation]    EES-214
-    user clicks button    Generate shareable link
-    user waits until page contains testid    permalink-generated-url
-    ${PERMA_LOCATION_URL_TWO}    Get Value    testid:permalink-generated-url
-    Set Suite Variable    ${PERMA_LOCATION_URL_TWO}
-
-Go to new permalink
-    user navigates to public frontend    ${PERMA_LOCATION_URL_TWO}
-    user waits until h1 is visible    '${SUBJECT_NAME}' from '${PUBLICATION_NAME}'
-    user checks page does not contain    WARNING
-    user checks page contains    Updating ${SUBJECT_NAME} footnote
+Validate Next update date
+    user checks summary list contains    Next update    August 4001
