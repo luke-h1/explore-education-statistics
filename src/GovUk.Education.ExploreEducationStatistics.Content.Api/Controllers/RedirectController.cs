@@ -20,11 +20,11 @@ public class RedirectController : ControllerBase
         return new RedirectViewModel[]
         {
             new (
-                @"\/find-statistics\/pupil-absence-in-schools-in-england-old",
-                "/find-statistics/pupil-absence-in-schools-in-england"),
+                @"(.*)\/pupil-absence-in-schools-in-england-old",
+                "$1/pupil-absence-in-schools-in-england"),
             new (
-                @"\/find-statistics\/pupil-absence-in-schools-in-england-old([\/#?])(.*)",
-                "/find-statistics/pupil-absence-in-schools-in-england$1$2")
+                @"(.*)\/pupil-absence-in-schools-in-england-old([\/#?].*)",
+                "$1/pupil-absence-in-schools-in-england$2")
         };
     }
 }
