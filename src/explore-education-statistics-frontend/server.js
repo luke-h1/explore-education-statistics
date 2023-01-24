@@ -29,6 +29,8 @@ loadEnvConfig(__dirname);
 const app = nextApp({
   dev: process.env.NODE_ENV !== 'production',
   dir: './src',
+  hostname: 'localhost',
+  port: process.env.PORT || 3000,
 });
 
 const handleRequest = app.getRequestHandler();
