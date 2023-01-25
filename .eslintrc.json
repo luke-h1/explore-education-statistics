@@ -17,6 +17,18 @@
     "node": true
   },
   "extends": [
+    /* 
+    TODO: LH - decide whether to add import/order asc enforcement
+    */
+
+    /* 
+      TODO: LH - decide whether to add the following plugins:
+    "plugin:import/typescript",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:@next/next/recommended",
+
+    */
     "airbnb",
     "plugin:@typescript-eslint/recommended",
     "plugin:react/recommended",
