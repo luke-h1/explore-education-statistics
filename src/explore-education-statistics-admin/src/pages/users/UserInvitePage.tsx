@@ -9,14 +9,12 @@ import ButtonText from '@common/components/ButtonText';
 import Form from '@common/components/form/Form';
 import FormFieldSelect from '@common/components/form/FormFieldSelect';
 import FormFieldTextInput from '@common/components/form/FormFieldTextInput';
-import { ErrorControlState } from '@common/contexts/ErrorControlContext';
 import useFormSubmit from '@common/hooks/useFormSubmit';
 import { mapFieldErrors } from '@common/validation/serverValidations';
 import Yup from '@common/validation/yup';
 import { Formik } from 'formik';
 import orderBy from 'lodash/orderBy';
 import React from 'react';
-import { RouteComponentProps } from 'react-router';
 import useAsyncHandledRetry from '@common/hooks/useAsyncHandledRetry';
 import LoadingSpinner from '@common/components/LoadingSpinner';
 import { IdTitlePair } from '@admin/services/types/common';
@@ -25,6 +23,7 @@ import InviteUserReleaseRoleForm from '@admin/pages/users/components/InviteUserR
 import publicationService from '@admin/services/publicationService';
 import { PublicationSummary } from '@common/services/publicationService';
 import InviteUserPublicationRoleForm from '@admin/pages/users/components/InviteUserPublicationRoleForm';
+import { useNavigate } from 'react-router-dom-v5-compat';
 
 export interface InviteUserReleaseRole {
   releaseId: string;
@@ -61,24 +60,22 @@ interface InviteUserModel {
   publications: PublicationSummary[];
 }
 
-const UserInvitePage = ({
-  history,
-}: RouteComponentProps & ErrorControlState) => {
+const UserInvitePage = () => {
   const formId = 'inviteUserForm';
+  const navigate = useNavigate();
 
-  const { value: model, isLoading } = useAsyncHandledRetry<
-    InviteUserModel
-  >(async () => {
-    const [roles, resourceRoles, releases, publications] = await Promise.all([
-      userService.getRoles(),
-      userService.getResourceRoles(),
-      userService.getReleases(),
-      publicationService.getPublicationSummaries(),
-    ]);
-    return { roles, resourceRoles, releases, publications };
-  }, []);
+  const { value: model, isLoading } =
+    useAsyncHandledRetry<InviteUserModel>(async () => {
+      const [roles, resourceRoles, releases, publications] = await Promise.all([
+        userService.getRoles(),
+        userService.getResourceRoles(),
+        userService.getReleases(),
+        publicationService.getPublicationSummaries(),
+      ]);
+      return { roles, resourceRoles, releases, publications };
+    }, []);
 
-  const cancelHandler = () => history.push('/administration/users/invites');
+  const cancelHandler = () => navigate('/administration/users/invites');
 
   const handleSubmit = useFormSubmit<FormValues>(async values => {
     const userReleaseRoles = values.userReleaseRoles.map(userReleaseRole => {
@@ -103,8 +100,7 @@ const UserInvitePage = ({
     };
 
     await userService.inviteUser(submission);
-
-    history.push(`/administration/users/invites`);
+    cancelHandler();
   }, errorMappings);
 
   return (
