@@ -20,6 +20,8 @@ export default function withLazyLoad<P>(
 
     return (
       <LazyLoad {...lazyLoadProps} placeholder={placeholder}>
+        {/* TODO: LH - fix this */}
+        {/* @ts-ignore */}
         <Component {...props} />
       </LazyLoad>
     );
