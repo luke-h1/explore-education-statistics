@@ -9,13 +9,13 @@ import useFormSubmit from '@common/hooks/useFormSubmit';
 import React from 'react';
 import releaseDataFileService from '@admin/services/releaseDataFileService';
 import Link from '@admin/components/Link';
-import { generatePath, useParams } from 'react-router';
+import { generatePath } from 'react-router';
 import LoadingSpinner from '@common/components/LoadingSpinner';
 import Yup from '@common/validation/yup';
 import { Formik } from 'formik';
 import { Form, FormFieldTextInput } from '@common/components/form';
 import Button from '@common/components/Button';
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { useNavigate, useParams } from 'react-router-dom-v5-compat';
 
 interface FormValues {
   title: string;

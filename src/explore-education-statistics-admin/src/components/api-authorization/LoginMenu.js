@@ -3,10 +3,12 @@
   "dotnet new react -o <output_directory_name> -au Individual"
 */
 import React, { Component, Fragment } from 'react';
-import { NavItem, NavLink } from 'reactstrap';
+import { NavItem, NavLink } from 'reactstrap'; // can get rid of this dependency once this file is gone
 import { Link } from 'react-router-dom';
 import authService from './AuthorizeService';
 import { ApplicationPaths } from './ApiAuthorizationConstants';
+
+// TODO: LH - Don't think this is used. double check later
 
 export class LoginMenu extends Component {
   constructor(props) {

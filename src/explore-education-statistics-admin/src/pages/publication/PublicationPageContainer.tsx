@@ -26,12 +26,8 @@ import RelatedInformation from '@common/components/RelatedInformation';
 import WarningMessage from '@common/components/WarningMessage';
 import useAsyncHandledRetry from '@common/hooks/useAsyncHandledRetry';
 import React from 'react';
-import {
-  generatePath,
-  Route,
-  Switch,
-  useParams,
-} from 'react-router';
+import { generatePath } from 'react-router';
+import { CompatRoute, Routes , useParams } from 'react-router-dom-v5-compat';
 
 const navRoutes = [
   publicationReleasesRoute,
@@ -135,11 +131,11 @@ const PublicationPageContainer = () => {
             }}
             onReload={reloadPublication}
           >
-            <Switch>
+            <Routes>
               {routes.map(route => (
-                <Route exact key={route.path} {...route} />
+                <CompatRoute exact key={route.path} {...route} />
               ))}
-            </Switch>
+            </Routes>
           </PublicationContextProvider>
         </Page>
       ) : (

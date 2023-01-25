@@ -1,8 +1,8 @@
 import ModalConfirm from '@common/components/ModalConfirm';
 import useToggle from '@common/hooks/useToggle';
 import React, { ReactNode, useEffect, useState } from 'react';
-import { Prompt, useLocation } from 'react-router';
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { Prompt } from 'react-router';
+import { useNavigate, useLocation } from 'react-router-dom-v5-compat';
 
 interface Props {
   blockRouteChange: boolean;

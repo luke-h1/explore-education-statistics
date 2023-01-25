@@ -16,8 +16,9 @@ import useFormSubmit from '@common/hooks/useFormSubmit';
 import { mapFieldErrors } from '@common/validation/serverValidations';
 import Yup from '@common/validation/yup';
 import React from 'react';
-import { generatePath, useParams, withRouter } from 'react-router';
-import { useNavigate } from 'react-router-dom-v5-compat';
+// TODO: LH - what is withRouter doing? check RR6 migration guide
+import { generatePath, withRouter } from 'react-router';
+import { useNavigate, useParams } from 'react-router-dom-v5-compat';
 
 export interface FormValues extends ReleaseSummaryFormValues {
   templateReleaseId: string;

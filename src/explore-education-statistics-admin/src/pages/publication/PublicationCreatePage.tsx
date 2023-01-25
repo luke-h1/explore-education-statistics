@@ -9,9 +9,8 @@ import appendQuery from '@common/utils/url/appendQuery';
 import LoadingSpinner from '@common/components/LoadingSpinner';
 import useAsyncHandledRetry from '@common/hooks/useAsyncHandledRetry';
 import React from 'react';
-import { useParams } from 'react-router';
 import { PublicationCreateRouteParams } from '@admin/routes/publicationRoutes';
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { useNavigate , useParams } from 'react-router-dom-v5-compat';
 
 const PublicationCreatePage = () => {
   const { topicId } = useParams<PublicationCreateRouteParams>();

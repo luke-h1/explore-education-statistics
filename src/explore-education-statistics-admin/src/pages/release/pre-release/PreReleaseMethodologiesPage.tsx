@@ -17,7 +17,8 @@ import TagGroup from '@common/components/TagGroup';
 import WarningMessage from '@common/components/WarningMessage';
 import useAsyncHandledRetry from '@common/hooks/useAsyncHandledRetry';
 import React from 'react';
-import { generatePath, useParams } from 'react-router';
+import { generatePath } from 'react-router';
+import { useParams } from 'react-router-dom-v5-compat';
 
 interface Model {
   externalMethodology?: ExternalMethodology;

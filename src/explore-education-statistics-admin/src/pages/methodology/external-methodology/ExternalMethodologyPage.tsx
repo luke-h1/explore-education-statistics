@@ -9,9 +9,8 @@ import publicationService, {
   Publication,
 } from '@admin/services/publicationService';
 import React from 'react';
-import { useParams } from 'react-router';
 import { ExternalMethodologyRouteParams } from '@admin/routes/methodologyRoutes';
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { useNavigate, useParams } from 'react-router-dom-v5-compat';
 
 interface Model {
   publication: Publication;

@@ -1,11 +1,23 @@
 import { OmitStrict } from '@common/types';
 import classNames from 'classnames';
 import React, { ReactNode } from 'react';
-import {
-  Link as RouterLink,
-  LinkProps as RouterLinkProps,
-} from 'react-router-dom';
+import { LinkProps as RouterLinkProps } from 'react-router-dom';
 
+import {
+  Link as RouterLinkV5,
+} from 'react-router-dom-v5-compat';
+
+/* 
+  // no routerlinkprops exposed. This is the v6 type
+export interface LinkProps extends Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "href"> {
+    reloadDocument?: boolean;
+    replace?: boolean;
+    state?: any;
+    preventScrollReset?: boolean;
+    relative?: RelativeRoutingType;
+    to: To;
+}
+*/
 export type LinkProps = {
   back?: boolean;
   children: ReactNode;
@@ -48,7 +60,7 @@ const Link = ({
   }
 
   return (
-    <RouterLink
+    <RouterLinkV5
       {...props}
       to={to}
       className={classNames(
@@ -61,7 +73,7 @@ const Link = ({
       )}
     >
       {children}
-    </RouterLink>
+    </RouterLinkV5>
   );
 };
 

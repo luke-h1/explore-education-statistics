@@ -21,7 +21,7 @@ import {
 import SummaryList from '@common/components/SummaryList';
 import SummaryListItem from '@common/components/SummaryListItem';
 import React from 'react';
-import { useParams } from 'react-router';
+import { useParams } from "react-router-dom-v5-compat";
 
 export const MethodologyContentPageInternal = () => {
   const { methodology, canUpdateMethodology, isPreRelease } =

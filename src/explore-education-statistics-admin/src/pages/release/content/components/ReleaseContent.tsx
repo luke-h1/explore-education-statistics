@@ -28,8 +28,9 @@ import PageSearchForm from '@common/components/PageSearchForm';
 import RelatedAside from '@common/components/RelatedAside';
 import ReleaseDataAccordion from '@common/modules/release/components/ReleaseDataAccordion';
 import React, { useCallback, useMemo } from 'react';
-import { generatePath, useLocation } from 'react-router';
+import { generatePath } from 'react-router';
 import ScrollableContainer from '@common/components/ScrollableContainer';
+import { useLocation } from 'react-router-dom-v5-compat';
 
 interface MethodologyLink {
   key: string;

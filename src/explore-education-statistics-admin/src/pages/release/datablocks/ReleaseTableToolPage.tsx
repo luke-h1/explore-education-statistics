@@ -9,7 +9,7 @@ import useAsyncHandledRetry from '@common/hooks/useAsyncHandledRetry';
 import publicationService from '@admin/services/publicationService';
 import React from 'react';
 import { generatePath } from 'react-router-dom';
-import { useParams } from 'react-router';
+import { useParams } from 'react-router-dom-v5-compat';
 
 const ReleaseTableToolPage = () => {
   const { releaseId, publicationId } = useParams<ReleaseRouteParams>();

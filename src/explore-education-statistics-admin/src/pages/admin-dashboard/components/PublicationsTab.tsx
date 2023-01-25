@@ -10,8 +10,7 @@ import useAsyncHandledRetry from '@common/hooks/useAsyncHandledRetry';
 import useStorageItem from '@common/hooks/useStorageItem';
 import orderBy from 'lodash/orderBy';
 import React, { useEffect, useMemo } from 'react';
-import { useLocation } from 'react-router';
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { useLocation, useNavigate } from 'react-router-dom-v5-compat';
 
 interface Props {
   isBauUser: boolean;
@@ -22,9 +21,8 @@ const PublicationsTab = ({ isBauUser }: Props) => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [savedThemeTopic, setSavedThemeTopic] = useStorageItem<
-    ThemeTopicParams
-  >('dashboardThemeTopic', undefined);
+  const [savedThemeTopic, setSavedThemeTopic] =
+    useStorageItem<ThemeTopicParams>('dashboardThemeTopic', undefined);
 
   const { value: themes, isLoading: loadingThemes } = useAsyncHandledRetry(
     themeService.getThemes,

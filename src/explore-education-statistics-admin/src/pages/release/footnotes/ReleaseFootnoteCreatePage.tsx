@@ -8,8 +8,8 @@ import footnoteService from '@admin/services/footnoteService';
 import LoadingSpinner from '@common/components/LoadingSpinner';
 import useAsyncHandledRetry from '@common/hooks/useAsyncHandledRetry';
 import React from 'react';
-import { generatePath, useParams } from 'react-router';
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { generatePath } from 'react-router';
+import { useNavigate , useParams } from 'react-router-dom-v5-compat';
 
 const ReleaseFootnoteCreatePage = () => {
   const { publicationId, releaseId } = useParams<ReleaseRouteParams>();

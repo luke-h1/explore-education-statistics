@@ -17,13 +17,13 @@ import WarningMessage from '@common/components/WarningMessage';
 import useAsyncHandledRetry from '@common/hooks/useAsyncHandledRetry';
 import Tag from '@common/components/Tag';
 import React from 'react';
+import { generatePath } from 'react-router';
 import {
-  generatePath,
-  Route,
-  Switch,
   useLocation,
+  CompatRoute,
+  Routes,
   useParams,
-} from 'react-router';
+} from 'react-router-dom-v5-compat';
 
 const navRoutes: MethodologyRouteProps[] = [
   methodologySummaryRoute,
@@ -135,16 +135,16 @@ const MethodologyPage = () => {
                 setMethodology({ value: nextMethodology });
               }}
             >
-              <Switch>
+              <Routes>
                 {routes.map(route => (
-                  <Route
+                  <CompatRoute
                     exact
                     key={route.path}
                     path={route.path}
                     component={route.component}
                   />
                 ))}
-              </Switch>
+              </Routes>
             </MethodologyContextProvider>
 
             <PreviousNextLinks

@@ -21,6 +21,7 @@ import {
   CompatRouter,
   CompatRoute,
   useNavigate,
+  Routes,
 } from 'react-router-dom-v5-compat';
 import PageNotFoundPage from './pages/errors/PageNotFoundPage';
 import { LastLocationContextProvider } from './contexts/LastLocationContext';
@@ -61,7 +62,7 @@ function PrototypesEntry() {
 
   return (
     <Suspense fallback={<ServiceProblemsPage />}>
-      <Switch>
+      <Routes>
         <CompatRoute exact path="/prototypes" component={PrototypeIndexPage} />
         {prototypeRoutes?.map(route => (
           <CompatRoute
@@ -70,7 +71,7 @@ function PrototypesEntry() {
             {...route}
           />
         ))}
-      </Switch>
+      </Routes>
     </Suspense>
   );
 }
@@ -89,7 +90,7 @@ function App() {
               <AuthContextProvider>
                 <LastLocationContextProvider>
                   <PageErrorBoundary>
-                    <Switch>
+                    <Routes>
                       {Object.entries(apiAuthorizationRouteList).map(
                         ([key, authRoute]) => (
                           <CompatRoute exact key={key} {...authRoute} />
@@ -113,7 +114,7 @@ function App() {
                         allowAnonymousUsers
                         component={PageNotFoundPage}
                       />
-                    </Switch>
+                    </Routes>
                   </PageErrorBoundary>
                 </LastLocationContextProvider>
               </AuthContextProvider>

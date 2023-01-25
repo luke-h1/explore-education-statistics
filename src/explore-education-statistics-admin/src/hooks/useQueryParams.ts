@@ -1,6 +1,6 @@
 import qs, { ParsedUrlQuery } from 'querystring';
 import { useMemo } from 'react';
-import { useLocation } from 'react-router';
+import { useLocation } from 'react-router-dom-v5-compat';
 
 export default function useQueryParams<Params extends ParsedUrlQuery>() {
   const location = useLocation();

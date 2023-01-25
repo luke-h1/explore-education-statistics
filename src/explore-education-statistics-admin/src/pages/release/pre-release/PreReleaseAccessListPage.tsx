@@ -8,7 +8,7 @@ import LoadingSpinner from '@common/components/LoadingSpinner';
 import ContentHtml from '@common/components/ContentHtml';
 import useAsyncHandledRetry from '@common/hooks/useAsyncHandledRetry';
 import React from 'react';
-import { useLocation, useParams } from 'react-router';
+import { useLocation, useParams } from 'react-router-dom-v5-compat';
 
 interface LocationState {
   backLink: string;

@@ -4,7 +4,9 @@
 */
 import React from 'react';
 import { Component } from 'react';
-import { Route, Redirect } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
+import { CompatRoute } from 'react-router-dom-v5-compat';
+
 import {
   ApplicationPaths,
   QueryParameterNames,
@@ -38,11 +40,11 @@ export default class AuthorizeRoute extends Component {
       QueryParameterNames.ReturnUrl
     }=${encodeURI(window.location.href)}`;
     if (!ready) {
-      return <div></div>;
+      return null;
     } else {
       const { component: Component, ...rest } = this.props;
       return (
-        <Route
+        <CompatRoute
           {...rest}
           render={props => {
             if (authenticated) {

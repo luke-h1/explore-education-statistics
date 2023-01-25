@@ -13,7 +13,7 @@ import useAsyncRetry from '@common/hooks/useAsyncRetry';
 import useFormSubmit from '@common/hooks/useFormSubmit';
 import { mapFieldErrors } from '@common/validation/serverValidations';
 import React, { useCallback, useEffect, useState } from 'react';
-import { useParams } from 'react-router';
+import { useParams } from 'react-router-dom-v5-compat';
 import RoleForm, {
   UpdateRoleFormValues,
 } from '@admin/pages/users/components/RoleForm';

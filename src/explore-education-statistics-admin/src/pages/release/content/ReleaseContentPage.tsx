@@ -18,7 +18,7 @@ import ReleasePreviewTableTool from '@admin/pages/release/content/components/Rel
 import getUnresolvedComments from '@admin/pages/release/content/utils/getUnresolvedComments';
 import classNames from 'classnames';
 import React from 'react';
-import { useParams } from 'react-router';
+import { useParams } from 'react-router-dom-v5-compat';
 
 const ReleaseContentPageLoaded = () => {
   const { canUpdateRelease, release } = useReleaseContentState();

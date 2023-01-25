@@ -1,6 +1,12 @@
 import classNames from 'classnames';
 import React, { ReactNode } from 'react';
-import { NavLink as RouterNavLink, NavLinkProps } from 'react-router-dom';
+import { NavLinkProps } from 'react-router-dom';
+
+import {
+  NavLink as RouterNavLinkV5,
+} from 'react-router-dom-v5-compat';
+
+
 import styles from './NavLink.module.scss';
 
 type Props = {
@@ -11,7 +17,8 @@ type Props = {
 
 const NavLink = ({ children, className, to, ...props }: Props) => {
   return (
-    <RouterNavLink
+    // TS not happy with isActive
+    <RouterNavLinkV5
       {...props}
       to={to}
       activeClassName={styles.currentPage}
@@ -22,7 +29,7 @@ const NavLink = ({ children, className, to, ...props }: Props) => {
       )}
     >
       {children}
-    </RouterNavLink>
+    </RouterNavLinkV5>
   );
 };
 

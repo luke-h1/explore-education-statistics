@@ -19,8 +19,8 @@ import { useErrorControl } from '@common/contexts/ErrorControlContext';
 import useAsyncRetry from '@common/hooks/useAsyncRetry';
 import { format } from 'date-fns';
 import React from 'react';
-import { generatePath, useParams } from 'react-router';
-import { Route, Switch } from 'react-router-dom';
+import { generatePath } from 'react-router';
+import { CompatRoute, Routes , useParams } from 'react-router-dom-v5-compat';
 
 interface Model {
   preReleaseWindowStatus: PreReleaseWindowStatus;
@@ -135,11 +135,11 @@ const PreReleasePageContainer = () => {
               label="Pre-release"
             />
 
-            <Switch>
+            <Routes>
               {preReleaseRoutes.map(route => (
-                <Route key={route.path} {...route} />
+                <CompatRoute key={route.path} {...route} />
               ))}
-            </Switch>
+            </Routes>
           </>
         );
       }

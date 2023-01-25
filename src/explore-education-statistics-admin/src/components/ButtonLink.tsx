@@ -1,6 +1,8 @@
 import classNames from 'classnames';
 import React, { ReactNode } from 'react';
-import { Link as RouterLink, LinkProps } from 'react-router-dom';
+import { LinkProps } from 'react-router-dom';
+
+import { Link as RouterLink } from 'react-router-dom-v5-compat';
 
 import {
   SetCommonButtonLink,
@@ -41,7 +43,7 @@ const ButtonLink = ({
     </RouterLink>
   );
 };
-
+// is this necessary? TODO: LH - investigate more
 SetCommonButtonLink(ButtonLink as ButtonLinkType);
 
 export default ButtonLink;

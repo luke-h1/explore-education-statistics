@@ -23,8 +23,8 @@ import useAsyncHandledRetry from '@common/hooks/useAsyncHandledRetry';
 import useAsyncRetry from '@common/hooks/useAsyncRetry';
 import useToggle from '@common/hooks/useToggle';
 import React from 'react';
-import { generatePath, useParams } from 'react-router';
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { generatePath } from 'react-router';
+import { useNavigate, useParams } from 'react-router-dom-v5-compat';
 
 const ReleaseDataFileReplacePage = () => {
   const { fileId, publicationId, releaseId } =

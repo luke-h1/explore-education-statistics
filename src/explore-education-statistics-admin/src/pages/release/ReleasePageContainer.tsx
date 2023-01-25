@@ -30,10 +30,10 @@ import LoadingSpinner from '@common/components/LoadingSpinner';
 import Tag from '@common/components/Tag';
 import useAsyncHandledRetry from '@common/hooks/useAsyncHandledRetry';
 import React from 'react';
-import { generatePath, Switch, useLocation, useParams } from 'react-router';
+import { generatePath } from 'react-router';
 import { publicationReleasesRoute } from '@admin/routes/publicationRoutes';
 import { PublicationRouteParams } from '@admin/routes/routes';
-import { CompatRoute } from 'react-router-dom-v5-compat';
+import { CompatRoute, Routes, useParams , useLocation } from 'react-router-dom-v5-compat';
 
 const navRoutes = [
   releaseSummaryRoute,
@@ -178,11 +178,11 @@ const ReleasePageContainer = () => {
               setRelease({ value: nextRelease });
             }}
           >
-            <Switch>
+            <Routes>
               {routes.map(route => (
                 <CompatRoute exact key={route.path} {...route} />
               ))}
-            </Switch>
+            </Routes>
           </ReleaseContextProvider>
           {currentRouteIndex > -1 && (
             <PreviousNextLinks

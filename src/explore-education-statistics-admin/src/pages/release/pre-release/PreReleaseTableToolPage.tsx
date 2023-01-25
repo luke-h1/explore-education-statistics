@@ -18,7 +18,7 @@ import mapFullTable from '@common/modules/table-tool/utils/mapFullTable';
 import mapTableHeadersConfig from '@common/modules/table-tool/utils/mapTableHeadersConfig';
 import tableBuilderService from '@common/services/tableBuilderService';
 import React from 'react';
-import { useParams } from 'react-router';
+import { useParams } from 'react-router-dom-v5-compat';
 import { generatePath } from 'react-router-dom';
 
 const PreReleaseTableToolPage = () => {

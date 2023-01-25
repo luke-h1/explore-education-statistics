@@ -12,8 +12,8 @@ import LoadingSpinner from '@common/components/LoadingSpinner';
 import WarningMessage from '@common/components/WarningMessage';
 import useAsyncHandledRetry from '@common/hooks/useAsyncHandledRetry';
 import React, { useCallback } from 'react';
-import { generatePath, useParams } from 'react-router';
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { generatePath } from 'react-router';
+import { useNavigate, useParams } from 'react-router-dom-v5-compat';
 
 const ReleaseDataBlockCreatePage = () => {
   const { releaseId, publicationId } = useParams<ReleaseRouteParams>();

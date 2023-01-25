@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { createMemoryHistory } from 'history';
 import React from 'react';
 import { Route, Router } from 'react-router';
-import { Link } from 'react-router-dom';
+import Link from '@admin/components/Link';
 
 describe('RouteLeavingGuard', () => {
   test('shows modal when route change is blocked on clicking link', () => {

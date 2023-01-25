@@ -6,9 +6,8 @@ import { dashboardRoute } from '@admin/routes/routes';
 import useAsyncHandledRetry from '@common/hooks/useAsyncHandledRetry';
 import AdoptMethodologyForm from '@admin/pages/methodology/adopt-methodology/components/AdoptMethodologyForm';
 import React from 'react';
-import { useParams } from 'react-router';
 import { MethodologyAdoptRouteParams } from '@admin/routes/methodologyRoutes';
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { useNavigate, useParams } from 'react-router-dom-v5-compat';
 
 const AdoptMethodologyPage = () => {
   const { publicationId } = useParams<MethodologyAdoptRouteParams>();

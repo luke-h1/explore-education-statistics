@@ -7,8 +7,7 @@ import appendQuery from '@common/utils/url/appendQuery';
 import LoadingSpinner from '@common/components/LoadingSpinner';
 import useAsyncHandledRetry from '@common/hooks/useAsyncHandledRetry';
 import React from 'react';
-import { useParams } from 'react-router';
-import { useNavigate } from 'react-router-dom-v5-compat';
+import { useParams , useNavigate } from 'react-router-dom-v5-compat';
 
 const ThemeEditPage = () => {
   const { themeId } = useParams<ThemeParams>();

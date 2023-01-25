@@ -16,7 +16,8 @@ import useAsyncHandledRetry from '@common/hooks/useAsyncHandledRetry';
 import useToggle from '@common/hooks/useToggle';
 import classNames from 'classnames';
 import React from 'react';
-import { generatePath, useParams } from 'react-router';
+import { generatePath } from 'react-router';
+import { useParams } from 'react-router-dom-v5-compat';
 
 const ReleaseFootnotesPage = () => {
   const { publicationId, releaseId } = useParams<ReleaseRouteParams>();

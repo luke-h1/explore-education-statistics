@@ -11,7 +11,7 @@ import ReleaseDataGuidancePageContent from '@common/modules/release/components/R
 import { useConfig } from '@admin/contexts/ConfigContext';
 import Link from '@admin/components/Link';
 import React from 'react';
-import { useLocation, useParams } from 'react-router';
+import { useParams, useLocation } from 'react-router-dom-v5-compat';
 
 interface LocationState {
   backLink: string;

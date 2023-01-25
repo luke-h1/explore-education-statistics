@@ -15,7 +15,8 @@ import WarningMessage from '@common/components/WarningMessage';
 import useAsyncRetry from '@common/hooks/useAsyncRetry';
 import { releaseTypes } from '@common/services/types/releaseType';
 import React from 'react';
-import { generatePath, useLocation } from 'react-router';
+import { generatePath } from 'react-router';
+import { useLocation } from 'react-router-dom-v5-compat';
 
 const ReleaseSummaryPage = () => {
   const location = useLocation();
