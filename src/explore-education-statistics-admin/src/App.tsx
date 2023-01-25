@@ -16,7 +16,6 @@ import {
 import useAsyncRetry from '@common/hooks/useAsyncRetry';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React, { lazy, Suspense, useEffect } from 'react';
-import { Switch } from 'react-router';
 import {
   CompatRouter,
   CompatRoute,

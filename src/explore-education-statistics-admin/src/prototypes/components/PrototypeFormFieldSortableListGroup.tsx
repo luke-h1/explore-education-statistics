@@ -190,7 +190,10 @@ function FormFieldSortableListGroup<FormValues>({
                 const key = `group-${index}`;
                 return (
                   <div className={styles.groupContainer} key={key}>
-                    <Draggable draggableId={`${name.toString()}-${index}`} index={index}>
+                    <Draggable
+                      draggableId={`${name.toString()}-${index}`}
+                      index={index}
+                    >
                       {(draggableProvided, draggableSnapshot) => (
                         <div
                           // eslint-disable-next-line react/jsx-props-no-spreading

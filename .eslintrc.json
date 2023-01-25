@@ -1,6 +1,6 @@
 {
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint", "react-hooks"],
+  "plugins": ["@typescript-eslint", "react-hooks", "jest"],
   "settings": {
     "import/resolver": {
       "typescript": {
@@ -38,9 +38,13 @@
     "class-methods-use-this": "off",
     "import/extensions": "off",
     "import/no-cycle": "off",
+    "no-promise-executor-return": "off",
     "react/function-component-definition": "off",
     "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
-    "import/no-unresolved": "off",
+    "import/no-unresolved": [
+      // TODO: LH - see if this plays nice with aliases
+      "error"
+    ],
     "react/forbid-prop-types": "off",
     "no-restricted-exports": "off",
     "react/no-unescaped-entities": [
@@ -120,6 +124,7 @@
     "react/state-in-constructor": "off",
     "react/static-property-placement": ["error", "static public field"],
     "react/prop-types": "off",
+    "react/react-in-jsx-scope": "off",
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
     "jsx-a11y/anchor-is-valid": "off",
