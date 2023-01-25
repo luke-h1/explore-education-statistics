@@ -38,9 +38,11 @@
     "class-methods-use-this": "off",
     "import/extensions": "off",
     "import/no-cycle": "off",
+    "react/function-component-definition": "off",
     "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
     "import/no-unresolved": "off",
     "react/forbid-prop-types": "off",
+    "no-restricted-exports": "off",
     "react/no-unescaped-entities": [
       "error",
       {
@@ -64,10 +66,13 @@
     ],
     "react/jsx-curly-newline": "off",
     "react/jsx-one-expression-per-line": "off",
-    "react/jsx-props-no-spreading": ["error", {
-      "html": "enforce",
-      "custom": "ignore"
-    }],
+    "react/jsx-props-no-spreading": [
+      "error",
+      {
+        "html": "enforce",
+        "custom": "ignore"
+      }
+    ],
     "react/jsx-wrap-multilines": ["error", { "prop": "ignore" }],
     "react/require-default-props": "off",
     "react/sort-comp": [
@@ -125,10 +130,13 @@
       }
     ],
     "no-console": "warn",
-    "no-param-reassign": ["error", {
-      "props": true,
-      "ignorePropertyModificationsFor": ["draft", "acc"]
-    }],
+    "no-param-reassign": [
+      "error",
+      {
+        "props": true,
+        "ignorePropertyModificationsFor": ["draft", "acc"]
+      }
+    ],
     "no-use-before-define": "off",
     "no-useless-constructor": "off",
     "spaced-comment": ["warn", "always", { "markers": ["/"] }]
