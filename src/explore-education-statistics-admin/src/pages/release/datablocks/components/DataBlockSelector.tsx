@@ -11,9 +11,10 @@ import { FormSelect } from '@common/components/form';
 import { SelectOption } from '@common/components/form/FormSelect';
 import useAsyncRetry from '@common/hooks/useAsyncRetry';
 import React, { useMemo } from 'react';
-import { generatePath, useHistory } from 'react-router';
+import { generatePath } from 'react-router';
 import ButtonLink from '@admin/components/ButtonLink';
 import FormLabel from '@common/components/form/FormLabel';
+import { useNavigate } from 'react-router-dom-v5-compat';
 
 const emptyDataBlocks: ReleaseDataBlockSummary[] = [];
 
@@ -30,7 +31,7 @@ const DataBlockSelector = ({
   releaseId,
   dataBlockId,
 }: Props) => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const { value: dataBlocks = emptyDataBlocks, isLoading } = useAsyncRetry(
     () => dataBlockService.listDataBlocks(releaseId),
@@ -77,7 +78,7 @@ const DataBlockSelector = ({
           value={dataBlockId}
           options={dataBlockOptions}
           onChange={e => {
-            history.push(
+            navigate(
               generatePath<ReleaseDataBlockRouteParams>(
                 releaseDataBlockEditRoute.path,
                 {

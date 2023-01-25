@@ -21,7 +21,8 @@ import UrlContainer from '@common/components/UrlContainer';
 import useAsyncHandledRetry from '@common/hooks/useAsyncHandledRetry';
 import useToggle from '@common/hooks/useToggle';
 import React, { useCallback, useRef } from 'react';
-import { generatePath, useHistory, useParams } from 'react-router';
+import { generatePath, useParams } from 'react-router';
+import { useNavigate } from 'react-router-dom-v5-compat';
 
 interface Model {
   dataBlock: ReleaseDataBlock;
@@ -31,7 +32,7 @@ interface Model {
 const ReleaseDataBlockEditPage = () => {
   const { dataBlockId, publicationId, releaseId } =
     useParams<ReleaseDataBlockRouteParams>();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const config = useConfig();
   const pageRef = useRef<HTMLDivElement>(null);
@@ -78,13 +79,13 @@ const ReleaseDataBlockEditPage = () => {
   );
 
   const handleDataBlockDelete = useCallback(() => {
-    history.push(
+    navigate(
       generatePath<ReleaseRouteParams>(releaseDataBlocksRoute.path, {
         publicationId,
         releaseId,
       }),
     );
-  }, [history, publicationId, releaseId]);
+  }, [navigate, publicationId, releaseId]);
 
   const { canUpdateRelease, dataBlock } = model ?? {};
 

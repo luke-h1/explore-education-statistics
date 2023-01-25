@@ -135,6 +135,7 @@ describe('ReleaseAncillaryFilePage', () => {
   test('successfully submitting form redirects to ancillary files page', async () => {
     releaseAncillaryFileService.getAncillaryFile.mockResolvedValue(testFile);
 
+    // TODO: LH - move to createNavigateHistory / RR router 6 test utils
     const history = createMemoryHistory();
 
     await renderPage(history);

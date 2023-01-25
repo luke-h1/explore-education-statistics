@@ -21,9 +21,9 @@ import classNames from 'classnames';
 import React, { useState } from 'react';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { generatePath } from 'react-router';
-import { useHistory } from 'react-router-dom';
 import ButtonText from '@common/components/ButtonText';
 import VisuallyHidden from '@common/components/VisuallyHidden';
+import { useNavigate } from 'react-router-dom-v5-compat';
 
 interface ConfirmAction {
   type: 'create' | 'edit' | 'reordering';
@@ -53,7 +53,7 @@ const LegacyReleasesTable = ({
   legacyReleases: initialLegacyReleases,
   publicationId,
 }: Props) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const [isReordering, toggleReordering] = useToggle(false);
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>();
   const [deleteLegacyRelease, setDeleteLegacyRelease] = useState<
@@ -263,7 +263,7 @@ const LegacyReleasesTable = ({
         onConfirm={() => {
           switch (confirmAction?.type) {
             case 'create': {
-              history.push(
+              navigate(
                 generatePath<PublicationRouteParams>(
                   publicationCreateLegacyReleaseRoute.path,
                   {
@@ -275,7 +275,7 @@ const LegacyReleasesTable = ({
             }
             case 'edit': {
               if (confirmAction.id) {
-                history.push(
+                navigate(
                   generatePath<PublicationEditLegacyReleaseRouteParams>(
                     publicationEditLegacyReleaseRoute.path,
                     {

@@ -7,11 +7,12 @@ import appendQuery from '@common/utils/url/appendQuery';
 import LoadingSpinner from '@common/components/LoadingSpinner';
 import useAsyncHandledRetry from '@common/hooks/useAsyncHandledRetry';
 import React from 'react';
-import { useHistory, useParams } from 'react-router';
+import { useParams } from 'react-router';
+import { useNavigate } from 'react-router-dom-v5-compat';
 
 const ThemeEditPage = () => {
   const { themeId } = useParams<ThemeParams>();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const { value: theme, isLoading } = useAsyncHandledRetry(
     () => themeService.getTheme(themeId),
@@ -44,7 +45,7 @@ const ThemeEditPage = () => {
             }
             onSubmit={async values => {
               await themeService.updateTheme(themeId, values);
-              history.push(themesPath);
+              navigate(themesPath);
             }}
           />
         )}

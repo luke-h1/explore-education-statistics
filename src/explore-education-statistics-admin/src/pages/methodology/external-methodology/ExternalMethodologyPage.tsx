@@ -9,8 +9,9 @@ import publicationService, {
   Publication,
 } from '@admin/services/publicationService';
 import React from 'react';
-import { useHistory, useParams } from 'react-router';
+import { useParams } from 'react-router';
 import { ExternalMethodologyRouteParams } from '@admin/routes/methodologyRoutes';
+import { useNavigate } from 'react-router-dom-v5-compat';
 
 interface Model {
   publication: Publication;
@@ -19,8 +20,8 @@ interface Model {
 
 const ExternalMethodologyPage = () => {
   const { publicationId } = useParams<ExternalMethodologyRouteParams>();
-  const history = useHistory();
-  
+  const navigate = useNavigate();
+
   const { value: model, isLoading } = useAsyncHandledRetry<Model>(async () => {
     const [publication, externalMethodology] = await Promise.all([
       publicationService.getPublication(publicationId),
@@ -45,7 +46,7 @@ const ExternalMethodologyPage = () => {
       publicationId,
       updatedExternalMethodology,
     );
-    history.push(dashboardRoute.path);
+    navigate(dashboardRoute.path);
   };
 
   return (
@@ -75,7 +76,7 @@ const ExternalMethodologyPage = () => {
             />
             <ExternalMethodologyForm
               initialValues={model?.externalMethodology}
-              onCancel={() => history.push(dashboardRoute.path)}
+              onCancel={() => navigate(dashboardRoute.path)}
               onSubmit={handleExternalMethodologySubmit}
             />
           </LoadingSpinner>

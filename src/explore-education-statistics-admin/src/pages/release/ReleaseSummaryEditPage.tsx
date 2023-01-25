@@ -13,7 +13,8 @@ import { mapFieldErrors } from '@common/validation/serverValidations';
 import LoadingSpinner from '@common/components/LoadingSpinner';
 import useAsyncRetry from '@common/hooks/useAsyncRetry';
 import React from 'react';
-import { generatePath, RouteComponentProps, useLocation } from 'react-router';
+import { generatePath, useLocation } from 'react-router';
+import { useNavigate } from 'react-router-dom-v5-compat';
 
 const errorMappings = [
   mapFieldErrors<ReleaseSummaryFormValues>({
@@ -25,9 +26,10 @@ const errorMappings = [
   }),
 ];
 
-const ReleaseSummaryEditPage = ({ history }: RouteComponentProps) => {
+const ReleaseSummaryEditPage = () => {
   const location = useLocation();
   const lastLocation = useLastLocation();
+  const navigate = useNavigate();
 
   const {
     releaseId,
@@ -59,7 +61,7 @@ const ReleaseSummaryEditPage = ({ history }: RouteComponentProps) => {
 
     onReleaseChange(nextRelease);
 
-    history.push(
+    navigate(
       generatePath<ReleaseRouteParams>(releaseSummaryRoute.path, {
         publicationId: release.publicationId,
         releaseId,
@@ -72,7 +74,7 @@ const ReleaseSummaryEditPage = ({ history }: RouteComponentProps) => {
       return;
     }
 
-    history.push(
+    navigate(
       generatePath<ReleaseRouteParams>(releaseSummaryRoute.path, {
         publicationId: release.publicationId,
         releaseId,

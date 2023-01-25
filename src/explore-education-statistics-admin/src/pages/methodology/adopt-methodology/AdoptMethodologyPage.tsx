@@ -6,12 +6,13 @@ import { dashboardRoute } from '@admin/routes/routes';
 import useAsyncHandledRetry from '@common/hooks/useAsyncHandledRetry';
 import AdoptMethodologyForm from '@admin/pages/methodology/adopt-methodology/components/AdoptMethodologyForm';
 import React from 'react';
-import { useHistory, useParams } from 'react-router';
+import { useParams } from 'react-router';
 import { MethodologyAdoptRouteParams } from '@admin/routes/methodologyRoutes';
+import { useNavigate } from 'react-router-dom-v5-compat';
 
 const AdoptMethodologyPage = () => {
   const { publicationId } = useParams<MethodologyAdoptRouteParams>();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const { value, isLoading } = useAsyncHandledRetry(async () => {
     const [adoptableMethodologies, publication] = await Promise.all([
@@ -36,13 +37,13 @@ const AdoptMethodologyPage = () => {
             {adoptableMethodologies && adoptableMethodologies.length > 0 ? (
               <AdoptMethodologyForm
                 methodologies={adoptableMethodologies}
-                onCancel={() => history.push(dashboardRoute.path)}
+                onCancel={() => navigate(dashboardRoute.path)}
                 onSubmit={async values => {
                   await publicationService.adoptMethodology(
                     publicationId,
                     values.methodologyId,
                   );
-                  history.push(dashboardRoute.path);
+                  navigate(dashboardRoute.path);
                 }}
               />
             ) : (

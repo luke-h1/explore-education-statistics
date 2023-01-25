@@ -4,11 +4,12 @@ import usePublicationContext from '@admin/pages/publication/contexts/Publication
 import { publicationLegacyReleasesRoute } from '@admin/routes/publicationRoutes';
 import legacyReleaseService from '@admin/services/legacyReleaseService';
 import React from 'react';
-import { generatePath, useHistory } from 'react-router';
+import { generatePath } from 'react-router';
+import { useNavigate } from 'react-router-dom-v5-compat';
 
 const PublicationLegacyReleaseCreatePage = () => {
   const { publicationId } = usePublicationContext();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const publicationEditPath = generatePath(
     publicationLegacyReleasesRoute.path,
@@ -33,7 +34,7 @@ const PublicationLegacyReleaseCreatePage = () => {
             publicationId,
           });
 
-          history.push(publicationEditPath);
+          navigate(publicationEditPath);
         }}
       />
     </>

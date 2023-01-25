@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 // Load app styles first to ensure correct style ordering
 import './styles/_all.scss';
 
@@ -15,10 +16,16 @@ import {
 import useAsyncRetry from '@common/hooks/useAsyncRetry';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React, { lazy, Suspense, useEffect } from 'react';
-import { Switch, useHistory } from 'react-router';
-import { CompatRouter , CompatRoute } from "react-router-dom-v5-compat";
+import { Switch } from 'react-router';
+import {
+  CompatRouter,
+  CompatRoute,
+  useNavigate,
+} from 'react-router-dom-v5-compat';
 import PageNotFoundPage from './pages/errors/PageNotFoundPage';
 import { LastLocationContextProvider } from './contexts/LastLocationContext';
+
+// NOTE LH: navigate is any but should be fully typed once full migration away from compat is done
 
 const queryClient = new QueryClient();
 
@@ -28,21 +35,21 @@ const PrototypeIndexPage = lazy(
 
 function ApplicationInsightsTracking() {
   const appInsights = useApplicationInsights();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (appInsights) {
       appInsights.trackPageView({
-        uri: history.location.pathname,
+        uri: navigate.location.pathname,
       });
 
-      history.listen(location => {
+      navigate.listen((navigate: { pathname: string }) => {
         appInsights.trackPageView({
-          uri: location.pathname,
+          uri: navigate.pathname,
         });
       });
     }
-  }, [appInsights, history]);
+  }, [appInsights, navigate]);
 
   return null;
 }
@@ -57,7 +64,11 @@ function PrototypesEntry() {
       <Switch>
         <CompatRoute exact path="/prototypes" component={PrototypeIndexPage} />
         {prototypeRoutes?.map(route => (
-          <CompatRoute key={route.path} exact={route.exact ?? true} {...route} />
+          <CompatRoute
+            key={route.path}
+            exact={route.exact ?? true}
+            {...route}
+          />
         ))}
       </Switch>
     </Suspense>

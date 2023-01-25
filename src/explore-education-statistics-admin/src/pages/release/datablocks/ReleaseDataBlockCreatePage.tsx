@@ -12,11 +12,12 @@ import LoadingSpinner from '@common/components/LoadingSpinner';
 import WarningMessage from '@common/components/WarningMessage';
 import useAsyncHandledRetry from '@common/hooks/useAsyncHandledRetry';
 import React, { useCallback } from 'react';
-import { generatePath, useHistory, useParams } from 'react-router';
+import { generatePath, useParams } from 'react-router';
+import { useNavigate } from 'react-router-dom-v5-compat';
 
 const ReleaseDataBlockCreatePage = () => {
   const { releaseId, publicationId } = useParams<ReleaseRouteParams>();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const { value: canUpdateRelease, isLoading } = useAsyncHandledRetry(
     () => permissionService.canUpdateRelease(releaseId),
@@ -25,7 +26,7 @@ const ReleaseDataBlockCreatePage = () => {
 
   const handleDataBlockSave = useCallback(
     async (dataBlock: ReleaseDataBlock) => {
-      history.push(
+      navigate(
         generatePath<ReleaseDataBlockRouteParams>(
           releaseDataBlockEditRoute.path,
           {
@@ -36,7 +37,7 @@ const ReleaseDataBlockCreatePage = () => {
         ),
       );
     },
-    [history, publicationId, releaseId],
+    [navigate, publicationId, releaseId],
   );
 
   return (

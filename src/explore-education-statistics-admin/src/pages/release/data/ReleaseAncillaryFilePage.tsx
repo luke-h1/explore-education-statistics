@@ -8,7 +8,7 @@ import useAsyncHandledRetry from '@common/hooks/useAsyncHandledRetry';
 import useFormSubmit from '@common/hooks/useFormSubmit';
 import React from 'react';
 import Link from '@admin/components/Link';
-import { generatePath, useHistory, useParams } from 'react-router';
+import { generatePath, useParams } from 'react-router';
 import LoadingSpinner from '@common/components/LoadingSpinner';
 import Yup from '@common/validation/yup';
 import { Formik } from 'formik';
@@ -19,6 +19,7 @@ import {
 } from '@common/components/form';
 import Button from '@common/components/Button';
 import releaseAncillaryFileService from '@admin/services/releaseAncillaryFileService';
+import { useNavigate } from 'react-router-dom-v5-compat';
 
 interface FormValues {
   title: string;
@@ -29,7 +30,7 @@ const ReleaseAncillaryFilePage = () => {
   const { fileId, publicationId, releaseId } =
     useParams<ReleaseAncillaryFileRouteParams>();
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const { value: ancillaryFile, isLoading: ancillaryFileLoading } =
     useAsyncHandledRetry(
@@ -43,7 +44,7 @@ const ReleaseAncillaryFilePage = () => {
       summary,
     });
 
-    history.push(
+    navigate(
       generatePath<ReleaseRouteParams>(releaseDataAncillaryRoute.path, {
         publicationId,
         releaseId,

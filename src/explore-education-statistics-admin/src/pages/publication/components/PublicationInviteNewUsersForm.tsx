@@ -17,8 +17,8 @@ import { mapFieldErrors } from '@common/validation/serverValidations';
 import Yup from '@common/validation/yup';
 import { Form, Formik } from 'formik';
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 import { generatePath } from 'react-router';
+import { useNavigate } from 'react-router-dom-v5-compat';
 
 interface InviteContributorFormValues {
   email: string;
@@ -49,7 +49,7 @@ const PublicationInviteNewUsersForm = ({
   releases,
   releaseId,
 }: Props) => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleSubmit = useFormSubmit<InviteContributorFormValues>(
     async values => {
@@ -58,7 +58,7 @@ const PublicationInviteNewUsersForm = ({
         publication.id,
         values.releaseIds,
       );
-      history.push(
+      navigate(
         generatePath<PublicationTeamRouteParams>(
           publicationTeamAccessRoute.path,
           {
@@ -117,7 +117,7 @@ const PublicationInviteNewUsersForm = ({
                 </Button>
                 <ButtonText
                   onClick={() => {
-                    history.push(
+                    navigate(
                       generatePath<PublicationTeamRouteParams>(
                         publicationTeamAccessRoute.path,
                         {

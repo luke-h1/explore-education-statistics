@@ -37,7 +37,8 @@ describe('RouteLeavingGuard', () => {
     expect(screen.queryByText('Other route')).not.toBeInTheDocument();
   });
 
-  test('shows modal when route change is blocked on `history.push`', () => {
+  test('shows modal when route change is blocked on `navigate`', () => {
+    // TOOD LH - RENAME
     const history = createMemoryHistory();
 
     render(

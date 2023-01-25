@@ -10,7 +10,8 @@ import useAsyncHandledRetry from '@common/hooks/useAsyncHandledRetry';
 import useStorageItem from '@common/hooks/useStorageItem';
 import orderBy from 'lodash/orderBy';
 import React, { useEffect, useMemo } from 'react';
-import { useHistory, useLocation } from 'react-router';
+import { useLocation } from 'react-router';
+import { useNavigate } from 'react-router-dom-v5-compat';
 
 interface Props {
   isBauUser: boolean;
@@ -19,7 +20,7 @@ interface Props {
 const PublicationsTab = ({ isBauUser }: Props) => {
   const { themeId, topicId } = useQueryParams<ThemeTopicParams>();
   const location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const [savedThemeTopic, setSavedThemeTopic] = useStorageItem<
     ThemeTopicParams
@@ -85,7 +86,7 @@ const PublicationsTab = ({ isBauUser }: Props) => {
     // Update query params to reflect the chosen
     // theme/topic if they haven't already been set.
     if (selectedTheme?.id !== themeId || selectedTopic?.id !== topicId) {
-      history.replace(
+      navigate(
         appendQuery<ThemeTopicParams>(location.pathname, {
           themeId: selectedTheme?.id,
           topicId: selectedTopic?.id,
@@ -94,7 +95,7 @@ const PublicationsTab = ({ isBauUser }: Props) => {
     }
   }, [
     isBauUser,
-    history,
+    navigate,
     location.pathname,
     savedThemeTopic,
     selectedTheme,
@@ -119,6 +120,7 @@ const PublicationsTab = ({ isBauUser }: Props) => {
       </ul>
 
       {isBauUser && (
+        // eslint-disable-next-line react/jsx-no-useless-fragment
         <>
           {themes && themes.length > 0 && (
             <FormThemeTopicSelect
@@ -133,7 +135,7 @@ const PublicationsTab = ({ isBauUser }: Props) => {
                   topicId: nextTopicId,
                 });
 
-                history.replace(
+                navigate(
                   appendQuery<ThemeTopicParams>(dashboardRoute.path, {
                     themeId: nextThemeId,
                     topicId: nextTopicId,
@@ -166,6 +168,7 @@ const PublicationsTab = ({ isBauUser }: Props) => {
           </p>
         </>
       ) : (
+        // eslint-disable-next-line react/jsx-no-useless-fragment
         <>
           {selectedTheme && selectedTopic ? (
             <TopicPublications
@@ -174,6 +177,7 @@ const PublicationsTab = ({ isBauUser }: Props) => {
               topic={selectedTopic}
             />
           ) : (
+            // eslint-disable-next-line react/jsx-no-useless-fragment
             <>
               {themes?.map(theme => {
                 return theme.topics.map(topic => (

@@ -23,16 +23,13 @@ import useAsyncHandledRetry from '@common/hooks/useAsyncHandledRetry';
 import useAsyncRetry from '@common/hooks/useAsyncRetry';
 import useToggle from '@common/hooks/useToggle';
 import React from 'react';
-import {
-  generatePath,
-  useHistory,
-  useParams,
-} from 'react-router';
+import { generatePath, useParams } from 'react-router';
+import { useNavigate } from 'react-router-dom-v5-compat';
 
 const ReleaseDataFileReplacePage = () => {
   const { fileId, publicationId, releaseId } =
     useParams<ReleaseDataFileReplaceRouteParams>();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [isCancelling, toggleCancelling] = useToggle(false);
   const {
     value: dataFile,
@@ -224,7 +221,7 @@ const ReleaseDataFileReplacePage = () => {
                     replacementFileId={replacementDataFile.id}
                     onCancel={toggleCancelling.on}
                     onReplacement={() => {
-                      history.push(
+                      navigate(
                         generatePath<ReleaseDataFileReplaceRouteParams>(
                           releaseDataFileReplacementCompleteRoute.path,
                           {

@@ -16,7 +16,8 @@ import useFormSubmit from '@common/hooks/useFormSubmit';
 import { mapFieldErrors } from '@common/validation/serverValidations';
 import Yup from '@common/validation/yup';
 import React from 'react';
-import { generatePath, useHistory, useParams, withRouter } from 'react-router';
+import { generatePath, useParams, withRouter } from 'react-router';
+import { useNavigate } from 'react-router-dom-v5-compat';
 
 export interface FormValues extends ReleaseSummaryFormValues {
   templateReleaseId: string;
@@ -43,7 +44,7 @@ interface Model {
 
 const ReleaseCreatePage = () => {
   const { publicationId } = useParams<MatchProps>();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const { value: model } = useAsyncRetry<Model>(async () => {
     const [templateRelease, publication] = await Promise.all([
@@ -69,7 +70,7 @@ const ReleaseCreatePage = () => {
         values.templateReleaseId !== 'new' ? values.templateReleaseId : '',
     });
 
-    history.push(
+    navigate(
       generatePath(releaseSummaryRoute.path, {
         publicationId,
         releaseId: createdRelease.id,
@@ -77,7 +78,7 @@ const ReleaseCreatePage = () => {
     );
   }, errorMappings);
 
-  const handleCancel = () => history.push(dashboardRoute.path);
+  const handleCancel = () => navigate(dashboardRoute.path);
 
   return (
     <Page

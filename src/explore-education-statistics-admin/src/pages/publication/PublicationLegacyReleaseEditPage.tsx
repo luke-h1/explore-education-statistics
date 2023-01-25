@@ -9,14 +9,15 @@ import legacyReleaseService from '@admin/services/legacyReleaseService';
 import LoadingSpinner from '@common/components/LoadingSpinner';
 import useAsyncHandledRetry from '@common/hooks/useAsyncHandledRetry';
 import React from 'react';
-import { generatePath, useHistory, useParams } from 'react-router';
+import { generatePath, useParams } from 'react-router';
+import { useNavigate } from 'react-router-dom-v5-compat';
 
 const PublicationLegacyReleaseEditPage = () => {
   const { legacyReleaseId } =
     useParams<PublicationEditLegacyReleaseRouteParams>();
 
   const { publicationId } = usePublicationContext();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const { value: legacyRelease, isLoading } = useAsyncHandledRetry(() =>
     legacyReleaseService.getLegacyRelease(legacyReleaseId),
@@ -51,7 +52,7 @@ const PublicationLegacyReleaseEditPage = () => {
               publicationId,
             });
 
-            history.push(publicationEditPath);
+            navigate(publicationEditPath);
           }}
         />
       )}

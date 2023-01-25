@@ -642,6 +642,7 @@ describe('PublicationTeamAccessPage', () => {
 });
 
 async function renderPage({
+  // TODO: LH - find alternative to createMemoryHistory for new useNavigate hook
   history = createMemoryHistory(),
   releaseId,
   publication,

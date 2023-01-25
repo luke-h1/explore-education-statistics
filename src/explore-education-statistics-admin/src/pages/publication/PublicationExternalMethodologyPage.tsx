@@ -8,18 +8,20 @@ import publicationService, {
   ExternalMethodology,
 } from '@admin/services/publicationService';
 import React from 'react';
-import { generatePath, useHistory } from 'react-router';
+import { generatePath } from 'react-router';
 import useAsyncHandledRetry from '@common/hooks/useAsyncHandledRetry';
 import LoadingSpinner from '@common/components/LoadingSpinner';
+import { useNavigate } from 'react-router-dom-v5-compat';
 
 const PublicationExternalMethodologyPage = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { publicationId, publication, onReload } = usePublicationContext();
   const { value: externalMethodology, isLoading } = useAsyncHandledRetry<
     ExternalMethodology | undefined
-  >(async () => publicationService.getExternalMethodology(publicationId), [
-    publicationId,
-  ]);
+  >(
+    async () => publicationService.getExternalMethodology(publicationId),
+    [publicationId],
+  );
 
   const returnRoute = generatePath<PublicationRouteParams>(
     publicationMethodologiesRoute.path,
@@ -44,7 +46,7 @@ const PublicationExternalMethodologyPage = () => {
       updatedExternalMethodology,
     );
     onReload();
-    history.push(returnRoute);
+    navigate(returnRoute);
   };
 
   return (
@@ -56,7 +58,7 @@ const PublicationExternalMethodologyPage = () => {
       </h2>
       <ExternalMethodologyForm
         initialValues={externalMethodology}
-        onCancel={() => history.push(returnRoute)}
+        onCancel={() => navigate(returnRoute)}
         onSubmit={handleExternalMethodologySubmit}
       />
     </LoadingSpinner>

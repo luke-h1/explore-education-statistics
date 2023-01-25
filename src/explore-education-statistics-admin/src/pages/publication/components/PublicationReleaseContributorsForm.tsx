@@ -13,7 +13,8 @@ import WarningMessage from '@common/components/WarningMessage';
 import useFormSubmit from '@common/hooks/useFormSubmit';
 import { Formik } from 'formik';
 import React from 'react';
-import { generatePath, useHistory } from 'react-router-dom';
+import { generatePath } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom-v5-compat';
 
 interface AddExistingUsersFormValues {
   userIds: string[];
@@ -32,7 +33,7 @@ const PublicationReleaseContributorsForm = ({
   releaseContributors,
   releaseId,
 }: Props) => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleSubmit = useFormSubmit<AddExistingUsersFormValues>(
     async values => {
@@ -40,7 +41,7 @@ const PublicationReleaseContributorsForm = ({
         releaseId,
         values.userIds,
       );
-      history.push(
+      navigate(
         generatePath<PublicationTeamRouteParams>(
           publicationTeamAccessRoute.path,
           {
@@ -61,7 +62,7 @@ const PublicationReleaseContributorsForm = ({
         </WarningMessage>
         <ButtonText
           onClick={() => {
-            history.push(
+            navigate(
               generatePath<PublicationTeamRouteParams>(
                 publicationTeamAccessRoute.path,
                 {
@@ -113,7 +114,7 @@ const PublicationReleaseContributorsForm = ({
               </Button>
               <ButtonText
                 onClick={() => {
-                  history.push(
+                  navigate(
                     generatePath<PublicationTeamRouteParams>(
                       publicationTeamAccessRoute.path,
                       {

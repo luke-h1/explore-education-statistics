@@ -2,7 +2,7 @@ import ModalConfirm from '@common/components/ModalConfirm';
 import useToggle from '@common/hooks/useToggle';
 import React, { ReactNode, useEffect, useState } from 'react';
 import { Prompt, useLocation } from 'react-router';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom-v5-compat';
 
 interface Props {
   blockRouteChange: boolean;
@@ -16,7 +16,7 @@ const RouteLeavingGuard = ({
   title,
 }: Props) => {
   const location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [lastLocation, setLastLocation] = useState(location);
   const [showModal, toggleShowModal] = useToggle(false);
   const [confirmedNavigation, toggleConfirmedNavigation] = useToggle(false);
@@ -40,9 +40,9 @@ const RouteLeavingGuard = ({
   useEffect(() => {
     if (confirmedNavigation && lastLocation) {
       toggleConfirmedNavigation.off();
-      history.push(lastLocation.pathname);
+      navigate(lastLocation.pathname);
     }
-  }, [confirmedNavigation, lastLocation, history, toggleConfirmedNavigation]);
+  }, [confirmedNavigation, lastLocation, navigate, toggleConfirmedNavigation]);
 
   return (
     <>

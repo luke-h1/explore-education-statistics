@@ -8,16 +8,13 @@ import {
 import methodologyService from '@admin/services/methodologyService';
 import { useMethodologyContext } from '@admin/pages/methodology/contexts/MethodologyContext';
 import React from 'react';
-import { generatePath, RouteComponentProps } from 'react-router';
+import { generatePath } from 'react-router';
+import { useNavigate } from 'react-router-dom-v5-compat';
 
-const MethodologySummaryEditPage = ({
-  history,
-}: RouteComponentProps<MethodologyRouteParams>) => {
-  const {
-    methodologyId,
-    methodology,
-    onMethodologyChange,
-  } = useMethodologyContext();
+const MethodologySummaryEditPage = () => {
+  const { methodologyId, methodology, onMethodologyChange } =
+    useMethodologyContext();
+  const navigate = useNavigate();
 
   const handleSubmit = async ({ title }: MethodologySummaryFormValues) => {
     if (!methodology) {
@@ -37,7 +34,7 @@ const MethodologySummaryEditPage = ({
 
     onMethodologyChange(nextMethodology);
 
-    history.push(
+    navigate(
       generatePath<MethodologyRouteParams>(methodologySummaryRoute.path, {
         methodologyId,
       }),
@@ -60,7 +57,7 @@ const MethodologySummaryEditPage = ({
           defaultTitle={methodology.owningPublication.title}
           submitText="Update methodology"
           onSubmit={handleSubmit}
-          onCancel={history.goBack}
+          onCancel={navigate('-1')}
         />
       )}
     </>

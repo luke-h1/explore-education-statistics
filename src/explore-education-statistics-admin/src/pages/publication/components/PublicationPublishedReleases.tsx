@@ -16,7 +16,8 @@ import useToggle from '@common/hooks/useToggle';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import last from 'lodash/last';
 import React, { MutableRefObject, useEffect, useMemo, useState } from 'react';
-import { generatePath, useHistory } from 'react-router';
+import { generatePath } from 'react-router';
+import { useNavigate } from 'react-router-dom-v5-compat';
 
 interface Props {
   publicationId: string;
@@ -29,15 +30,13 @@ export default function PublicationPublishedReleases({
   pageSize = 5,
   refetchRef,
 }: Props) {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const [amendReleaseId, setAmendReleaseId] = useState<string>();
   const [focusReleaseId, setFocusReleaseId] = useState<string>();
 
-  const [
-    showPublishedStatusGuidance,
-    togglePublishedStatusGuidance,
-  ] = useToggle(false);
+  const [showPublishedStatusGuidance, togglePublishedStatusGuidance] =
+    useToggle(false);
 
   const {
     data: releases,
@@ -168,7 +167,7 @@ export default function PublicationPublishedReleases({
               amendReleaseId,
             );
 
-            history.push(
+            navigate(
               generatePath<ReleaseRouteParams>(releaseSummaryRoute.path, {
                 publicationId,
                 releaseId: amendment.id,

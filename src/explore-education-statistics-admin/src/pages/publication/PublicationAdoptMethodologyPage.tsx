@@ -8,18 +8,16 @@ import publicationService from '@admin/services/publicationService';
 import LoadingSpinner from '@common/components/LoadingSpinner';
 import useAsyncHandledRetry from '@common/hooks/useAsyncHandledRetry';
 import React from 'react';
-import { generatePath, useHistory } from 'react-router';
+import { generatePath } from 'react-router';
+import { useNavigate } from 'react-router-dom-v5-compat';
 
 const PublicationAdoptMethodologyPage = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const { publicationId } = usePublicationContext();
 
-  const {
-    value: adoptableMethodologies,
-    isLoading,
-  } = useAsyncHandledRetry(async () =>
-    publicationService.getAdoptableMethodologies(publicationId),
+  const { value: adoptableMethodologies, isLoading } = useAsyncHandledRetry(
+    async () => publicationService.getAdoptableMethodologies(publicationId),
   );
 
   const returnRoute = generatePath<PublicationRouteParams>(
@@ -36,13 +34,13 @@ const PublicationAdoptMethodologyPage = () => {
         {adoptableMethodologies && adoptableMethodologies.length > 0 ? (
           <AdoptMethodologyForm
             methodologies={adoptableMethodologies}
-            onCancel={() => history.push(returnRoute)}
+            onCancel={() => navigate(returnRoute)}
             onSubmit={async values => {
               await publicationService.adoptMethodology(
                 publicationId,
                 values.methodologyId,
               );
-              history.push(returnRoute);
+              navigate(returnRoute);
             }}
           />
         ) : (

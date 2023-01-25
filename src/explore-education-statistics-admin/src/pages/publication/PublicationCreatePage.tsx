@@ -9,12 +9,13 @@ import appendQuery from '@common/utils/url/appendQuery';
 import LoadingSpinner from '@common/components/LoadingSpinner';
 import useAsyncHandledRetry from '@common/hooks/useAsyncHandledRetry';
 import React from 'react';
-import { useHistory, useParams } from 'react-router';
+import { useParams } from 'react-router';
 import { PublicationCreateRouteParams } from '@admin/routes/publicationRoutes';
+import { useNavigate } from 'react-router-dom-v5-compat';
 
 const PublicationCreatePage = () => {
   const { topicId } = useParams<PublicationCreateRouteParams>();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const { value: topic, isLoading } = useAsyncHandledRetry(
     () => topicService.getTopic(topicId),
@@ -77,7 +78,7 @@ const PublicationCreatePage = () => {
               },
             });
 
-            history.push(dashboardRoute.path);
+            navigate(dashboardRoute.path);
           }}
         />
       </Page>

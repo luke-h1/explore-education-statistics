@@ -14,11 +14,12 @@ import WarningMessage from '@common/components/WarningMessage';
 import useAsyncHandledRetry from '@common/hooks/useAsyncHandledRetry';
 import React, { useState } from 'react';
 import { useParams } from 'react-router';
-import { generatePath, useHistory } from 'react-router-dom';
+import { generatePath } from 'react-router-dom';
 import { UserPublicationRole } from '@admin/services/userService';
 import orderBy from 'lodash/orderBy';
 import ButtonLink from '@admin/components/ButtonLink';
 import PublicationReleaseAccess from '@admin/pages/publication/components/PublicationReleaseAccess';
+import { useNavigate } from 'react-router-dom-v5-compat';
 
 interface Model {
   releases: ReleaseSummary[];
@@ -29,7 +30,7 @@ interface Model {
 }
 
 const PublicationTeamAccessPage = () => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { releaseId } = useParams<PublicationTeamRouteParams>();
   const { publicationId, permissions } = usePublicationContext();
   const [currentReleaseId, setCurrentReleaseId] = useState(releaseId ?? '');
@@ -43,7 +44,7 @@ const PublicationTeamAccessPage = () => {
     if (!releaseId && releases.length) {
       setCurrentReleaseId(releases[0].id);
 
-      history.replace(
+      navigate(
         generatePath<PublicationTeamRouteParams>(
           publicationTeamAccessRoute.path,
           {
@@ -178,7 +179,7 @@ const PublicationTeamAccessPage = () => {
                   value={currentReleaseId}
                   onChange={e => {
                     setCurrentReleaseId(e.target.value);
-                    history.replace(
+                    navigate(
                       generatePath<PublicationTeamRouteParams>(
                         publicationTeamAccessRoute.path,
                         {

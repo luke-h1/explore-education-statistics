@@ -9,13 +9,14 @@ import footnoteService from '@admin/services/footnoteService';
 import LoadingSpinner from '@common/components/LoadingSpinner';
 import useAsyncHandledRetry from '@common/hooks/useAsyncHandledRetry';
 import React from 'react';
-import { generatePath, useHistory, useParams } from 'react-router';
+import { generatePath, useParams } from 'react-router';
+import { useNavigate } from 'react-router-dom-v5-compat';
 
 const ReleaseFootnoteEditPage = () => {
   const { publicationId, releaseId, footnoteId } =
     useParams<ReleaseFootnoteRouteParams>();
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const { value: footnoteMeta, isLoading: isFootnoteMetaLoading } =
     useAsyncHandledRetry(
@@ -57,7 +58,7 @@ const ReleaseFootnoteEditPage = () => {
                 values,
               );
 
-              history.push(footnotesPath);
+              navigate(footnotesPath);
             }}
             cancelButton={
               <Link unvisited to={footnotesPath}>
