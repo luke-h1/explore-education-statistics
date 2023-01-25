@@ -6,13 +6,12 @@ import { dashboardRoute } from '@admin/routes/routes';
 import useAsyncHandledRetry from '@common/hooks/useAsyncHandledRetry';
 import AdoptMethodologyForm from '@admin/pages/methodology/adopt-methodology/components/AdoptMethodologyForm';
 import React from 'react';
-import { RouteComponentProps } from 'react-router';
+import { useHistory, useParams } from 'react-router';
+import { MethodologyAdoptRouteParams } from '@admin/routes/methodologyRoutes';
 
-const AdoptMethodologyPage = ({
-  history,
-  match,
-}: RouteComponentProps<{ publicationId: string }>) => {
-  const { publicationId } = match.params;
+const AdoptMethodologyPage = () => {
+  const { publicationId } = useParams<MethodologyAdoptRouteParams>();
+  const history = useHistory();
 
   const { value, isLoading } = useAsyncHandledRetry(async () => {
     const [adoptableMethodologies, publication] = await Promise.all([

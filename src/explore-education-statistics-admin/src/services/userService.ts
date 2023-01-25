@@ -1,5 +1,5 @@
 import client from '@admin/services/utils/service';
-import { IdTitlePair } from 'src/services/types/common';
+import { IdTitlePair } from '@admin/services/types/common';
 
 export interface UserStatus {
   id: string;

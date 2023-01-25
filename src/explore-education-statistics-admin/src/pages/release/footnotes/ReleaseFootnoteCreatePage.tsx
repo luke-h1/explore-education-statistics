@@ -8,13 +8,11 @@ import footnoteService from '@admin/services/footnoteService';
 import LoadingSpinner from '@common/components/LoadingSpinner';
 import useAsyncHandledRetry from '@common/hooks/useAsyncHandledRetry';
 import React from 'react';
-import { generatePath, RouteComponentProps } from 'react-router';
+import { generatePath, useHistory, useParams } from 'react-router';
 
-const ReleaseFootnoteCreatePage = ({
-  match,
-  history,
-}: RouteComponentProps<ReleaseRouteParams>) => {
-  const { publicationId, releaseId } = match.params;
+const ReleaseFootnoteCreatePage = () => {
+  const { publicationId, releaseId } = useParams<ReleaseRouteParams>();
+  const history = useHistory();
 
   const { value: footnoteMeta, isLoading } = useAsyncHandledRetry(
     () => footnoteService.getFootnoteMeta(releaseId),

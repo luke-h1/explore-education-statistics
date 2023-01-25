@@ -9,34 +9,30 @@ import appendQuery from '@common/utils/url/appendQuery';
 import LoadingSpinner from '@common/components/LoadingSpinner';
 import useAsyncHandledRetry from '@common/hooks/useAsyncHandledRetry';
 import React from 'react';
-import { RouteComponentProps } from 'react-router';
+import { useHistory, useParams } from 'react-router';
+import { PublicationCreateRouteParams } from '@admin/routes/publicationRoutes';
 
-const PublicationCreatePage = ({
-  history,
-  match,
-}: RouteComponentProps<{ topicId: string }>) => {
-  const { topicId } = match.params;
+const PublicationCreatePage = () => {
+  const { topicId } = useParams<PublicationCreateRouteParams>();
+  const history = useHistory();
 
   const { value: topic, isLoading } = useAsyncHandledRetry(
     () => topicService.getTopic(topicId),
     [topicId],
   );
 
-  if (isLoading) {
-    return <LoadingSpinner loading={isLoading} />;
-  }
-
   if (!topic) {
     return null;
   }
 
   return (
-    <Page breadcrumbs={[{ name: 'Create new publication' }]}>
-      <div className="govuk-grid-row">
-        <div className="govuk-grid-column-two-thirds">
-          <PageTitle caption={topic.title} title="Create new publication" />
-        </div>
-        {/* EES-2464
+    <LoadingSpinner loading={isLoading}>
+      <Page breadcrumbs={[{ name: 'Create new publication' }]}>
+        <div className="govuk-grid-row">
+          <div className="govuk-grid-column-two-thirds">
+            <PageTitle caption={topic.title} title="Create new publication" />
+          </div>
+          {/* EES-2464
         <div className="govuk-grid-column-one-third">
           <RelatedInformation heading="Help and guidance">
             <ul className="govuk-list">
@@ -48,43 +44,44 @@ const PublicationCreatePage = ({
             </ul>
           </RelatedInformation>
         </div> */}
-      </div>
+        </div>
 
-      <PublicationForm
-        showTitleInput
-        cancelButton={
-          <Link
-            unvisited
-            to={appendQuery<ThemeTopicParams>(dashboardRoute.path, {
-              themeId: topic.themeId,
-              topicId,
-            })}
-          >
-            Cancel
-          </Link>
-        }
-        onSubmit={async ({
-          teamName,
-          teamEmail,
-          contactName,
-          contactTelNo,
-          ...values
-        }) => {
-          await publicationService.createPublication({
-            ...values,
-            topicId: topic.id,
-            contact: {
-              teamName,
-              teamEmail,
-              contactName,
-              contactTelNo,
-            },
-          });
+        <PublicationForm
+          showTitleInput
+          cancelButton={
+            <Link
+              unvisited
+              to={appendQuery<ThemeTopicParams>(dashboardRoute.path, {
+                themeId: topic.themeId,
+                topicId,
+              })}
+            >
+              Cancel
+            </Link>
+          }
+          onSubmit={async ({
+            teamName,
+            teamEmail,
+            contactName,
+            contactTelNo,
+            ...values
+          }) => {
+            await publicationService.createPublication({
+              ...values,
+              topicId: topic.id,
+              contact: {
+                teamName,
+                teamEmail,
+                contactName,
+                contactTelNo,
+              },
+            });
 
-          history.push(dashboardRoute.path);
-        }}
-      />
-    </Page>
+            history.push(dashboardRoute.path);
+          }}
+        />
+      </Page>
+    </LoadingSpinner>
   );
 };
 

@@ -23,14 +23,16 @@ import useAsyncHandledRetry from '@common/hooks/useAsyncHandledRetry';
 import useAsyncRetry from '@common/hooks/useAsyncRetry';
 import useToggle from '@common/hooks/useToggle';
 import React from 'react';
-import { generatePath, RouteComponentProps } from 'react-router';
+import {
+  generatePath,
+  useHistory,
+  useParams,
+} from 'react-router';
 
-const ReleaseDataFileReplacePage = ({
-  history,
-  match: {
-    params: { publicationId, releaseId, fileId },
-  },
-}: RouteComponentProps<ReleaseDataFileReplaceRouteParams>) => {
+const ReleaseDataFileReplacePage = () => {
+  const { fileId, publicationId, releaseId } =
+    useParams<ReleaseDataFileReplaceRouteParams>();
+  const history = useHistory();
   const [isCancelling, toggleCancelling] = useToggle(false);
   const {
     value: dataFile,

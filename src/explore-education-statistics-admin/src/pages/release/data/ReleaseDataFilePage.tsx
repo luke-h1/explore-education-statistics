@@ -9,7 +9,7 @@ import useFormSubmit from '@common/hooks/useFormSubmit';
 import React from 'react';
 import releaseDataFileService from '@admin/services/releaseDataFileService';
 import Link from '@admin/components/Link';
-import { generatePath, RouteComponentProps } from 'react-router';
+import { generatePath, useHistory, useParams } from 'react-router';
 import LoadingSpinner from '@common/components/LoadingSpinner';
 import Yup from '@common/validation/yup';
 import { Formik } from 'formik';
@@ -20,16 +20,12 @@ interface FormValues {
   title: string;
 }
 
-const ReleaseDataFilePage = ({
-  history,
-  match: {
-    params: { publicationId, releaseId, fileId },
-  },
-}: RouteComponentProps<ReleaseDataFileRouteParams>) => {
-  const {
-    value: dataFile,
-    isLoading: dataFileLoading,
-  } = useAsyncHandledRetry(
+const ReleaseDataFilePage = () => {
+  const { fileId, publicationId, releaseId } =
+    useParams<ReleaseDataFileRouteParams>();
+  const history = useHistory();
+
+  const { value: dataFile, isLoading: dataFileLoading } = useAsyncHandledRetry(
     () => releaseDataFileService.getDataFile(releaseId, fileId),
     [releaseId, fileId],
   );

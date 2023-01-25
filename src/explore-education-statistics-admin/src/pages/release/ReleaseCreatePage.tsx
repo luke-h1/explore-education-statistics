@@ -16,7 +16,7 @@ import useFormSubmit from '@common/hooks/useFormSubmit';
 import { mapFieldErrors } from '@common/validation/serverValidations';
 import Yup from '@common/validation/yup';
 import React from 'react';
-import { generatePath, RouteComponentProps, withRouter } from 'react-router';
+import { generatePath, useHistory, useParams, withRouter } from 'react-router';
 
 export interface FormValues extends ReleaseSummaryFormValues {
   templateReleaseId: string;
@@ -41,11 +41,9 @@ interface Model {
   publication: Publication;
 }
 
-const ReleaseCreatePage = ({
-  match,
-  history,
-}: RouteComponentProps<MatchProps>) => {
-  const { publicationId } = match.params;
+const ReleaseCreatePage = () => {
+  const { publicationId } = useParams<MatchProps>();
+  const history = useHistory();
 
   const { value: model } = useAsyncRetry<Model>(async () => {
     const [templateRelease, publication] = await Promise.all([

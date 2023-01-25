@@ -8,7 +8,7 @@ import useAsyncHandledRetry from '@common/hooks/useAsyncHandledRetry';
 import useFormSubmit from '@common/hooks/useFormSubmit';
 import React from 'react';
 import Link from '@admin/components/Link';
-import { generatePath, RouteComponentProps } from 'react-router';
+import { generatePath, useHistory, useParams } from 'react-router';
 import LoadingSpinner from '@common/components/LoadingSpinner';
 import Yup from '@common/validation/yup';
 import { Formik } from 'formik';
@@ -25,19 +25,17 @@ interface FormValues {
   summary: string;
 }
 
-const ReleaseAncillaryFilePage = ({
-  history,
-  match: {
-    params: { publicationId, releaseId, fileId },
-  },
-}: RouteComponentProps<ReleaseAncillaryFileRouteParams>) => {
-  const {
-    value: ancillaryFile,
-    isLoading: ancillaryFileLoading,
-  } = useAsyncHandledRetry(
-    () => releaseAncillaryFileService.getAncillaryFile(releaseId, fileId),
-    [releaseId, fileId],
-  );
+const ReleaseAncillaryFilePage = () => {
+  const { fileId, publicationId, releaseId } =
+    useParams<ReleaseAncillaryFileRouteParams>();
+
+  const history = useHistory();
+
+  const { value: ancillaryFile, isLoading: ancillaryFileLoading } =
+    useAsyncHandledRetry(
+      () => releaseAncillaryFileService.getAncillaryFile(releaseId, fileId),
+      [releaseId, fileId],
+    );
 
   const handleSubmit = useFormSubmit<FormValues>(async ({ title, summary }) => {
     await releaseAncillaryFileService.updateFile(releaseId, fileId, {

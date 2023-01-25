@@ -8,12 +8,11 @@ import ReleasePreviewTableTool from '@admin/pages/release/content/components/Rel
 import useAsyncHandledRetry from '@common/hooks/useAsyncHandledRetry';
 import publicationService from '@admin/services/publicationService';
 import React from 'react';
-import { generatePath, RouteComponentProps } from 'react-router-dom';
+import { generatePath } from 'react-router-dom';
+import { useParams } from 'react-router';
 
-const ReleaseTableToolPage = ({
-  match,
-}: RouteComponentProps<ReleaseRouteParams>) => {
-  const { releaseId, publicationId } = match.params;
+const ReleaseTableToolPage = () => {
+  const { releaseId, publicationId } = useParams<ReleaseRouteParams>();
 
   const { value: publication, isLoading } = useAsyncHandledRetry(
     () => publicationService.getPublication(publicationId),

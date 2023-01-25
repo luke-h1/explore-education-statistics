@@ -16,36 +16,32 @@ import useAsyncHandledRetry from '@common/hooks/useAsyncHandledRetry';
 import useToggle from '@common/hooks/useToggle';
 import classNames from 'classnames';
 import React from 'react';
-import { generatePath, RouteComponentProps } from 'react-router';
+import { generatePath, useParams } from 'react-router';
 
-const ReleaseFootnotesPage = ({
-  match,
-}: RouteComponentProps<ReleaseRouteParams>) => {
-  const { publicationId, releaseId } = match.params;
+const ReleaseFootnotesPage = () => {
+  const { publicationId, releaseId } = useParams<ReleaseRouteParams>();
   const [isReordering, toggleIsReordering] = useToggle(false);
 
-  const {
-    value: canUpdateRelease = false,
-    isLoading: isPermissionLoading,
-  } = useAsyncHandledRetry(
-    () => permissionService.canUpdateRelease(releaseId),
-    [releaseId],
-  );
+  const { value: canUpdateRelease = false, isLoading: isPermissionLoading } =
+    useAsyncHandledRetry(
+      () => permissionService.canUpdateRelease(releaseId),
+      [releaseId],
+    );
 
-  const {
-    value: footnoteMeta,
-    isLoading: isFootnoteMetaLoading,
-  } = useAsyncHandledRetry(() => footnoteService.getFootnoteMeta(releaseId), [
-    releaseId,
-  ]);
+  const { value: footnoteMeta, isLoading: isFootnoteMetaLoading } =
+    useAsyncHandledRetry(
+      () => footnoteService.getFootnoteMeta(releaseId),
+      [releaseId],
+    );
 
   const {
     value: footnotes,
     setState: setFootnotes,
     isLoading: isFootnotesLoading,
-  } = useAsyncHandledRetry(() => footnoteService.getFootnotes(releaseId), [
-    releaseId,
-  ]);
+  } = useAsyncHandledRetry(
+    () => footnoteService.getFootnotes(releaseId),
+    [releaseId],
+  );
 
   const handleReorder = (reorderedFootnotes: Footnote[]) => {
     setFootnotes({

@@ -18,13 +18,12 @@ import mapFullTable from '@common/modules/table-tool/utils/mapFullTable';
 import mapTableHeadersConfig from '@common/modules/table-tool/utils/mapTableHeadersConfig';
 import tableBuilderService from '@common/services/tableBuilderService';
 import React from 'react';
-import { RouteComponentProps } from 'react-router';
+import { useParams } from 'react-router';
 import { generatePath } from 'react-router-dom';
 
-const PreReleaseTableToolPage = ({
-  match,
-}: RouteComponentProps<PreReleaseTableToolRouteParams>) => {
-  const { publicationId, releaseId, dataBlockId } = match.params;
+const PreReleaseTableToolPage = () => {
+  const { publicationId, releaseId, dataBlockId } =
+    useParams<PreReleaseTableToolRouteParams>();
 
   const { value: publication } = useAsyncHandledRetry(
     () => publicationService.getPublication(publicationId),
@@ -124,6 +123,8 @@ const PreReleaseTableToolPage = ({
                 {highlight.name}
               </Link>
             )}
+            // TODO: LH refactor?
+            // eslint-disable-next-line react/no-unstable-nested-components
             finalStep={({ query, table, tableHeaders, onReorder }) => (
               <WizardStep>
                 {wizardStepProps => (

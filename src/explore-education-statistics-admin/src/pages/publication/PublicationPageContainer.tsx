@@ -26,7 +26,12 @@ import RelatedInformation from '@common/components/RelatedInformation';
 import WarningMessage from '@common/components/WarningMessage';
 import useAsyncHandledRetry from '@common/hooks/useAsyncHandledRetry';
 import React from 'react';
-import { generatePath, Route, RouteComponentProps, Switch } from 'react-router';
+import {
+  generatePath,
+  Route,
+  Switch,
+  useParams,
+} from 'react-router';
 
 const navRoutes = [
   publicationReleasesRoute,
@@ -47,10 +52,8 @@ const routes = [
   publicationInviteUsersPageRoute,
 ];
 
-const PublicationPageContainer = ({
-  match,
-}: RouteComponentProps<PublicationRouteParams>) => {
-  const { publicationId } = match.params;
+const PublicationPageContainer = () => {
+  const { publicationId } = useParams<PublicationRouteParams>();
   const {
     value: publication,
     setState: setPublication,

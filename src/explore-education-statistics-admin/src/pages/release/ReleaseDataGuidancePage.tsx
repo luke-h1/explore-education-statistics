@@ -11,7 +11,7 @@ import ReleaseDataGuidancePageContent from '@common/modules/release/components/R
 import { useConfig } from '@admin/contexts/ConfigContext';
 import Link from '@admin/components/Link';
 import React from 'react';
-import { RouteComponentProps, StaticContext } from 'react-router';
+import { useLocation, useParams } from 'react-router';
 
 interface LocationState {
   backLink: string;
@@ -22,11 +22,9 @@ interface Model {
   release: Release;
 }
 
-const ReleaseDataGuidancePage = ({
-  match,
-  location,
-}: RouteComponentProps<ReleaseRouteParams, StaticContext, LocationState>) => {
-  const { releaseId } = match.params;
+const ReleaseDataGuidancePage = () => {
+  const { releaseId } = useParams<ReleaseRouteParams>();
+  const location = useLocation<LocationState>();
 
   const { value: model, isLoading } = useAsyncHandledRetry<Model>(async () => {
     const [dataGuidance, release] = await Promise.all([

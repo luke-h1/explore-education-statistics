@@ -21,6 +21,10 @@ export type PublicationEditLegacyReleaseRouteParams = {
   legacyReleaseId: string;
 };
 
+export type PublicationCreateRouteParams = {
+  topicId: string;
+}
+
 export type PublicationTeamRouteParams = {
   publicationId: string;
   releaseId?: string;

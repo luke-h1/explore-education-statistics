@@ -13,6 +13,14 @@ export type MethodologyRouteParams = {
   methodologyId: string;
 };
 
+export type ExternalMethodologyRouteParams = {
+  publicationId: string;
+};
+
+export type MethodologyAdoptRouteParams = {
+  publicationId: string;
+};
+
 export const methodologySummaryRoute: MethodologyRouteProps = {
   path: '/methodology/:methodologyId/summary',
   title: 'Summary',

@@ -13,7 +13,7 @@ import LoadingSpinner from '@common/components/LoadingSpinner';
 import WarningMessage from '@common/components/WarningMessage';
 import useAsyncHandledRetry from '@common/hooks/useAsyncHandledRetry';
 import React, { useState } from 'react';
-import { RouteComponentProps } from 'react-router';
+import { useParams } from 'react-router';
 import { generatePath, useHistory } from 'react-router-dom';
 import { UserPublicationRole } from '@admin/services/userService';
 import orderBy from 'lodash/orderBy';
@@ -28,11 +28,9 @@ interface Model {
   permissions: PublicationPermissions;
 }
 
-const PublicationTeamAccessPage = ({
-  match,
-}: RouteComponentProps<PublicationTeamRouteParams>) => {
+const PublicationTeamAccessPage = () => {
   const history = useHistory();
-  const { releaseId } = match.params;
+  const { releaseId } = useParams<PublicationTeamRouteParams>();
   const { publicationId, permissions } = usePublicationContext();
   const [currentReleaseId, setCurrentReleaseId] = useState(releaseId ?? '');
 
@@ -69,25 +67,21 @@ const PublicationTeamAccessPage = ({
     };
   });
 
-  if (isLoading || !model) {
-    return <LoadingSpinner />;
-  }
-
-  const currentRelease = model.releases.find(
+  const currentRelease = model?.releases.find(
     release => release.id === currentReleaseId,
   );
 
   return (
-    <>
+    <LoadingSpinner loading={isLoading || !model}>
       <h2>Manage team access</h2>
 
       <h3>
-        {model.permissions.canUpdateContributorReleaseRole
+        {model?.permissions.canUpdateContributorReleaseRole
           ? 'Update publication access'
           : 'Publication access'}
       </h3>
 
-      {model.publicationRoles.length ? (
+      {model?.publicationRoles.length ? (
         <>
           <table data-testid="publicationRoles">
             <thead>
@@ -145,7 +139,7 @@ const PublicationTeamAccessPage = ({
         </p>
       )}
 
-      {model.permissions.canUpdateContributorReleaseRole &&
+      {model?.permissions.canUpdateContributorReleaseRole &&
         currentReleaseId !== '' && (
           <ButtonLink
             to={generatePath<PublicationTeamRouteParams>(
@@ -160,7 +154,8 @@ const PublicationTeamAccessPage = ({
           </ButtonLink>
         )}
 
-      {model.permissions.canViewReleaseTeamAccess && (
+      {model?.permissions.canViewReleaseTeamAccess && (
+        // eslint-disable-next-line react/jsx-no-useless-fragment
         <>
           {model?.releases.length ? (
             <>
@@ -216,7 +211,7 @@ const PublicationTeamAccessPage = ({
           )}
         </>
       )}
-    </>
+    </LoadingSpinner>
   );
 };
 

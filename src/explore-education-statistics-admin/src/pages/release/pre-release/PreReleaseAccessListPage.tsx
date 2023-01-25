@@ -8,17 +8,15 @@ import LoadingSpinner from '@common/components/LoadingSpinner';
 import ContentHtml from '@common/components/ContentHtml';
 import useAsyncHandledRetry from '@common/hooks/useAsyncHandledRetry';
 import React from 'react';
-import { RouteComponentProps, StaticContext } from 'react-router';
+import { useLocation, useParams } from 'react-router';
 
 interface LocationState {
   backLink: string;
 }
 
-const PreReleaseAccessListPage = ({
-  match,
-  location,
-}: RouteComponentProps<ReleaseRouteParams, StaticContext, LocationState>) => {
-  const { releaseId } = match.params;
+const PreReleaseAccessListPage = () => {
+  const { releaseId } = useParams<ReleaseRouteParams>();
+  const location = useLocation<LocationState>();
 
   const { value: release, isLoading } = useAsyncHandledRetry(
     () => releaseService.getRelease(releaseId),

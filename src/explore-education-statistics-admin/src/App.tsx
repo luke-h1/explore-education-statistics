@@ -15,8 +15,8 @@ import {
 import useAsyncRetry from '@common/hooks/useAsyncRetry';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React, { lazy, Suspense, useEffect } from 'react';
-import { Route, Switch, useHistory } from 'react-router';
-import { BrowserRouter } from 'react-router-dom';
+import { Switch, useHistory } from 'react-router';
+import { CompatRouter , CompatRoute } from "react-router-dom-v5-compat";
 import PageNotFoundPage from './pages/errors/PageNotFoundPage';
 import { LastLocationContextProvider } from './contexts/LastLocationContext';
 
@@ -55,9 +55,9 @@ function PrototypesEntry() {
   return (
     <Suspense fallback={<ServiceProblemsPage />}>
       <Switch>
-        <Route exact path="/prototypes" component={PrototypeIndexPage} />
+        <CompatRoute exact path="/prototypes" component={PrototypeIndexPage} />
         {prototypeRoutes?.map(route => (
-          <Route key={route.path} exact={route.exact ?? true} {...route} />
+          <CompatRoute key={route.path} exact={route.exact ?? true} {...route} />
         ))}
       </Switch>
     </Suspense>
@@ -71,7 +71,7 @@ function App() {
         <ApplicationInsightsContextProvider
           instrumentationKey={config.AppInsightsKey}
         >
-          <BrowserRouter>
+          <CompatRouter>
             <ApplicationInsightsTracking />
 
             <QueryClientProvider client={queryClient}>
@@ -81,7 +81,7 @@ function App() {
                     <Switch>
                       {Object.entries(apiAuthorizationRouteList).map(
                         ([key, authRoute]) => (
-                          <Route exact key={key} {...authRoute} />
+                          <CompatRoute exact key={key} {...authRoute} />
                         ),
                       )}
 
@@ -107,7 +107,7 @@ function App() {
                 </LastLocationContextProvider>
               </AuthContextProvider>
             </QueryClientProvider>
-          </BrowserRouter>
+          </CompatRouter>
         </ApplicationInsightsContextProvider>
       )}
     </ConfigContextProvider>

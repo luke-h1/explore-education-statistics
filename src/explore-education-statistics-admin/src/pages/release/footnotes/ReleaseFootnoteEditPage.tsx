@@ -9,28 +9,25 @@ import footnoteService from '@admin/services/footnoteService';
 import LoadingSpinner from '@common/components/LoadingSpinner';
 import useAsyncHandledRetry from '@common/hooks/useAsyncHandledRetry';
 import React from 'react';
-import { generatePath, RouteComponentProps } from 'react-router';
+import { generatePath, useHistory, useParams } from 'react-router';
 
-const ReleaseFootnoteEditPage = ({
-  match,
-  history,
-}: RouteComponentProps<ReleaseFootnoteRouteParams>) => {
-  const { publicationId, releaseId, footnoteId } = match.params;
+const ReleaseFootnoteEditPage = () => {
+  const { publicationId, releaseId, footnoteId } =
+    useParams<ReleaseFootnoteRouteParams>();
 
-  const {
-    value: footnoteMeta,
-    isLoading: isFootnoteMetaLoading,
-  } = useAsyncHandledRetry(() => footnoteService.getFootnoteMeta(releaseId), [
-    releaseId,
-  ]);
+  const history = useHistory();
 
-  const {
-    value: footnote,
-    isLoading: isFootnoteLoading,
-  } = useAsyncHandledRetry(
-    () => footnoteService.getFootnote(releaseId, footnoteId),
-    [releaseId, footnoteId],
-  );
+  const { value: footnoteMeta, isLoading: isFootnoteMetaLoading } =
+    useAsyncHandledRetry(
+      () => footnoteService.getFootnoteMeta(releaseId),
+      [releaseId],
+    );
+
+  const { value: footnote, isLoading: isFootnoteLoading } =
+    useAsyncHandledRetry(
+      () => footnoteService.getFootnote(releaseId, footnoteId),
+      [releaseId, footnoteId],
+    );
 
   const footnotesPath = generatePath<ReleaseRouteParams>(
     releaseFootnotesRoute.path,

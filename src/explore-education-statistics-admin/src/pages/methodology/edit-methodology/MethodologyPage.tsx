@@ -17,7 +17,13 @@ import WarningMessage from '@common/components/WarningMessage';
 import useAsyncHandledRetry from '@common/hooks/useAsyncHandledRetry';
 import Tag from '@common/components/Tag';
 import React from 'react';
-import { generatePath, Route, RouteComponentProps, Switch } from 'react-router';
+import {
+  generatePath,
+  Route,
+  Switch,
+  useLocation,
+  useParams,
+} from 'react-router';
 
 const navRoutes: MethodologyRouteProps[] = [
   methodologySummaryRoute,
@@ -30,11 +36,9 @@ const routes: MethodologyRouteProps[] = [
   methodologySummaryEditRoute,
 ];
 
-const MethodologyPage = ({
-  match,
-  location,
-}: RouteComponentProps<MethodologyRouteParams>) => {
-  const { methodologyId } = match.params;
+const MethodologyPage = () => {
+  const location = useLocation();
+  const { methodologyId } = useParams<MethodologyRouteParams>();
 
   const {
     value: methodology,
