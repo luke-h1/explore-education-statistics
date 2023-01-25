@@ -43,10 +43,11 @@ const KeyStat = ({
   dataBlockId,
   testId = 'keyStat',
 }: KeyStatProps) => {
-  const { value: keyStat, isLoading, error } = useKeyStatQuery(
-    releaseId,
-    dataBlockId,
-  );
+  const {
+    value: keyStat,
+    isLoading,
+    error,
+  } = useKeyStatQuery(releaseId, dataBlockId);
 
   if (error) {
     return null;

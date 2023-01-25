@@ -20,7 +20,7 @@ import useAsyncRetry from '@common/hooks/useAsyncRetry';
 import { format } from 'date-fns';
 import React from 'react';
 import { generatePath } from 'react-router';
-import { CompatRoute, Routes , useParams } from 'react-router-dom-v5-compat';
+import { CompatRoute, Routes, useParams } from 'react-router-dom-v5-compat';
 
 interface Model {
   preReleaseWindowStatus: PreReleaseWindowStatus;

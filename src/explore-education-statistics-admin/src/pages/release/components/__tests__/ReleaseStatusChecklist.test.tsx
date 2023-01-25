@@ -80,8 +80,7 @@ describe('ReleaseStatusChecklist', () => {
 
     expect(
       screen.getByRole('link', {
-        name:
-          'All summary information must be completed on the data guidance page',
+        name: 'All summary information must be completed on the data guidance page',
       }),
     ).toHaveAttribute(
       'href',
@@ -90,8 +89,7 @@ describe('ReleaseStatusChecklist', () => {
 
     expect(
       screen.getByRole('link', {
-        name:
-          'A public release note for this amendment is required, add this near the top of the content page',
+        name: 'A public release note for this amendment is required, add this near the top of the content page',
       }),
     ).toHaveAttribute(
       'href',
@@ -142,8 +140,7 @@ describe('ReleaseStatusChecklist', () => {
 
     expect(
       screen.getByRole('link', {
-        name:
-          'An in-EES methodology page has not been linked to this publication',
+        name: 'An in-EES methodology page has not been linked to this publication',
       }),
     ).toHaveAttribute('href', '/publication/publication-1/methodologies');
 
@@ -229,15 +226,13 @@ describe('ReleaseStatusChecklist', () => {
 
     expect(
       screen.getByRole('link', {
-        name:
-          'All summary information must be completed on the data guidance page',
+        name: 'All summary information must be completed on the data guidance page',
       }),
     ).toBeInTheDocument();
 
     expect(
       screen.getByRole('link', {
-        name:
-          'An in-EES methodology page has not been linked to this publication',
+        name: 'An in-EES methodology page has not been linked to this publication',
       }),
     ).toBeInTheDocument();
   });

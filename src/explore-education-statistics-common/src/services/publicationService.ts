@@ -98,7 +98,7 @@ export const publicationSortOptions = [
   'title',
 ] as const;
 
-export type PublicationSortOption = typeof publicationSortOptions[number];
+export type PublicationSortOption = (typeof publicationSortOptions)[number];
 
 export type PublicationSortParam = 'published' | 'title' | 'relevance';
 
@@ -106,7 +106,7 @@ export type PublicationOrderParam = 'asc' | 'desc';
 
 export const publicationFilters = ['releaseType', 'search', 'themeId'] as const;
 
-export type PublicationFilter = typeof publicationFilters[number];
+export type PublicationFilter = (typeof publicationFilters)[number];
 
 export interface PublicationListRequest {
   order?: PublicationOrderParam;
@@ -121,7 +121,7 @@ export interface PublicationListRequest {
 export interface Release<
   ContentBlockType extends ContentBlock = ContentBlock,
   DataBlockType extends DataBlock = DataBlock,
-  EmbedBlockType extends EmbedBlock = EmbedBlock
+  EmbedBlockType extends EmbedBlock = EmbedBlock,
 > {
   id: string;
   title: string;

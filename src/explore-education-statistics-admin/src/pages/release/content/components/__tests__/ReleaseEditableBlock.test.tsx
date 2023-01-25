@@ -557,9 +557,8 @@ describe('ReleaseEditableBlock', () => {
       .spyOn(connectionMock, 'state', 'get')
       .mockReturnValue(HubConnectionState.Connected);
 
-    let onContentBlockLocked: (
-      event: ReleaseContentBlockLockEvent,
-    ) => void = noop;
+    let onContentBlockLocked: (event: ReleaseContentBlockLockEvent) => void =
+      noop;
 
     connectionMock.on.mockImplementation((methodName, callback) => {
       if (methodName === 'ContentBlockLocked') {
@@ -728,9 +727,8 @@ describe('ReleaseEditableBlock', () => {
       .spyOn(connectionMock, 'state', 'get')
       .mockReturnValue(HubConnectionState.Connected);
 
-    let onContentBlockLocked: (
-      event: ReleaseContentBlockLockEvent,
-    ) => void = noop;
+    let onContentBlockLocked: (event: ReleaseContentBlockLockEvent) => void =
+      noop;
 
     connectionMock.on.mockImplementation((methodName, callback) => {
       if (methodName === 'ContentBlockLocked') {

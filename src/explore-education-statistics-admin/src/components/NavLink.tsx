@@ -2,10 +2,7 @@ import classNames from 'classnames';
 import React, { ReactNode } from 'react';
 import { NavLinkProps } from 'react-router-dom';
 
-import {
-  NavLink as RouterNavLinkV5,
-} from 'react-router-dom-v5-compat';
-
+import { NavLink as RouterNavLinkV5 } from 'react-router-dom-v5-compat';
 
 import styles from './NavLink.module.scss';
 

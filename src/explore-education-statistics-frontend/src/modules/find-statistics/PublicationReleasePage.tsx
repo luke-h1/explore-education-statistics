@@ -590,10 +590,8 @@ const CreateTablesButton = ({ release, className }: CreateTableButtonProps) => {
 export const getServerSideProps: GetServerSideProps<Props> = async ({
   query,
 }) => {
-  const {
-    publication: publicationSlug,
-    release: releaseSlug,
-  } = query as Dictionary<string>;
+  const { publication: publicationSlug, release: releaseSlug } =
+    query as Dictionary<string>;
 
   const release = await (releaseSlug
     ? publicationService.getPublicationRelease(publicationSlug, releaseSlug)

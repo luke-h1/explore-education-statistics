@@ -316,16 +316,15 @@ export const lineChartBlockDefinition: ChartDefinition = {
 export default memo(LineChartBlock);
 
 // eslint-disable-next-line react/display-name
-const getDot = (symbol: ChartSymbol | 'none' = 'circle') => ({
-  ref,
-  ...props
-}: SymbolsProps) => {
-  if (symbol === 'none') {
-    return undefined;
-  }
+const getDot =
+  (symbol: ChartSymbol | 'none' = 'circle') =>
+  ({ ref, ...props }: SymbolsProps) => {
+    if (symbol === 'none') {
+      return undefined;
+    }
 
-  return <Symbols {...props} ref={ref as never} type={symbol} />;
-};
+    return <Symbols {...props} ref={ref as never} type={symbol} />;
+  };
 
 const getLegendType = (
   symbol: LegendType | undefined = 'square',

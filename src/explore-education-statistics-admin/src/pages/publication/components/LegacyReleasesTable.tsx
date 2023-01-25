@@ -56,9 +56,8 @@ const LegacyReleasesTable = ({
   const navigate = useNavigate();
   const [isReordering, toggleReordering] = useToggle(false);
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>();
-  const [deleteLegacyRelease, setDeleteLegacyRelease] = useState<
-    LegacyRelease
-  >();
+  const [deleteLegacyRelease, setDeleteLegacyRelease] =
+    useState<LegacyRelease>();
 
   const [legacyReleases, setLegacyReleases] = useState(initialLegacyReleases);
 

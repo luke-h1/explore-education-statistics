@@ -3,9 +3,7 @@ import classNames from 'classnames';
 import React, { ReactNode } from 'react';
 import { LinkProps as RouterLinkProps } from 'react-router-dom';
 
-import {
-  Link as RouterLinkV5,
-} from 'react-router-dom-v5-compat';
+import { Link as RouterLinkV5 } from 'react-router-dom-v5-compat';
 
 /* 
   // no routerlinkprops exposed. This is the v6 type

@@ -45,10 +45,11 @@ const EditableKeyStat = ({
   const [showForm, toggleShowForm] = useToggle(false);
   const [removing, toggleRemoving] = useToggle(false);
 
-  const { value: keyStat, isLoading, error } = useKeyStatQuery(
-    releaseId,
-    dataBlockId,
-  );
+  const {
+    value: keyStat,
+    isLoading,
+    error,
+  } = useKeyStatQuery(releaseId, dataBlockId);
 
   const formId = `editableKeyStatForm-${dataBlockId}`;
 

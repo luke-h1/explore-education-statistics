@@ -23,10 +23,8 @@ export interface KeyStatisticsProps {
 }
 
 const KeyStatistics = ({ release, isEditing }: KeyStatisticsProps) => {
-  const {
-    deleteContentSectionBlock,
-    updateContentSectionDataBlock,
-  } = useReleaseContentActions();
+  const { deleteContentSectionBlock, updateContentSectionDataBlock } =
+    useReleaseContentActions();
 
   const [keyStatisticsBlocks, setKeyStatisticsBlocks] = useState(
     release.keyStatisticsSection.content.filter(

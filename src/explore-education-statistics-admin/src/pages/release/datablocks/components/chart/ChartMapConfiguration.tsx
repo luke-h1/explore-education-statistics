@@ -52,11 +52,8 @@ export default function ChartMapConfiguration({
   onChange,
   onSubmit,
 }: Props) {
-  const {
-    hasSubmitted,
-    updateForm,
-    submitForms,
-  } = useChartBuilderFormsContext();
+  const { hasSubmitted, updateForm, submitForms } =
+    useChartBuilderFormsContext();
 
   // EES-3858 - removed until feature is reimplemented
   // const hasMixedUnits = !dataSetsUnits.every(unit => unit === dataSetsUnits[0]);
@@ -77,9 +74,11 @@ export default function ChartMapConfiguration({
         }),
       dataClassification: Yup.string()
         .required('Choose a data classification')
-        .oneOf(['EqualIntervals', 'Quantiles', 'Custom']) as StringSchema<
-        DataClassification
-      >,
+        .oneOf([
+          'EqualIntervals',
+          'Quantiles',
+          'Custom',
+        ]) as StringSchema<DataClassification>,
       dataGroups: Yup.number()
         .required('Enter the number of data groups')
         .min(1, 'The number of data groups must be greater than 1')
@@ -200,8 +199,7 @@ export default function ChartMapConfiguration({
               {
                 label: 'Quantiles',
                 value: 'Quantiles',
-                hint:
-                  'Data is classified so that each group roughly has the same quantity of features.',
+                hint: 'Data is classified so that each group roughly has the same quantity of features.',
               },
               // EES-3858 - removed until feature is reimplemented
               // {

@@ -10,7 +10,7 @@ import LoadingSpinner from '@common/components/LoadingSpinner';
 import useAsyncHandledRetry from '@common/hooks/useAsyncHandledRetry';
 import React from 'react';
 import { generatePath } from 'react-router';
-import { useNavigate , useParams } from 'react-router-dom-v5-compat';
+import { useNavigate, useParams } from 'react-router-dom-v5-compat';
 
 const PublicationLegacyReleaseEditPage = () => {
   const { legacyReleaseId } =

@@ -33,7 +33,12 @@ import React from 'react';
 import { generatePath } from 'react-router';
 import { publicationReleasesRoute } from '@admin/routes/publicationRoutes';
 import { PublicationRouteParams } from '@admin/routes/routes';
-import { CompatRoute, Routes, useParams , useLocation } from 'react-router-dom-v5-compat';
+import {
+  CompatRoute,
+  Routes,
+  useParams,
+  useLocation,
+} from 'react-router-dom-v5-compat';
 
 const navRoutes = [
   releaseSummaryRoute,

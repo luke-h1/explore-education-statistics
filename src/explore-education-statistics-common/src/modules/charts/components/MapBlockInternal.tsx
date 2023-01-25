@@ -223,16 +223,14 @@ export default function MapBlockInternal({
   // Rebuild the geometry if the selection has changed
   useEffect(() => {
     if (dataSetCategories.length && selectedDataSetConfig) {
-      const {
-        features: newFeatures,
-        dataGroups: newDataGroups,
-      } = generateFeaturesAndDataGroups({
-        selectedDataSetConfig,
-        dataSetCategories,
-        dataGroups,
-        classification: dataClassification,
-        customDataGroups,
-      });
+      const { features: newFeatures, dataGroups: newDataGroups } =
+        generateFeaturesAndDataGroups({
+          selectedDataSetConfig,
+          dataSetCategories,
+          dataGroups,
+          classification: dataClassification,
+          customDataGroups,
+        });
 
       setFeatures(newFeatures);
       setLegendDataGroups(newDataGroups);
@@ -322,7 +320,8 @@ export default function MapBlockInternal({
     (feature: MapFeature, featureLayer: Layer) => {
       if (feature.properties) {
         // eslint-disable-next-line no-param-reassign
-        feature.properties.layer = featureLayer as MapFeatureProperties['layer'];
+        feature.properties.layer =
+          featureLayer as MapFeatureProperties['layer'];
       }
 
       featureLayer.bindTooltip(() => {

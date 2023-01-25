@@ -66,7 +66,7 @@ export default function getCsvData(fullTable: WorkerFullTable): string[][] {
       const [location, timePeriod, ...filterOptions] = filterCombination as [
         WorkerLocationFilter,
         WorkerTimePeriodFilter,
-        ...WorkerCategoryFilter[]
+        ...WorkerCategoryFilter[],
       ];
 
       const indicatorCells = indicators.map(indicator => {

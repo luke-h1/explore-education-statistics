@@ -8,9 +8,9 @@ import { GetServerSideProps } from 'next';
 
 export default TableToolPage;
 
-export const getServerSideProps: GetServerSideProps<TableToolPageProps> = async ({
-  query,
-}) => {
+export const getServerSideProps: GetServerSideProps<
+  TableToolPageProps
+> = async ({ query }) => {
   const { dataBlockId } = query as Dictionary<string>;
 
   const [fastTrack, themeMeta] = await Promise.all([

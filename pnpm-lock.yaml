@@ -8,7 +8,7 @@ importers:
       '@typescript-eslint/eslint-plugin': ^5.49.0
       '@typescript-eslint/parser': ^5.49.0
       caniuse-lite: ^1.0.30001448
-      chalk: ^5.2.0
+      chalk: ^4.1.0
       cross-spawn: ^7.0.3
       eslint: ^8.32.0
       eslint-config-airbnb: ^19.0.4
@@ -36,7 +36,7 @@ importers:
       '@typescript-eslint/eslint-plugin': 5.49.0_iu322prlnwsygkcra5kbpy22si
       '@typescript-eslint/parser': 5.49.0_7uibuqfxkfaozanbtbziikiqje
       caniuse-lite: 1.0.30001448
-      chalk: 5.2.0
+      chalk: 4.1.2
       cross-spawn: 7.0.3
       eslint: 8.32.0
       eslint-config-airbnb: 19.0.4_td5yecidacttadzxcsbd5t7tli
@@ -6982,11 +6982,6 @@ packages:
     dependencies:
       ansi-styles: 4.3.0
       supports-color: 7.2.0
-
-  /chalk/5.2.0:
-    resolution: {integrity: sha512-ree3Gqw/nazQAPuJJEy+avdl7QfZMcUvmHIKgEZkGL+xOBzRvup5Hxo6LHuMceSxOabuJLJm5Yp/92R9eMmMvA==}
-    engines: {node: ^12.17.0 || ^14.13 || >=16.0.0}
-    dev: true
 
   /char-regex/1.0.2:
     resolution: {integrity: sha512-kWWXztvZ5SBQV+eRgKFeh8q5sLuZY2+8WUIzlxWVTg+oGwY14qylx1KbKzHd8P6ZYkAg0xyIDU9JMHhyJMZ1jw==}

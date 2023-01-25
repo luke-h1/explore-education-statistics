@@ -27,7 +27,7 @@ import WarningMessage from '@common/components/WarningMessage';
 import useAsyncHandledRetry from '@common/hooks/useAsyncHandledRetry';
 import React from 'react';
 import { generatePath } from 'react-router';
-import { CompatRoute, Routes , useParams } from 'react-router-dom-v5-compat';
+import { CompatRoute, Routes, useParams } from 'react-router-dom-v5-compat';
 
 const navRoutes = [
   publicationReleasesRoute,

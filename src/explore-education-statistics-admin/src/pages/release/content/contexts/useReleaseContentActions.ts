@@ -21,9 +21,8 @@ export default function useReleaseContentActions() {
 
   const updateAvailableDataBlocks = useCallback(
     async ({ releaseId }: { releaseId: string }) => {
-      const availableDataBlocks = await releaseContentService.getAvailableDataBlocks(
-        releaseId,
-      );
+      const availableDataBlocks =
+        await releaseContentService.getAvailableDataBlocks(releaseId);
 
       dispatch({
         type: 'SET_AVAILABLE_DATABLOCKS',
@@ -74,12 +73,13 @@ export default function useReleaseContentActions() {
       sectionKey: ContentSectionKeys;
       values: KeyStatsFormValues;
     }) => {
-      const updateBlock = await releaseContentService.updateContentSectionDataBlock(
-        releaseId,
-        sectionId,
-        blockId,
-        values,
-      );
+      const updateBlock =
+        await releaseContentService.updateContentSectionDataBlock(
+          releaseId,
+          sectionId,
+          blockId,
+          values,
+        );
       dispatch({
         type: 'UPDATE_SECTION_BLOCK',
         payload: {
@@ -137,12 +137,13 @@ export default function useReleaseContentActions() {
       blockId: string;
       comment: CommentCreate;
     }): Promise<Comment> => {
-      const newComment = await releaseContentCommentService.addContentSectionComment(
-        releaseId,
-        sectionId,
-        blockId,
-        comment,
-      );
+      const newComment =
+        await releaseContentCommentService.addContentSectionComment(
+          releaseId,
+          sectionId,
+          blockId,
+          comment,
+        );
 
       dispatch({
         type: 'ADD_BLOCK_COMMENT',
@@ -196,9 +197,8 @@ export default function useReleaseContentActions() {
       blockId: string;
       comment: Comment;
     }) => {
-      const updatedComment = await releaseContentCommentService.updateContentSectionComment(
-        comment,
-      );
+      const updatedComment =
+        await releaseContentCommentService.updateContentSectionComment(comment);
 
       dispatch({
         type: 'UPDATE_BLOCK_COMMENT',
@@ -356,11 +356,12 @@ export default function useReleaseContentActions() {
       sectionKey: ContentSectionKeys;
       order: Dictionary<number>;
     }) => {
-      const sectionContent = await releaseContentService.updateContentSectionBlocksOrder(
-        releaseId,
-        sectionId,
-        order,
-      );
+      const sectionContent =
+        await releaseContentService.updateContentSectionBlocksOrder(
+          releaseId,
+          sectionId,
+          order,
+        );
 
       dispatch({
         type: 'UPDATE_SECTION_CONTENT',

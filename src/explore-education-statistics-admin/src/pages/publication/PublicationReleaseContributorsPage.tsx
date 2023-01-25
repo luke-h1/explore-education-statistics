@@ -11,7 +11,7 @@ import releaseService, { Release } from '@admin/services/releaseService';
 import LoadingSpinner from '@common/components/LoadingSpinner';
 import useAsyncHandledRetry from '@common/hooks/useAsyncHandledRetry';
 import React from 'react';
-import { useParams } from "react-router-dom-v5-compat";
+import { useParams } from 'react-router-dom-v5-compat';
 
 interface Model {
   publication: Publication;

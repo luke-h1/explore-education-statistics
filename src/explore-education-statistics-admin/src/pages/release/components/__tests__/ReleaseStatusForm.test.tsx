@@ -632,8 +632,7 @@ describe('ReleaseStatusForm', () => {
       });
 
       const errorLink = screen.getByRole('link', {
-        name:
-          'There was a problem updating the approval status of this release',
+        name: 'There was a problem updating the approval status of this release',
       });
 
       expect(errorLink).toHaveAttribute(
@@ -836,8 +835,7 @@ describe('ReleaseStatusForm', () => {
 
       expect(
         screen.getByRole('link', {
-          name:
-            'Release must be scheduled at least one day in advance of the publishing day',
+          name: 'Release must be scheduled at least one day in advance of the publishing day',
         }),
       ).toHaveAttribute('href', '#releaseStatusForm-publishScheduled');
     });
