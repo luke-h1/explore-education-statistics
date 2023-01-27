@@ -206,6 +206,13 @@ def user_creates_test_release_via_api(
     return response.json()["id"]
 
 
+def user_updates_release_published_date(release_id: str, published: datetime) -> None:
+    response = admin_client.patch(f"/api/releases/{release_id}/published", {"published": published.isoformat()})
+    assert (
+        response.status_code < 300
+    ), f"Updating release published date failed with {response.status_code} and {response.text}"
+
+
 def _get_user_details_via_api(user_email: str):
 
     users = admin_client.get("/api/user-management/users").json()

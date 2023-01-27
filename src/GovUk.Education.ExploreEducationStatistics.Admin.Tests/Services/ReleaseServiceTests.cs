@@ -86,6 +86,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
                 Assert.Null(result.PublishScheduled);
                 Assert.Null(result.Published);
                 Assert.False(result.NotifySubscribers);
+                Assert.False(result.UpdatePublishedDate);
             }
 
             await using (var context = InMemoryApplicationDbContext(contextId))
@@ -105,6 +106,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
                 Assert.Null(actual.NextReleaseDate);
                 Assert.Null(actual.NotifiedOn);
                 Assert.False(actual.NotifySubscribers);
+                Assert.False(actual.UpdatePublishedDate);
             }
         }
 
@@ -743,7 +745,9 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
                         InternalReleaseNote = "Release note 2 days ago",
                         Created = DateTime.UtcNow.Subtract(TimeSpan.FromDays(2))
                     }
-                }
+                },
+                NotifySubscribers = true,
+                UpdatePublishedDate = true
             };
 
             var publication = new Publication
@@ -797,7 +801,8 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin.Tests.Services
                 Assert.True(viewModel.LatestRelease);
                 Assert.True(viewModel.Live);
                 Assert.False(viewModel.Amendment);
-                Assert.False(viewModel.NotifySubscribers);
+                Assert.True(viewModel.NotifySubscribers);
+                Assert.True(viewModel.UpdatePublishedDate);
             }
         }
 
