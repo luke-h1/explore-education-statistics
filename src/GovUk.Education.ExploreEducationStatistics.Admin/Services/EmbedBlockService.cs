@@ -31,7 +31,8 @@ public class EmbedBlockService : IEmbedBlockService
     /// </remarks>
     public static readonly string[] PermittedDomains =
     {
-        "https://department-for-education.shinyapps.io", "https://dfe-analytical-services.github.io"
+        "https://department-for-education.shinyapps.io", 
+        "https://dfe-analytical-services.github.io"
     };
     
     private readonly ContentDbContext _contentDbContext;
