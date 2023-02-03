@@ -882,7 +882,6 @@ describe('ReleaseEditableBlock', () => {
             </ReleaseContentProvider>
           </ReleaseContentHubContextProvider>
         </AuthContextTestProvider>
-        ,
       </TestConfigContextProvider>,
     );
   }
