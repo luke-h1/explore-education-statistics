@@ -91,8 +91,10 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Services
 
         public async Task<Either<ActionResult, SubjectMetaViewModel>> GetSubjectMeta(ReleaseSubject releaseSubject)
         {
-            return await _userService.CheckCanViewSubjectData(releaseSubject)
-                .OnSuccess(GetSubjectMetaViewModel);
+            // TODO EES-4029 Revert this
+            return await GetSubjectMetaViewModel(releaseSubject);
+            // return await _userService.CheckCanViewSubjectData(releaseSubject)
+            //     .OnSuccess(GetSubjectMetaViewModel);
         }
 
         public async Task<Either<ActionResult, SubjectMetaViewModel>> FilterSubjectMeta(Guid? releaseId,
@@ -100,7 +102,8 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Services
             CancellationToken cancellationToken)
         {
             return await CheckReleaseSubjectExists(releaseId, query.SubjectId)
-                .OnSuccess(_userService.CheckCanViewSubjectData)
+                // TODO EES-4029 Revert this
+                //.OnSuccess(_userService.CheckCanViewSubjectData)
                 .OnSuccess(releaseSubject =>
                     GetSubjectMetaViewModelFromQuery(query, releaseSubject, cancellationToken));
         }

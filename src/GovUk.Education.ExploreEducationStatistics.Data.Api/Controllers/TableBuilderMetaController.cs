@@ -24,18 +24,29 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Api.Controllers
     [ApiController]
     public class TableBuilderMetaController : ControllerBase
     {
+        private readonly StatisticsDbContext _statisticsDbContext;
         private readonly IPersistenceHelper<ContentDbContext> _contentPersistenceHelper;
         private readonly IPersistenceHelper<StatisticsDbContext> _statisticsPersistenceHelper;
         private readonly ISubjectMetaService _subjectMetaService;
 
         public TableBuilderMetaController(
+            StatisticsDbContext statisticsDbContext,
             IPersistenceHelper<ContentDbContext> contentPersistenceHelper,
             IPersistenceHelper<StatisticsDbContext> statisticsPersistenceHelper,
             ISubjectMetaService subjectMetaService)
         {
+            _statisticsDbContext = statisticsDbContext;
             _contentPersistenceHelper = contentPersistenceHelper;
             _statisticsPersistenceHelper = statisticsPersistenceHelper;
             _subjectMetaService = subjectMetaService;
+        }
+
+        [HttpDelete("buffer-cache")]
+        public async Task<ActionResult> DeleteBufferCache()
+        {
+            await _statisticsDbContext.Database.ExecuteSqlRawAsync("CHECKPOINT");
+            await _statisticsDbContext.Database.ExecuteSqlRawAsync("DBCC DROPCLEANBUFFERS");
+            return NoContent();
         }
 
         [HttpGet("meta/subject/{subjectId:guid}")]
@@ -67,7 +78,8 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Api.Controllers
                 .OnSuccess(release => new CacheableReleaseSubject(releaseSubject, release));
         }
 
-        [BlobCache(typeof(SubjectMetaCacheKey))]
+        // TODO EES-4029 Revert this
+        //[BlobCache(typeof(SubjectMetaCacheKey))]
         private Task<Either<ActionResult, SubjectMetaViewModel>> GetSubjectMeta(CacheableReleaseSubject cacheable)
         {
             return _subjectMetaService.GetSubjectMeta(cacheable.ReleaseSubject);
@@ -95,13 +107,18 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Api.Controllers
         private async Task<Either<ActionResult, ReleaseSubject>> CheckReleaseSubjectExists(Guid subjectId,
             Guid? releaseId = null)
         {
-            return releaseId.HasValue
-                ? await _statisticsPersistenceHelper.CheckEntityExists<ReleaseSubject>(
-                    query => query
-                        .Where(rs => rs.ReleaseId == releaseId && rs.SubjectId == subjectId)
-                )
-                : await _subjectMetaService.GetReleaseSubjectForLatestPublishedVersion(subjectId) ??
-                  new Either<ActionResult, ReleaseSubject>(new NotFoundResult());
+            return await _statisticsPersistenceHelper.CheckEntityExists<ReleaseSubject>(
+                query => query
+                    .Where(rs => rs.ReleaseId == releaseId && rs.SubjectId == subjectId));
+
+            // TODO EES-4029 Remove this
+            // return releaseId.HasValue
+            //     ? await _statisticsPersistenceHelper.CheckEntityExists<ReleaseSubject>(
+            //         query => query
+            //             .Where(rs => rs.ReleaseId == releaseId && rs.SubjectId == subjectId)
+            //     )
+            //     : await _subjectMetaService.GetReleaseSubjectForLatestPublishedVersion(subjectId) ??
+            //       new Either<ActionResult, ReleaseSubject>(new NotFoundResult());
         }
     }
 }
