@@ -1,4 +1,5 @@
 #nullable enable
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using GovUk.Education.ExploreEducationStatistics.Common.Tests.Fixtures;
@@ -17,6 +18,12 @@ public static class IndicatorGeneratorExtensions
         this Generator<Indicator> generator,
         IndicatorGroup indicatorGroup)
         => generator.ForInstance(s => s.SetIndicatorGroup(indicatorGroup));
+
+    public static Generator<Indicator> WithIndicatorGroup(
+        this Generator<Indicator> generator,
+        Range range,
+        IndicatorGroup indicatorGroup)
+        => generator.ForRange(range, s => s.SetIndicatorGroup(indicatorGroup));
 
     public static Generator<Indicator> WithFootnotes(
         this Generator<Indicator> generator,

@@ -1,4 +1,5 @@
 #nullable enable
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using GovUk.Education.ExploreEducationStatistics.Common.Tests.Fixtures;
@@ -18,8 +19,19 @@ public static class FilterGroupGeneratorExtensions
 
     public static Generator<FilterGroup> WithFilterItems(
         this Generator<FilterGroup> generator,
+        params FilterItem[] filterItems)
+        => generator.WithFilterItems(filterItems.ToList());
+
+    public static Generator<FilterGroup> WithFilterItems(
+        this Generator<FilterGroup> generator,
         IEnumerable<FilterItem> filterItems)
         => generator.ForInstance(s => s.SetFilterItems(filterItems));
+
+    public static Generator<FilterGroup> WithFilterItems(
+        this Generator<FilterGroup> generator,
+        Range range,
+        IEnumerable<FilterItem> filterItems)
+        => generator.ForRange(range, s => s.SetFilterItems(filterItems));
 
     public static Generator<FilterGroup> WithFootnotes(
         this Generator<FilterGroup> generator,
