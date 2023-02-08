@@ -170,7 +170,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Services
             {
                 subjectMetaStep = SubjectMetaQueryStep.GetTimePeriods;
             }
-            else if (query.TimePeriod != null && query.Filters == null)
+            else if (query.TimePeriod != null && query.Filters.IsNullOrEmpty())
             {
                 subjectMetaStep = SubjectMetaQueryStep.GetFilterItems;
             }

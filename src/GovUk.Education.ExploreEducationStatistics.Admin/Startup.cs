@@ -586,7 +586,8 @@ namespace GovUk.Education.ExploreEducationStatistics.Admin
             services.AddTransient<ITimePeriodService, TimePeriodService>();
             services.AddTransient<IReleaseSubjectService, ReleaseSubjectService>();
             services.AddTransient<ISubjectMetaService, SubjectMetaService>();
-            services.AddTransient<IResultSubjectMetaService, ResultSubjectMetaService>();
+            services.AddTransient<ISubjectResultMetaService, SubjectResultMetaService>();
+            services.AddTransient<ISubjectCsvMetaService, SubjectCsvMetaService>();
             services.AddSingleton<DataServiceMemoryCache<BoundaryLevel>, DataServiceMemoryCache<BoundaryLevel>>();
             services.AddSingleton<DataServiceMemoryCache<GeoJson>, DataServiceMemoryCache<GeoJson>>();
             services.AddTransient<IUserManagementService, UserManagementService>();
