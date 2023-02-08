@@ -1,9 +1,12 @@
 #nullable enable
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
 using GovUk.Education.ExploreEducationStatistics.Common.Extensions;
 using GovUk.Education.ExploreEducationStatistics.Common.Model.Data;
 
@@ -12,6 +15,32 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Model
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     public class Location
     {
+        private static readonly Lazy<List<PropertyInfo>> _locationAttributeProperties = new(
+            () => typeof(Location).GetProperties()
+                .Where(member => member.PropertyType.IsAssignableTo(typeof(LocationAttribute)))
+                .ToList()
+        );
+
+        private static readonly Lazy<IReadOnlySet<string>> _allCsvColumns = new(
+            () =>
+            {
+                var baseType = typeof(LocationAttribute);
+                
+                return AppDomain.CurrentDomain.GetAssemblies()
+                    .SelectMany(assembly => assembly.GetLoadableTypes()
+                        .Where(type => type != baseType)
+                        .Where(baseType.IsAssignableFrom))
+                    // This is a bit hacky, but we initialise empty attribute objects that we can call
+                    // the `GetCsvValues` on each one. This means that we don't need to define any more
+                    // methods for getting the CSV columns on each type (less verbose and error prone).
+                    .Select(type => (LocationAttribute)FormatterServices.GetUninitializedObject(type))
+                    .SelectMany(attribute => attribute.GetCsvValues().Select(kv => kv.Key))
+                    .ToImmutableHashSet();
+            }
+        );
+
+        public static IReadOnlySet<string> AllCsvColumns() => _allCsvColumns.Value;
+
         public Guid Id { get; set; }
 
         public GeographicLevel GeographicLevel { get; set; }
@@ -373,6 +402,21 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Model
             hashCode.Add(Ward_Code);
             hashCode.Add(Ward_Name);
             return hashCode.ToHashCode();
+        }
+
+        public Dictionary<string, string> GetCsvValues()
+        {
+            return GetAttributes()
+                .SelectMany(attribute => attribute.GetCsvValues())
+                .ToDictionary(kv => kv.Key, kv => kv.Value);
+        }
+
+        public IEnumerable<LocationAttribute> GetAttributes()
+        {
+            return _locationAttributeProperties.Value
+                .Select(property => property.GetValue(this))
+                .OfType<LocationAttribute?>()
+                .WhereNotNull();
         }
 
         public LocationAttribute ToLocationAttribute()

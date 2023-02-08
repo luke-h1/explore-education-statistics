@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using GovUk.Education.ExploreEducationStatistics.Common.Model.Data;
 using Xunit;
 using static GovUk.Education.ExploreEducationStatistics.Common.Services.CollectionUtils;
@@ -16,6 +17,94 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Model.Tests
         private readonly LocalAuthority _nottingham = new("E06000018", "", "Nottingham");
 
         private readonly List<string> _countryRegionLaHierarchy = ListOf("Country", "Region");
+
+        [Fact]
+        public void AllCsvColumns()
+        {
+            var expected = new HashSet<string>
+            {
+                "country_code",
+                "country_name",
+                "english_devolved_area_code",
+                "english_devolved_area_name",
+                "institution_id",
+                "institution_name",
+                "new_la_code",
+                "old_la_code",
+                "la_name",
+                "lad_code",
+                "lad_name",
+                "local_enterprise_partnership_code",
+                "local_enterprise_partnership_name",
+                "trust_id",
+                "trust_name",
+                "mayoral_combined_authority_code",
+                "mayoral_combined_authority_name",
+                "opportunity_area_code",
+                "opportunity_area_name",
+                "pcon_code",
+                "pcon_name",
+                "planning_area_code",
+                "planning_area_name",
+                "provider_ukprn",
+                "provider_name",
+                "region_code",
+                "region_name",
+                "rsc_region_lead_name",
+                "school_urn",
+                "school_name",
+                "sponsor_id",
+                "sponsor_name",
+                "ward_code",
+                "ward_name",
+            };
+
+            Assert.Equal(expected, Location.AllCsvColumns());
+        }
+
+        [Fact]
+        public void GetCsvValues()
+        {
+            var location = new Location
+            {
+                Id = Guid.NewGuid(),
+                Country = _england,
+                Region = _northWest,
+                LocalAuthority = _nottingham,
+                GeographicLevel = GeographicLevel.LocalAuthority
+            };
+
+            var csvValues = location.GetCsvValues();
+
+            Assert.Equal(7, csvValues.Count);
+            Assert.Equal(_england.Code, csvValues["country_code"]);
+            Assert.Equal(_england.Name, csvValues["country_name"]);
+            Assert.Equal(_northWest.Code, csvValues["region_code"]);
+            Assert.Equal(_northWest.Name, csvValues["region_name"]);
+            Assert.Equal(_nottingham.Code, csvValues["new_la_code"]);
+            Assert.Equal(_nottingham.OldCode, csvValues["old_la_code"]);
+            Assert.Equal(_nottingham.Name, csvValues["la_name"]);
+        }
+
+        [Fact]
+        public void GetAttributes()
+        {
+            var location = new Location
+            {
+                Id = Guid.NewGuid(),
+                Country = _england,
+                Region = _northWest,
+                LocalAuthority = _nottingham,
+                GeographicLevel = GeographicLevel.LocalAuthority
+            };
+
+            Assert.Equal(3, location.GetAttributes().Count());
+
+            var attributes = location.GetAttributes().ToHashSet();
+            Assert.Contains(_england, attributes);
+            Assert.Contains(_northWest, attributes);
+            Assert.Contains(_nottingham, attributes);
+        }
 
         [Fact]
         public void GetLocationAttributesHierarchical_NoLocations()
@@ -61,7 +150,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Model.Tests
         public void GetLocationAttributesHierarchical_GeographicLevelsHaveNoRelevantHierarchy()
         {
             // Test a scenario where hierarchies are defined but none are relevant to the Subject data
-            var locations = ListOf(new Location 
+            var locations = ListOf(new Location
                 {
                     Id = Guid.NewGuid(),
                     Country = _england,
@@ -189,7 +278,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Model.Tests
             /*
              * Test a scenario where all Observations have Locations that don't have attributes present in the hierarchy.
              * E.g a Country-Region-LA hierarchy is defined for the LA level but no Locations have Country or Region:
-             * 
+             *
              * geographic_level    country_code    country_name    region_code    region_name    la_code    la_name
              * ====================================================================================================
              * Local authority                                                                   E06000015  Derby
@@ -225,7 +314,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Model.Tests
             var localAuthorities = result[GeographicLevel.LocalAuthority];
             Assert.Single(localAuthorities);
 
-            // Country attribute at depth 1 is empty as not defined for any of the LA data 
+            // Country attribute at depth 1 is empty as not defined for any of the LA data
             Assert.Equal(new Country(null, null), localAuthorities[0].Attribute);
             Assert.Null(localAuthorities[0].LocationId);
             Assert.Single(localAuthorities[0].Children);
@@ -250,7 +339,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Model.Tests
             /*
              * Test a scenario where *some* Observations have Locations that don't have attributes present in the hierarchy.
              * E.g a Country-Region-LA hierarchy is defined for the LA level but Derby appears with and without a Region.
-             * 
+             *
              * geographic_level    country_code    country_name    region_code    region_name    la_code    la_name
              * ====================================================================================================
              * Local authority     E92000001       England         E12000004      East Midlands  E06000015  Derby
@@ -321,7 +410,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Model.Tests
             Assert.Equal(new Region(null, null), localAuthorities[0].Children[1].Attribute);
             Assert.Null(localAuthorities[0].Children[1].LocationId);
             Assert.Single(localAuthorities[0].Children[1].Children);
-            
+
             Assert.Equal(_derby, localAuthorities[0].Children[1].Children[0].Attribute);
             Assert.Equal(locations[1].Id, localAuthorities[0].Children[1].Children[0].LocationId);
             Assert.Empty(localAuthorities[0].Children[1].Children[0].Children);
