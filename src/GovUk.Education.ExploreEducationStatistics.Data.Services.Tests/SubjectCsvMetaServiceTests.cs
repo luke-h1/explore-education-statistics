@@ -820,8 +820,8 @@ public class SubjectCsvMetaServiceTests
                 .Append(",country_code,country_name")
                 .Append(",region_code,region_name")
                 .Append(",new_la_code,old_la_code,la_name")
-                .Append(@$",""{filters[0].Name}"",""{filters[1].Name}""")
-                .Append(@$",""{indicators[0].Name}"",""{indicators[1].Name}"",""{indicators[2].Name}""");
+                .Append($",{filters[0].Name},{filters[1].Name}")
+                .Append($",{indicators[0].Name},{indicators[1].Name},{indicators[2].Name}");
 
             var releaseFileBlobService = new Mock<IReleaseFileBlobService>(Strict);
 
@@ -945,8 +945,8 @@ public class SubjectCsvMetaServiceTests
         {
             var csv = new StringBuilder("time_period,time_identifier")
                 .Append(",country_code,country_name")
-                .Append(@$",""{filters[0].Name}""")
-                .Append(@$",""{indicators[0].Name}"",""{indicators[1].Name}"",""{indicators[2].Name}"",""{indicators[3].Name}""");
+                .Append($",{filters[0].Name}")
+                .Append($",{indicators[0].Name},{indicators[1].Name},{indicators[2].Name},{indicators[3].Name}");
 
             var releaseFileBlobService = new Mock<IReleaseFileBlobService>(Strict);
 
@@ -1059,8 +1059,8 @@ public class SubjectCsvMetaServiceTests
         {
             var csv = new StringBuilder("time_period,time_identifier")
                 .Append(",country_code,country_name")
-                .Append(@$",""{filters[0].Name}""")
-                .Append(@$",""{indicators[0].Name}"",""{indicators[1].Name}""");
+                .Append($",{filters[0].Name}")
+                .Append($",{indicators[0].Name},{indicators[1].Name}");
 
             var releaseFileBlobService = new Mock<IReleaseFileBlobService>(Strict);
 
@@ -1173,9 +1173,9 @@ public class SubjectCsvMetaServiceTests
             var csv = new StringBuilder("time_period,time_identifier")
                 .Append(",country_code,country_name")
                 .Append(",some_header")
-                .Append(@$",""{filters[0].Name}""")
+                .Append($",{filters[0].Name}")
                 .Append(",another_header")
-                .Append(@$",""{indicators[0].Name}"",""{indicators[1].Name}""")
+                .Append($",{indicators[0].Name},{indicators[1].Name}")
                 .Append(",last_header");
 
             var releaseFileBlobService = new Mock<IReleaseFileBlobService>(Strict);

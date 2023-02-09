@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using GovUk.Education.ExploreEducationStatistics.Common.Extensions;
 using GovUk.Education.ExploreEducationStatistics.Common.Tests.Fixtures;
 
 namespace GovUk.Education.ExploreEducationStatistics.Data.Model.Tests.Fixtures;
@@ -35,6 +36,7 @@ public static class IndicatorGeneratorExtensions
             .SetDefault(i => i.Id)
             .SetDefault(i => i.Label)
             .SetDefault(i => i.Name)
+            .Set(i => i.Name, (_, i) => i.Name.SnakeCase())
             .Set(i => i.Unit, Unit.Number)
             .Set(i => i.DecimalPlaces, 0);
 
