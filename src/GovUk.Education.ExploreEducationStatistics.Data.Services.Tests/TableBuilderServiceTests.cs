@@ -1,13 +1,15 @@
 #nullable enable
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using GovUk.Education.ExploreEducationStatistics.Common.Model;
+using GovUk.Education.ExploreEducationStatistics.Common.Extensions;
 using GovUk.Education.ExploreEducationStatistics.Common.Model.Data;
 using GovUk.Education.ExploreEducationStatistics.Common.Model.Data.Query;
 using GovUk.Education.ExploreEducationStatistics.Common.Services.Interfaces.Security;
 using GovUk.Education.ExploreEducationStatistics.Common.Tests.Extensions;
+using GovUk.Education.ExploreEducationStatistics.Common.Tests.Fixtures;
 using GovUk.Education.ExploreEducationStatistics.Common.Utils;
 using GovUk.Education.ExploreEducationStatistics.Content.Model;
 using GovUk.Education.ExploreEducationStatistics.Content.Model.Database;
@@ -17,13 +19,16 @@ using GovUk.Education.ExploreEducationStatistics.Data.Model;
 using GovUk.Education.ExploreEducationStatistics.Data.Model.Database;
 using GovUk.Education.ExploreEducationStatistics.Data.Model.Repository;
 using GovUk.Education.ExploreEducationStatistics.Data.Model.Repository.Interfaces;
+using GovUk.Education.ExploreEducationStatistics.Data.Model.Tests.Fixtures;
 using GovUk.Education.ExploreEducationStatistics.Data.Services.Interfaces;
+using GovUk.Education.ExploreEducationStatistics.Data.Services.Utils;
 using GovUk.Education.ExploreEducationStatistics.Data.Services.ViewModels;
 using GovUk.Education.ExploreEducationStatistics.Data.Services.ViewModels.Meta;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Moq;
+using Snapshooter.Xunit;
 using Xunit;
+using static GovUk.Education.ExploreEducationStatistics.Common.Model.TimeIdentifier;
 using static GovUk.Education.ExploreEducationStatistics.Common.Services.CollectionUtils;
 using static GovUk.Education.ExploreEducationStatistics.Common.Tests.Utils.MockUtils;
 using static GovUk.Education.ExploreEducationStatistics.Content.Model.Tests.Utils.ContentDbUtils;
@@ -85,7 +90,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Services.Tests
                         FilterItem = new FilterItem("Filter Item 1", Guid.NewGuid())
                     }),
                     Year = 2019,
-                    TimeIdentifier = TimeIdentifier.AcademicYear,
+                    TimeIdentifier = AcademicYear,
                 },
                 new()
                 {
@@ -104,7 +109,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Services.Tests
                         FilterItem = new FilterItem("Filter Item 2", Guid.NewGuid())
                     }),
                     Year = 2020,
-                    TimeIdentifier = TimeIdentifier.AcademicYear,
+                    TimeIdentifier = AcademicYear,
                 },
                 new()
                 {
@@ -125,7 +130,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Services.Tests
                         FilterItem = new FilterItem("Filter Item 3", Guid.NewGuid())
                     }),
                     Year = 2020,
-                    TimeIdentifier = TimeIdentifier.AcademicYear,
+                    TimeIdentifier = AcademicYear,
                 }
             };
 
@@ -168,9 +173,9 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Services.Tests
                     TimePeriod = new TimePeriodQuery
                     {
                         StartYear = 2019,
-                        StartCode = TimeIdentifier.AcademicYear,
+                        StartCode = AcademicYear,
                         EndYear = 2020,
-                        EndCode = TimeIdentifier.AcademicYear,
+                        EndCode = AcademicYear,
                     }
                 };
 
@@ -402,9 +407,9 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Services.Tests
                     TimePeriod = new TimePeriodQuery
                     {
                         StartYear = 2019,
-                        StartCode = TimeIdentifier.AcademicYear,
+                        StartCode = AcademicYear,
                         EndYear = 2020,
-                        EndCode = TimeIdentifier.AcademicYear
+                        EndCode = AcademicYear
                     }
                 };
 
@@ -479,7 +484,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Services.Tests
                         FilterItem = new FilterItem("Filter Item 1", Guid.NewGuid())
                     }),
                     Year = 2019,
-                    TimeIdentifier = TimeIdentifier.AcademicYear,
+                    TimeIdentifier = AcademicYear,
                 },
                 new()
                 {
@@ -498,7 +503,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Services.Tests
                         FilterItem = new FilterItem("Filter Item 2", Guid.NewGuid())
                     }),
                     Year = 2020,
-                    TimeIdentifier = TimeIdentifier.AcademicYear,
+                    TimeIdentifier = AcademicYear,
                 },
                 new()
                 {
@@ -519,7 +524,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Services.Tests
                         FilterItem = new FilterItem("Filter Item 3", Guid.NewGuid())
                     }),
                     Year = 2020,
-                    TimeIdentifier = TimeIdentifier.AcademicYear,
+                    TimeIdentifier = AcademicYear,
                 }
             };
 
@@ -557,9 +562,9 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Services.Tests
                     TimePeriod = new TimePeriodQuery
                     {
                         StartYear = 2019,
-                        StartCode = TimeIdentifier.AcademicYear,
+                        StartCode = AcademicYear,
                         EndYear = 2020,
-                        EndCode = TimeIdentifier.AcademicYear,
+                        EndCode = AcademicYear,
                     }
                 };
 
@@ -715,9 +720,9 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Services.Tests
                     TimePeriod = new TimePeriodQuery
                     {
                         StartYear = 2019,
-                        StartCode = TimeIdentifier.AcademicYear,
+                        StartCode = AcademicYear,
                         EndYear = 2020,
-                        EndCode = TimeIdentifier.AcademicYear
+                        EndCode = AcademicYear
                     }
                 };
 
@@ -757,6 +762,743 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Services.Tests
             }
         }
 
+        [Fact]
+        public async Task QueryToCsvStream_LatestRelease()
+        {
+            var fixture = new DataFixture();
+
+            var publication = new Publication
+            {
+                Id = Guid.NewGuid(),
+                LatestPublishedRelease = new Content.Model.Release
+                {
+                    Id = Guid.NewGuid(),
+                }
+            };
+
+            var releaseSubject = new ReleaseSubject
+            {
+                Release = new Release
+                {
+                    Id = publication.LatestPublishedRelease.Id,
+                    PublicationId = publication.Id
+                },
+                Subject = new Subject()
+            };
+
+            var filterItems = fixture.DefaultFilterItem().GenerateArray(4);
+            var filters = fixture.DefaultFilter()
+                .WithSubject(releaseSubject.Subject)
+                .WithFilterGroups(
+                    ..1,
+                    fixture.DefaultFilterGroup()
+                        .WithFilterItems(filterItems[..2])
+                        .Generate(1))
+                .WithFilterGroups(
+                    1..2,
+                    fixture.DefaultFilterGroup()
+                        .WithFilterItems(filterItems[2..])
+                        .Generate(1))
+                .GenerateList(2);
+
+            var indicators = fixture.DefaultIndicator()
+                .WithIndicatorGroup(
+                    ..1,
+                    fixture.DefaultIndicatorGroup()
+                        .WithSubject(releaseSubject.Subject))
+                .WithIndicatorGroup(
+                    1..3,
+                    fixture.DefaultIndicatorGroup()
+                        .WithSubject(releaseSubject.Subject))
+                .GenerateList(3);
+
+            var locations = fixture.DefaultLocation()
+                .ForRange(..2, l => l.SetPresetRegion())
+                .ForRange(2..4, l => l.SetPresetRegionAndLocalAuthority())
+                .GenerateList(4);
+
+            var observations = fixture.DefaultObservation()
+                .WithSubject(releaseSubject.Subject)
+                .WithMeasures(indicators)
+                .ForRange(..2, o => o
+                    .SetFilterItems(filterItems[0], filterItems[2])
+                    .SetLocation(locations[0])
+                    .SetTimePeriod(2022, AcademicYear))
+                .ForRange(2..4, o => o
+                    .SetFilterItems(filterItems[0], filterItems[2])
+                    .SetLocation(locations[1])
+                    .SetTimePeriod(2022, AcademicYear))
+                .ForRange(4..6, o => o
+                    .SetFilterItems(filterItems[1], filterItems[3])
+                    .SetLocation(locations[2])
+                    .SetTimePeriod(2023, AcademicYear))
+                .ForRange(6..8, o => o
+                    .SetFilterItems(filterItems[1], filterItems[3])
+                    .SetLocation(locations[3])
+                    .SetTimePeriod(2023, AcademicYear))
+                .GenerateList(8);
+
+            var contextId = Guid.NewGuid().ToString();
+
+            await using (var contentDbContext = InMemoryContentDbContext(contextId))
+            await using (var statisticsDbContext = InMemoryStatisticsDbContext(contextId))
+            {
+                await contentDbContext.Publications.AddAsync(publication);
+                await contentDbContext.SaveChangesAsync();
+
+                await statisticsDbContext.ReleaseSubject.AddAsync(releaseSubject);
+                await statisticsDbContext.Observation.AddRangeAsync(observations);
+                await statisticsDbContext.MatchedObservations.AddRangeAsync(
+                    observations.Select(o => new MatchedObservation(o.Id)).ToArray()
+                );
+                await statisticsDbContext.SaveChangesAsync();
+            }
+
+            await using (var contentDbContext = InMemoryContentDbContext(contextId))
+            await using (var statisticsDbContext = InMemoryStatisticsDbContext(contextId))
+            {
+                var query = new ObservationQueryContext
+                {
+                    SubjectId = releaseSubject.Subject.Id,
+                    Indicators = indicators.Select(i => i.Id).ToList(),
+                    LocationIds = locations.Select(l => l.Id).ToList(),
+                    TimePeriod = new TimePeriodQuery
+                    {
+                        StartYear = 2022,
+                        StartCode = AcademicYear,
+                        EndYear = 2023,
+                        EndCode = AcademicYear,
+                    }
+                };
+
+                var observationService = new Mock<IObservationService>(Strict);
+
+                observationService
+                    .Setup(s => s.GetMatchedObservations(query, default))
+                    .ReturnsAsync(statisticsDbContext.MatchedObservations);
+
+                var subjectCsvMeta = new SubjectCsvMetaViewModel
+                {
+                    Filters = FiltersMetaViewModelBuilder.BuildCsvFiltersFromFilterItems(filterItems),
+                    Indicators = indicators
+                        .Select(i => new IndicatorCsvMetaViewModel(i))
+                        .ToDictionary(i => i.Name),
+                    Locations = locations.ToDictionary(l => l.Id, l => l.GetCsvValues()),
+                    Headers = new List<string>
+                    {
+                        "time_period", "time_identifier",
+                        "country_code", "country_name",
+                        "region_code", "region_name",
+                        "new_la_code", "old_la_code", "la_name",
+                        filters[0].Name, filters[1].Name,
+                        indicators[0].Name, indicators[1].Name, indicators[2].Name
+                    }
+                };
+
+                var subjectCsvMetaService = new Mock<ISubjectCsvMetaService>(Strict);
+
+                subjectCsvMetaService
+                    .Setup(
+                        s => s.GetSubjectCsvMeta(
+                            It.Is<ReleaseSubject>(rs =>
+                                rs.ReleaseId == releaseSubject.ReleaseId
+                                && rs.SubjectId == releaseSubject.SubjectId),
+                            query,
+                            It.IsAny<IList<Observation>>(),
+                            default
+                        )
+                    )
+                    .ReturnsAsync(subjectCsvMeta);
+
+                var service = BuildTableBuilderService(
+                    statisticsDbContext,
+                    contentDbContext,
+                    observationService: observationService.Object,
+                    subjectCsvMetaService: subjectCsvMetaService.Object
+                );
+
+                using var stream = new MemoryStream();
+
+                var result = await service.QueryToCsvStream(query, stream);
+
+                VerifyAllMocks(observationService, subjectCsvMetaService);
+
+                result.AssertRight();
+
+                stream.Seek(0L, SeekOrigin.Begin);
+
+                Snapshot.Match(stream.ReadToEnd());
+            }
+        }
+
+        [Fact]
+        public async Task QueryToCsvStream_LatestRelease_ReleaseNotFound()
+        {
+            var releaseSubject = new ReleaseSubject
+            {
+                Release = new Release(),
+                Subject = new Subject(),
+            };
+
+            var contextId = Guid.NewGuid().ToString();
+
+            await using (var statisticsDbContext = InMemoryStatisticsDbContext(contextId))
+            {
+                await statisticsDbContext.ReleaseSubject.AddAsync(releaseSubject);
+                await statisticsDbContext.SaveChangesAsync();
+            }
+
+            await using (var contentDbContext = InMemoryContentDbContext(contextId))
+            await using (var statisticsDbContext = InMemoryStatisticsDbContext(contextId))
+            {
+                var service = BuildTableBuilderService(
+                    statisticsDbContext: statisticsDbContext,
+                    contentDbContext: contentDbContext
+                );
+
+                // SubjectId exists, but no Content.Model.Release
+                var query = new ObservationQueryContext
+                {
+                    SubjectId = releaseSubject.SubjectId,
+                };
+
+                using var stream = new MemoryStream();
+
+                var result = await service.QueryToCsvStream(query, stream);
+
+                result.AssertNotFound();
+            }
+        }
+
+        [Fact]
+        public async Task QueryToCsvStream_LatestRelease_SubjectNotFound()
+        {
+            var publicationId = Guid.NewGuid();
+
+            var releaseSubject = new ReleaseSubject
+            {
+                Release = new Release
+                {
+                    PublicationId = publicationId
+                },
+                Subject = new Subject()
+            };
+
+            var contextId = Guid.NewGuid().ToString();
+
+            await using (var statisticsDbContext = InMemoryStatisticsDbContext(contextId))
+            {
+                await statisticsDbContext.ReleaseSubject.AddAsync(releaseSubject);
+                await statisticsDbContext.SaveChangesAsync();
+            }
+
+            await using (var contentDbContext = InMemoryContentDbContext(contextId))
+            await using (var statisticsDbContext = InMemoryStatisticsDbContext(contextId))
+            {
+                var service = BuildTableBuilderService(statisticsDbContext, contentDbContext);
+
+                // SubjectId does not exist
+                var query = new ObservationQueryContext
+                {
+                    SubjectId = Guid.NewGuid(),
+                };
+
+                using var stream = new MemoryStream();
+
+                var result = await service.QueryToCsvStream(query, stream);
+
+                result.AssertNotFound();
+            }
+        }
+
+        [Fact]
+        public async Task QueryToCsvStream_LatestRelease_PredictedTableTooBig()
+        {
+            var publication = new Publication
+            {
+                Id = Guid.NewGuid(),
+                LatestPublishedRelease = new Content.Model.Release
+                {
+                    Id = Guid.NewGuid(),
+                }
+            };
+
+            var releaseSubject = new ReleaseSubject
+            {
+                Release = new Release
+                {
+                    Id = publication.LatestPublishedRelease.Id,
+                    PublicationId = publication.Id
+                },
+                Subject = new Subject()
+            };
+
+            var contextId = Guid.NewGuid().ToString();
+
+            await using (var contentDbContext = InMemoryContentDbContext(contextId))
+            await using (var statisticsDbContext = InMemoryStatisticsDbContext(contextId))
+            {
+                await contentDbContext.Publications.AddAsync(publication);
+                await contentDbContext.SaveChangesAsync();
+
+                await statisticsDbContext.ReleaseSubject.AddAsync(releaseSubject);
+                await statisticsDbContext.SaveChangesAsync();
+            }
+
+            await using (var contentDbContext = InMemoryContentDbContext(contextId))
+            await using (var statisticsDbContext = InMemoryStatisticsDbContext(contextId))
+            {
+                var query = new ObservationQueryContext
+                {
+                    SubjectId = releaseSubject.Subject.Id,
+                    Filters = new[] { Guid.NewGuid(), Guid.NewGuid() },
+                    Indicators = new[] { Guid.NewGuid(), Guid.NewGuid() },
+                    LocationIds = ListOf(Guid.NewGuid()),
+                    TimePeriod = new TimePeriodQuery
+                    {
+                        StartYear = 2019,
+                        StartCode = AcademicYear,
+                        EndYear = 2020,
+                        EndCode = AcademicYear
+                    }
+                };
+
+                var filterItemRepository = new Mock<IFilterItemRepository>(Strict);
+
+                filterItemRepository
+                    .Setup(s => s.CountFilterItemsByFilter(query.Filters))
+                    .ReturnsAsync(new Dictionary<Guid, int>
+                    {
+                        {
+                            // For the purpose of calculating the potential table size,
+                            // treat all the Filter Items as belonging to the same Filter
+                            Guid.NewGuid(), query.Filters.Count()
+                        }
+                    });
+
+                var options = Options.Create(new TableBuilderOptions
+                {
+                    // 2 Filter items (from 1 Filter), 1 Location, and 2 Time periods provide 4 different combinations,
+                    // assuming that all the data is provided. For 2 Indicators this would be 8 table cells rendered.
+                    // Configure a maximum table size limit lower than 8.
+                    MaxTableCellsAllowed = 7
+                });
+
+                var service = BuildTableBuilderService(
+                    statisticsDbContext: statisticsDbContext,
+                    contentDbContext: contentDbContext,
+                    filterItemRepository: filterItemRepository.Object,
+                    options: options
+                );
+
+                using var stream = new MemoryStream();
+
+                var result = await service.QueryToCsvStream(query, stream);
+
+                VerifyAllMocks(filterItemRepository);
+
+                result.AssertBadRequest(ValidationErrorMessages.QueryExceedsMaxAllowableTableSize);
+            }
+        }
+
+        [Fact]
+        public async Task QueryToCsvStream_ReleaseId()
+        {
+            var fixture = new DataFixture();
+
+            var releaseSubject = new ReleaseSubject
+            {
+                Release = new Release(),
+                Subject = new Subject()
+            };
+
+            var filterItems = fixture.DefaultFilterItem().GenerateArray(4);
+            var filters = fixture.DefaultFilter()
+                .WithSubject(releaseSubject.Subject)
+                .WithFilterGroups(
+                    ..1,
+                    fixture.DefaultFilterGroup()
+                        .WithFilterItems(filterItems[..2])
+                        .Generate(1))
+                .WithFilterGroups(
+                    1..2,
+                    fixture.DefaultFilterGroup()
+                        .WithFilterItems(filterItems[2..])
+                        .Generate(1))
+                .GenerateList(2);
+
+            var indicators = fixture.DefaultIndicator()
+                .WithIndicatorGroup(
+                    fixture.DefaultIndicatorGroup()
+                        .WithSubject(releaseSubject.Subject))
+                .GenerateList(3);
+
+            var locations = fixture.DefaultLocation()
+                .WithPresetRegion()
+                .GenerateList(2);
+
+            var observations = fixture.DefaultObservation()
+                .WithSubject(releaseSubject.Subject)
+                .WithMeasures(indicators)
+                .ForRange(..2, o => o
+                    .SetFilterItems(filterItems[0], filterItems[2])
+                    .SetLocation(locations[0])
+                    .SetTimePeriod(2022, AcademicYear))
+                .ForRange(2..4, o => o
+                    .SetFilterItems(filterItems[1], filterItems[3])
+                    .SetLocation(locations[1])
+                    .SetTimePeriod(2023, AcademicYear))
+                .GenerateList(4);
+
+            var contextId = Guid.NewGuid().ToString();
+
+            await using (var statisticsDbContext = InMemoryStatisticsDbContext(contextId))
+            {
+                await statisticsDbContext.ReleaseSubject.AddAsync(releaseSubject);
+                await statisticsDbContext.Observation.AddRangeAsync(observations);
+                await statisticsDbContext.MatchedObservations.AddRangeAsync(
+                    observations.Select(o => new MatchedObservation(o.Id)).ToArray()
+                );
+                await statisticsDbContext.SaveChangesAsync();
+            }
+
+            await using (var contentDbContext = InMemoryContentDbContext(contextId))
+            await using (var statisticsDbContext = InMemoryStatisticsDbContext(contextId))
+            {
+                var query = new ObservationQueryContext
+                {
+                    SubjectId = releaseSubject.Subject.Id,
+                    Indicators = indicators.Select(i => i.Id).ToList(),
+                    LocationIds = locations.Select(l => l.Id).ToList(),
+                    TimePeriod = new TimePeriodQuery
+                    {
+                        StartYear = 2022,
+                        StartCode = AcademicYear,
+                        EndYear = 2023,
+                        EndCode = AcademicYear,
+                    }
+                };
+
+                var observationService = new Mock<IObservationService>(Strict);
+
+                observationService
+                    .Setup(s => s.GetMatchedObservations(query, default))
+                    .ReturnsAsync(statisticsDbContext.MatchedObservations);
+
+                var subjectCsvMeta = new SubjectCsvMetaViewModel
+                {
+                    Filters = FiltersMetaViewModelBuilder.BuildCsvFiltersFromFilterItems(filterItems),
+                    Indicators = indicators
+                        .Select(i => new IndicatorCsvMetaViewModel(i))
+                        .ToDictionary(i => i.Name),
+                    Locations = locations.ToDictionary(l => l.Id, l => l.GetCsvValues()),
+                    Headers = new List<string>
+                    {
+                        "time_period", "time_identifier",
+                        "country_code", "country_name",
+                        "region_code", "region_name",
+                        filters[0].Name, filters[1].Name,
+                        indicators[0].Name, indicators[1].Name, indicators[2].Name
+                    }
+                };
+
+                var subjectCsvMetaService = new Mock<ISubjectCsvMetaService>(Strict);
+
+                subjectCsvMetaService
+                    .Setup(
+                        s => s.GetSubjectCsvMeta(
+                            It.Is<ReleaseSubject>(rs =>
+                                rs.ReleaseId == releaseSubject.ReleaseId
+                                && rs.SubjectId == releaseSubject.SubjectId),
+                            query,
+                            It.IsAny<IList<Observation>>(),
+                            default
+                        )
+                    )
+                    .ReturnsAsync(subjectCsvMeta);
+
+                var service = BuildTableBuilderService(
+                    statisticsDbContext,
+                    contentDbContext,
+                    observationService: observationService.Object,
+                    subjectCsvMetaService: subjectCsvMetaService.Object
+                );
+
+                using var stream = new MemoryStream();
+
+                var result = await service.QueryToCsvStream(releaseSubject.ReleaseId, query, stream);
+
+                VerifyAllMocks(observationService, subjectCsvMetaService);
+
+                result.AssertRight();
+
+                stream.Seek(0L, SeekOrigin.Begin);
+
+                Snapshot.Match(stream.ReadToEnd());
+            }
+        }
+
+        [Fact]
+        public async Task QueryToCsvStream_ReleaseId_NoFilters()
+        {
+            var fixture = new DataFixture();
+
+            var releaseSubject = new ReleaseSubject
+            {
+                Release = new Release(),
+                Subject = new Subject()
+            };
+
+            var indicators = fixture.DefaultIndicator()
+                .WithIndicatorGroup(
+                    fixture.DefaultIndicatorGroup()
+                        .WithSubject(releaseSubject.Subject))
+                .GenerateList(3);
+
+            var locations = fixture.DefaultLocation()
+                .WithPresetRegion()
+                .GenerateList(2);
+
+            var observations = fixture.DefaultObservation()
+                .WithSubject(releaseSubject.Subject)
+                .WithMeasures(indicators)
+                .ForRange(..2, o => o
+                    .SetLocation(locations[0])
+                    .SetTimePeriod(2022, AcademicYear))
+                .ForRange(2..4, o => o
+                    .SetLocation(locations[1])
+                    .SetTimePeriod(2022, AcademicYear))
+                .GenerateList(4);
+
+            var contextId = Guid.NewGuid().ToString();
+
+            await using (var statisticsDbContext = InMemoryStatisticsDbContext(contextId))
+            {
+                await statisticsDbContext.ReleaseSubject.AddAsync(releaseSubject);
+                await statisticsDbContext.Observation.AddRangeAsync(observations);
+                await statisticsDbContext.MatchedObservations.AddRangeAsync(
+                    observations.Select(o => new MatchedObservation(o.Id)).ToArray()
+                );
+                await statisticsDbContext.SaveChangesAsync();
+            }
+
+            await using (var contentDbContext = InMemoryContentDbContext(contextId))
+            await using (var statisticsDbContext = InMemoryStatisticsDbContext(contextId))
+            {
+                var query = new ObservationQueryContext
+                {
+                    SubjectId = releaseSubject.Subject.Id,
+                    Indicators = indicators.Select(i => i.Id).ToList(),
+                    LocationIds = locations.Select(l => l.Id).ToList(),
+                    TimePeriod = new TimePeriodQuery
+                    {
+                        StartYear = 2022,
+                        StartCode = AcademicYear,
+                        EndYear = 2023,
+                        EndCode = AcademicYear,
+                    }
+                };
+
+                var observationService = new Mock<IObservationService>(Strict);
+
+                observationService
+                    .Setup(s => s.GetMatchedObservations(query, default))
+                    .ReturnsAsync(statisticsDbContext.MatchedObservations);
+
+                var subjectCsvMeta = new SubjectCsvMetaViewModel
+                {
+                    Indicators = indicators
+                        .Select(i => new IndicatorCsvMetaViewModel(i))
+                        .ToDictionary(i => i.Name),
+                    Locations = locations.ToDictionary(l => l.Id, l => l.GetCsvValues()),
+                    Headers = new List<string>
+                    {
+                        "time_period", "time_identifier",
+                        "country_code", "country_name",
+                        "region_code", "region_name",
+                        indicators[0].Name, indicators[1].Name
+                    }
+                };
+
+                var subjectCsvMetaService = new Mock<ISubjectCsvMetaService>(Strict);
+
+                subjectCsvMetaService
+                    .Setup(
+                        s => s.GetSubjectCsvMeta(
+                            It.Is<ReleaseSubject>(rs =>
+                                rs.ReleaseId == releaseSubject.ReleaseId
+                                && rs.SubjectId == releaseSubject.SubjectId),
+                            query,
+                            It.IsAny<IList<Observation>>(),
+                            default
+                        )
+                    )
+                    .ReturnsAsync(subjectCsvMeta);
+
+                var service = BuildTableBuilderService(
+                    statisticsDbContext,
+                    contentDbContext,
+                    observationService: observationService.Object,
+                    subjectCsvMetaService: subjectCsvMetaService.Object
+                );
+
+                using var stream = new MemoryStream();
+
+                var result = await service.QueryToCsvStream(releaseSubject.ReleaseId, query, stream);
+
+                VerifyAllMocks(observationService, subjectCsvMetaService);
+
+                result.AssertRight();
+
+                stream.Seek(0L, SeekOrigin.Begin);
+
+                Snapshot.Match(stream.ReadToEnd());
+            }
+        }
+
+        [Fact]
+        public async Task QueryToCsvStream_ReleaseId_ReleaseNotFound()
+        {
+            var releaseSubject = new ReleaseSubject
+            {
+                Release = new Release(),
+                Subject = new Subject(),
+            };
+
+            var contextId = Guid.NewGuid().ToString();
+
+            await using (var statisticsDbContext = InMemoryStatisticsDbContext(contextId))
+            {
+                await statisticsDbContext.ReleaseSubject.AddAsync(releaseSubject);
+                await statisticsDbContext.SaveChangesAsync();
+            }
+
+            await using (var contentDbContext = InMemoryContentDbContext(contextId))
+            await using (var statisticsDbContext = InMemoryStatisticsDbContext(contextId))
+            {
+                var service = BuildTableBuilderService(statisticsDbContext, contentDbContext);
+
+                // SubjectId exists, but no Content.Model.Release
+                var query = new ObservationQueryContext
+                {
+                    SubjectId = releaseSubject.SubjectId,
+                };
+
+                using var stream = new MemoryStream();
+
+                var result = await service.QueryToCsvStream(Guid.NewGuid(), query, stream);
+
+                result.AssertNotFound();
+            }
+        }
+
+        [Fact]
+        public async Task QueryToCsvStream_ReleaseId_SubjectNotFound()
+        {
+            var releaseSubject = new ReleaseSubject
+            {
+                Release = new Release(),
+                Subject = new Subject(),
+            };
+
+            var contextId = Guid.NewGuid().ToString();
+
+            await using (var statisticsDbContext = InMemoryStatisticsDbContext(contextId))
+            {
+                await statisticsDbContext.ReleaseSubject.AddAsync(releaseSubject);
+                await statisticsDbContext.SaveChangesAsync();
+            }
+
+            await using (var contentDbContext = InMemoryContentDbContext(contextId))
+            await using (var statisticsDbContext = InMemoryStatisticsDbContext(contextId))
+            {
+                var service = BuildTableBuilderService(statisticsDbContext, contentDbContext);
+
+                // SubjectId does not exist
+                var query = new ObservationQueryContext
+                {
+                    SubjectId = Guid.NewGuid(),
+                };
+
+                using var stream = new MemoryStream();
+
+                var result = await service.QueryToCsvStream(releaseSubject.ReleaseId, query, stream);
+
+                result.AssertNotFound();
+            }
+        }
+
+        [Fact]
+        public async Task QueryToCsvStream_ReleaseId_PredictedTableTooBig()
+        {
+            var releaseSubject = new ReleaseSubject
+            {
+                Release = new Release(),
+                Subject = new Subject()
+            };
+
+            var contextId = Guid.NewGuid().ToString();
+
+            await using (var statisticsDbContext = InMemoryStatisticsDbContext(contextId))
+            {
+                await statisticsDbContext.ReleaseSubject.AddAsync(releaseSubject);
+                await statisticsDbContext.SaveChangesAsync();
+            }
+
+            await using (var statisticsDbContext = InMemoryStatisticsDbContext(contextId))
+            {
+                var query = new ObservationQueryContext
+                {
+                    SubjectId = releaseSubject.Subject.Id,
+                    Filters = new[] { Guid.NewGuid(), Guid.NewGuid() },
+                    Indicators = new[] { Guid.NewGuid(), Guid.NewGuid() },
+                    LocationIds = ListOf(Guid.NewGuid()),
+                    TimePeriod = new TimePeriodQuery
+                    {
+                        StartYear = 2019,
+                        StartCode = AcademicYear,
+                        EndYear = 2020,
+                        EndCode = AcademicYear
+                    }
+                };
+
+                var filterItemRepository = new Mock<IFilterItemRepository>(Strict);
+
+                filterItemRepository
+                    .Setup(s => s.CountFilterItemsByFilter(query.Filters))
+                    .ReturnsAsync(new Dictionary<Guid, int>
+                    {
+                        {
+                            // For the purpose of calculating the potential table size,
+                            // treat all the Filter Items as belonging to the same Filter
+                            Guid.NewGuid(), query.Filters.Count()
+                        }
+                    });
+
+                var options = Options.Create(new TableBuilderOptions
+                {
+                    // 2 Filter items (from 1 Filter), 1 Location, and 2 Time periods provide 4 different combinations,
+                    // assuming that all the data is provided. For 2 Indicators this would be 8 table cells rendered.
+                    // Configure a maximum table size limit lower than 8.
+                    MaxTableCellsAllowed = 7
+                });
+
+                var service = BuildTableBuilderService(
+                    statisticsDbContext: statisticsDbContext,
+                    filterItemRepository: filterItemRepository.Object,
+                    options: options
+                );
+
+                using var stream = new MemoryStream();
+
+                var result = await service.QueryToCsvStream(releaseSubject.ReleaseId, query, stream);
+
+                VerifyAllMocks(filterItemRepository);
+
+                result.AssertBadRequest(ValidationErrorMessages.QueryExceedsMaxAllowableTableSize);
+            }
+        }
+
         private static IOptions<TableBuilderOptions> DefaultOptions()
         {
             return Options.Create(new TableBuilderOptions
@@ -772,6 +1514,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Services.Tests
             IObservationService? observationService = null,
             IPersistenceHelper<StatisticsDbContext>? statisticsPersistenceHelper = null,
             ISubjectResultMetaService? subjectResultMetaService = null,
+            ISubjectCsvMetaService? subjectCsvMetaService = null,
             ISubjectRepository? subjectRepository = null,
             IUserService? userService = null,
             IResultBuilder<Observation, ObservationViewModel>? resultBuilder = null,
@@ -784,6 +1527,7 @@ namespace GovUk.Education.ExploreEducationStatistics.Data.Services.Tests
                 observationService ?? Mock.Of<IObservationService>(Strict),
                 statisticsPersistenceHelper ?? new PersistenceHelper<StatisticsDbContext>(statisticsDbContext),
                 subjectResultMetaService ?? Mock.Of<ISubjectResultMetaService>(Strict),
+                subjectCsvMetaService ?? Mock.Of<ISubjectCsvMetaService>(Strict),
                 subjectRepository ?? new SubjectRepository(statisticsDbContext),
                 userService ?? AlwaysTrueUserService().Object,
                 resultBuilder ?? new ResultBuilder(),
