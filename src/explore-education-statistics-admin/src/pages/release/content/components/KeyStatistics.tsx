@@ -17,6 +17,7 @@ import { DragDropContext, Draggable, DropResult } from 'react-beautiful-dnd';
 
 export interface KeyStatisticsProps {
   release: EditableRelease;
+  // eslint-disable-next-line react/no-unused-prop-types
   isEditing?: boolean;
 }
 
