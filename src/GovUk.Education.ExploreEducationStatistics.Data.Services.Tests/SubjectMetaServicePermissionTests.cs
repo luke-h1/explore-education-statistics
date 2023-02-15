@@ -2,26 +2,23 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using GovUk.Education.ExploreEducationStatistics.Common.Model;
 using GovUk.Education.ExploreEducationStatistics.Common.Model.Data.Query;
 using GovUk.Education.ExploreEducationStatistics.Common.Services.Interfaces;
 using GovUk.Education.ExploreEducationStatistics.Common.Services.Interfaces.Security;
-using GovUk.Education.ExploreEducationStatistics.Common.Tests.Utils;
-using GovUk.Education.ExploreEducationStatistics.Common.Utils;
-using GovUk.Education.ExploreEducationStatistics.Content.Model;
-using GovUk.Education.ExploreEducationStatistics.Content.Model.Database;
-using GovUk.Education.ExploreEducationStatistics.Content.Model.Tests.Utils;
 using GovUk.Education.ExploreEducationStatistics.Data.Model;
 using GovUk.Education.ExploreEducationStatistics.Data.Model.Database;
 using GovUk.Education.ExploreEducationStatistics.Data.Model.Repository.Interfaces;
-using GovUk.Education.ExploreEducationStatistics.Data.Model.Tests.Utils;
 using GovUk.Education.ExploreEducationStatistics.Data.Services.Interfaces;
 using GovUk.Education.ExploreEducationStatistics.Data.Services.Security;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using Xunit;
 using static GovUk.Education.ExploreEducationStatistics.Common.Tests.Utils.PermissionTestUtils;
 using static GovUk.Education.ExploreEducationStatistics.Content.Model.Tests.Utils.ContentDbUtils;
+using static GovUk.Education.ExploreEducationStatistics.Data.Model.Tests.Utils.StatisticsDbUtils;
 using static Moq.MockBehavior;
 using ContentRelease = GovUk.Education.ExploreEducationStatistics.Content.Model.Release;
 
@@ -46,6 +43,8 @@ public class SubjectMetaServicePermissionTests
             .AssertForbidden(
                 async userService =>
                 {
+
+
                     var service = SetupSubjectMetaService(
                         userService: userService.Object
                     );
@@ -121,14 +120,20 @@ public class SubjectMetaServicePermissionTests
                     await contextDbContext.Releases.AddAsync(release);
                     await contextDbContext.SaveChangesAsync();
 
-                    await using var statisticsDbContext = StatisticsDbUtils.InMemoryStatisticsDbContext();
+                    await using var statisticsDbContext = InMemoryStatisticsDbContext();
                     await statisticsDbContext.ReleaseSubject.AddAsync(ReleaseSubject);
                     await statisticsDbContext.SaveChangesAsync();
-                    
+
+                    var releaseSubjectService = new Mock<IReleaseSubjectService>(Strict);
+
+                    releaseSubjectService
+                        .Setup(s => s.CheckReleaseSubjectExists(SubjectId, null))
+                        .ReturnsAsync(new Either<ActionResult, ReleaseSubject>(ReleaseSubject));
+
                     var service = SetupSubjectMetaService(
-                        userService: userService.Object, 
-                        statisticsDbContext: statisticsDbContext, 
-                        contentDbContext: contextDbContext);
+                        userService: userService.Object,
+                        statisticsDbContext: statisticsDbContext,
+                        releseSubjectService: releaseSubjectService.Object);
 
                     var cancellationToken = new CancellationTokenSource().Token;
 
@@ -137,43 +142,10 @@ public class SubjectMetaServicePermissionTests
             );
     }
 
-    [Fact]
-    public async Task GetReleaseSubjectForLatestPublishedVersion()
-    {
-        // Note that there are no explicit security policy checks enforced for this method.
-        // This is because this method is very specifically returning only ReleaseSubjects for currently-live Releases
-        // which are definitely publicly visible.
-        await PolicyCheckBuilder<DataSecurityPolicies>()
-            .AssertSuccess(async userService =>
-            {
-                var release = new ContentRelease
-                {
-                    Id = ReleaseId,
-                    Published = DateTime.UtcNow.AddDays(-1)
-                };
-
-                await using var contextDbContext = InMemoryContentDbContext();
-                await contextDbContext.Releases.AddAsync(release);
-                await contextDbContext.SaveChangesAsync();
-
-                await using var statisticsDbContext = StatisticsDbUtils.InMemoryStatisticsDbContext();
-                await statisticsDbContext.ReleaseSubject.AddAsync(ReleaseSubject);
-                await statisticsDbContext.SaveChangesAsync();
-                    
-                var service = SetupSubjectMetaService(
-                    userService: userService.Object, 
-                    statisticsDbContext: statisticsDbContext, 
-                    contentDbContext: contextDbContext);
-                
-                return await service.GetReleaseSubjectForLatestPublishedVersion(subjectId: SubjectId);
-            });
-    }
-
     private static SubjectMetaService SetupSubjectMetaService(
         StatisticsDbContext? statisticsDbContext = null,
-        ContentDbContext? contentDbContext = null,
-        IPersistenceHelper<StatisticsDbContext>? statisticsPersistenceHelper = null,
         IBlobCacheService? cacheService = null,
+        IReleaseSubjectService? releseSubjectService = null,
         IFilterRepository? filterRepository = null,
         IFilterItemRepository? filterItemRepository = null,
         IIndicatorGroupRepository? indicatorGroupRepository = null,
@@ -184,10 +156,9 @@ public class SubjectMetaServicePermissionTests
         IOptions<LocationsOptions>? options = null)
     {
         return new(
-            statisticsPersistenceHelper ?? DefaultPersistenceHelperMock().Object,
             statisticsDbContext ?? Mock.Of<StatisticsDbContext>(Strict),
-            contentDbContext ?? InMemoryContentDbContext(),
-            cacheService ?? Mock.Of<IBlobCacheService>(Strict), 
+            cacheService ?? Mock.Of<IBlobCacheService>(Strict),
+            releseSubjectService ?? DefaultSubjectService().Object,
             filterRepository ?? Mock.Of<IFilterRepository>(Strict),
             filterItemRepository ?? Mock.Of<IFilterItemRepository>(Strict),
             indicatorGroupRepository ?? Mock.Of<IIndicatorGroupRepository>(Strict),
@@ -205,8 +176,14 @@ public class SubjectMetaServicePermissionTests
         return Options.Create(new LocationsOptions());
     }
 
-    private static Mock<IPersistenceHelper<StatisticsDbContext>> DefaultPersistenceHelperMock()
+    private static Mock<IReleaseSubjectService> DefaultSubjectService()
     {
-        return MockUtils.MockPersistenceHelper<StatisticsDbContext, ReleaseSubject>(ReleaseSubject);
+        var service = new Mock<IReleaseSubjectService>(Strict);
+
+        service
+            .Setup(s => s.CheckReleaseSubjectExists(SubjectId, ReleaseSubject.ReleaseId))
+            .ReturnsAsync(new Either<ActionResult, ReleaseSubject>(ReleaseSubject));
+
+        return service;
     }
 }
