@@ -99,6 +99,7 @@ const ReleasePreviewTableToolFinalStep = ({
           <DownloadTable
             fullTable={table}
             fileName={`data-${publication.slug}`}
+            query={query}
             tableRef={dataTableRef}
           />
 

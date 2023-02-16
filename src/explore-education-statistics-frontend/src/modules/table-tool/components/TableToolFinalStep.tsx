@@ -1,9 +1,7 @@
 import Tag from '@common/components/Tag';
 import useAsyncRetry from '@common/hooks/useAsyncRetry';
 import useToggle from '@common/hooks/useToggle';
-import DownloadTable, {
-  FileFormat,
-} from '@common/modules/table-tool/components/DownloadTable';
+import DownloadTable from '@common/modules/table-tool/components/DownloadTable';
 import TableHeadersForm from '@common/modules/table-tool/components/TableHeadersForm';
 import TimePeriodDataTable from '@common/modules/table-tool/components/TimePeriodDataTable';
 import TableToolShare from '@frontend/modules/table-tool/components/TableToolShare';
@@ -147,7 +145,8 @@ const TableToolFinalStep = ({
             fullTable={table}
             fileName={`data-${selectedPublication.slug}`}
             tableRef={dataTableRef}
-            onSubmit={(fileFormat: FileFormat) =>
+            query={query}
+            onSubmit={fileFormat =>
               logEvent({
                 category: 'Table tool',
                 action:
