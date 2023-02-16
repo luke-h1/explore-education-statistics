@@ -97,7 +97,8 @@
     // CONTAINER REGISTRY END
   },
   "variables": {
-    "appServicePlanPortalName": "[format('AppServicePlan-{0}', parameters('publicAppName'))]"
+    "appServicePlanPortalName": "[format('AppServicePlan-{0}', parameters('publicAppName'))]",
+    "publicAppName": "[parameters('publicAppName')]"
   },
   "resources": [
     {
