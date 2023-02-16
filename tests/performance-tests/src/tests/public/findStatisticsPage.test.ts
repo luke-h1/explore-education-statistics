@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { Counter, Rate, Trend } from 'k6/metrics';
 import { Options } from 'k6/options';
-import http from 'k6/http';
+import http, { RefinedResponse } from 'k6/http';
 import { check, fail } from 'k6';
 import getEnvironmentAndUsersFromFile from '../../utils/environmentAndUsers';
 import loggingUtils from '../../utils/loggingUtils';
@@ -43,7 +43,7 @@ export function setup() {
 
 const performTest = () => {
   const startTime = Date.now();
-  let response;
+  let response: RefinedResponse<undefined>;
   try {
     response = http.get(
       `${environmentAndUsers.environment.publicUrl}/find-statistics`,
@@ -55,13 +55,12 @@ const performTest = () => {
     getReleaseFailureCount.add(1);
     errorRate.add(1);
     fail(`Failure to get Find Statistics page - ${JSON.stringify(e)}`);
-    return;
   }
 
   if (
     check(response, {
       'response code was 200': ({ status }) => status === 200,
-      'response should have contained body': ({ body }) => body != null,
+      'response should have contained body': ({ body }) => body !== null,
     }) &&
     check(response, {
       'response contains expected text': res =>
