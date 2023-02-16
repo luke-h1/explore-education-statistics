@@ -229,7 +229,7 @@
         "dataEndpointEnabled": false,
         "publicNetworkAccess": "Enabled",
         "networkRuleBypassOptions": "AzureServices",
-        "zoneRedundancy": "Enabled",
+        "zoneRedundancy": "Disabled",
         "anonymousPullEnabled": false
       }
     },
