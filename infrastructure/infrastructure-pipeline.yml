@@ -2,23 +2,26 @@ trigger:
   batch: true
   branches:
     include:
+    # - master
+    # - dev
     - EES-3976-migrate-to-PNPM
   paths:
     include:
     - infrastructure/*
     exclude:
     - README.md
-pr: none
+pr: EES-3976-migrate-to-PNPM
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: 'windows-latest'
 
 steps:
 - task: AzSKARMTemplateChecker@4
   enabled: false
   inputs:
     ARMTemplateFilePath: '$(System.DefaultWorkingDirectory)/infrastructure/templates/'
-
+    ARMTemplateParameterFilePath: '$(System.DefaultWorkingDirectory)/infrastructure/parameters/'
+    SkipControlsFromFile: '$(System.DefaultWorkingDirectory)/infrastructure/template-checker/skip-controls.csv'
 - task: PublishPipelineArtifact@0
   inputs:
     artifactName: 'arm-template'
