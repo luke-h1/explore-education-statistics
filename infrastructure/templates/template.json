@@ -10,6 +10,13 @@
   },
   "parameters": {
     // EES existing frontend environment variables start
+    "repoUrl": {
+      "type": "string",
+      "defaultValue": "https://github.com/luke-h1/explore-education-statistics",
+      "metadata": {
+        "description": "The URL of the repository that contains the source code."
+      }
+    },
     "publicAppBasicAuthUsername": {
       "type": "string",
       "metadata": {
@@ -32,7 +39,7 @@
       "type": "string"
     },
     // EES existing frontend environment variables end
-    "webAppName": {
+    "publicAppName": {
       "type": "string",
       "defaultValue": "ees-pnpm-linux-container",
       "minLength": 2,
@@ -52,13 +59,6 @@
       "defaultValue": "B1",
       "metadata": {
         "description": "The SKU of App Service Plan."
-      }
-    },
-    "repoUrl": {
-      "type": "string",
-      "defaultValue": "https://github.com/luke-h1/container-app-ees",
-      "metadata": {
-        "description": "Optional Git Repo URL"
       }
     },
     "DOCKER_REGISTER_SERVER_URL": {
@@ -88,10 +88,16 @@
       "metadata": {
         "description": "The name of the Docker image."
       }
+    },
+    // CONTAINER REGISTRY START 
+    "registries_eesdev2_name": {
+      "defaultValue": "eesdev2",
+      "type": "String"
     }
+    // CONTAINER REGISTRY END
   },
   "variables": {
-    "appServicePlanPortalName": "[format('AppServicePlan-{0}', parameters('webAppName'))]"
+    "appServicePlanPortalName": "[format('AppServicePlan-{0}', parameters('publicAppName'))]"
   },
   "resources": [
     {
@@ -111,7 +117,7 @@
     {
       "type": "Microsoft.Web/sites",
       "apiVersion": "2021-02-01",
-      "name": "[parameters('webAppName')]",
+      "name": "[parameters('publicAppName')]",
       "kind": "app,linux,container",
       "location": "[parameters('location')]",
       "properties": {
@@ -133,19 +139,7 @@
           "DOCKER_REGISTRY_SERVER_PASSWORD": "[parameters('DOCKER_REGISTRY_SERVER_PASSWORD')]",
           "DOCKER_IMAGE_TAG": "latest",
           "WEBSITES_ENABLE_APP_SERVICE_STORAGE": true
-        },
-        // EES frontend env vars start
-        "APP_ENV": "development",
-        "BASIC_AUTH": true,
-        "BASIC_AUTH_USERNAME": "[parameters('publicAppBasicAuthUsername')]",
-        "BASIC_AUTH_PASSWORD": "[parameters('publicAppBasicAuthPassword')]",
-        "CONTENT_API_BASE_URL": "[parameters('contentApiUrl')]",
-        "DATA_API_BASE_URL": "[parameters('dataApiUrl')]",
-        "NOTIFICATION_API_BASE_URL": "[parameters('notifyApiUrl')]",
-        "NEXT_CONFIG_MODE": "server",
-        "NODE_ENV": "production",
-        "PUBLIC_URL": "https://ees-pnpm-linux-container.azurewebsites.net/"
-        // EES - frontend env vars end
+        }
       },
       "identity": {
         "type": "SystemAssigned"
@@ -158,15 +152,133 @@
       "condition": "[contains(parameters('repoUrl'), 'http')]",
       "type": "Microsoft.Web/sites/sourcecontrols",
       "apiVersion": "2021-02-01",
-      "name": "[format('{0}/{1}', parameters('webAppName'), 'web')]",
+      "name": "[format('{0}/{1}', parameters('publicAppName'), 'web')]",
       "properties": {
         "repoUrl": "[parameters('repoUrl')]",
         "branch": "EES-3976-migrate-to-PNPM",
         "isManualIntegration": true
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Web/sites', parameters('webAppName'))]"
+        "[resourceId('Microsoft.Web/sites', parameters('publicAppName'))]"
       ]
+    },
+    // PUBLIC FRONTEND APP SETTINGS START 
+    {
+      "name": "[concat(variables('publicAppName'), '/appsettings')]",
+      "type": "Microsoft.Web/sites/config",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2021-02-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', variables('publicAppName'))]"
+      ],
+      "properties": {
+        // EES frontend env vars start
+        "APP_ENV": "development",
+        "BASIC_AUTH": true,
+        "BASIC_AUTH_USERNAME": "[parameters('publicAppBasicAuthUsername')]",
+        "BASIC_AUTH_PASSWORD": "[parameters('publicAppBasicAuthPassword')]",
+        "CONTENT_API_BASE_URL": "[parameters('contentApiUrl')]",
+        "DATA_API_BASE_URL": "[parameters('dataApiUrl')]",
+        "NOTIFICATION_API_BASE_URL": "[parameters('notifyApiUrl')]",
+        "NEXT_CONFIG_MODE": "server",
+        "NODE_ENV": "production",
+        "PUBLIC_URL": "https://ees-pnpm-linux-container.azurewebsites.net/"
+        // EES - frontend env vars end
+      }
+    },
+    // PUBLIC FRONTEND APP SETTINGS END
+    // CONTAINER REGISTRIES START
+    {
+      "type": "Microsoft.ContainerRegistry/registries",
+      "apiVersion": "2022-02-01-preview",
+      "name": "[parameters('registries_eesdev_name')]",
+      "location": "uksouth",
+      "sku": {
+        "name": "Standard",
+        "tier": "Standard"
+      },
+      "properties": {
+        "adminUserEnabled": true,
+        "policies": {
+          "quarantinePolicy": {
+            "status": "disabled"
+          },
+          "trustPolicy": {
+            "type": "Notary",
+            "status": "disabled"
+          },
+          "retentionPolicy": {
+            "days": 7,
+            "status": "disabled"
+          },
+          "exportPolicy": {
+            "status": "enabled"
+          },
+          "azureADAuthenticationAsArmPolicy": {
+            "status": "enabled"
+          },
+          "softDeletePolicy": {
+            "retentionDays": 7,
+            "status": "enabled"
+          }
+        },
+        "encryption": {
+          "status": "disabled"
+        },
+        "dataEndpointEnabled": false,
+        "publicNetworkAccess": "Enabled",
+        "networkRuleBypassOptions": "AzureServices",
+        "zoneRedundancy": "Enabled",
+        "anonymousPullEnabled": false
+      }
+    },
+    {
+      "type": "Microsoft.ContainerRegistry/registries/scopeMaps",
+      "apiVersion": "2022-02-01-preview",
+      "name": "[concat(parameters('registries_eesdev_name'), '/_repositories_admin')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.ContainerRegistry/registries', parameters('registries_eesdev_name'))]"
+      ],
+      "properties": {
+        "description": "Can perform all read, write and delete operations on the registry",
+        "actions": [
+          "repositories/*/metadata/read",
+          "repositories/*/metadata/write",
+          "repositories/*/content/read",
+          "repositories/*/content/write",
+          "repositories/*/content/delete"
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.ContainerRegistry/registries/scopeMaps",
+      "apiVersion": "2022-02-01-preview",
+      "name": "[concat(parameters('registries_eesdev_name'), '/_repositories_pull')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.ContainerRegistry/registries', parameters('registries_eesdev_name'))]"
+      ],
+      "properties": {
+        "description": "Can pull any repository of the registry",
+        "actions": [
+          "repositories/*/content/read"
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.ContainerRegistry/registries/scopeMaps",
+      "apiVersion": "2022-02-01-preview",
+      "name": "[concat(parameters('registries_eesdev_name'), '/_repositories_push')]",
+      "dependsOn": [
+        "[resourceId('Microsoft.ContainerRegistry/registries', parameters('registries_eesdev_name'))]"
+      ],
+      "properties": {
+        "description": "Can push to any repository of the registry",
+        "actions": [
+          "repositories/*/content/read",
+          "repositories/*/content/write"
+        ]
+      }
     }
+    // CONTAINER REGISTRIES END 
   ]
 }
