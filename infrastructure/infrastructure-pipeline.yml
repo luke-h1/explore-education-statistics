@@ -2,8 +2,9 @@ trigger:
   batch: true
   branches:
     include:
-    - master
-    - dev
+    # - master
+    # - dev
+    - EES-3976-migrate-to-PNPM
   paths:
     include:
     - infrastructure/*
