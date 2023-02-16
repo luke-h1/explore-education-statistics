@@ -10,7 +10,10 @@ trigger:
     - infrastructure/*
     exclude:
     - README.md
-pr: EES-3976-migrate-to-PNPM
+pr: 
+  branches:
+    include:
+    - EES-3976-migrate-to-PNPM
 
 pool:
   vmImage: 'windows-latest'
