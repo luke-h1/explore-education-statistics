@@ -6,7 +6,7 @@ variables:
   DOTNET_VERSION: 6.0.x
 
 trigger:
-- main
+- EES-3976-migrate-to-PNPM
 
 pool:
   vmImage: ubuntu-latest
