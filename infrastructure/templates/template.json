@@ -162,7 +162,7 @@
         "[resourceId('Microsoft.Web/sites', parameters('publicAppName'))]"
       ]
     },
-    // PUBLIC FRONTEND APP SETTINGS START 
+    // PUBLIC FRONTEND APP SETTINGS START
     {
       "name": "[concat(variables('publicAppName'), '/appsettings')]",
       "type": "Microsoft.Web/sites/config",
