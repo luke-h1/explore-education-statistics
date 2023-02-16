@@ -192,7 +192,7 @@
     {
       "type": "Microsoft.ContainerRegistry/registries",
       "apiVersion": "2022-02-01-preview",
-      "name": "[parameters('registries_eesdev_name')]",
+      "name": "[parameters('registries_eesdev2_name')]",
       "location": "uksouth",
       "sku": {
         "name": "Standard",
@@ -236,9 +236,9 @@
     {
       "type": "Microsoft.ContainerRegistry/registries/scopeMaps",
       "apiVersion": "2022-02-01-preview",
-      "name": "[concat(parameters('registries_eesdev_name'), '/_repositories_admin')]",
+      "name": "[concat(parameters('registries_eesdev2_name'), '/_repositories_admin')]",
       "dependsOn": [
-        "[resourceId('Microsoft.ContainerRegistry/registries', parameters('registries_eesdev_name'))]"
+        "[resourceId('Microsoft.ContainerRegistry/registries', parameters('registries_eesdev2_name'))]"
       ],
       "properties": {
         "description": "Can perform all read, write and delete operations on the registry",
@@ -254,9 +254,9 @@
     {
       "type": "Microsoft.ContainerRegistry/registries/scopeMaps",
       "apiVersion": "2022-02-01-preview",
-      "name": "[concat(parameters('registries_eesdev_name'), '/_repositories_pull')]",
+      "name": "[concat(parameters('registries_eesdev2_name'), '/_repositories_pull')]",
       "dependsOn": [
-        "[resourceId('Microsoft.ContainerRegistry/registries', parameters('registries_eesdev_name'))]"
+        "[resourceId('Microsoft.ContainerRegistry/registries', parameters('registries_eesdev2_name'))]"
       ],
       "properties": {
         "description": "Can pull any repository of the registry",
@@ -268,9 +268,9 @@
     {
       "type": "Microsoft.ContainerRegistry/registries/scopeMaps",
       "apiVersion": "2022-02-01-preview",
-      "name": "[concat(parameters('registries_eesdev_name'), '/_repositories_push')]",
+      "name": "[concat(parameters('registries_eesdev2_name'), '/_repositories_push')]",
       "dependsOn": [
-        "[resourceId('Microsoft.ContainerRegistry/registries', parameters('registries_eesdev_name'))]"
+        "[resourceId('Microsoft.ContainerRegistry/registries', parameters('registries_eesdev2_name'))]"
       ],
       "properties": {
         "description": "Can push to any repository of the registry",
