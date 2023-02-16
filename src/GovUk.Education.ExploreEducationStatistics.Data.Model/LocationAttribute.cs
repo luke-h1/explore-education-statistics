@@ -117,7 +117,7 @@ public record LocalEnterprisePartnership(string? Code, string? Name) : LocationA
     }
 }
 
-public record Mat(string? Code, string? Name) : LocationAttribute(Code, Name)
+public record MultiAcademyTrust(string? Code, string? Name) : LocationAttribute(Code, Name)
 {
     public override KeyValuePair<string, string>[] GetCsvValues()
     {
