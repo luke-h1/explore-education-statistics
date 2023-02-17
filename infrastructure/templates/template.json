@@ -61,27 +61,27 @@
         "description": "The SKU of App Service Plan."
       }
     },
-    "DOCKER_REGISTER_SERVER_URL": {
-      "type": "string",
-      "defaultValue": "",
-      "metadata": {
-        "description": "The URL of the Docker registry."
-      }
-    },
-    "DOCKER_REGISTRY_SERVER_USERNAME": {
-      "type": "string",
-      "defaultValue": "",
-      "metadata": {
-        "description": "The username to log in to the Docker registry."
-      }
-    },
-    "DOCKER_REGISTRY_SERVER_PASSWORD": {
-      "type": "securestring",
-      "defaultValue": "",
-      "metadata": {
-        "description": "The password to log in to the Docker registry."
-      }
-    },
+    // "DOCKER_REGISTER_SERVER_URL": {
+    //   "type": "string",
+    //   "defaultValue": "",
+    //   "metadata": {
+    //     "description": "The URL of the Docker registry."
+    //   }
+    // },
+    // "DOCKER_REGISTRY_SERVER_USERNAME": {
+    //   "type": "string",
+    //   "defaultValue": "",
+    //   "metadata": {
+    //     "description": "The username to log in to the Docker registry."
+    //   }
+    // },
+    // "DOCKER_REGISTRY_SERVER_PASSWORD": {
+    //   "type": "securestring",
+    //   "defaultValue": "",
+    //   "metadata": {
+    //     "description": "The password to log in to the Docker registry."
+    //   }
+    // },
     "DOCKER_IMAGE_NAME": {
       "type": "string",
       "defaultValue": "eesfrontendcontainer",
@@ -131,14 +131,14 @@
           "alwaysOn": true,
           "minTlsVersion": "1.2",
           "ftpsState": "FtpsOnly",
-          "netFrameworkVersion": "v6.0",
-          "framework": "node",
+          // "netFrameworkVersion": "v6.0",
+          // "framework": "node",
           "nodeVersion": "16-lts",
           "WEBSITES_PORT": 3000,
-          "DOCKER_REGISTRY_SERVER_URL": "[parameters('DOCKER_REGISTER_SERVER_URL')]",
-          "DOCKER_REGISTRY_SERVER_USERNAME": "[parameters('DOCKER_REGISTRY_SERVER_USERNAME')]",
-          "DOCKER_REGISTRY_SERVER_PASSWORD": "[parameters('DOCKER_REGISTRY_SERVER_PASSWORD')]",
-          "DOCKER_IMAGE_TAG": "latest",
+          // "DOCKER_REGISTRY_SERVER_URL": "[parameters('DOCKER_REGISTER_SERVER_URL')]",
+          // "DOCKER_REGISTRY_SERVER_USERNAME": "[parameters('DOCKER_REGISTRY_SERVER_USERNAME')]",
+          // "DOCKER_REGISTRY_SERVER_PASSWORD": "[parameters('DOCKER_REGISTRY_SERVER_PASSWORD')]",
+          // "DOCKER_IMAGE_TAG": "latest",
           "WEBSITES_ENABLE_APP_SERVICE_STORAGE": true
         }
       },
