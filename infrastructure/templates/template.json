@@ -108,7 +108,7 @@
       "sku": {
         "name": "[parameters('sku')]"
       },
-      "kind": "app,linux,container",
+      "kind": "linux,container",
       "dependsOn": [],
       "properties": {
         "reserved": true
@@ -118,7 +118,7 @@
       "type": "Microsoft.Web/sites",
       "apiVersion": "2021-02-01",
       "name": "[parameters('publicAppName')]",
-      "kind": "app,linux,container",
+      "kind": "linux,container",
       "location": "[parameters('location')]",
       "properties": {
         "enabled": true,
