@@ -5,7 +5,7 @@ echo "What is the name of the container registry?"
 read CONTAINER_REGISTRY
 
 echo "Pushing image version $VERSION to $CONTAINER_REGISTRY"
-az acr login --name $CONTAINER_REGISTRY
+az acr login --name $CONTAINER_REGISTRY --expose-token
 
 docker build -t eesfrontendcontainer:$VERSION .
 

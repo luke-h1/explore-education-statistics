@@ -104,7 +104,7 @@
       "sku": {
         "name": "[parameters('sku')]"
       },
-      "kind": "linux,container",
+      "kind": "app,linux,container",
       "dependsOn": [],
       "properties": {
         "reserved": true
@@ -114,7 +114,7 @@
       "type": "Microsoft.Web/sites",
       "apiVersion": "2021-02-01",
       "name": "[parameters('publicAppName')]",
-      "kind": "linux,container",
+      "kind": "app,linux,container",
       "location": "[parameters('location')]",
       "properties": {
         "enabled": true,
@@ -249,7 +249,12 @@
       "properties": {
         "description": "Can pull any repository of the registry",
         "actions": [
-          "repositories/*/content/read"
+          "repositories/*/content/read",
+          "repositories/*/metadata/read",
+          "repositories/*/metadata/write",
+          "repositories/*/content/read",
+          "repositories/*/content/write",
+          "repositories/*/content/delete"
         ]
       }
     },
@@ -263,8 +268,11 @@
       "properties": {
         "description": "Can push to any repository of the registry",
         "actions": [
+          "repositories/*/metadata/read",
+          "repositories/*/metadata/write",
           "repositories/*/content/read",
-          "repositories/*/content/write"
+          "repositories/*/content/write",
+          "repositories/*/content/delete"
         ]
       }
     }
