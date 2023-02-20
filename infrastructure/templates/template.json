@@ -93,7 +93,7 @@
     }
   },
   "variables": {
-    "appServicePlanPortalName": "[format('AppServicePlan-{0}', parameters('publicAppName'))]"
+    "appServicePlanPortalName": "[format('AppServicePlan-{0}', parameters('webAppName'))]"
   },
   "resources": [
     {
@@ -113,7 +113,7 @@
     {
       "type": "Microsoft.Web/sites",
       "apiVersion": "2021-02-01",
-      "name": "[parameters('publicAppName')]",
+      "name": "[parameters('webAppName')]",
       "kind": "app,linux,container",
       "location": "[parameters('location')]",
       "properties": {
@@ -132,15 +132,7 @@
           "DOCKER_REGISTRY_SERVER_USERNAME": "[parameters('DOCKER_REGISTRY_SERVER_USERNAME')]",
           "DOCKER_REGISTRY_SERVER_PASSWORD": "[parameters('DOCKER_REGISTRY_SERVER_PASSWORD')]",
           "DOCKER_IMAGE_TAG": "latest",
-          "WEBSITES_ENABLE_APP_SERVICE_STORAGE": true,
-          "BASIC_AUTH_USERNAME": "[parameters('publicAppBasicAuthUsername')]",
-          "BASIC_AUTH_PASSWORD": "[parameters('publicAppBasicAuthPassword')]",
-          "CONTENT_API_BASE_URL": "[parameters('contentApiUrl')]",
-          "DATA_API_BASE_URL": "[parameters('dataApiUrl')]",
-          "NOTIFICATION_API_BASE_URL": "[parameters('notifyApiUrl')]",
-          "NEXT_CONFIG_MODE": "server",
-          "NODE_ENV": "production",
-          "PUBLIC_URL": "https://ees-pnpm-linux-container.azurewebsites.net/"  
+          "WEBSITES_ENABLE_APP_SERVICE_STORAGE": true
         }
       },
       "identity": {
@@ -154,37 +146,37 @@
       "condition": "[contains(parameters('repoUrl'), 'http')]",
       "type": "Microsoft.Web/sites/sourcecontrols",
       "apiVersion": "2021-02-01",
-      "name": "[format('{0}/{1}', parameters('publicAppName'), 'web')]",
+      "name": "[format('{0}/{1}', parameters('webAppName'), 'web')]",
       "properties": {
         "repoUrl": "[parameters('repoUrl')]",
         "branch": "EES-3976-migrate-to-PNPM",
         "isManualIntegration": true
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Web/sites', parameters('publicAppName'))]"
+        "[resourceId('Microsoft.Web/sites', parameters('webAppName'))]"
       ]
     },
-    // {
-    //   "name": "[concat(parameters('publicAppName'), '/appsettings')]",
-    //   "type": "Microsoft.Web/sites/config",
-    //   "location": "[resourceGroup().location]",
-    //   "apiVersion": "2021-02-01",
-    //   "dependsOn": [
-    //     "[resourceId('Microsoft.Web/sites', parameters('publicAppName'))]"
-    //   ],
-    //   "properties": {
-    //     "APP_ENV": "development",
-    //     "BASIC_AUTH": true,
-    //     "BASIC_AUTH_USERNAME": "[parameters('publicAppBasicAuthUsername')]",
-    //     "BASIC_AUTH_PASSWORD": "[parameters('publicAppBasicAuthPassword')]",
-    //     "CONTENT_API_BASE_URL": "[parameters('contentApiUrl')]",
-    //     "DATA_API_BASE_URL": "[parameters('dataApiUrl')]",
-    //     "NOTIFICATION_API_BASE_URL": "[parameters('notifyApiUrl')]",
-    //     "NEXT_CONFIG_MODE": "server",
-    //     "NODE_ENV": "production",
-    //     "PUBLIC_URL": "https://ees-pnpm-linux-container.azurewebsites.net/"
-    //   }
-    // },
+    {
+      "name": "[concat(parameters('webAppName'), '/appsettings')]",
+      "type": "Microsoft.Web/sites/config",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2021-02-01",
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/sites', parameters('webAppName'))]"
+      ],
+      "properties": {
+        "APP_ENV": "development",
+        "BASIC_AUTH": true,
+        "BASIC_AUTH_USERNAME": "[parameters('publicAppBasicAuthUsername')]",
+        "BASIC_AUTH_PASSWORD": "[parameters('publicAppBasicAuthPassword')]",
+        "CONTENT_API_BASE_URL": "[parameters('contentApiUrl')]",
+        "DATA_API_BASE_URL": "[parameters('dataApiUrl')]",
+        "NOTIFICATION_API_BASE_URL": "[parameters('notifyApiUrl')]",
+        "NEXT_CONFIG_MODE": "server",
+        "NODE_ENV": "production",
+        "PUBLIC_URL": "https://ees-pnpm-linux-container.azurewebsites.net/"
+      }
+    },
     {
       "type": "Microsoft.ContainerRegistry/registries",
       "apiVersion": "2022-02-01-preview",
