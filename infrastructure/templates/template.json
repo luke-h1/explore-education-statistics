@@ -9,7 +9,6 @@
     }
   },
   "parameters": {
-    // EES existing frontend environment variables start
     "repoUrl": {
       "type": "string",
       "defaultValue": "https://github.com/luke-h1/explore-education-statistics",
@@ -38,8 +37,7 @@
     "notifyApiUrl": {
       "type": "string"
     },
-    // EES existing frontend environment variables end
-    "publicAppName": {
+    "webAppName": {
       "type": "string",
       "defaultValue": "ees-pnpm-linux-container",
       "minLength": 2,
@@ -89,12 +87,10 @@
         "description": "The name of the Docker image."
       }
     },
-    // CONTAINER REGISTRY START 
     "registries_eesdev2_name": {
       "defaultValue": "eesdev2",
-      "type": "String"
+      "type": "string"
     }
-    // CONTAINER REGISTRY END
   },
   "variables": {
     "appServicePlanPortalName": "[format('AppServicePlan-{0}', parameters('publicAppName'))]"
@@ -130,14 +126,12 @@
           "alwaysOn": true,
           "minTlsVersion": "1.2",
           "ftpsState": "FtpsOnly",
-          // "netFrameworkVersion": "v6.0",
-          // "framework": "node",
           "nodeVersion": "16-lts",
           "WEBSITES_PORT": 3000,
           "DOCKER_REGISTRY_SERVER_URL": "[parameters('DOCKER_REGISTER_SERVER_URL')]",
           "DOCKER_REGISTRY_SERVER_USERNAME": "[parameters('DOCKER_REGISTRY_SERVER_USERNAME')]",
           "DOCKER_REGISTRY_SERVER_PASSWORD": "[parameters('DOCKER_REGISTRY_SERVER_PASSWORD')]",
-          // "DOCKER_IMAGE_TAG": "latest",
+          "DOCKER_IMAGE_TAG": "latest",
           "WEBSITES_ENABLE_APP_SERVICE_STORAGE": true
         }
       },
@@ -162,7 +156,6 @@
         "[resourceId('Microsoft.Web/sites', parameters('publicAppName'))]"
       ]
     },
-    // PUBLIC FRONTEND APP SETTINGS START
     {
       "name": "[concat(parameters('publicAppName'), '/appsettings')]",
       "type": "Microsoft.Web/sites/config",
@@ -172,7 +165,6 @@
         "[resourceId('Microsoft.Web/sites', parameters('publicAppName'))]"
       ],
       "properties": {
-        // EES frontend env vars start
         "APP_ENV": "development",
         "BASIC_AUTH": true,
         "BASIC_AUTH_USERNAME": "[parameters('publicAppBasicAuthUsername')]",
@@ -183,11 +175,8 @@
         "NEXT_CONFIG_MODE": "server",
         "NODE_ENV": "production",
         "PUBLIC_URL": "https://ees-pnpm-linux-container.azurewebsites.net/"
-        // EES - frontend env vars end
       }
     },
-    // PUBLIC FRONTEND APP SETTINGS END
-    // CONTAINER REGISTRIES START
     {
       "type": "Microsoft.ContainerRegistry/registries",
       "apiVersion": "2022-02-01-preview",
@@ -279,6 +268,5 @@
         ]
       }
     }
-    // CONTAINER REGISTRIES END 
   ]
 }
