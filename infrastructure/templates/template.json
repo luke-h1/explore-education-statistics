@@ -249,8 +249,7 @@
       "properties": {
         "description": "Can pull any repository of the registry",
         "actions": [
-          "repositories/*/content/read",
-          "repositories/*/metadata/read"
+          "repositories/*/content/read"
         ]
       }
     },
