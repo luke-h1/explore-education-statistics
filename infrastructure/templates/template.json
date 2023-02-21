@@ -250,11 +250,7 @@
         "description": "Can pull any repository of the registry",
         "actions": [
           "repositories/*/content/read",
-          "repositories/*/metadata/read",
-          "repositories/*/metadata/write",
-          "repositories/*/content/read",
-          "repositories/*/content/write",
-          "repositories/*/content/delete"
+          "repositories/*/metadata/read"
         ]
       }
     },
@@ -268,11 +264,8 @@
       "properties": {
         "description": "Can push to any repository of the registry",
         "actions": [
-          "repositories/*/metadata/read",
-          "repositories/*/metadata/write",
           "repositories/*/content/read",
-          "repositories/*/content/write",
-          "repositories/*/content/delete"
+          "repositories/*/content/write"
         ]
       }
     }
