@@ -8,7 +8,7 @@ RUN rm -rf src/GovUk.*
 
 RUN corepack enable
 
-RUN pnpm i
+# RUN pnpm i
 RUN pnpm --filter=explore-education-statistics-frontend... install
 RUN pnpm --filter=explore-education-statistics-frontend build
 
@@ -24,7 +24,7 @@ COPY --from=builder /app/src/explore-education-statistics-frontend/ ./src/explor
 
 RUN corepack enable
 
-RUN pnpm i
+# RUN pnpm i
 RUN pnpm --filter=explore-education-statistics-frontend... --prod install
 
 WORKDIR /usr/src/app/src/explore-education-statistics-frontend
