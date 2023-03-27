@@ -46,6 +46,15 @@ jobs:
         working-directory: tests/robot-tests
         run: pipenv run python scripts/create_snapshots.py --validate --slack-webhook-url ${{ env.SLACK_WEBHOOK_URL }}
 
+      - name: Set output variables
+        id: vars
+        run: |
+          pr_title="[Test] Update test snapshots $(date +%d-%m-%Y)"
+          pr_body="This PR was auto-generated on $(date +%d-%m-%Y) \
+            by [create-pull-request](https://github.com/peter-evans/create-pull-request)."
+          echo "pr_title=$pr_title" >> $GITHUB_OUTPUT
+          echo "pr_body=$pr_body" >> $GITHUB_OUTPUT
+
       - name: Create pull request
         id: cpr
         uses: peter-evans/create-pull-request@v4
@@ -58,7 +67,6 @@ jobs:
           add-paths: |
             tests/robot-tests/tests/snapshots
           # reviewers: rmbielby, lauraselby, cjrace, chfoster, twilliams24
-          title: 'Update test snapshots ${{ env.DATE }}'
-          body: |
-            ## Updated test snapshots due to visual differences ${{ env.DATE }}
+          title: ${{ steps.vars.outputs.pr_title }}
+          body: ${{ steps.vars.outputs.pr_body }}          
           draft: false
