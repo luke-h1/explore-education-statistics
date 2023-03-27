@@ -51,8 +51,8 @@ jobs:
         run: |
           pr_title="chore(tests): Update test snapshots $(date +%d-%m-%Y)"
           pr_body="This PR was auto-generated on $(date +%d-%m-%Y) \
-            by [create-pull-request](https://github.com/peter-evans/create-pull-request) \
-            due to visual differences identified by [create_snapshots.py](./tests/robot-tests/scripts/create_snapshots.py)"
+          by [create-pull-request](https://github.com/peter-evans/create-pull-request) \
+          due to visual differences identified by `create_snapshots.py`"
           echo "pr_title=$pr_title" >> $GITHUB_OUTPUT
           echo "pr_body=$pr_body" >> $GITHUB_OUTPUT
 
