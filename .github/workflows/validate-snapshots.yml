@@ -44,7 +44,7 @@ jobs:
 
       - name: Validate snapshots
         working-directory: tests/robot-tests
-        run: pipenv run python scripts/create_snapshots.py --validate --slack-webhook-url ''
+        run: pipenv run python scripts/create_snapshots.py --validate --slack-webhook-url ${{ env.SLACK_WEBHOOK_URL }}
 
       - name: Create pull request
         id: cpr
