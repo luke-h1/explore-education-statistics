@@ -58,8 +58,7 @@ jobs:
           add-paths: |
             tests/robot-tests/tests/snapshots
           # reviewers: rmbielby, lauraselby, cjrace, chfoster, twilliams24
-          title: '[test snapshots] - update test snapshots ${{ env.DATE }}'
+          title: 'Update test snapshots ${{ env.DATE }}'
           body: |
-            ## Update test snapshots ${{ env.DATE }}
-              - Updated test snapshots due to visual differences
+            ## Updated test snapshots due to visual differences ${{ env.DATE }}
           draft: false
