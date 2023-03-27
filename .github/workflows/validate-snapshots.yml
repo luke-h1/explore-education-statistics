@@ -7,6 +7,9 @@ env:
   PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
   PYTHON_VERSION: 3.10.10
+  DATE: $(date --rfc-3339=date)
+
+
 jobs:
   test:
     name: Validate snapshots
@@ -41,24 +44,22 @@ jobs:
 
       - name: Validate snapshots
         working-directory: tests/robot-tests
-        run: pipenv run python scripts/create_snapshots.py --validate --slack-webhook-url ${{ env.SLACK_WEBHOOK_URL }}
-
-      - name: Set current date as environment variable
-        run: echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
+        run: pipenv run python scripts/create_snapshots.py --validate --slack-webhook-url ''
 
       - name: Create pull request
         id: cpr
         uses: peter-evans/create-pull-request@v4
         with:
           token: ${{ env.PAT_TOKEN }}
-          commit-message: 'chore(tests): update test snapshots - $(date +"%Y-%m-%dT%H:%M:%S")'
+          commit-message: 'chore(tests): update test snapshots - ${{ env.DATE }}'
           committer: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
           branch-suffix: timestamp
+          branch: chore/update-test-snapshots
           add-paths: |
             tests/robot-tests/tests/snapshots
           # reviewers: rmbielby, lauraselby, cjrace, chfoster, twilliams24
-          title: '[test snapshots] - update test snapshots $(date + "%Y-%m-%dT%H:%M:%S")'
+          title: '[test snapshots] - update test snapshots ${{ env.DATE }}'
           body: |
-            ## Update test snapshots $(date +"%Y-%m-%dT%H:%M:%S")
+            ## Update test snapshots ${{ env.DATE }}
               - Updated test snapshots due to visual differences
           draft: false
