@@ -35,8 +35,9 @@ jobs:
       - name: pipenv install
         run: pipenv install
 
-      - name: run snapshots
-        run: pipenv run python tests/robot-tests/scripts/create_snapshots.py --validate --slack-webhook-url ${{ env.SLACK_WEBHOOK_URL }}
+      - name: Validate snapshots
+        working-directory: tests/robot-tests
+        run: pipenv run scripts/create_snapshots.py --validate --slack-webhook-url ${{ env.SLACK_WEBHOOK_URL }}
 
       - name: Set current date as environment variable
         run: echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
