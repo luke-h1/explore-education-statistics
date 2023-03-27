@@ -49,9 +49,9 @@ jobs:
       - name: Set output variables
         id: vars
         run: |
-          pr_title="[Test] Update test snapshots $(date +%d-%m-%Y)"
+          pr_title="chore(tests): Update test snapshots $(date +%d-%m-%Y)"
           pr_body="This PR was auto-generated on $(date +%d-%m-%Y) \
-            by [create-pull-request](https://github.com/peter-evans/create-pull-request)."
+            to update test snapshots due to visual differences."
           echo "pr_title=$pr_title" >> $GITHUB_OUTPUT
           echo "pr_body=$pr_body" >> $GITHUB_OUTPUT
 
