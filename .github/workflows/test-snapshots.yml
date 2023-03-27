@@ -6,10 +6,10 @@ on:
 env:
   PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-  PYTHON_VERSION: 3.10
+  PYTHON_VERSION: 3.10.10
 jobs:
   test:
-    name: snapshots
+    name: Validate snapshots
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
