@@ -1,0 +1,58 @@
+name: CI / test snapshots
+on:
+  workflow_dispatch:
+  schedule: 
+    - cron: '30 9 * * 1-5'
+env:
+  PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+  SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+  PYTHON_VERSION: 3.10
+jobs:
+  test:
+    name: snapshots
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Install moreutils
+        run: sudo apt install moreutils
+
+      # https://github.com/actions/virtual-environments/issues/1187
+      - name: tune linux network
+        run: sudo ethtool -K eth0 tx off rx off            
+
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: Setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pipenv'
+
+      - name: Install pipenv
+        run: curl https://raw.githubusercontent.com/pypa/pipenv/master/get-pipenv.py | python
+
+      - name: pipenv install
+        run: pipenv install
+
+      - name: run snapshots
+        run: pipenv run python scripts/create_snapshots.py --validate --slack-webhook-url ${{ env.SLACK_WEBHOOK_URL }}
+
+      - name: Set current date as environment variable
+        run: echo "NOW=$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ env.PAT_TOKEN }}
+          commit-message: 'chore(tests): update test snapshots - $NOW'
+          committer: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
+          branch-suffix: timestamp
+          add-paths: |
+            tests/robot-tests/tests/snapshots
+          # reviewers: rmbielby, lauraselby, cjrace, chfoster, twilliams24
+          title: '[test snapshots] - update test snapshots $NOW'
+          body: |
+            Update test snapshots
+              - Updated test snapshots due to visual differences
+
