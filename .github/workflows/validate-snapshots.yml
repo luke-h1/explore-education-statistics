@@ -35,6 +35,9 @@ jobs:
       - name: pipenv install
         run: pipenv install
 
+      - name: echo stuff to file
+        run: echo "yo yo yo " >> test.txt && mv test.txt tests/robot-tests
+
       - name: Validate snapshots
         working-directory: tests/robot-tests
         run: pipenv run python scripts/create_snapshots.py --validate --slack-webhook-url ${{ env.SLACK_WEBHOOK_URL }}
